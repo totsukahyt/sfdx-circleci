@@ -131,7 +131,7 @@
         for (var i = 0; i < fieldList.length; i ++) {
           for (var j = 0; j < fieldList2.length; j ++) {
             if (fieldList[i].fieldName == fieldList2[j].fieldName) {
-                fieldList2[i].checkAllCheck = fieldList[i].checkAllCheck;
+              fieldList2[j].checkAllCheck = fieldList[i].checkAllCheck;
             }
           }
         }
