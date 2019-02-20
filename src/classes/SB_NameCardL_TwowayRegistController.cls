@@ -930,22 +930,8 @@ public with sharing class SB_NameCardL_TwowayRegistController {
         //  ToDo 仮ラベルSB_NCLD_Msg_SelectRegisterDestination
         throw new LeadRegistControllerException(System.Label.SB_NCLD_Msg_SelectRegisterDestination);
       }
-      Account acc;
-      Contact c;
-
-      if (!this.accountRecTypeEdit) {
-        acc = (Account)Account.sObjectType.newSObject(this.accountRecTypeId, false);
-        acc.put('RecordTypeId',this.accountRecTypeId);
-      } else {
-        acc = (Account)Account.sObjectType.newSObject(null, false);
-      }
-
-      if (!this.contactRecTypeEdit) {
-        c = (Contact)Contact.sObjectType.newSObject(this.contactRecTypeId, false);
-        c.put('RecordTypeId',this.contactRecTypeId);
-      } else {
-        c = (Contact)Contact.sObjectType.newSObject(null, false);
-      }
+      Account acc = (Account)Account.sObjectType.newSObject(null, false);
+      Contact c = (Contact)Contact.sObjectType.newSObject(null, false);
       //ラベル:取引先を入力してください
       String straccount = String.format(System.Label.SB_NCLD_MSG_Enter,new String[]{SB_NameCardL_TwowayRegistController.AC_LABEL});
       //ラベル:取引先責任者を入力してください
@@ -978,7 +964,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
         }
       }
       c.AccountId = acc.Id;
-      if (this.accountRecTypeEdit) {
+      if (this.accountRecTypeEdit == false) {
         this.accountRecTypeId = null;
       }
       // SV_DEV-781  個別取引先登録 で 既存の アカウント、コンタクトを選択していても、「新規作成時の指定」の所有者をしていしていないとエラーになる。
@@ -989,7 +975,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       }
       SB_NameCardL_RegistHelper.RegistParam acre = new SB_NameCardL_RegistHelper.RegistParam('Account',this.accountOverwrite,this.accountRecTypeId,acc.Id == null ? pageAccount.OwnerId : acc.OwnerId,this.isAllowDuplicateSave);
 
-      if (this.contactRecTypeEdit) {
+      if (this.contactRecTypeEdit == false) {
         this.contactRecTypeId = null;
       }
       System.debug(acc.Id);
