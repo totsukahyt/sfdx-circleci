@@ -327,7 +327,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
           saveResult.otherMessage.put('showType', 'Contact');
         }
         else if (haveAccount == false && haveLead == false) {
-          saveResult.otherMessage.put('showType', 'Both');
+          saveResult.otherMessage.put('showType', SB_NameCard_LeadRegist.svConfig.defaultDisplayExistingLead() ? 'Lead' : 'Contact');
         }
         else {
           saveResult.otherMessage.put('showType', 'Lead');
