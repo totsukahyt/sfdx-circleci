@@ -159,9 +159,16 @@ global class SB_NameCard_LeadRegist
             if (nc.SmartViscaf__lead__c != null) nameIdList.add(nc.SmartViscaf__lead__c);
 
             if ((name = getPersonName(nc)) != null) {
-                nameSet.add(name);
-                if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
-                else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
+            String str = EncodingUtil.urlEncode(name,'UTF-8');
+            Blob b = Blob.valueOf(str);
+            String b64 = EncodingUtil.base64Encode(b);
+            System.debug('b64 is' + b64);
+            name = name.replaceAll('\'', b64);
+            name = String.escapeSingleQuotes(name.replaceAll('＼', '_'));
+            name = name.replaceAll(b64, '\'');
+            nameSet.add(name);
+                //if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
+                //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
             }
         }
         List<String> whereList = new List<String>();
@@ -192,10 +199,10 @@ global class SB_NameCard_LeadRegist
 
         if (String.isBlank(pnMap.get('last_name'))) {
             if (String.isBlank(pnMap.get('first_name'))) return null;
-            return ' '+pnMap.get('first_name'); // 名のみ
+            return '%'+pnMap.get('first_name'); // 名のみ
         }
         if (String.isBlank(pnMap.get('first_name'))) {
-            return pnMap.get('last_name')+' '; // 姓のみ
+            return pnMap.get('last_name')+'%'; // 姓のみ
         }
         return pnMap.get('last_name')+' '+pnMap.get('first_name'); // 姓名
     }
