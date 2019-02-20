@@ -25,14 +25,75 @@
       if (cmp.isValid() && state === "SUCCESS") {
         var result = JSON.parse(response.getReturnValue());
         if (result.success) {
-          cmp.set("v.dataList", result.data);    // 対象の名刺一覧
           cmp.set("v.dataCount", result.data.length);
           var ids = targetIds.split(',');
           cmp.set('v.lookUpId', ids[0]);
           // cmp.set('v.inputV.ownerId', result[0].cObjectMap['OwnerId'].value);
+          cmp.set("v.dataList", result.data);    // 対象の名刺一覧
           cmp.set('v.firstLoading', false);
-          // var childCmp = cmp.find('bulkRegistComon');
-          // childCmp.reSetThead();
+          if (isInit) {
+            cmp.set("v.showPlickListType", result.otherMessage.showType);
+            var r = cmp.get("v.fieldMap");
+            // var childCmp = cmp.find('bulkRegistComon');
+            // childCmp.reSetThead();
+            var value = result.otherMessage.showType;
+            var inputV = cmp.get("v.inputV");    // 対象の名刺一覧
+            inputV.showOverWrite = false;
+            inputV.showRecordType = false;
+            for (var i = 0; i < inputV.InputPlickListValues.length; i ++) {
+              if ((value == 'Lead' && (i == 1 || i == 2))
+                  || (value == 'Contact' && i == 0)
+                 ) {
+                inputV.InputPlickListValues[i].show = false;
+                inputV.inputRegistOverWritValues[i].show = false;
+              }
+              else {
+                if (i == 0) {
+                  if (inputV.InputPlickListValues[i].canShow) {
+                    inputV.InputPlickListValues[i].show = inputV.leadAuthority.isCreateable;
+                  }
+                  inputV.newSectionLabel = inputV.labelMap['LeadNew'];
+                }
+                else if (i == 1) {
+                  if (inputV.InputPlickListValues[i].canShow) {
+                    inputV.InputPlickListValues[i].show = inputV.accountAuthority.isCreateable;
+                  }
+                  inputV.newSectionLabel = inputV.labelMap['AccountNew'];
+                }
+                else if (i == 2) {
+                  if (inputV.InputPlickListValues[i].canShow) {
+                    inputV.InputPlickListValues[i].show = inputV.contactAuthority.isCreateable;
+                  }
+                  inputV.newSectionLabel = inputV.labelMap['BothNew'];
+                }
+                if (inputV.inputRegistOverWritValues[i].canShow == true) {
+                  inputV.inputRegistOverWritValues[i].show = true;
+                  inputV.showOverWrite = true;
+                }
+                if (inputV.showRecordType == false) {
+                  inputV.showRecordType = inputV.InputPlickListValues[i].plickListOptions.length > 0 && inputV.InputPlickListValues[i].canShow;
+                }
+              }
+            }
+            if (value == 'Both') {
+              inputV.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
+              inputV.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
+            }
+            else {
+              inputV.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign");
+              inputV.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus");
+            }
+            var arr = new Array();
+            for (var i = 0; i < inputV.searchConditions.length; i ++) {
+              var sc = inputV.searchConditions[i];
+                if ((sc.groupName == value && sc.disabled != true) || value == 'Both') {
+                  arr.push(sc);
+                }
+            }
+            inputV.searchConditions = arr;
+            cmp.set("v.inputV", inputV);    // 対象の名刺一覧
+            cmp.set("v.fieldList", r[result.otherMessage.showType]);    // 対象の名刺一覧
+          }
         }
         else {
           // エラーがあった場合、画面に表示
@@ -103,61 +164,6 @@
         var result = JSON.parse(response.getReturnValue());
         // if (result.success) {
           cmp.set("v.allSearchConditions", JSON.parse(JSON.stringify(result.searchConditions)));    // 対象の名刺一覧
-
-          var value = cmp.get("v.showPlickListType");
-          result.showOverWrite = false;
-          result.showRecordType = false;
-          for (var i = 0; i < result.InputPlickListValues.length; i ++) {
-            if ((value == 'Lead' && (i == 1 || i == 2))
-                || (value == 'Contact' && i == 0)
-               ) {
-              result.InputPlickListValues[i].show = false;
-              result.inputRegistOverWritValues[i].show = false;
-            }
-            else {
-              if (i == 0) {
-                if (result.InputPlickListValues[i].canShow) {
-                  result.InputPlickListValues[i].show = result.leadAuthority.isCreateable;
-                }
-                result.newSectionLabel = result.labelMap['LeadNew'];
-              }
-              else if (i == 1) {
-                if (result.InputPlickListValues[i].canShow) {
-                  result.InputPlickListValues[i].show = result.accountAuthority.isCreateable;
-                }
-                result.newSectionLabel = result.labelMap['AccountNew'];
-              }
-              else if (i == 2) {
-                if (result.InputPlickListValues[i].canShow) {
-                  result.InputPlickListValues[i].show = result.contactAuthority.isCreateable;
-                }
-                result.newSectionLabel = result.labelMap['BothNew'];
-              }
-              if (result.inputRegistOverWritValues[i].canShow == true) {
-                result.inputRegistOverWritValues[i].show = true;
-                result.showOverWrite = true;
-              }
-              if (result.showRecordType == false) {
-                result.showRecordType = result.InputPlickListValues[i].plickListOptions.length > 0 && result.InputPlickListValues[i].canShow;
-              }
-            }
-          }
-          if (value == 'Both') {
-            result.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
-            result.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
-          }
-          else {
-            result.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign");
-            result.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus");
-          }
-          var arr = new Array();
-          for (var i = 0; i < result.searchConditions.length; i ++) {
-            var sc = result.searchConditions[i];
-              if ((sc.groupName == value && sc.disabled != true) || value == 'Both') {
-                arr.push(sc);
-              }
-          }
-          result.searchConditions = arr;
           cmp.set("v.inputV", result);    // 対象の名刺一覧
 
 
