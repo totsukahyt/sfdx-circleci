@@ -419,7 +419,7 @@
             }
 
             initset();
-            document.getElementById('allCheckTodo').checked = {!baseSetting.SmartViscaf__RegistNoToDo__c} == false;
+            document.getElementById('allCheckTodo').checked = document.getElementById('{!JSENCODE($Component.basicToDo)}').value == 'false';
             resetOwnerDisable();
 
           </script>
