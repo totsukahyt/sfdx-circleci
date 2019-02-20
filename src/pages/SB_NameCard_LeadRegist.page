@@ -23,15 +23,15 @@
             <apex:pageBlockButtons >
                 <apex:outputPanel id="save">
                 <!-- rerender="pageMsgs, save,All"  -->
-                    <apex:commandButton onclick="startLoad('{!$Component.savebtn}','{!$Component.cancelbtn}')" value="{!$Label.smartviscal__sb_ncld_label_save}" rendered="{!NOT(isAllowDuplicateSave)}" oncomplete="save();" id="savebtn"/>
-                    <apex:commandButton onclick="startLoad('{!$Component.savealertignorebtn}','{!$Component.cancelbtn}')" value="{!$Label.smartviscal__sb_ncld_label_save}{!$Label.smartviscal__sb_ncld_label_ignorealert}"  rendered="{!isAllowDuplicateSave}" oncomplete="save();" id="savealertignorebtn"/>
+                    <apex:commandButton onclick="startLoad('{!$Component.savebtn}','{!$Component.cancelbtn}')" value="{!$Label.SB_NCLD_Label_Save}" rendered="{!NOT(isAllowDuplicateSave)}" oncomplete="save();" id="savebtn"/>
+                    <apex:commandButton onclick="startLoad('{!$Component.savealertignorebtn}','{!$Component.cancelbtn}')" value="{!$Label.SB_NCLD_Label_Save}{!$Label.SB_NCLD_Label_IgnoreAlert}"  rendered="{!isAllowDuplicateSave}" oncomplete="save();" id="savealertignorebtn"/>
                 </apex:outputPanel>
-                <apex:commandButton action="{!cancel}" value="{!$Label.smartviscal__sb_ncld_label_cancel}" immediate="true" id="cancelbtn"/>
+                <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true" id="cancelbtn"/>
             </apex:pageBlockButtons>
 
-            <apex:pageBlockSection title="{!$Label.smartviscal__sb_ncld_text_businesscardinformation}" columns="2">
+            <apex:pageBlockSection title="{!$Label.SB_NCLD_Text_BusinessCardInformation}" columns="2">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_name}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Name}"/>
                     <apex:panelGroup >
                         <apex:outputText value="{!nameCard.SmartViscaf__person_name_last__c}"/>
                         <apex:outputText value=" "/>
@@ -40,34 +40,34 @@
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_email}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Email}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__email__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_companyname}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_CompanyName}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__company_name__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_prefectures}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Prefectures}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__address_pref__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_division}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Division}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__division__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_position}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Position}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__title_name__c}"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 
-            <apex:pageBlockSection title="{!$Label.smartviscal__sb_ncld_text_lead}" columns="1">
+            <apex:pageBlockSection title="{!$Label.SB_NCLD_Text_Lead}" columns="1">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_searchcondition}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_SearchCondition}"/>
                     <apex:selectRadio value="{!searchType}">
                         <apex:selectOptions value="{!searchTypeList}"/>
                         <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, leadRecordList"/>
@@ -75,30 +75,30 @@
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_registerdestinationselection}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_RegisterDestinationSelection}"/>
                     <apex:pageBlockTable id="leadRecordList" value="{!leadRecordList}" var="leadRecord">
                         <apex:column style="width:15px;">
-                            <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_select}</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Select}</apex:facet>
                             <input id="leadRecordList{!leadRecord.index}" type="radio" name="leadRecordsIndex" value="{!leadRecord.index}" onclick="document.getElementById('{!$Component.leadRecordListIndex}').value=this.value;checkRadio();"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Company']}">
-                            <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_companyname}</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_CompanyName}</apex:facet>
                             <apex:outputText id="company" value="{!leadRecord.lead.Company}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['State']}">
-                            <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_prefectures}</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Prefectures}</apex:facet>
                             <apex:outputText id="state" value="{!leadRecord.lead.State}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Title']}">
-                            <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_position}</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Position}</apex:facet>
                             <apex:outputText id="title" value="{!leadRecord.lead.Title}"/>
                         </apex:column>
 
                         <apex:column >
-                            <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_name}</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Name}</apex:facet>
                             <apex:outputText value="{!createNewLeadLabel}" rendered="{!leadRecord.isNew}"/>
                             <apex:inputField value="{!leadRecord.lookUpNameCard.SmartViscaf__lead__c}" rendered="{!NOT(ISBLANK(leadRecord.lookUpNameCard))}">
                                 <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs,time,ownerName,email,title,state,company" >
@@ -114,17 +114,17 @@
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Email']}">
-                            <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_email}</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Email}</apex:facet>
                             <apex:outputText id="email" value="{!leadRecord.lead.Email}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['LastModifiedDate']}">
-                            <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_lastmodieddate}</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_LastModiedDate}</apex:facet>
                             <apex:outputField id="time" value="{!leadRecord.lead.LastModifiedDate}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Owner']}">
-                            <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_owner}</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Owner}</apex:facet>
                             <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(leadRecord.lead.OwnerId))}">
                                 <a href="/{!leadRecord.lead.OwnerId}" id="lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}" onblur="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onfocus="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();">
                                     <apex:outputText id="ownerName" value="{!leadRecord.lead.Owner.Name}"/>
@@ -137,7 +137,7 @@
                 <apex:pageBlockSectionItem id="selectRecodrType" rendered="{!showLeadRecType}">
                     <apex:outputText value=""/>
                         <apex:outputPanel >
-                            <apex:outputText value="{!$Label.smartviscal__sb_ncld_label_recordtypeexplain}"/>
+                            <apex:outputText value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/>
                             <br/><br/>
                             <apex:outputLabel value="{!leadRecType}"/>
                             <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!leadRecordTypeId}" multiselect="false" size="1" disabled="{!Not(leadRecTypeEdit)}">
@@ -162,42 +162,42 @@
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_campaignstatus}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_CampaignStatus}" style="{!IF(campDisabled,'color:#999999;','')}"/>
                     <apex:selectList value="{!campStatus}" multiselect="false" size="1" disabled="{!campDisabled}">
                         <apex:selectOptions value="{!CampaignStatus}"/>
                     </apex:selectList>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem Id="ownerSelectItem">
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_owner}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Owner}"/>
                     <apex:inputField id="ownerinput" value="{!lead.OwnerId}" required="false"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 
-            <apex:pageBlockSection id="todode" title="{!$Label.smartviscal__sb_ncld_text_todo}" columns="1">
+            <apex:pageBlockSection id="todode" title="{!$Label.SB_NCLD_Text_ToDo}" columns="1">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_subject}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Subject}"/>
                     <apex:inputField value="{!todo.Subject}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_activitydate}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_ActivityDate}"/>
                     <apex:inputField value="{!todo.ActivityDate}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_comment}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Comment}"/>
                     <apex:inputField value="{!todo.Description}" style="width:800px; height:150px;"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_todoregistration}"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_ToDoRegistration}"/>
                     <apex:inputCheckbox disabled="{!NOT(canEditTodo)}" value="{!registTodo}"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
         </apex:pageBlock>
         <script type="text/javascript">
-            var saveingValue = "{!$Label.smartviscal__sb_ncld_label_saveing}";
+            var saveingValue = "{!$Label.SB_NCLD_Label_Saveing}";
             function startLoad(saveid,cancelid){
                 saveChangeValue(saveid);
                 saveChangeValue(cancelid);
@@ -231,7 +231,7 @@
             //SV_DEV-283 リード用のキューを所有者に選択できるようにする
             function initset() {
                 var ow = document.getElementById('{!$Component.All.blockid.newSelect.ownerSelectItem.ownerinput}');
-                ow.style="margin-left:10px;";
+                ow.style = "margin-left:10px;";
                 var oDiv = document.getElementById('{!$Component.All.blockid.newSelect.ownerSelectItem.ownerinput}' + '_mlktp');
                 oDiv.onchange = function(){
                     ow.value = '';

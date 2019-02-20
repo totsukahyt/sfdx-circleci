@@ -9,9 +9,9 @@
   <apex:pageMessages id="pageMsgs"/>
 
   <apex:form >
-    <apex:pageBlock title="{!$Label.smartviscal__sb_ncld_text_businesscardlist}">
+    <apex:pageBlock title="{!$Label.SB_NCLD_Text_BusinessCardList}">
       <apex:pageBlockButtons >
-        <apex:commandButton action="{!cancel}" value="{!$Label.smartviscal__sb_ncld_label_cancel}" immediate="true"/>
+        <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
       </apex:pageBlockButtons>
 
       <apex:pageBlockSection columns="2">
@@ -25,7 +25,7 @@
         <apex:column >
           <apex:facet name="header">{!updateLeadLabel}</apex:facet>
           <apex:outputLink value="javascript:void(0)">
-            {!$Label.smartviscal__sb_ncld_text_update}
+            {!$Label.SB_NCLD_Text_Update}
             <apex:actionSupport event="onclick" action="{!save}" rerender="pageMsgs">
               <apex:param name="nameCardRecordListIndex" assignto="{!nameCardRecordListIndex}" value="{!ncRec.index}"/>
             </apex:actionSupport>
@@ -33,45 +33,45 @@
         </apex:column>
 
         <apex:column rendered="true">
-          <apex:facet name="header">{!$Label.smartviscal__sb_ncld_text_businesscardexchangedate}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Text_BusinessCardExchangeDate}</apex:facet>
           <apex:outputField value="{!ncRec.nameCard.SmartViscaf__card_exchange_date__c}"/>
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_companyname}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_CompanyName}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__company_name__c}"/>
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_prefectures}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Prefectures}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__address_pref__c}"/>
         </apex:column>
 
         <apex:column >
         <!-- SV_DEV-575 リード1.11バージョン:リード詳細画面で「名刺で更新」：役職の項目に「氏名」のリンクが表示されている。 -->
         <!-- SmartViscaf__title_name__c ~~~~~~~ SmartViscaf__division__c -->
-          <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_division}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Division}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__division__c}"/>
         </apex:column>
 
         <apex:column >
         <!-- SV_DEV-575 リード1.11バージョン:リード詳細画面で「名刺で更新」：役職の項目に「氏名」のリンクが表示されている。 -->
-          <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_position}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Position}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_email}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Email}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__email__c}"/>
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_lastmodieddate}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_LastModiedDate}</apex:facet>
           <apex:outputField value="{!ncRec.nameCard.LastModifiedDate}"/>
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.smartviscal__sb_ncld_label_owner}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Owner}</apex:facet>
           <apex:outputPanel layout="none">
             <a href="/{!ncRec.nameCard.OwnerId}" id="ncOwn_{!ncRec.nameCard.OwnerId}" onblur="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onfocus="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onmouseover="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();">
               <apex:outputText value="{!ncRec.nameCard.Owner.Name}"/>
