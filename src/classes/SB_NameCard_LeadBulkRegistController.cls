@@ -7,6 +7,7 @@
 public with sharing class SB_NameCard_LeadBulkRegistController
 {
     public class LeadBulkRegistControllerException extends exception {}
+    public String retUrl{get;set;}
     // 名刺レコード
     public class NameCardRecord
     {
@@ -89,7 +90,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         }
     }
 
-    private PageReference retUrl;
+    //private PageReference retUrl;
 
     public Integer searchType { get; set; }
     public Boolean leadOverwrite { get; set; }
@@ -111,10 +112,28 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     public String overwriteLeadInfoLabel{get;set;}
     public String registerToLeadLabel{get;set;}
     public String specifiedWhenCreateNew{get;set;}
+    public Boolean saveOK{get;set;}//保存状況
 
 
     public SB_NameCard_LeadBulkRegistController(ApexPages.StandardSetController controller)
     {
+        PageReference page = ApexPages.currentPage();
+        Map<String, String> paras = page.getParameters();
+        Boolean bLex = false;
+        if (paras.containsKey('vfRetURLInSFX')) {
+          bLex = true;
+          this.retUrl = paras.get('vfRetURLInSFX');
+          //this.viewId = getViewidFromUrl(this.retUrl, bLex);
+          //this.urlRoot = getUrlRoot(this.retUrl);     // LEX のときだけでいい
+        }
+        else if (paras.containsKey('retUrl')) {
+          bLex = false;
+          this.retUrl = paras.get('retUrl');
+          //this.viewId = getViewidFromUrl(this.retUrl, bLex);
+        }
+        else {
+            this.retUrl = '/home/home.jsp';
+        }
         try {
             this.leadCreateable = Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable();
 
@@ -124,8 +143,6 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
 
-            String retUrlStr = System.currentPageReference().getParameters().get('retUrl');
-            if (String.isNotBlank(retUrlStr)) this.retUrl = new PageReference(retUrlStr);
 
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadOverwrite = SB_NameCard_LeadRegist.svConfig.overwrite();
@@ -233,9 +250,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // 保存
-    public PageReference save()
+    public void save()
     {
-        PageReference pageRef;
+        saveOK = true;
         Savepoint sp;
 
         try {
@@ -245,18 +262,20 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             Integer i = this.insertLead();
             i += this.updateLead();
-            String str = System.Label.SB_NCLD_Msg_SelectLeadDEV;
-            str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
+            String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
             //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
+            System.debug(str);
             if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
 
-            pageRef = this.retUrl;
+            //pageRef = this.retUrl;
         } catch (Exception e) {
             if (sp != null) Database.rollback(sp);
             this.hasError = true;
+            saveOK = false;
+            System.debug(e.getMessage());
             ApexPages.addMessages(e);
         }
-        return pageRef;
+        //return pageRef;
     }
 
     // リード作成
@@ -264,8 +283,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     {
         List<Lead> leadList = new List<Lead>();
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
-        String str = System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV;
-        str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
+        String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
 
 
         Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
@@ -462,8 +480,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // キャンセル
-    public PageReference cancel()
-    {
-        return this.retUrl;
-    }
+    //public PageReference cancel()
+    //{
+    //    return this.retUrl;
+    //}
 }

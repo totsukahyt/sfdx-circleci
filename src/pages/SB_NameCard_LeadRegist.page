@@ -14,12 +14,14 @@
         <apex:actionFunction action="{!changeowner}" name="changeowner" reRender="todode,selectowner"/>
 
         <apex:pageBlock title="{!registerToLeadLabel}">
+        <apex:actionFunction name="save"  action="{!save}" reRender="pageMsgs,blockid,leadRecordListIndex" oncomplete="endLoad();"/>
             <apex:pageBlockButtons >
                 <apex:outputPanel id="save">
-                    <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}" rerender="pageMsgs, save,All" rendered="{!NOT(isAllowDuplicateSave)}"/>
-                    <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}{!$Label.SB_NCLD_Label_IgnoreAlert}" rerender="pageMsgs,All" rendered="{!isAllowDuplicateSave}"/>
+                <!-- rerender="pageMsgs, save,All"  -->
+                    <apex:commandButton onclick="startLoad('{!$Component.savebtn}','{!$Component.cancelbtn}')" value="{!$Label.SB_NCLD_Label_Save}" rendered="{!NOT(isAllowDuplicateSave)}" oncomplete="save();" id="savebtn"/>
+                    <apex:commandButton onclick="startLoad('{!$Component.savealertignorebtn}','{!$Component.cancelbtn}')" value="{!$Label.SB_NCLD_Label_Save}{!$Label.SB_NCLD_Label_IgnoreAlert}"  rendered="{!isAllowDuplicateSave}" oncomplete="save();" id="savealertignorebtn"/>
                 </apex:outputPanel>
-                <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
+                <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true" id="cancelbtn"/>
             </apex:pageBlockButtons>
 
             <apex:pageBlockSection title="{!$Label.SB_NCLD_Text_BusinessCardInformation}" columns="2">
@@ -170,5 +172,34 @@
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
         </apex:pageBlock>
+        <script type="text/javascript">
+            var saveingValue = "{!$Label.SB_NCLD_Label_Saveing}";
+            function startLoad(saveid,cancelid){
+                saveChangeValue(saveid);
+                saveChangeValue(cancelid);
+                saveChangeValue(isContains(saveid,'bottom'));
+                saveChangeValue(isContains(cancelid,'bottom'));
+            }
+            function saveChangeValue(strid){
+                document.getElementById(strid).classList.add('btnDisabled');
+                document.getElementById(strid).disabled="true";
+                document.getElementById(strid).value=saveingValue;
+            }
+            function isContains(str, substr) {
+                var index = str.indexOf(substr);
+                var changeid = '';
+                if (index >0) {
+                    changeid = str.substring(0,index) + str.substring(index + 7,str.length);
+                }
+                else {
+                    var index1 = str.lastIndexOf(':');
+                    changeid = str.substring(0,index1) + ':bottom' + str.substring(index1,str.length);
+                }
+                return changeid;
+            }
+            function endLoad() {
+                document.getElementById('leadRecordList' + document.getElementById('{!$Component.leadRecordListIndex}').value).checked = '1';
+            }
+        </script>
     </apex:form>
 </apex:page>

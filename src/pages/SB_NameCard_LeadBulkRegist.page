@@ -9,10 +9,12 @@
   <apex:pageMessages id="pageMsgs" escape="false"/>
 
   <apex:form >
+    <apex:actionFunction action="{!save}" name="save" reRender="pageMsgs,saveflage,nameCardTable, ncRecList" oncomplete="saveClick();"/>
+    <apex:inputHidden value="{!saveOK}" id="saveflage"/>
     <apex:pageBlock title="{!registerToLeadLabel}">
       <apex:pageBlockButtons >
-        <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}" rerender="pageMsgs, ncRecList"/>
-        <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
+        <apex:commandButton onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.SB_NCLD_Label_Save}" id="savebtn"/>
+        <apex:commandButton id="cancelbtn" oncomplete="cancelClick();" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
       </apex:pageBlockButtons>
       <apex:pageBlockSection columns="2">
 
@@ -92,5 +94,80 @@
         </apex:pageBlockSectionItem>
       </apex:pageBlockSection>
     </apex:pageBlock>
+    <script >
+
+            var saveingValue = "{!$Label.SB_NCLD_Label_Saveing}";
+            var saveid1 = "";
+            var cancelid1 = "";
+            var saveid2 = "";
+            var cancelid2 = "";
+
+            function saveChangeValue(strid){
+                document.getElementById(strid).classList.add('btnDisabled');
+                document.getElementById(strid).disabled="true";
+                document.getElementById(strid).value=saveingValue;
+            }
+
+            function saveBackValue(strid,val){
+                document.getElementById(strid).classList.remove('btnDisabled');
+                document.getElementById(strid).disabled="";
+                document.getElementById(strid).value=val;
+            }
+
+            var retUrl = '{!retUrl}';
+           function cancelClick(){
+                rePage();
+            }
+
+            function saveClick(){
+                var saveok = document.getElementById('{!$Component.saveflage}').value;
+                if(saveok == false || saveok == 'false'){
+                    saveBackValue(saveid1,"{!$Label.SB_NCLD_Label_Save}");
+                    saveBackValue(cancelid1,"{!$Label.SB_NCLD_Label_Cancel}");
+                    saveBackValue(saveid2,"{!$Label.SB_NCLD_Label_Save}");
+                    saveBackValue(cancelid2,"{!$Label.SB_NCLD_Label_Cancel}");
+                    return;
+                }
+                rePage();
+            }
+
+            function rePage(){
+                if( (typeof sforce != 'undefined') && (sforce != null) ) {
+                    // S1とか
+                    sforce.one.back();
+                }
+                else {
+                  // クラシック
+                  window.open(retUrl, "_top");
+                }
+            }
+
+
+            function startSave(saveid,cancelid){
+                saveid1 = isContains(saveid,'bottom');
+                saveid2 = saveid;
+                cancelid1 = cancelid;
+                cancelid2 = isContains(cancelid,'bottom');
+                saveChangeValue(saveid1);
+                saveChangeValue(cancelid1);
+                saveChangeValue(saveid2);
+                saveChangeValue(cancelid2);
+                save();
+            }
+
+            function isContains(str, substr) {
+                var index = str.indexOf(substr);
+                var changeid = '';
+                if (index >0) {
+                    changeid = str.substring(0,index) + str.substring(index + 7,str.length);
+                }
+                else {
+                    var index1 = str.lastIndexOf(':');
+                    changeid = str.substring(0,index1) + ':bottom' + str.substring(index1,str.length);
+                }
+                return changeid;
+            }
+
+          </script>
   </apex:form>
 </apex:page>
