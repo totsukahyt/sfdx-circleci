@@ -27,6 +27,10 @@
   global static List<Database.SaveResult> screate(List<SObject> os, Database.DMLOptions dml) {
     Schema.SObjectType targetType = os[0].getSObjectType();
     Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
+    // オブジェクト作成権限があるか
+    if (!sobjResult.isCreateable()) {
+        throw new CrudFlsException(String.format(Label.SB_MSG_CrudNotCreateable, new String[] {sobjResult.label}));
+    }
     Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
     Set<String> keys = getCheckFields(os);    // 入力のあった項目s]
     System.debug(keys.size());
@@ -52,6 +56,11 @@
   global static List<Database.SaveResult> supdate(List<SObject> os, Database.DMLOptions dml) {
     Schema.SObjectType targetType = os[0].getSObjectType();
     Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
+    // オブジェクトの編集権限があるか
+    if (!sobjResult.isUpdateable()) {
+        throw new CrudFlsException(String.format(Label.SB_MSG_CrudNotUpdateable, new String[] {sobjResult.label}));
+    }
+
     Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
     Set<String> keys = getCheckFields(os);    // 入力のあった項目s
     // 入力のあった項目が作成可能でないと例外
