@@ -53,12 +53,14 @@
   showModal : function(component, event, helper) {
     component.set('v.showModal', true);
   },
+  // 候補登録先変更する際に実行するJS
   changeShowType : function(component, event, helper) {
     var seSObjEvent = component.getEvent("leadBulkRegistEvent");
-    component.set("v.showType", event.target.id);
+    var va = event.getParam("value");
+    component.set("v.showType", va);
     seSObjEvent.setParams({
           "name" : "changeShowType",
-          "value" : event.target.id
+          "value" : va
       }).fire();
   },
   hiddenError : function(component, event, helper) {

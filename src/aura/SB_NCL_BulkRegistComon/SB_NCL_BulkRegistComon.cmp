@@ -61,7 +61,19 @@
     <!-- <p title="Update by Business Card">{!v.titleV.userName}</p> -->
   </lightning:tile>
 
+  <!-- 一括画面の検索条件 -->
   <div style="position: fixed;z-index: 9000; float:right; right: 30px; top: 30px;">
+    <aura:renderIf isTrue="{!v.isIntegration}">
+      <!-- 候補登録先 -->
+      <lightning:buttonMenu menuAlignment="right" iconName="utility:standard_objects" class="right40" alternativeText="Settings" onselect="{!c.changeShowType}">
+            <lightning:menuItem label="{!v.inputV.labelMap.LeadLabel}" value="Lead" iconName="utility:user" checked="{!v.showType == 'Lead'}"/>
+            <lightning:menuItem label="{!v.inputV.labelMap.AccountContact}" value="Contact" iconName="utility:company" checked="{!v.showType == 'Contact'}"/>
+            <lightning:menuItem label="{!$Label.c.SB_NCLD_Label_Both_display}" value="Both" iconName="utility:groups" checked="{!v.showType == 'Both'}"/>
+      </lightning:buttonMenu>
+    </aura:renderIf>
+
+
+
     <lightning:buttonMenu menuAlignment="right" iconName="utility:search" class="right40" alternativeText="Settings" onselect="{!c.selectedSearchMenu}">
       <aura:iteration var="val" items="{!v.inputV.searchConditions}">
         <aura:renderIf isTrue="{!val.disabled == true}">
