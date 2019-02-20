@@ -188,13 +188,13 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     SB_NameCardL_BulkRegistDTO.SearchCondition scc2 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + andLabel + accountSite, String.valueOf(SEARCHTYPE_ACNAMESITE), 'utility:hierarchy', '');
     scc2.groupName = 'Contact';
     inv.searchConditions.add(scc2);
-    SB_NameCardL_BulkRegistDTO.SearchCondition scc3 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + '．' + accountSite + andLabel + System.Label.SB_NCLD_Label_Prefectures, String.valueOf(SEARCHTYPE_ACNAMESITESTATE), 'utility:signpost', '');
+    SB_NameCardL_BulkRegistDTO.SearchCondition scc3 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + '、' + accountSite + andLabel + System.Label.SB_NCLD_Label_Prefectures, String.valueOf(SEARCHTYPE_ACNAMESITESTATE), 'utility:signpost', '');
     scc3.groupName = 'Contact';
     inv.searchConditions.add(scc3);
-    SB_NameCardL_BulkRegistDTO.SearchCondition scc4 = new SB_NameCardL_BulkRegistDTO.SearchCondition('取引先名,部門と市区郡まで', String.valueOf(SEARCHTYPE_NAMECITY), 'utility:pin', '');
+    SB_NameCardL_BulkRegistDTO.SearchCondition scc4 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + '、' + accountSite + andLabel + System.Label.SB_NCLD_Label_To_Street, String.valueOf(SEARCHTYPE_NAMECITY), 'utility:pin', '');
     scc4.groupName = 'Contact';
     inv.searchConditions.add(scc4);
-    SB_NameCardL_BulkRegistDTO.SearchCondition scc5 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + ',' + accountSite + andLabel + Account.BillingPostalCode.getDescribe().getLabel(), String.valueOf(SEARCHTYPE_NAMECODE), 'utility:email', '');
+    SB_NameCardL_BulkRegistDTO.SearchCondition scc5 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + '、' + accountSite + andLabel + System.Label.SB_NCLD_Label_Postcode, String.valueOf(SEARCHTYPE_NAMECODE), 'utility:email', '');
     scc5.groupName = 'Contact';
     inv.searchConditions.add(scc5);
     inv.searchConditionValueContact = String.valueOf(3);

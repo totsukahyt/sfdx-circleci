@@ -232,6 +232,13 @@
         <value>役職</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_Postcode</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Postcode</shortDescription>
+        <value>郵便番号</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_Prefectures</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -328,6 +335,13 @@
         <protected>true</protected>
         <shortDescription>ToDo登録</shortDescription>
         <value>ToDo登録</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_To_Street</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_To_Street</shortDescription>
+        <value>市区郡まで</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_WarningConfirm</fullName>
