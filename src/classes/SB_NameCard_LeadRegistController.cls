@@ -118,6 +118,10 @@ public with sharing class SB_NameCard_LeadRegistController
             // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
             this.showLeadRecType = LEADRECORDTYPES.size() > 1 && this.svConfig.leadRectype();
 
+            // SV_DEV-753 リードに登録（個別画面）でキャンペーン選択後の「キャンペーンメンバー状況」の値がデフォルト値にならない。
+            if (String.isNotBlank(this.namecard.campaign__c)) {
+                campStatus = this.namecard.campaign__r.Status;
+            }
 
             //レコードタイプに関する設定
             setRecord();
@@ -184,9 +188,6 @@ public with sharing class SB_NameCard_LeadRegistController
                 campStatus = f.Label;
             }
             options.add(new SelectOption(f.Label, f.Label));
-        }
-        if (String.isNotBlank(this.namecard.campaign__c)) {
-            campStatus = this.namecard.campaign__r.Status;
         }
         campDisabled = options.size() <= 0 || campLookUpDisabled;
         return options;
