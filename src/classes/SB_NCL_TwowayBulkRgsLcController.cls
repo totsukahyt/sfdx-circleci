@@ -456,7 +456,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     inv.labelMap.put('SmartViscaf__address_pref__c', SmartViscaf__NameCard__c.SmartViscaf__address_pref__c.getDescribe().getLabel());
     inv.searchConditionRct.description = System.Label.SB_NCLD_Label_SearchRecordTypeExplanation;
 
-    List<RecordTypeInfo> leadRecordTypes = SB_NameCardL_Util.getRecordType(Lead.sObjecttype);
+    List<RecordTypeInfo> leadRecordTypes = SB_NCL_TwowayBulkRgsLcController.getRecordType(Lead.sObjecttype);
     SB_NameCardL_BulkRegistDTO.SearchConditionRecordTypeOptionGroup   optionGroup = new SB_NameCardL_BulkRegistDTO.SearchConditionRecordTypeOptionGroup();
     optionGroup.title = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {Lead.sObjecttype.getDescribe().getLabel()});
     optionGroup.titleId = 'Lead';
@@ -487,7 +487,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     inputR.canShow = inputR.plickListOptions.size() > 1 && inv.leadAuthority.isCreateable && basicSetting.SmartViscaf__RegistDispLeadRectype__c;
     inv.searchConditionRct.searchConditionRecordTypeOptionGroups.add(optionGroup);
 
-    List<RecordTypeInfo> accountRecordTypes = SB_NameCardL_Util.getRecordType(Account.sObjecttype);
+    List<RecordTypeInfo> accountRecordTypes = SB_NCL_TwowayBulkRgsLcController.getRecordType(Account.sObjecttype);
     optionGroup = new SB_NameCardL_BulkRegistDTO.SearchConditionRecordTypeOptionGroup();
     optionGroup.title = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {Account.sObjecttype.getDescribe().getLabel()});
     optionGroup.titleId = 'Account';
@@ -517,7 +517,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     inputR.canShow = inputR.plickListOptions.size() > 1 && inv.accountAuthority.isCreateable && basicSetting.SmartViscaf__RegistDispAccountRectype__c;
     inv.searchConditionRct.searchConditionRecordTypeOptionGroups.add(optionGroup);
 
-    List<RecordTypeInfo> contactRecordTypes = SB_NameCardL_Util.getRecordType(Contact.sObjecttype);
+    List<RecordTypeInfo> contactRecordTypes = SB_NCL_TwowayBulkRgsLcController.getRecordType(Contact.sObjecttype);
     optionGroup = new SB_NameCardL_BulkRegistDTO.SearchConditionRecordTypeOptionGroup();
     optionGroup.title = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {Contact.sObjecttype.getDescribe().getLabel()});
     optionGroup.titleId = 'Contact';
@@ -1258,5 +1258,28 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     ot.queryTitle = false;
     ot.queryMobile = false;
     return ot;
+  }
+
+  // Lightning標準と同じ順で表示
+    //レコードタイプを取得
+  public static List<RecordTypeInfo> getRecordType(SObjectType otype){
+    List<Schema.RecordTypeInfo> rs =  otype.getDescribe().getRecordTypeInfos();
+    List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
+    for (RecordTypeInfo r : rs) {
+      if (r.isAvailable()) {
+        if (r.isDefaultRecordTypeMapping() && recordtypes.size() > 0) {
+          recordtypes.add(0, r);
+        }
+        else {
+          recordtypes.add(r);
+        }
+      }
+    }
+    //isMasterメソード使えるにはWinter'16　APIバージョン35.0以降でなければならない、
+    //そのため、今最後のレコードタイプMasterをリストから削除します
+    if (recordtypes.size()>0) {
+      recordtypes.remove(recordtypes.size()-1);
+    }
+    return recordtypes;
   }
 }
