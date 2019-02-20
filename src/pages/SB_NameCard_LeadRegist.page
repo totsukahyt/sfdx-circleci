@@ -14,7 +14,10 @@
         <apex:inputHidden id="canEditTodo" value="{!canEditTodo}"/>
         <apex:actionFunction action="{!changeOwner}" name="changeOwner" reRender="todode,newSelect" oncomplete="initset();"/>
         <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newSelect" oncomplete="initset();"/>
-        <apex:actionFunction name="save"  action="{!save}" reRender="pageMsgs,blockid,leadRecordListIndex,todode" oncomplete="initset();endLoad();"/>
+        <!-- SV_DEV-542 重複エラーが出たときのラジオボタン選択について -->
+        <!-- Start -->
+        <apex:actionFunction name="save"  action="{!save}" reRender="pageMsgs, blockid, leadRecordListIndex, todode" oncomplete="initset();endLoad();"/>
+        <!-- End -->
         <apex:actionFunction action="{!checkRadio}" name="checkRadio" reRender="lRecordType" />
         <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
             <apex:pageBlockButtons >
@@ -218,9 +221,12 @@
                 }
                 return changeid;
             }
+            //SV_DEV-542 重複エラーが出たときのラジオボタン選択について
+            //Start
             function endLoad() {
                 document.getElementById('leadRecordList' + document.getElementById('{!$Component.leadRecordListIndex}').value).checked = '1';
             }
+            //End
 
             //SV_DEV-283 リード用のキューを所有者に選択できるようにする
             function initset() {
