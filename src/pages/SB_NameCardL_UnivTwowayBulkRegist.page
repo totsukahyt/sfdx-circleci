@@ -167,7 +167,7 @@
       <apex:pageBlockSection id="newBlock" rendered="{!leadCreateable}"  title="{!if(renkeiType == 'Contact', specifiedWhenCreateNewAccount, if(renkeiType == 'Lead', specifiedWhenCreateNew, specifiedWhenCreateNewBoth))}" columns="2">
         <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}">
-          <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign + if(renkeiType == 'Both', $Label.SB_NCLD_Label_Campaign_ForLead, '')}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
+          <apex:outputLabel value="{!$ObjectType.Campaign.Label + if(renkeiType == 'Both', $Label.SB_NCLD_Label_Campaign_ForLead, '')}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
           <apex:inputField onchange="changeCampaign();" value="{!campaignOption.campaign__c}" rendered="{!Not(campLookUpDisabled)}"/>
         </apex:pageBlockSectionItem>
 

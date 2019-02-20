@@ -65,11 +65,11 @@
     var va = event.getParam("value");
     var inputv = component.get("v.inputV");
     if (va == 'Both') {
-      inputv.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
+      inputv.campaignLabel = inputv.labelMap.campaignAPILabel + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
       inputv.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
     }
     else {
-      inputv.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign");
+      inputv.campaignLabel =  inputv.labelMap.campaignAPILabel;
       inputv.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus");
     }
     component.set("v.showType", va);

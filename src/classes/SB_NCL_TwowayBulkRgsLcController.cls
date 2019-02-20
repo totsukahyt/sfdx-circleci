@@ -465,6 +465,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     inv.labelMap.put('cardLabel_SmartViscaf__mobile__c', SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel());
     inv.labelMap.put('cardLabel_SmartViscaf__email__c', SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel());
     inv.labelMap.put('SmartViscaf__address_pref__c', SmartViscaf__NameCard__c.SmartViscaf__address_pref__c.getDescribe().getLabel());
+    inv.labelMap.put('campaignAPILabel', Campaign.getSObjectType().getDescribe().getLabel());
     inv.searchConditionRct.description = System.Label.SB_NCLD_Label_SearchRecordTypeExplanation;
 
     List<RecordTypeInfo> leadRecordTypes = SB_NCL_TwowayBulkRgsLcController.getRecordType(Lead.sObjecttype);
