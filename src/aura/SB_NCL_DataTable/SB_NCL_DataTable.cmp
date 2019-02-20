@@ -52,7 +52,7 @@
                   <!--   <th scope="col" class="slds-text-title_caps" is="lightning-primitive-header-factory">
                       <div class="slds-truncate" title="{!va.label}">{!va.label}</div>
                     </th> -->
-                    <th style="position:static; " class="slds-text-title_caps slds-is-resizable" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                    <th style="position:static; " class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
                       <span tabindex="-1" id="{!'dataTableTheadSpan' + va.fieldName}" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
 
                         <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
