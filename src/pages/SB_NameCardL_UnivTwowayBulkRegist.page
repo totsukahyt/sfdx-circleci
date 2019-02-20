@@ -26,20 +26,20 @@
       </apex:pageBlockButtons>
 
       <apex:pageBlockSection columns="2">
-        <apex:selectRadio label="{!$Label.SB_NCLD_Label_CandidateRegistration}" value="{!renkeiType}">
+        <apex:selectRadio label="{!$Label.SB_NCLD_Label_CandidateRegistration}" onchange="startLoading();" value="{!renkeiType}">
           <apex:selectOptions value="{!RenkeiTypeList}"/>
-          <apex:actionSupport event="onclick" rerender="pageMsgs, ncRecList, radio, overWrite, newBlock, recordTypeSection" oncomplete="resetOwnerDisable();"/>
+          <apex:actionSupport event="onclick" rerender="pageMsgs, ncRecList, radio, overWrite, newBlock, recordTypeSection" oncomplete="resetOwnerDisable();endLoading();"/>
         </apex:selectRadio>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" id="radio">
-        <apex:selectRadio label="{!searchCriteriaLead}" value="{!searchType}" rendered="{!renkeiType != 'Contact'}">
+        <apex:selectRadio label="{!searchCriteriaLead}" onchange="startLoading();" value="{!searchType}" rendered="{!renkeiType != 'Contact'}">
           <apex:selectOptions value="{!searchTypeList}"/>
-          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList"/>
+          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList" oncomplete="endLoading();"/>
         </apex:selectRadio>
-        <apex:selectRadio label="{!searchCriteriaAccount}" value="{!searchTypeContact}" rendered="{!renkeiType != 'Lead'}">
+        <apex:selectRadio label="{!searchCriteriaAccount}" onchange="startLoading();" value="{!searchTypeContact}" rendered="{!renkeiType != 'Lead'}">
           <apex:selectOptions value="{!searchTypeSelectOpts}"/>
-          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList"/>
+          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList" oncomplete="endLoading();"/>
         </apex:selectRadio>
       </apex:pageBlockSection>
 
