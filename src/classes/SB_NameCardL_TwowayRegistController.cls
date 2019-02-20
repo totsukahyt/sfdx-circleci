@@ -572,6 +572,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
           this.screenData = new ScreenData();
           this.registObjs = RegistType.AccountContactLead;
           this.accountQueryOption = getQueryOption(Account.sObjecttype);
+          this.accountQueryOption.queryCompany = true; // 会社名は常に 照合
           this.contactQueryOption =  getQueryOption(Contact.sObjecttype);
           if (this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.Lead) {
             this.leadQueryOption =  getQueryOption(Lead.sObjecttype);

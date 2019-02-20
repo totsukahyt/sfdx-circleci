@@ -453,6 +453,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
     if (this.accountQueryOption != null) {
       // 部門を検索する？
       this.accountQueryOption.queryDept = (this.searchTypeContact == SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE);
+      this.accountQueryOption.queryCompany = true; // 会社名は常に 照合
       // // 取引先名 は完全に一致？
       // this.accountQueryOption.companyRule = this.queryMatch == QUERY_PERFECT_NO ?
       //       SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
@@ -501,6 +502,9 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
         Map<String, List<Lead>> emailListMap = new Map<String, List<Lead>>();
         Map<String, List<Lead>> nameListMap = new Map<String, List<Lead>>();
 
+        if (this.nameCardIdSet.size() == 0) {
+          return;
+        }
 
         Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(this.nameCardIdSet);
         Boolean cor = Schema.SObjectType.Contact.isCreateable();
