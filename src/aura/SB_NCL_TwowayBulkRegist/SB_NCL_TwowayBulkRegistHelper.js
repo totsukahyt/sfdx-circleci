@@ -105,11 +105,11 @@
               }
             }
             if (value == 'Both') {
-              inputV.campaignLabel = inputv.labelMap.campaignAPILabel + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
+              inputV.campaignLabel = inputV.labelMap.campaignAPILabel + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
               inputV.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
             }
             else {
-              inputV.campaignLabel = inputv.labelMap.campaignAPILabel;
+              inputV.campaignLabel = inputV.labelMap.campaignAPILabel;
               inputV.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus");
             }
             var arr = new Array();
