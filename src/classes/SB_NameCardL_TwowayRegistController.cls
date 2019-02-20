@@ -576,9 +576,9 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
           String constr = SB_NameCardL_Util.getDefaultRecordType(Contact.sObjectType);
 
-          this.accountRecTypeEdit = !Account.sObjectType.getDescribe().isCreateable() || (ACNT_RECORDTYPES.size() < 1);
+          this.accountRecTypeEdit = Account.sObjectType.getDescribe().isCreateable() && (ACNT_RECORDTYPES.size() > 1);
 
-          this.contactRecTypeEdit = !Contact.sObjectType.getDescribe().isCreateable() || (CONT_RECORDTYPES.size() < 1);
+          this.contactRecTypeEdit = Contact.sObjectType.getDescribe().isCreateable() && (CONT_RECORDTYPES.size() > 1);
 
           this.accountRecTypeId = String.isBlank(accstr) ? 'nano' : accstr;
 
@@ -667,7 +667,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
             if (baseSetting == null) {
               this.leadOverwrite = true;
             } else {
-              this.leadOverwrite = baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
+              this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
             }
           }
 
@@ -775,10 +775,23 @@ public with sharing class SB_NameCardL_TwowayRegistController {
   }
 
   public void checkRadio() {
-      CandidateRecord lea = this.leadRecordList[this.leadRecordListIndex];
+      if (this.leadRecordListIndex > -1) {
+         CandidateRecord lea = this.leadRecordList[this.leadRecordListIndex];
 
-      if (Lead.sObjectType.getDescribe().isCreateable()) {
-          this.leadRecTypeEdit = lea.getLeadId() == null && LEADRECORDTYPES.size() > 1;
+        if (Lead.sObjectType.getDescribe().isCreateable()) {
+            this.leadRecTypeEdit = lea.getLeadId() == null && LEADRECORDTYPES.size() > 1;
+        }
+      }
+
+      if (this.accountTableIndex > -1) {
+        CandidateRecord accRec = this.candidateTable[this.accountTableIndex];
+
+        if (Account.sObjectType.getDescribe().isCreateable()) {
+          this.accountRecTypeEdit = String.isBlank(accRec.getAccountId()) && (ACNT_RECORDTYPES.size() > 1);
+        }
+        if (Contact.sObjectType.getDescribe().isCreateable()) {
+          this.contactRecTypeEdit = String.isBlank(accRec.getContactId()) && (CONT_RECORDTYPES.size() > 1);
+        }
       }
   }
 

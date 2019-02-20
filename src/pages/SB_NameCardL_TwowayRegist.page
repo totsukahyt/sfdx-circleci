@@ -28,7 +28,7 @@
         <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="renkeiType, newSelect" oncomplete="initset();endLoad();"/>
         <apex:actionFunction name="save"  action="{!saveRenkei}" reRender="pageMsgs,blockid,leadRecordListIndex,accountTableIndex,todode,renkeiType" oncomplete="initset();endLoad();"/>
         <!-- <apex:actionFunction name="ref" reRender="renkeiType" oncomplete="initset();"/> -->
-        <apex:actionFunction action="{!checkRadio}" name="checkRadio" reRender="lRecordType" />
+        <apex:actionFunction action="{!checkRadio}" name="checkRadio" reRender="lRecordType, aRecordType, cRecordType" />
         <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
             <apex:pageBlockButtons >
                 <apex:outputPanel id="save">
@@ -217,7 +217,7 @@
           <apex:column style="width:15px;">
             <apex:facet name="header">{!$Label.SB_NCLD_Label_Select}</apex:facet>
             <!-- <apex:selectRadio value="{!val.index}" onclick="document.getElementById('{!$Component.accountTableIndex}').value = this.value;" onselect="checkradio(this.value)"/> -->
-            <input type="radio" id="candidateTable{!val.index}" name="accTblIndex" value="{!val.index}" onclick="document.getElementById('{!$Component.accountTableIndex}').value = this.value;checkradio();"/>
+            <input type="radio" id="candidateTable{!val.index}" name="accTblIndex" value="{!val.index}" onclick="document.getElementById('{!$Component.accountTableIndex}').value = this.value;checkRadio();"/>
           </apex:column>
 
           <!-- アカウント -->
@@ -321,11 +321,11 @@
                 <apex:outputText value="{!recordTypeExplain}"/>
                 <br/><br/>
                 <apex:outputLabel rendered="{!showAccountRecType}" value="{!accountRecType}"/>
-                <apex:selectList style="margin-left: 5pt;" rendered="{!showAccountRecType}" id="aRecordType" value="{!accountRecTypeId}" multiselect="false" size="1" disabled="{!accountRecTypeEdit}">
+                <apex:selectList style="margin-left: 5pt;" rendered="{!showAccountRecType}" id="aRecordType" value="{!accountRecTypeId}" multiselect="false" size="1" disabled="{!Not(accountRecTypeEdit)}">
                     <apex:selectOptions value="{!AccRecTypeSelectOpts}"/>
                 </apex:selectList>
                 <apex:outputLabel style="margin-left: 30pt;" rendered="{!showContactRecType}" value="{!contactRecType}"/>
-                <apex:selectList style="margin-left: 5pt;" rendered="{!showContactRecType}" id="cRecordType" value="{!contactRecTypeId}" multiselect="false" size="1" disabled="{!contactRecTypeEdit}">
+                <apex:selectList style="margin-left: 5pt;" rendered="{!showContactRecType}" id="cRecordType" value="{!contactRecTypeId}" multiselect="false" size="1" disabled="{!Not(contactRecTypeEdit)}">
                     <apex:selectOptions value="{!ContRecTypeSelectOpts}"/>
                 </apex:selectList>
             </apex:outputPanel>
