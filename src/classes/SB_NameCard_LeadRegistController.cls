@@ -64,15 +64,12 @@ public with sharing class SB_NameCard_LeadRegistController
     public SB_NameCard_LeadRegistController(ApexPages.StandardController sc)
     {
         try {
-            this.createNewLeadLabel = System.Label.SB_NCLD_Label_CreateNewLeadDEV;
-            this.createNewLeadLabel = this.createNewLeadLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
-            this.createNewLeadLabel = this.createNewLeadLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
-            this.registerToLeadLabel = System.Label.SB_NCLD_Text_RegisterToLeadDEV;
-            this.registerToLeadLabel = this.registerToLeadLabel.replace('&*Lead*&', System.Label.SB_NCLD_Text_Lead);
-            this.registerToLeadLabel = this.registerToLeadLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
-            this.overwriteLeadInfoLabel = System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV;
-            this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*Lead*&', System.Label.SB_NCLD_Text_Lead);
-            this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+            this.createNewLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_CreateNewLeadDEV);
+
+            this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadDEV);
+
+            this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
+
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadRecordListIndex = -1;
             this.lookUpIndex = -1;
@@ -119,7 +116,7 @@ public with sharing class SB_NameCard_LeadRegistController
             List<Lead> leadList = this.getLeadList();
 
             if (leadList != null) {
-            Integer Leadnumber = SB_NameCard_LeadRegist.isCreateable(new Lead()) ? 998 : 999;
+            Integer Leadnumber = SB_NameCard_LeadCrudFls.isCreateable(new Lead()) ? 998 : 999;
                 if (leadList.size() <= Leadnumber) {
                     for (Lead lead : leadList) {
                         this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
@@ -128,10 +125,9 @@ public with sharing class SB_NameCard_LeadRegistController
                 	    for (Lead lead : leadList) {
                 	    	    if (lead.Id == this.nameCard.SmartViscaf__lead__c) {
                             this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
-                	    	    }
-                                String str = System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV;
-                                str = str.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
-                                str = str.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
+                                }
+                                String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV);
+
                                 //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。'));
                                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING,str));
                 	    }
@@ -141,7 +137,7 @@ public with sharing class SB_NameCard_LeadRegistController
             ApexPages.addMessages(e);
         }
         this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), true));
-       if(SB_NameCard_LeadRegist.isCreateable(new Lead()))
+       if(SB_NameCard_LeadCrudFls.isCreateable(new Lead()))
          {
            this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), false));
          }
@@ -188,19 +184,19 @@ public with sharing class SB_NameCard_LeadRegistController
             LeadRecord leadRec = this.leadRecordList.get(this.leadRecordListIndex);
             Id leadId, ownerId;
             if (leadRec.isNew) {
-                SB_NameCard_LeadRegist.isCreateableError(new Lead());
+                SB_NameCard_LeadCrudFls.isCreateableError(new Lead());
                 if (this.nameCard.OwnerId == null) {
-                String str = System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV;
-                str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
+                String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
+
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
                     throw new SB_NameCard_LeadRegist.LeadRegistException(str);
                 }
                 ownerId = this.nameCard.OwnerId;
             } else {
-                 SB_NameCard_LeadRegist.isUpdateableError(new Lead());
+                 SB_NameCard_LeadCrudFls.isUpdateableError(new Lead());
                 if (leadRec.lead == null) {
-                    String str = System.Label.SB_NCLD_Msg_SelectLeadDEV;
-                    str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
+                    String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
+
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
                     throw new SB_NameCard_LeadRegist.LeadRegistException(str);
                 }
@@ -214,6 +210,15 @@ public with sharing class SB_NameCard_LeadRegistController
                 lead = new Lead(Id=leadId, NameCard__c = this.namecard.Id);
             }
             sp = Database.setSavepoint();
+            List<Lead>leads = new List<Lead>();
+            leads.add(lead);
+            if(leadRec.isNew)
+            {
+                SB_NameCard_LeadCrudFls.screateLead(leads);
+            }else
+            {
+                SB_NameCard_LeadCrudFls.supdateLead(leads);
+            }
 
             // リード
             this.upsertLead(lead, leadRec.isNew);

@@ -69,45 +69,17 @@ global class SB_NameCard_LeadRegist
         }
     }
 
-     //作成権限あるか判断
-    global static Boolean isCreateable(Sobject objects)
-    {
-       Schema.SObjectType targetType = objects.getSobjectType();
-       Schema.DescribeSObjectResult tar = targetType.getDescribe();
-       return tar.isCreateable();
-    }
- 
-    //編集権限あるか
-    global static Boolean isUpdateable(Sobject objects)
-    {
-        Schema.SObjectType targetType = objects.getSobjectType();
-        Schema.DescribeSObjectResult tar = targetType.getDescribe();
-        return tar.isUpdateable();
-    }
-
-      global static Void isCreateableError(Sobject objects)
-    {
-       Schema.SObjectType targetType = objects.getSobjectType();
-       Schema.DescribeSObjectResult tar = targetType.getDescribe();
-       if(!tar.isCreateable())
-       {
-        throw new LeadRegistException(String.format(System.Label.SB_MSG_CrudNotCreateable,new String[]{tar.label})) ;
-       }
-    }
- 
-    //編集権限あるか
-    global static void isUpdateableError(Sobject objects)
-    {
-        Schema.SObjectType targetType = objects.getSobjectType();
-        Schema.DescribeSObjectResult tar = targetType.getDescribe();
-        if(!tar.isUpdateable())
-        {
-            throw new LeadRegistException(String.format(System.Label.SB_MSG_CrudNotUpdateable, new String[]{tar.label}));
-        }
-    }
-
     // インスタンス化させない
     private SB_NameCard_LeadRegist() {}
+
+
+    //ラベル変更
+    global static String changeleadlabel(String str)
+    {
+        str = str.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+        str = str.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
+        return str;
+    }
 
     // SmartVisca設定
     global static SvConfig svConfig {
@@ -249,8 +221,10 @@ global class SB_NameCard_LeadRegist
         List<String> whereList = new List<String>();
         if (nameIdList.size() > 0)  whereList.add('Id IN :nameIdList');
         String str = '';
-        if (lastnameSet.size() > 0) str += 'LastName = :lastnameSet ';
-        if (firstnameSet.size() > 0) str += ' AND FirstName = :firstnameSet';
+        if (lastnameSet.size() > 0) str += ' LastName = :lastnameSet ';
+        if (firstnameSet.size() > 0){
+         str = '(' + str + ' AND FirstName = :firstnameSet' + ')';
+     }
         whereList.add(str);
         soqlMap.put(SEARCHTYPE_NAME, getSoql(whereList));
     }
