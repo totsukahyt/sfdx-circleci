@@ -6,7 +6,6 @@
 
 public with sharing class SB_NameCard_LeadNameCardListController
 {
-
   public class NameCardRecord
   {
     public Integer index { get; set; }
@@ -30,12 +29,8 @@ public with sharing class SB_NameCard_LeadNameCardListController
   public SB_NameCard_LeadNameCardListController(ApexPages.StandardController sc)
   {
     try {
-      this.updateLeadLabel = System.Label.SB_NCLD_Text_UpdateLeadDEV;
-      this.updateLeadLabel = this.updateLeadLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
-      this.updateLeadLabel = this.updateLeadLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
-      this.overwriteLeadInfoLabel = System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV;
-      this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
-      this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+      this.updateLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_UpdateLeadDEV);
+      this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
       this.leadOverwrite = SB_NameCard_LeadRegist.svConfig.overwrite();
       this.nameCardRecordListIndex = -1;
       this.nameCardRecordList = new List<NameCardRecord>();
@@ -97,8 +92,7 @@ public with sharing class SB_NameCard_LeadNameCardListController
             whereStr = '(' + whereStr + ') AND SmartViscaf__delivery_type__c != \'1\' AND SmartViscaf__Parent__c = null';
         }
 
-
-    String soql = 'SELECT Id, Name, OwnerId, Owner.Name, LastModifiedDate,'
+    String soql = 'SELECT Id, Name, OwnerId, Owner.Name, LastModifiedDate,SmartViscaf__division__c,'
       + ' SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c,'
       + ' SmartViscaf__address_bld__c, SmartViscaf__address_eng__c,'
       + ' SmartViscaf__company_name__c, SmartViscaf__web_url1__c, SmartViscaf__tel1__c, SmartViscaf__fax1__c, SmartViscaf__title_name__c,'
@@ -127,7 +121,7 @@ public with sharing class SB_NameCard_LeadNameCardListController
 
       Lead updLead;
       if (this.leadOverwrite) {
-        updLead = SB_NameCard_LeadRegist.getLead(this.lead.Id, ncRec.nameCard, null);
+        updLead = SB_NameCard_LeadRegist.getLead(this.lead.Id, ncRec.nameCard, null,null);
       } else {
         updLead = new Lead(Id=this.lead.Id, NameCard__c=ncRec.nameCard.Id);
       }

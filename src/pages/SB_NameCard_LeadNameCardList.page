@@ -49,16 +49,12 @@
 
         <apex:column >
           <apex:facet name="header">{!$Label.SB_NCLD_Label_Division}</apex:facet>
-          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__division__c}"/>
         </apex:column>
 
         <apex:column >
           <apex:facet name="header">{!$Label.SB_NCLD_Label_Position}</apex:facet>
-          <apex:outputPanel layout="none">
-            <a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
-              <apex:outputText value="{!ncRec.nameCard.Name}"/>
-            </a>
-          </apex:outputPanel>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
         </apex:column>
 
         <apex:column >
