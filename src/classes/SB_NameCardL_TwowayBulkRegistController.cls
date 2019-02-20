@@ -777,7 +777,6 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
         Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
         System.debug(ownerErrorMap);
         if (!ownerErrorMap.isEmpty()) {
-          str = '<br/>';
           for (Integer i = 0; i<nameCardRecordListDTO.size(); i++) {
             if (ownerErrorMap.containsKey(nameCardRecordListDTO[i].nameCard.id)) {
               nameCardRecordListDTO[i].hasError = true;
@@ -827,6 +826,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
         this.hasError = true;
         saveOK = false;
         System.debug(e.getMessage());
+        System.debug(e.getStackTraceString());
         testError = e.getMessage();
         testError += e.getStackTraceString();
         ApexPages.addMessages(e);

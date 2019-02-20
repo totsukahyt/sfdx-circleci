@@ -1,17 +1,10 @@
 /*
- * (c) 2016 Sunbridge Inc.
+ * (c) 2018 Sunbridge Inc.
  *
- * リードに登録this.isAllowDuplicateSave;
+ * Classic統合詳細画面 コントローラ
+ * @author kou
+ * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX
  *
- * @Version 1 2018/01/XX  SV_DEV-753 リードに登録（個別画面）でキャンペーン選択後の「キャンペーンメンバー状況」の値がデフォルト値にならない。
- *                        SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
- *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
- *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
- *                        SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
- *                        SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
- *                        SV_DEV-542 重複エラーが出たときのラジオボタン選択について
- *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
- *                        SV_DEV-565 リード登録のリード所有者の修正
  */
 
 public with sharing class SB_NameCardL_TwowayRegistController {
@@ -243,12 +236,13 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       return true;
     }
     public override void postLookup() {
-      List<Contact> conts = [SELECT Id, Name, OwnerId, Account.OwnerId, Account.Name, Account.Owner.Name, MailingState, Department, MobilePhone, Email,
+      List<Contact> conts = [SELECT Id, Name, OwnerId, Account.OwnerId, Account.Name, Account.Owner.Name, MailingState, Department, MobilePhone, Email, AccountId,
                                     LastModifiedDate
                                FROM Contact
                               WHERE Id = :card4Lookup.SmartViscaf__contact__c];
       System.assert(!conts.isEmpty());
       this.cont = conts[0];
+      this.card4Lookup.SmartViscaf__account__c = conts[0].AccountId;
     }
   }
 
@@ -736,7 +730,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
             }
           }
           this.pageAccount = new Account();
-          if (String.valueOf(this.nameCard.OwnerId).startsWith('005')) {
+          if (String.valueOf(this.nameCard.OwnerId).startsWith('005') && this.nameCard.Owner.IsActive) {
             this.pageAccount.OwnerId = this.nameCard.OwnerId;
           }
           //if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
@@ -964,7 +958,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
         this.accountRecTypeId = null;
       }
       // SV_DEV-781  個別取引先登録 で 既存の アカウント、コンタクトを選択していても、「新規作成時の指定」の所有者をしていしていないとエラーになる。
-      if ((String.isBlank(acc.Id) || String.isBlank(c.Id)) && String.isBlank(pageLead.OwnerId)) {
+      if ((String.isBlank(acc.Id) || String.isBlank(c.Id)) && String.isBlank(pageAccount.OwnerId)) {
         // 取引先、取引先責任者を新規作成する場合は「所有者」を指定してください
         // SB_NC_SpecifyOwnerWhenCreateAcCo
         throw new LeadRegistControllerException(System.Label.SB_NCLD_SpecifyOwnerWhenCreateAcCo);
@@ -974,6 +968,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       if (this.contactRecTypeEdit) {
         this.contactRecTypeId = null;
       }
+      System.debug(acc.Id);
       SB_NameCardL_RegistHelper.RegistParam conre = new SB_NameCardL_RegistHelper.RegistParam('Contact',this.contactOverwrite,this.contactRecTypeId,c.Id == null ? pageAccount.OwnerId : c.OwnerId,this.isAllowDuplicateSave);
 
       SB_NameCardL_RegistHelper.TodoParam todo = new SB_NameCardL_RegistHelper.TodoParam(this.todo.Subject,this.todo.ActivityDate,this.todo.Description,null);
@@ -991,12 +986,12 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       System.debug(tar);
       SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(new List<SB_NameCardL_RegistHelper.RegistTarget>{tar},acre,conre,null,todo);
       Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
-        System.debug(ownerErrorMap);
-        if (!ownerErrorMap.isEmpty()) {
-          String str = '';
-          str += ownerErrorMap.get(this.nameCard.Id);
-          throw new LeadRegistControllerException(str);
-        }
+      System.debug(ownerErrorMap);
+      if (!ownerErrorMap.isEmpty()) {
+        String str = '';
+        str += ownerErrorMap.get(this.nameCard.Id);
+        throw new LeadRegistControllerException(str);
+      }
       //doRegist内既にrollbackしていますので、ここは二度目はしません
       SB_NameCardL_RegistHelper.RegistResponse result = SB_NameCardL_RegistHelper.doRegist(re);
       if (result.success == false) {
@@ -1113,6 +1108,13 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       }
 
       SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(new SB_NameCardL_RegistHelper.RegistTarget[]{tar}, null, null, leadRP, todoRP);
+      Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
+      System.debug(ownerErrorMap);
+      if (!ownerErrorMap.isEmpty()) {
+        String str = '';
+        str += ownerErrorMap.get(this.nameCard.Id);
+        throw new LeadRegistControllerException(str);
+      }
       //doRegist内既にrollbackしていますので、ここは二度目はしません
       SB_NameCardL_RegistHelper.RegistResponse result = SB_NameCardL_RegistHelper.doRegist(re);
       if (result.success == false) {
