@@ -236,7 +236,7 @@
             <!-- 新規 OR コンタクトのルックアップ -->
             <apex:outputPanel layout="none" rendered="{!ISBLANK(val.accountId)}">　
                 <apex:outputText value="{!val.accountName}{!IF(screenData.dispAccountOwner&&NOT(ISBLANK(val.accountId)), ' ('&val.accountOwnerName&')', '')}"
-                      rendered="{!IF(val.candidateType==5, true, false)}"/>
+                      rendered="{!IF(OR(val.candidateType==5, val.candidateType==7), true, false)}"/>
                 <apex:outputText id="lookUpAccount" value="{!val.accountName}{!IF(screenData.dispAccountOwner&&NOT(ISBLANK(val.accountId)), ' ('&val.accountOwnerName&')', '')}"
                       rendered="{!IF(val.candidateType==4, true, false)}"/>
             </apex:outputPanel>
@@ -481,9 +481,11 @@
                 var doc = document.getElementById('img_' + otherSectionId);
                 var selfdoc = document.getElementById('img_' + selfSectionId);
                 doc.className = 'showListButton';
-                doc.parentNode.parentNode.childNodes[1].style = 'display: none;';
+                // doc.parentNode.parentNode.childNodes[1].style = 'display: none;';
+                doc.parentNode.parentNode.childNodes[1].style.display = 'none';
                 selfdoc.className = 'hideListButton';
-                selfdoc.parentNode.parentNode.childNodes[1].style = 'display: block;';
+                // selfdoc.parentNode.parentNode.childNodes[1].style = 'display: block;';
+                selfdoc.parentNode.parentNode.childNodes[1].style.display = 'block';
                 if (renkeiTypeText == 'Lead') {
                     document.getElementById('{!$Component.All.blockid.renkeiRadioSection.renkeiRadio.renkeiTypeRadio}' + ':0').checked = true;
                 } else {
@@ -496,7 +498,7 @@
                 var selfdoc = document.getElementById('img_' + selfSectionId);
                 if (selfdoc.className == 'hideListButton') {
                     doc.className = 'showListButton';
-                    doc.parentNode.parentNode.childNodes[1].style = 'display: none;';
+                    doc.parentNode.parentNode.childNodes[1].style.display = 'none';
                 }
             }
 
