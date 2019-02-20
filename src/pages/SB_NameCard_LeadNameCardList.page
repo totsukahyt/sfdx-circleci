@@ -70,7 +70,9 @@
          <apex:column >
           <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
           <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.Name.Label}</apex:facet>
-          <apex:outputText value="{!ncRec.nameCard.Name}"/>
+          <a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
+              <apex:outputText value="{!ncRec.nameCard.Name}"/>
+          </a>
         </apex:column>
 
         <apex:column >
