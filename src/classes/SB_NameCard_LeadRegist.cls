@@ -17,7 +17,8 @@ global class SB_NameCard_LeadRegist
     {
         global Map<String, Boolean> disp { get; private set; }
         private Map<String, Boolean> confMap = new Map<String, Boolean>();
-        private String todoSubject = '名刺交換';
+        //private String todoSubject = '名刺交換';
+        private String todoSubject = System.Label.SB_NCLD_Text_BusinessCardExchange;
 
         global SvConfig()
         {
@@ -98,8 +99,10 @@ global class SB_NameCard_LeadRegist
     {
         List<SelectOption> opts = new List<SelectOption>();
 
-        opts.add(new SelectOption(String.valueOf(SEARCHTYPE_EMAIL), 'メールアドレス'));
-        opts.add(new SelectOption(String.valueOf(SEARCHTYPE_NAME),  '氏名'));
+        //opts.add(new SelectOption(String.valueOf(SEARCHTYPE_EMAIL), 'メールアドレス'));
+        //opts.add(new SelectOption(String.valueOf(SEARCHTYPE_NAME),  '氏名'));
+        opts.add(new SelectOption(String.valueOf(SEARCHTYPE_EMAIL), System.Label.SB_NCLD_Label_Email));
+        opts.add(new SelectOption(String.valueOf(SEARCHTYPE_NAME),  System.Label.SB_NCLD_Label_Name));
 
         return opts;
     }

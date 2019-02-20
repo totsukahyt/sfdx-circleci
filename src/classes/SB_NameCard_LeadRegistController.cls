@@ -69,7 +69,8 @@ public with sharing class SB_NameCard_LeadRegistController
             this.registTodo    = this.svConfig.registTodo();
 
             this.nameCard = SB_NameCard_LeadRegist.getNameCard(sc.getId());
-            if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
+            //if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
+            if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_BusinessCardNotFound);
 
             if (String.isBlank(this.nameCard.SmartViscaf__email__c) && (String.isNotBlank(this.nameCard.SmartViscaf__person_name_last__c) || String.isNotBlank(this.nameCard.SmartViscaf__person_name_first__c))) {
                 this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
@@ -110,7 +111,8 @@ public with sharing class SB_NameCard_LeadRegistController
                 	    	    if (lead.Id == this.nameCard.SmartViscaf__lead__c) {
                             this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
                 	    	    }
-                	    	    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。'));
+                                //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。'));
+                                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.SB_NCLD_Msg_DisplayUnderConditions));
                 	    }
                 }
             }
@@ -154,19 +156,22 @@ public with sharing class SB_NameCard_LeadRegistController
 
         try {
             if (this.leadRecordListIndex < 0 || this.leadRecordListIndex >= this.leadRecordList.size()) {
-                throw new SB_NameCard_LeadRegist.LeadRegistException('登録先を選択してください');
+                //throw new SB_NameCard_LeadRegist.LeadRegistException('登録先を選択してください');
+                throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SelectRegisterDestination);
             }
             LeadRecord leadRec = this.leadRecordList.get(this.leadRecordListIndex);
             Id leadId, ownerId;
 
             if (leadRec.isNew) {
                 if (this.nameCard.OwnerId == null) {
-                    throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
+                    //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
+                    throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLead);
                 }
                 ownerId = this.nameCard.OwnerId;
             } else {
                 if (leadRec.lead == null) {
-                    throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
+                    //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
+                    throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SelectLead);
                 }
                 leadId = leadRec.lead.Id;
                 ownerId = leadRec.lead.OwnerId;

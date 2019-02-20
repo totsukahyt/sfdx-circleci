@@ -29,7 +29,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         public void setLeadRecord(Map<Id, Lead> idMap, Map<String, List<Lead>> emailListMap, Map<String, List<Lead>> nameListMap)
         {
             this.leadSelOptList.clear();
-            this.leadSelOptList.add(new SelectOption('none', '登録しない'));
+            //this.leadSelOptList.add(new SelectOption('none', '登録しない'));
+            this.leadSelOptList.add(new SelectOption('none', System.Label.SB_NCLD_Menu_NotToRegister));
 
             Set<Id> idSet = new Set<Id>();
             List<SelectOption> emailSelOptList = new List<SelectOption>();
@@ -62,9 +63,11 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 this.leadSelOptList.addAll(emailSelOptList);
                 this.leadSelOptList.addAll(nameSelOptList);
             } else {
-                this.message = '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。';
+                //this.message = '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。';
+                this.message = System.Label.SB_NCLD_Msg_DisplayUnderConditions;
             }
-            this.leadSelOptList.add(new SelectOption('new', '新規作成'));
+            //this.leadSelOptList.add(new SelectOption('new', '新規作成'));
+            this.leadSelOptList.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
             this.leadId = 'none';
             this.hasError = false;
         }
@@ -216,7 +219,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             Integer i = this.insertLead();
             i += this.updateLead();
-            if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
+            //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
+            if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SelectLead);
 
             pageRef = this.retUrl;
         } catch (Exception e) {
@@ -237,7 +241,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             if (ncRec.leadId != 'new') continue;
 
             if (this.insertOption.OwnerId == null) {
-                throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
+                //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
+                throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLead);
             }
             leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, this.insertOption.OwnerId));
             ncRecList.add(ncRec);
@@ -271,7 +276,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             if (ncRec.leadId == 'none' || ncRec.leadId == 'new') continue;
 
             leadId = Id.valueOf(ncRec.leadId);
-            if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException('リードが重複しています');
+            //if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException('リードが重複しています');
+            if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Text_LeadOverLap);
             leadIdSet.add(leadId);
 
             if (this.leadOverwrite) {
