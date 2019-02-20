@@ -581,9 +581,9 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
           this.contactRecTypeEdit = Contact.sObjectType.getDescribe().isCreateable() && (CONT_RECORDTYPES.size() > 1);
 
-          this.accountRecTypeId = String.isBlank(accstr) ? 'nano' : accstr;
+          this.accountRecTypeId = String.isBlank(accstr) ? null : accstr;
 
-          this.contactRecTypeId = String.isBlank(constr) ? 'nano' : constr;
+          this.contactRecTypeId = String.isBlank(constr) ? null : constr;
 
           // --------------------- changelabel start ---------------------
           // this.createNewLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_CreateNewLeadDEV);
