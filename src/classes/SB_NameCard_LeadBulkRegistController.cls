@@ -139,6 +139,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
   public Boolean campLookUpDisabled{get;set;} //キャンペーン Disabled フラグ
   public Boolean cannotUpdataLead{get; private set;}//取引先責任者更新不可フラグ
   public  List<SelectOption> campaignStatus {get; set;}
+  public  Boolean registTodoAll {get; set;}
 
   public  String useNameCardOwnerLabel {get; set;}
 
@@ -204,7 +205,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
         if (!baseSetting.SmartViscaf__RegistDispLeadOverWriteCheckbox__c) {
           this.showLeadOverwrite = false;
         }
-
+        this.registTodoAll = SB_NameCard_LeadRegist.svConfig.registTodo();
         List<SmartViscaf__NameCard__c> ncList = SB_NameCard_LeadRegist.getNameCardList(controller.getSelected());
         this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodo());
 
