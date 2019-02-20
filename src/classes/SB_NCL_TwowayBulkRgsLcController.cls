@@ -966,8 +966,9 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     // }
 
     accountQueryOption.queryCompany = true;
-    // contactQueryOption.queryCompany = true;
-    accountQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch;
+    accountQueryOption.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch;
+    contactQueryOption.queryCompany = true;
+    // accountQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch;
     Integer searchContactTypeInt;
     if (String.isNotBlank(searchContactType)) {
       searchContactTypeInt = Integer.valueOf(searchContactType);
@@ -987,20 +988,20 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     else if (searchContactTypeInt == SEARCHTYPE_ACNAMESITESTATE) {
       accountQueryOption.queryDept = true;
       accountQueryOption.queryState = true;
-      // contactQueryOption.queryDept = true;
-      // contactQueryOption.queryState = true;
+      contactQueryOption.queryDept = true;
+      contactQueryOption.queryState = true;
     }
     else if (searchContactTypeInt == SEARCHTYPE_NAMECITY) {
       accountQueryOption.queryDept = true;
       accountQueryOption.queryCity = true;
-      // contactQueryOption.queryDept = true;
-      // contactQueryOption.queryCity = true;
+      contactQueryOption.queryDept = true;
+      contactQueryOption.queryCity = true;
     }
     else if (searchContactTypeInt == SEARCHTYPE_NAMECODE) {
       accountQueryOption.queryDept = true;
       accountQueryOption.queryZip = true;
-      // contactQueryOption.queryDept = true;
-      // contactQueryOption.queryZip = true;
+      contactQueryOption.queryDept = true;
+      contactQueryOption.queryZip = true;
     }
 
     queryOptions.add(queryOption);
