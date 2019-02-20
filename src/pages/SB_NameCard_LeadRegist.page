@@ -69,24 +69,24 @@
 
                         <apex:column rendered="{!svConfig.disp['Company']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_CompanyName}</apex:facet>
-                            <apex:outputText value="{!leadRecord.lead.Company}"/>
+                            <apex:outputText id="company" value="{!leadRecord.lead.Company}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['State']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Prefectures}</apex:facet>
-                            <apex:outputText value="{!leadRecord.lead.State}"/>
+                            <apex:outputText id="state" value="{!leadRecord.lead.State}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Title']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Position}</apex:facet>
-                            <apex:outputText value="{!leadRecord.lead.Title}"/>
+                            <apex:outputText id="title" value="{!leadRecord.lead.Title}"/>
                         </apex:column>
 
                         <apex:column >
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Name}</apex:facet>
                             <apex:outputText value="{!createNewLeadLabel}" rendered="{!leadRecord.isNew}"/>
                             <apex:inputField value="{!leadRecord.lookUpNameCard.SmartViscaf__lead__c}" rendered="{!NOT(ISBLANK(leadRecord.lookUpNameCard))}">
-                                <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs, leadRecordList" >
+                                <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs,time,ownername,email,title,state,company" >
                                 <!-- oncomplete="document.getElementById('leadRecordList{!leadRecord.index}').checked='checked'" -->
                                     <apex:param name="lookUpIndex" assignto="{!lookUpIndex}" value="{!leadRecord.index}"/>
                                 </apex:actionSupport>
@@ -100,19 +100,19 @@
 
                         <apex:column rendered="{!svConfig.disp['Email']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Email}</apex:facet>
-                            <apex:outputText value="{!leadRecord.lead.Email}"/>
+                            <apex:outputText id="email" value="{!leadRecord.lead.Email}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['LastModifiedDate']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_LastModiedDate}</apex:facet>
-                            <apex:outputField value="{!leadRecord.lead.LastModifiedDate}"/>
+                            <apex:outputField id="time" value="{!leadRecord.lead.LastModifiedDate}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Owner']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Owner}</apex:facet>
                             <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(leadRecord.lead.OwnerId))}">
                                 <a href="/{!leadRecord.lead.OwnerId}" id="lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}" onblur="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onfocus="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();">
-                                    <apex:outputText value="{!leadRecord.lead.Owner.Name}"/>
+                                    <apex:outputText id="ownername" value="{!leadRecord.lead.Owner.Name}"/>
                                 </a>
                             </apex:outputPanel>
                         </apex:column>
