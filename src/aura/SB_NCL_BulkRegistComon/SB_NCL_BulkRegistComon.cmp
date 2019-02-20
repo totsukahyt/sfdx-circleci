@@ -374,4 +374,38 @@
      <div class="slds-backdrop slds-backdrop--open"></div>
     </div>
   </aura:renderIf>
+  <!-- 名刺選択されていない場合エラーメッセージを表示します -->
+  <aura:renderIf isTrue="{!v.dataList.length == 0}">
+    <div role="dialog" class="slds-modal slds-fade-in-open slds-modal--small">
+     <div class="slds-modal__container">
+      <div class="slds-modal__header">
+       <div class="slds-notify_container">
+        <div class="slds-notify slds-notify--toast slds-theme--alert" style="background-color: rgba(84,105,141,.95);" role="alert">
+         <span class="slds-assistive-text">Error</span>
+         <div class="slds-notify__content slds-grid">
+          <lightning:icon iconName="utility:warning" size="small" variant="inverse"/>
+          <div class="slds-col slds-align-middle">
+           <h2 class="slds-text-heading--small">{!$Label.c.SB_NCLD_Label_WarningConfirm}</h2>
+          </div>
+         </div>
+        </div>
+       </div>
+       <h2 class="slds-text-heading--medium">&nbsp;</h2>
+      </div>
+      <div class="slds-modal__content slds-p-around--medium">
+       <div>
+        <div>
+         <p>{!$Label.c.SB_NCLD_MSG_NotSelectNameCard}</p>
+        </div>
+       </div>
+      </div>
+      <div class="slds-modal__footer">
+       <button class="slds-button slds-button--neutral slds-container--center slds-button" type="button" onclick="{!c.close}">
+        <!-- react-text: 123 -->OK
+        <!-- /react-text --></button>
+      </div>
+     </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop--open"></div>
+  </aura:renderIf>
 </aura:component>

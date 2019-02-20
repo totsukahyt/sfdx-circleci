@@ -175,6 +175,9 @@
         "searchContactType" : cmp.get('v.inputV.searchConditionValueContact'),
         "searchRecordTypes" : cmp.get('v.inputV.searchRecordTypes')
     });
+    if (targetIds == '') {
+      return;
+    }
     action.setCallback(this,function(response) {
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {

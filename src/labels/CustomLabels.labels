@@ -323,6 +323,13 @@
         <value>ToDo登録</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_WarningConfirm</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_WarningConfirm</shortDescription>
+        <value>確認してください</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_MSG_CanNotSetInActiveUserToOwner</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -384,6 +391,13 @@
         <protected>true</protected>
         <shortDescription>SB_NCLD_MSG_NameMissing</shortDescription>
         <value>姓を設定してください</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_MSG_NotSelectNameCard</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_MSG_NotSelectNameCard</shortDescription>
+        <value>名刺が選択されていません。</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_MSG_QUEUES_ERROR</fullName>
