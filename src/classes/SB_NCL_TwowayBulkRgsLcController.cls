@@ -285,10 +285,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     inputR.canShow = inputR.plickListOptions.size() > 1 && inv.contactAuthority.isCreateable && basicSetting.SmartViscaf__RegistDispContactRectype__c;
     inv.searchConditionRct.searchConditionRecordTypeOptionGroups.add(optionGroup);
 
-    inv.haveQueue = ![Select QueueId, SobjectType, Queue.Name
-                          FROM QueueSobject
-                         WHERE SobjectType = 'Lead'].isEmpty();
-
+    // inv.haveQueue = ![Select QueueId, SobjectType, Queue.Name
+    //                       FROM QueueSobject
+    //                      WHERE SobjectType = 'Lead'].isEmpty();
+    inv.haveQueue = true;
 
     return JSON.serialize(inv);
   }
