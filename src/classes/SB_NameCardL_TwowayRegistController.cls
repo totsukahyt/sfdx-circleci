@@ -687,6 +687,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
           this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
           this.leadRecordListIndex = -1;
+          this.accountTableIndex = -1;
           this.lookUpIndex = -1;
           this.leadRecordList = new List<CandidateRecord>();
           this.todo = new Task();
@@ -1020,6 +1021,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
     catch (Exception e){
       System.debug(e.getStackTraceString());
       ApexPages.addMessages(e);
+      // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getStackTraceString()));
       return null;
     }
   }
@@ -1094,7 +1096,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
 
       SB_NameCardL_RegistHelper.RegistParam leadRP = new SB_NameCardL_RegistHelper.RegistParam('Lead', this.leadOverwrite, this.leadRecordTypeId, ownerId, this.isAllowDuplicateSave );
-      SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(baseSetting.SmartViscaf__RegistToDoSubject__c, null ,null ,null);
+      SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(this.todo.Subject, this.todo.ActivityDate,this.todo.Description,null);
       SB_NameCardL_RegistHelper.RegistTarget tar = new SB_NameCardL_RegistHelper.RegistTarget(SB_NameCardL_RegistHelper.ProcType.LEAD,
                                                                                               this.nameCard.Id,
                                                                                               null,
@@ -1102,6 +1104,9 @@ public with sharing class SB_NameCardL_TwowayRegistController {
                                                                                               leadId,
                                                                                               registTodo,
                                                                                               null);
+      if (String.isNotBlank(nameCard.campaign__c) && String.isBlank(leadId)) {
+        tar.setLeadCampaign(nameCard.campaign__c, campStatus);
+      }
 
       SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(new SB_NameCardL_RegistHelper.RegistTarget[]{tar}, null, null, leadRP, todoRP);
       //doRegist内既にrollbackしていますので、ここは二度目はしません
@@ -1169,6 +1174,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       queryOptions.add(this.contactQueryOption);
     }
     if (this.leadQueryOption != null) {
+      this.leadQueryOption.queryCompany = false;
       if (this.searchType == SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL) {
         this.leadQueryOption.queryLastName = false;
         this.leadQueryOption.queryFirstName = false;
