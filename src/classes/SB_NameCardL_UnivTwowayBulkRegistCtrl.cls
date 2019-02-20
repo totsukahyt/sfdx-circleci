@@ -784,6 +784,12 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
 
       for (Integer i = 0; i < this.nameCardRecordListDTO.size(); i ++) {
         SB_NameCardL_BulkRegistDTO.CustomObject ncr = this.nameCardRecordListDTO[i];
+        /*
+          leadId --> none --> 登録しない
+          leadId --> new --> 新規作成
+          leadId --> ID ---> 既存リード
+        */
+       // 登録先は取引先ではない(リードOR両方) && リードの登録先は登録しないではないの場合
         if (ncr.leadId != 'none' && renkeiType != 'Contact') {
           if (ncr.leadId == 'new') {
             //画面上の所有者を
@@ -816,9 +822,12 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
           }
           tars.add(tar);
         }
-        System.debug(ncr.accAndConList);
-        // System.debug(ncr.accAndCon);
-        if (ncr.accAndCon > 0 && renkeiType != 'Lead') {
+        /*
+          accAndCon --> 0 --> 登録しない
+          accAndCon --> >0 --> 新規OR既存
+        */
+        // 登録先はリードではない(取引先OR両方) && 取引先の登録先は登録しないではないの場合
+        else if (ncr.accAndCon > 0 && renkeiType != 'Lead') {
           SB_NameCardL_BulkRegistDTO.AccAndCon aacTmp1 = ncr.accAndConList[ncr.accAndCon - 1];
           if (!haveNewAccount) {
             haveNewAccount = String.isBlank(aacTmp1.accountId) || String.isBlank(aacTmp1.contactId);
