@@ -8,6 +8,7 @@
  *                        SV_DEV-755 無効なユーザでTODO登録したときのエラー
  *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
  *                        SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
+ *                        SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
  *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
  *
  */
@@ -321,7 +322,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // 保存
-    public void save() {
+    // SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
+    public void saveLead() {
         saveOK = true;
         Savepoint sp;
 

@@ -18,7 +18,7 @@
         <apex:inputHidden id="canEditTodo" value="{!canEditTodo}"/>
         <apex:actionFunction action="{!changeOwner}" name="changeOwner" reRender="todode,newSelect" oncomplete="initset();"/>
         <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newSelect" oncomplete="initset();"/>
-        <apex:actionFunction name="save"  action="{!save}" reRender="pageMsgs,blockid,leadRecordListIndex,todode" oncomplete="initset();endLoad();"/>
+        <apex:actionFunction name="save"  action="{!saveLead}" reRender="pageMsgs,blockid,leadRecordListIndex,todode" oncomplete="initset();endLoad();"/>
         <apex:actionFunction action="{!checkRadio}" name="checkRadio" reRender="lRecordType" />
         <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
             <apex:pageBlockButtons >

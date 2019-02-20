@@ -1,6 +1,9 @@
 /*
  * (c) 2015 SunBridge Inc.
  *
+ *  @Version 1 2017/11/XX SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
+ *
+ *
  * リードを更新
  */
 
@@ -103,8 +106,9 @@ public with sharing class SB_NameCard_LeadNameCardListController{
   }
 
   // 更新
-  public PageReference save() {
-    if (this.lead == null) return null;
+  // SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
+  public PageReference saveLead() {
+    if (this.pageLead == null) return null;
     PageReference pageRef;
     Savepoint sp;
 

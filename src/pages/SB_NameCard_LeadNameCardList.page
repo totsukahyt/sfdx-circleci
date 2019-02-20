@@ -28,7 +28,7 @@
           <apex:facet name="header">{!updateLeadLabel}</apex:facet>
           <apex:outputLink value="javascript:void(0)">
             {!$Label.SB_NCLD_Text_Update}
-            <apex:actionSupport event="onclick" action="{!save}" rerender="pageMsgs">
+            <apex:actionSupport event="onclick" action="{!saveLead}" rerender="pageMsgs">
               <apex:param name="nameCardRecordListIndex" assignto="{!nameCardRecordListIndex}" value="{!ncRec.index}"/>
             </apex:actionSupport>
           </apex:outputLink>

@@ -11,7 +11,7 @@
   <apex:pageMessages id="pageMsgs" escape="false"/>
 
   <apex:form id="All">
-    <apex:actionFunction action="{!save}" name="save" reRender="pageMsgs,saveflage,nameCardTable, ncRecList" oncomplete="saveClick();"/>
+    <apex:actionFunction action="{!saveLead}" name="save" reRender="pageMsgs,saveflage,nameCardTable, ncRecList" oncomplete="saveClick();"/>
     <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newBlock" oncomplete="initset();"/>
     <apex:actionFunction name="changeOwner" reRender="newBlock" oncomplete="initset();"/>
     <apex:inputHidden value="{!saveOK}" id="saveflage"/>
