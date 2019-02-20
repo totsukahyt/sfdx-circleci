@@ -65,8 +65,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
             cf.checked = !basicSetting.SmartViscaf__RegistNoToDo__c;
           }
           if (field.fieldName == 'Address') {
-            cf.label = (String)sobj.get('SmartViscaf__address__c') + ' ' + (String)sobj.get('SmartViscaf__address_eng__c');
-            cf.value = (String)sobj.get('SmartViscaf__address__c') + ' ' + (String)sobj.get('SmartViscaf__address_eng__c');
+            String address = String.isBlank((String)sobj.get('SmartViscaf__address__c')) ? '' : (String)sobj.get('SmartViscaf__address__c');
+            String addresseng = String.isBlank((String)sobj.get('SmartViscaf__address_eng__c')) ? '' : (String)sobj.get('SmartViscaf__address_eng__c');
+            cf.label = address + ' ' + addresseng;
+            cf.value = address + ' ' + addresseng;
           }
           cf.type = field.type;
           cf.input = field.input;
