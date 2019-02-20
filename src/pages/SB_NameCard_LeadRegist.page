@@ -75,7 +75,8 @@
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_SearchCondition}"/>
                     <apex:selectRadio value="{!searchType}">
                         <apex:selectOptions value="{!searchTypeList}"/>
-                        <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, leadRecordList"/>
+                        <!-- SV_DEV-542 重複エラーが出たときのラジオボタン選択について -->
+                        <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, leadRecordList, leadRecordListIndex"/>
                     </apex:selectRadio>
                 </apex:pageBlockSectionItem>
 

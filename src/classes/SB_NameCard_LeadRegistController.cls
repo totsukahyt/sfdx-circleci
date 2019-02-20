@@ -8,6 +8,7 @@
  *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
  *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
  *                        SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
+ *                        SV_DEV-542 重複エラーが出たときのラジオボタン選択について
  */
 
 public with sharing class SB_NameCard_LeadRegistController
@@ -206,6 +207,8 @@ public with sharing class SB_NameCard_LeadRegistController
     public void search()
     {
         this.leadRecordList.clear();
+        // SV_DEV-542 重複エラーが出たときのラジオボタン選択について
+        this.leadRecordListIndex = -1;
 
         try {
             List<Lead> leadList = this.getLeadList();
