@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>SB_NC_CrudFlsIgnoreObjects</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>CRUD/FLS のチェック対象外のオブジェクト</shortDescription>
+        <value>null</value>
+    </labels>
+    <labels>
+        <fullName>SB_NC_Line</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NC_Line</shortDescription>
+        <value>行目</value>
+    </labels>
+</CustomLabels>

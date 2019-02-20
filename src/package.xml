@@ -18,6 +18,10 @@
     </types>
     <types>
         <members>*</members>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>*</members>
         <name>StaticResource</name>
     </types>
     <version>31.0</version>
