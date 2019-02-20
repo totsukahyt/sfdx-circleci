@@ -253,6 +253,20 @@
         <value>ToDoの所有者はキューに設定する事ができません</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_MSG_Regist_Error</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>登録エラー</shortDescription>
+        <value>登録エラー</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_MSG_Update_Error</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>更新エラー</shortDescription>
+        <value>更新エラー</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Menu_NewLead</fullName>
         <language>ja</language>
         <protected>true</protected>

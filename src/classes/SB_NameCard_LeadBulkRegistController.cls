@@ -5,6 +5,7 @@
  * @Version 1 2017/11/XX  SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
  *                        SV_DEV-746 リードに登録（一括登録）で、検索条件が「氏名」の場合でメールアドレスが一致した候補が表示される場合がある。
  *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
+ *                        SV_DEV-755 無効なユーザでTODO登録したときのエラー
  *
  *
  */
@@ -378,7 +379,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             dml.OptAllOrNone = false;
 
         // リード
-        this.setResult(SB_NameCard_LeadCrudFls.screate(leadList,dml), ncRecList);
+        //SV_DEV-755 無効なユーザでTODO登録したときのエラー
+        this.setResult(SB_NameCard_LeadCrudFls.screate(leadList,dml), ncRecList, Lead.getSObjectType(), true);
 
         // キャンペーンメンバー
         insertCampaignMember(this.insertOption.campaign__c, leadList, ncRecList, campStatus);
@@ -433,7 +435,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         dml.OptAllOrNone = false;
 
         // リード
-        this.setResult(SB_NameCard_LeadCrudFls.supdate(leadList, dml), ncRecList);
+        //SV_DEV-755 無効なユーザでTODO登録したときのエラー
+        this.setResult(SB_NameCard_LeadCrudFls.supdate(leadList, dml), ncRecList, Lead.getSObjectType(), false);
 
         // キャンペーンメンバー
         insertCampaignMember(this.insertOption.campaign__c, leadList, ncRecList, campStatus);
@@ -448,7 +451,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // リード処理結果
-    private void setResult(List<Database.SaveResult> srList, List<NameCardRecord> ncRecList) {
+    private void setResult(List<Database.SaveResult> srList, List<NameCardRecord> ncRecList, sObjectType sobj, Boolean isCreate) {
         String errMsg = '';
 
         Map<Id,Integer> cardindex = new Map<Id,Integer>();
@@ -461,7 +464,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         dbError.putSaveResults(srList);
 
         if (dbError.isError()) {
-            String leadl = Lead.getSObjectType().getDescribe().getLabel();
+            String leadl = sobj.getDescribe().getLabel();
+            //SV_DEV-755 無効なユーザでTODO登録したときのエラー
+            leadl += isCreate ? System.Label.SB_NCLD_MSG_Regist_Error : System.Label.SB_NCLD_MSG_Update_Error;
             for (Integer i = 0; i < srList.size(); i++) {
                 SB_NameCard_LeadSaveResult.DbErrorHolder err = dbError.getDbErrorHolder(i);
                 NameCardRecord n = ncRecList[i];
@@ -575,7 +580,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             dml.OptAllOrNone = false;
 
-            this.setResult(SB_NameCard_LeadCrudFls.screate(todoList,dml), ncRecList);
+            //SV_DEV-755 無効なユーザでTODO登録したときのエラー
+            this.setResult(SB_NameCard_LeadCrudFls.screate(todoList,dml), ncRecList, Task.getSObjectType(), true);
 
          }
     }
