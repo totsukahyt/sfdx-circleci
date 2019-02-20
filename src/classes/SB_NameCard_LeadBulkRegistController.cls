@@ -3,6 +3,7 @@
  *
  * リードに一括登録
  * @Version 1 2017/11/XX  SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+ *                        SV_DEV-746 リードに登録（一括登録）で、検索条件が「氏名」の場合でメールアドレスが一致した候補が表示される場合がある。
  *
  *
  */
@@ -275,38 +276,42 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             idMap.put(lead.Id, lead);
             this.leadOwnerIdMap.put(lead.Id, lead.OwnerId);
 
-            if (String.isNotBlank(lead.Email)) {
-                if (emailListMap.containsKey(lead.Email)) {
-                    emailListMap.get(lead.Email).add(lead);
-                } else {
-                    emailListMap.put(lead.Email, new List<Lead>{lead});
+            // SV_DEV-746 リードに登録（一括登録）で、検索条件が「氏名」の場合でメールアドレスが一致した候補が表示される場合がある。
+            if (this.searchType == SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL) {
+                if (String.isNotBlank(lead.Email)) {
+                    if (emailListMap.containsKey(lead.Email)) {
+                        emailListMap.get(lead.Email).add(lead);
+                    } else {
+                        emailListMap.put(lead.Email, new List<Lead>{lead});
+                    }
                 }
-            }
+            } else {
 
-            // 姓名
-            if (nameListMap.containsKey(lead.Name)) {
+                // 姓名
+                if (nameListMap.containsKey(lead.Name)) {
 
-                nameListMap.get(lead.Name).add(lead);
-            }
-            else {
-                nameListMap.put(lead.Name, new List<Lead>{lead});
-            }
+                    nameListMap.get(lead.Name).add(lead);
+                }
+                else {
+                    nameListMap.put(lead.Name, new List<Lead>{lead});
+                }
 
-            // 姓のみ
-            name = lead.LastName;
-            if (nameListMap.containsKey(name)) {
-                nameListMap.get(name).add(lead);
-            }
-            else {
-                nameListMap.put(name, new List<Lead>{lead});
-            }
-            // 名のみ
-            name = lead.FirstName;
-            if (nameListMap.containsKey(name)) {
-                nameListMap.get(name).add(lead);
-            }
-            else {
-                nameListMap.put(name, new List<Lead>{lead});
+                // 姓のみ
+                name = lead.LastName;
+                if (nameListMap.containsKey(name)) {
+                    nameListMap.get(name).add(lead);
+                }
+                else {
+                    nameListMap.put(name, new List<Lead>{lead});
+                }
+                // 名のみ
+                name = lead.FirstName;
+                if (nameListMap.containsKey(name)) {
+                    nameListMap.get(name).add(lead);
+                }
+                else {
+                    nameListMap.put(name, new List<Lead>{lead});
+                }
             }
         }
     }
