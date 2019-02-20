@@ -10,6 +10,7 @@
  *  @Version 拡張パッケージ：Lead Ex. 1.12
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1154 LEX画面「リードもしくは取引先・取引先責任者に登録*」一括登録でキャンペーンの状況が無効状態で表示されない。
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1162 LEX統合一括画面検索条件を変更する際にエラーが発生
+ *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1229 [統合版]一括登録Lex版ではリードの場合、あるいは取引先・取引先責任者選択する場合、レコードタイプの設定ポップアップの内容はずっとリードと取引先・取引先責任者のレコードタイプが表示
  *
  **/ -->
 
@@ -341,7 +342,7 @@
       <lightning:button label="{!v.titleV.saveValue}" iconName="utility:check" variant="brand" onclick="{!c.save}" iconPosition="left" />
     <!-- </lightning:layout> -->
   </div>
-  <c:SB_NCL_RecordTypeConditionModal inputV="{!v.inputV}" show="{!v.showModal}" searchRecordTypes="{!v.inputV.searchRecordTypes}"/>
+  <c:SB_NCL_RecordTypeConditionModal showType="{!v.showType}" inputV="{!v.inputV}" show="{!v.showModal}" searchRecordTypes="{!v.inputV.searchRecordTypes}"/>
   <aura:renderIf isTrue="{!and(v.showErrorMsg == true, not(empty(v.errorMsg)))}">
     <div class="demo-only" style="z-index: 9999;">
      <div role="dialog" class="slds-modal slds-fade-in-open slds-modal--large">
