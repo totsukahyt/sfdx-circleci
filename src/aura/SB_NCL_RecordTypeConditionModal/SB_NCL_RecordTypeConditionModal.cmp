@@ -19,8 +19,8 @@
   <aura:attribute name="inputV" type="Sobject" /> <!-- 入力内容 -->
   <aura:attribute name="showType" type="String" /> <!-- 入力内容 -->
   <aura:attribute name="show" type="Boolean" /> <!-- 表示フラグ -->
-  <aura:attribute name="searchRecordTypes" type="String" /> <!-- 選択されてレコードタイプ -->
-  <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistComonEvent" action="{!c.modalSearchRecordTypeChanged}"/>
+  <aura:attribute name="searchRecordTypesMap" type="Map" /> <!-- 選択されてレコードタイプMap -->
+  <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistCommonEvent" action="{!c.modalSearchRecordTypeChanged}"/>
   <aura:registerEvent name="changeSearchCondition" type="c:SB_NCL_ChangeSearchConditionEvent"/>
 
   <aura:renderIf isTrue="{!v.show}">

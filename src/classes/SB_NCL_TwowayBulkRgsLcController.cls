@@ -27,7 +27,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
   @RemoteAction
   @AuraEnabled
   // 全てのデータここで取得
-  public static String getAllData(String recordIds, String fieldListStr, String searchType, String recordType) {
+   public static String getAllData(String recordIds, String fieldListStr, String searchType, String searchContactType, String recordTypesMapstr) {
     SB_NameCardL_BulkRegistDTO.SaveResult saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
     try{
       List<SB_NameCardL_BulkRegistDTO.DataTableColumnField> fieldList;
@@ -52,6 +52,8 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       System.debug('fieldList : ' + fieldList);
       Map<String, Schema.SObjectField> fields = SmartViscaf__NameCard__c.sObjectType.getDescribe().fields.getMap();
       List<SB_NameCardL_BulkRegistDTO.CustomObject> dataList = new List<SB_NameCardL_BulkRegistDTO.CustomObject>();
+
+      Map<Id, SB_NameCardL_BulkRegistDTO.CustomObject> nameCardObjMap = new Map<Id, SB_NameCardL_BulkRegistDTO.CustomObject>();
       for (SmartViscaf__NameCard__c sobj : ncs) {
         SB_NameCardL_BulkRegistDTO.CustomObject co = new SB_NameCardL_BulkRegistDTO.CustomObject();
         for (SB_NameCardL_BulkRegistDTO.DataTableColumnField field : fieldList) {
@@ -237,12 +239,16 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       lvc.value = info.getRecordTypeId();
       lvc.checked = true;
       optionGroup.searchConditionplickListOptions.add(lvc);
-      if (String.isBlank(inv.searchRecordTypes)) {
-        inv.searchRecordTypes = info.getRecordTypeId();
+      if (!inv.searchRecordTypesMap.containsKey('Lead')) {
+        inv.searchRecordTypesMap.put('Lead', new List<String>());
       }
-      else {
-        inv.searchRecordTypes += ',' + info.getRecordTypeId();
-      }
+      inv.searchRecordTypesMap.get('Lead').add(info.getRecordTypeId());
+      // if (String.isBlank(inv.searchRecordTypes)) {
+      //   inv.searchRecordTypes = info.getRecordTypeId();
+      // }
+      // else {
+      //   inv.searchRecordTypes += ',' + info.getRecordTypeId();
+      // }
     }
     inv.showRecordType = !inputR.plickListOptions.isEmpty();
     inputR.canShow = inputR.plickListOptions.size() > 1 && inv.leadAuthority.isCreateable && basicSetting.SmartViscaf__RegistDispLeadRectype__c;
@@ -264,12 +270,16 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       lvc.value = info.getRecordTypeId();
       lvc.checked = true;
       optionGroup.searchConditionplickListOptions.add(lvc);
-      if (String.isBlank(inv.searchRecordTypes)) {
-        inv.searchRecordTypes = info.getRecordTypeId();
+      if (!inv.searchRecordTypesMap.containsKey('Account')) {
+        inv.searchRecordTypesMap.put('Account', new List<String>());
       }
-      else {
-        inv.searchRecordTypes += ',' + info.getRecordTypeId();
-      }
+      inv.searchRecordTypesMap.get('Account').add(info.getRecordTypeId());
+      // if (String.isBlank(inv.searchRecordTypes)) {
+      //   inv.searchRecordTypes = info.getRecordTypeId();
+      // }
+      // else {
+      //   inv.searchRecordTypes += ',' + info.getRecordTypeId();
+      // }
     }
     inputR.canShow = inputR.plickListOptions.size() > 1 && inv.accountAuthority.isCreateable && basicSetting.SmartViscaf__RegistDispAccountRectype__c;
     inv.searchConditionRct.searchConditionRecordTypeOptionGroups.add(optionGroup);
@@ -290,12 +300,16 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       lvc.value = info.getRecordTypeId();
       lvc.checked = true;
       optionGroup.searchConditionplickListOptions.add(lvc);
-      if (String.isBlank(inv.searchRecordTypes)) {
-        inv.searchRecordTypes = info.getRecordTypeId();
+      if (!inv.searchRecordTypesMap.containsKey('Contact')) {
+        inv.searchRecordTypesMap.put('Contact', new List<String>());
       }
-      else {
-        inv.searchRecordTypes += ',' + info.getRecordTypeId();
-      }
+      inv.searchRecordTypesMap.get('Contact').add(info.getRecordTypeId());
+      // if (String.isBlank(inv.searchRecordTypes)) {
+      //   inv.searchRecordTypes = info.getRecordTypeId();
+      // }
+      // else {
+      //   inv.searchRecordTypes += ',' + info.getRecordTypeId();
+      // }
     }
     inputR.canShow = inputR.plickListOptions.size() > 1 && inv.contactAuthority.isCreateable && basicSetting.SmartViscaf__RegistDispContactRectype__c;
     inv.searchConditionRct.searchConditionRecordTypeOptionGroups.add(optionGroup);
@@ -487,7 +501,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
 
   @RemoteAction
   @AuraEnabled
-  public static String searchAllLead(String nameCardIds, String searchType, String searchContactType, String searchRecordTypes) {
+  public static String searchAllLead(String nameCardIds, String searchType, String searchContactType, Map<String, List<String>> searchRecordTypesMap) {
     String message = '';
     SB_NameCardL_BulkRegistDTO.SaveResult saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
     try {
@@ -510,7 +524,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
         // Map<String, List<Lead>> emailListMap = new Map<String, List<Lead>>();
         // Map<String, List<Lead>> nameListMap = new Map<String, List<Lead>>();
 
-        Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(nameCardIdSet, nameCards, searchType, searchContactType, searchRecordTypes);
+        Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(nameCardIdSet, nameCards, searchType, searchContactType, searchRecordTypesMap);
         System.debug(sObjectList);
         Map<Schema.SObjectType, Map<Id, SObject>> sObjectTypemap = new Map<Schema.SObjectType, Map<Id, SObject>>();
         sObjectTypemap.put(Lead.sObjectType, new Map<Id, SObject>());
@@ -666,8 +680,12 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
   }
 
   public static Map<Id,Map<Schema.SObjectType,List<SObject>>> buildCandidateList(Set<Id> ncList, List<SmartViscaf__NameCard__c> nameCardList,
-                                                                                String searchType, String searchContactType,String searchRecordTypes) {
+                                                                                String searchType, String searchContactType,Map<String, List<String>> searchRecordTypesMap) {
     List<SB_NameCardL_RegistQueryOption> queryOptions = new List<SB_NameCardL_RegistQueryOption>();
+
+    if (searchRecordTypesMap == null) {
+      searchRecordTypesMap = new Map<String, List<String>>();
+    }
 
     SB_NameCardL_RegistQueryOption queryOption = getQueryOption(Lead.sObjecttype);
     if (searchType == String.valueOf(SEARCHTYPE_NAME)) {
@@ -683,13 +701,44 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     SB_NameCardL_RegistQueryOption accountQueryOption = getQueryOption(Account.sObjecttype);
     SB_NameCardL_RegistQueryOption contactQueryOption =  getQueryOption(Contact.sObjecttype);
 
-
-    if (String.isNotBlank(searchRecordTypes)) {
-      Set<Id> recordTypeSet =  new Set<Id>((List<Id>)new List<String>(searchRecordTypes.split(',')));
-      queryOption.setRectypeIds(recordTypeSet);
-      accountQueryOption.setRectypeIds(recordTypeSet);
-      contactQueryOption.setRectypeIds(recordTypeSet);
+    System.debug(searchRecordTypesMap);
+    // リードMap
+    if (searchRecordTypesMap.containsKey('Lead')) {
+      // System.debug(searchRecordTypesMap.get('Lead'));
+      List<Id> leadRecordTypeList = (List<Id>)searchRecordTypesMap.get('Lead');
+      if (leadRecordTypeList.size() > 0) {
+        Set<Id> leadRecord = new Set<Id>();
+        leadRecord.addAll(leadRecordTypeList);
+        queryOption.setRectypeIds(leadRecord);
+      }
     }
+
+    if (searchRecordTypesMap.containsKey('Account')) {
+      List<Id> accountRecordTypeList = searchRecordTypesMap.get('Account');
+      if (accountRecordTypeList.size() > 0) {
+        Set<Id> accountRecord = new Set<Id>();
+        accountRecord.addAll(accountRecordTypeList);
+        accountQueryOption.setRectypeIds(accountRecord);
+      }
+    }
+
+    if (searchRecordTypesMap.containsKey('Contact')) {
+      List<Id> contactRecordTypeList = searchRecordTypesMap.get('Contact');
+      if (contactRecordTypeList.size() > 0) {
+        Set<Id> contactRecord = new Set<Id>();
+        contactRecord.addAll(contactRecordTypeList);
+        contactQueryOption.setRectypeIds(contactRecord);
+      }
+    }
+
+    // if (String.isNotBlank(searchRecordTypes)) {
+    //   Set<Id> recordTypeSet =  new Set<Id>((List<Id>)new List<String>(searchRecordTypes.split(',')));
+    //   System.debug(recordTypeSet.size());
+    //   System.debug(recordTypeSet);
+    //   queryOption.setRectypeIds(recordTypeSet);
+    //   accountQueryOption.setRectypeIds(recordTypeSet);
+    //   contactQueryOption.setRectypeIds(recordTypeSet);
+    // }
 
     accountQueryOption.queryCompany = true;
     // contactQueryOption.queryCompany = true;

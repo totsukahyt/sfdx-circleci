@@ -1,7 +1,7 @@
 /**
  *
  *  SB_NCL_RecordTypeConditionModal
- *  リード拡張環境 一括統合用コンポネート Helper
+ *  リード拡張環境 Lightning一括統合データ操作コンポネート Helper
  *
  *
  *
@@ -9,16 +9,20 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
  *
  **/
 ({
-	doInit : function(cmp, event, helper, targetIds) {
-		var action = cmp.get('c.getAllData');
+  // 初期化
+   searchAllData : function(cmp, event, helper, targetIds, isInit) {
+    var action = cmp.get('c.getAllData');
     action.setParams(
     {
       "recordIds": targetIds,
-      "fieldListStr" : JSON.stringify(cmp.get("v.fieldList"))
+      "fieldListStr" : JSON.stringify(cmp.get("v.fieldList")),
+      "searchType" : cmp.get('v.inputV.searchConditionValue'),
+      "searchContactType" : cmp.get('v.inputV.searchConditionValueContact'),
+      "recordTypesMapstr" : JSON.stringify(cmp.get('v.inputV.searchRecordTypesMap'))
     });
     action.setCallback(this,function(response) {
       var state = response.getState();
@@ -106,7 +110,8 @@
       cmp.set('v.working', false);
     });
     $A.enqueueAction(action);
-	},
+  },
+  // 表示項目リストを取得
   setFieldList : function(cmp, event, helper) {
     var action = cmp.get('c.getFieldList');
     action.setCallback(this,function(response) {
@@ -120,8 +125,6 @@
             cmp.set("v.showPlickListType", "Lead");
           }
           cmp.set("v.fieldMap", result);
-          var r = cmp.get("v.fieldMap");
-          cmp.set("v.fieldList", result[showType]);    // 対象の名刺一覧
         // }
         // else {
           // エラーがあった場合、画面に表示
@@ -135,6 +138,7 @@
     });
     $A.enqueueAction(action);
   },
+  // タイトルに関する内容を取得
   setTitleValue : function(cmp, event, helper) {
     var action = cmp.get('c.getTitleValue');
     action.setCallback(this,function(response) {
@@ -156,6 +160,7 @@
     });
     $A.enqueueAction(action);
   },
+  // 画面入力に関する内容を取得
   setInputValue : function(cmp, event, helper) {
     var action = cmp.get('c.getInputValue');
     action.setCallback(this,function(response) {
@@ -180,6 +185,7 @@
     });
     $A.enqueueAction(action);
   },
+  // 検索
   searchLead : function(cmp, event, helper, targetIds) {
     var action = cmp.get('c.searchAllLead');
     action.setParams(
@@ -187,7 +193,7 @@
         "nameCardIds" : targetIds,
         "searchType" : cmp.get('v.inputV.searchConditionValue'),
         "searchContactType" : cmp.get('v.inputV.searchConditionValueContact'),
-        "searchRecordTypes" : cmp.get('v.inputV.searchRecordTypes')
+        "searchRecordTypesMap" : cmp.get('v.inputV.searchRecordTypesMap')
     });
     if (targetIds == '') {
       return;
@@ -219,6 +225,7 @@
     });
     $A.enqueueAction(action);
   },
+  // 検索条件変更
     changeSearchCondition : function(cmp, event, helper) {
       var action = cmp.get("c.getAllData");
 
@@ -235,6 +242,7 @@
         "recordIds": targetIds,
         "fieldListStr" : JSON.stringify(cmp.get("v.fieldMap")['Both']),
         "searchType" : cmp.get("v.inputV.searchConditionValue"),
+        "searchContactType" : cmp.get('v.inputV.searchConditionValueContact'),
         "recordType" : recordTypes
       });
       action.setCallback(this,function(response) {
@@ -301,6 +309,7 @@
       });
       $A.enqueueAction(action);
     },
+    // キャンペーン変更JS
     changeCampaign : function(cmp, event, helper) {
       var action = cmp.get('c.getCampaignStatus');
       action.setParams(

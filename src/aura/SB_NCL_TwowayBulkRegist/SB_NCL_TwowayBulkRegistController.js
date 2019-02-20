@@ -1,7 +1,7 @@
 /**
  *
  *  SB_NCL_RecordTypeConditionModal
- *  リード拡張環境 一括統合用コンポネート Controller
+ *  リード拡張環境 Lightning一括統合データ操作コンポネート Controller
  *
  *
  *
@@ -9,7 +9,7 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
  *
  **/
 ({
@@ -17,22 +17,24 @@
       var targetIds = cmp.get("v.recordId");
       cmp.set('v.working', true);
       if (targetIds != null) {
-        helper.searchLead(cmp, event, helper, targetIds);
+        // helper.searchLead(cmp, event, helper, targetIds);
         helper.setFieldList(cmp, event, helper);
         helper.setTitleValue(cmp, event, helper);
         helper.setInputValue(cmp, event, helper);
-        helper.doInit(cmp, event, helper, targetIds);
+        helper.searchAllData(cmp, event, helper, targetIds, true);
       }
       else {
         cmp.set('v.working', false);
       }
     },
+    // 検索条件変更JS
     changeSearchCondition : function (cmp, event, helper) {
       // helper.changeSearchCondition(cmp, event, helper);
       cmp.set('v.working', true);
       var targetIds = cmp.get('v.recordId');
-      helper.searchLead(cmp, event, helper, targetIds);
+      helper.searchAllData(cmp, event, helper, targetIds, false);
     },
+    // イベントをキャッチしたJS
     doSomething : function (cmp, event, helper) {
       var name = event.getParam('name');
       if (name == 'close') {
@@ -118,7 +120,7 @@
         }
         inputV.searchConditions = arr;
         cmp.set("v.inputV", inputV);
-        $A.get('e.force:refreshView').fire();
+        // $A.get('e.force:refreshView').fire();
       }
     }
 })

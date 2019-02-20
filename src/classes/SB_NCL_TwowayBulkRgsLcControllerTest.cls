@@ -1,3 +1,13 @@
+/*
+ * SB_NCL_TwowayBulkRgsLcControllerTest
+ *
+ * (c) 2018 Sunbridge Inc.
+ *
+ * 統合版一括登録Lex コントローラ SB_NCL_TwowayBulkRgsLcControllerのテストクラス
+ * @Version リード拡張：Lead Ex. 1.12 2018/08/XX
+ *
+ */
+
 @isTest
 private class SB_NCL_TwowayBulkRgsLcControllerTest {
     /**
@@ -203,6 +213,7 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
 
       String data = SB_NCL_TwowayBulkRgsLcController.searchAllLead(cards[0].Id, '2', '3', null);
       Map<String, Object> dto = (Map<String, Object>)System.JSON.deserializeUntyped(data);
+      System.assertEquals('', dto.get('message'));
       System.assertEquals(true, dto.get('success'));
       System.assertEquals('', dto.get('message'));
       Map<Id, Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue>> inputPlickListVMap = (Map<Id, Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue>>)System.JSON.deserializeStrict(JSON.serialize(dto.get('data')), Map<Id, Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue>> .Class);
@@ -282,7 +293,7 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       List<Lead> lea = [SELECT Id
                           FROM Lead];
       System.assertEquals(1, lea.size());
-      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null);
+      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null, null);
       Map<String, Object> dtoMap = (Map<String, Object>)System.JSON.deserializeUntyped(data);
       System.assertEquals(true, dtoMap.get('success'));
       System.assertEquals('', dtoMap.get('message'));
@@ -325,7 +336,7 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       List<Lead> lea = [SELECT Id
                           FROM Lead];
       System.assertEquals(1, lea.size());
-      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null);
+      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null, null);
       Map<String, Object> dtoMap = (Map<String, Object>)System.JSON.deserializeUntyped(data);
       System.assertEquals(true, dtoMap.get('success'));
       System.assertEquals('', dtoMap.get('message'));
@@ -377,7 +388,7 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       List<Lead> lea = [SELECT Id
                           FROM Lead];
       System.assertEquals(1, lea.size());
-      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null);
+      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null, null);
       Map<String, Object> dtoMap = (Map<String, Object>)System.JSON.deserializeUntyped(data);
       System.assertEquals(true, dtoMap.get('success'));
       System.assertEquals('', dtoMap.get('message'));
