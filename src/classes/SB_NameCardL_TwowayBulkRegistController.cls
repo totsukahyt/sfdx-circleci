@@ -676,6 +676,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController
         queryOptions.add(this.contactQueryOption);
       }
       if (this.leadQueryOption != null) {
+        this.leadQueryOption.queryCompany = false;
         if (searchType == SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL) {
             this.leadQueryOption.queryEMail = true;
             this.leadQueryOption.queryLastName = false;
@@ -817,7 +818,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController
                       && String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(ncRec.nameCard).get('last_name'))) {
                       opsMap.put('Lead', new List<SelectOption> {new SelectOption('none', System.Label.SB_NCLD_DontRegister_NameRequired)});
                     }
-                    opsMap.put('Account', new List<SelectOption> {new SelectOption('none', System.Label.SB_NCLD_DontRegister_CompanyNameRequired)});
+                    opsMap.put('Account', new List<SelectOption> {new SelectOption('-1', System.Label.SB_NCLD_DontRegister_CompanyNameRequired)});
                     // opsMap.put('Account', setNameCardRecord(ncRec.nameCard, this.searchTypeContact, cIdMap, cEmailMap, cNameMap, cLastNameMap, aIdMap, aNameList, ncRec, null));
                     ncRec.accAndCon = 0;
                     ncRec.leadId = 'none';
