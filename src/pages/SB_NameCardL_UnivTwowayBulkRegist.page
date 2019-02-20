@@ -334,7 +334,10 @@
             }
 
             function initset() {
-                document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}').style="margin-left:10px;";
+                var owner1 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}');
+                if (owner1 != null) {
+                  owner1.style="margin-left:10px;";
+                }
                 var oDiv = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_mlktp');
                 var ow = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}');
                 if (oDiv != null) {
@@ -343,7 +346,10 @@
                       changeOwner();
                   }
                 }
-                document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}').style="margin-left:10px;";
+                var owner2 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}');
+                if (owner2 != null) {
+                  owner2.style="margin-left:10px;";
+                }
                 var oDiv1 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}' + '_mlktp');
                 var ow1 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}');
                 if (oDiv1 != null) {
