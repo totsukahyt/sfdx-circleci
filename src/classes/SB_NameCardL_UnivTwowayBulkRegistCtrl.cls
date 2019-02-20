@@ -520,14 +520,33 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
         Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(this.nameCardIdSet);
         Boolean cor = Schema.SObjectType.Contact.isCreateable();
         Boolean acc = Schema.SObjectType.Account.isCreateable();
-
+        Map<Id, Map<String, List<SelectOption>>> inputPlickListVMapClone;
+        if (inputPlickListVMap != null) {
+         inputPlickListVMapClone = inputPlickListVMap.clone();
+        }
         inputPlickListVMap = new Map<Id, Map<String, List<SelectOption>>>();
         System.debug(this.nameCardRecordListDTO.size());
         Boolean haveAccount = false;
         Boolean haveLead = false;
         for (Integer i = 0; i < this.nameCardRecordListDTO.size(); i ++) {
+            String leadKey = null;
+            String accountKey = null;
+            Boolean setAccount = false;
+            Boolean setLead = false;
             Boolean leadSelect = true;
             SB_NameCardL_BulkRegistDTO.CustomObject ncRec = this.nameCardRecordListDTO[i];
+            if (inputPlickListVMapClone != null) {
+              Map<String, List<SelectOption>> sopsMap = inputPlickListVMapClone.get(ncRec.nameCard.Id);
+              if (ncRec.accAndCon != 0) {
+                SB_NameCardL_BulkRegistDTO.AccAndCon accAndCon2 = ncRec.accAndConList[ncRec.accAndCon - 1];
+                accountKey = String.valueOf(accAndCon2.accountId) + String.valueOf(accAndCon2.contactId);
+                System.debug(accountKey);
+              }
+
+              if (ncRec.leadId != 'none' && String.isNotBlank(ncRec.leadId)) {
+                leadKey = ncRec.leadId;
+              }
+            }
             ncRec.index = i;
             ncRec.leadId = 'none';
             Map<String, List<SelectOption>> opsMap = new Map<String, List<SelectOption>>();
@@ -563,6 +582,10 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                   if (objMap.containsKey(Contact.sObjectType)) {
                     for (sObject sobj : objMap.get(Contact.sObjectType)) {
                       Contact c = (Contact) sobj;
+                      if (accountKey == String.valueOf(c.AccountId) + String.valueOf(c.Id)) {
+                        ncRec.accAndCon = index;
+                        setAccount = true;
+                      }
                       accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));
                       opts.add(new SelectOption(String.valueOf(index), c.Account.Name + '(' + getStr(c.Account.Site) + ')' + '/' + c.Name + '(' + getStr(c.Department) + '/' + getStr(c.Email) + ')'));
                       index ++;
@@ -572,6 +595,10 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                   if (objMap.containsKey(Account.sObjectType)) {
                     for (sObject sobj : objMap.get(Account.sObjectType)) {
                       Account a = (Account) sobj;
+                      if (setAccount == false && accountKey == (String.valueOf(a.Id) + 'null')) {
+                        ncRec.accAndCon = index;
+                        setAccount = true;
+                      }
                       accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(a.Id, null));
                       opts.add(new SelectOption(String.valueOf(index), a.Name + '(' + getStr(a.Site) + ')' + '/' + System.Label.SB_NCLD_Menu_NewLead));
                       index++;
@@ -588,22 +615,34 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                     opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NewLead + '/' + System.Label.SB_NCLD_Menu_NewLead));
                     accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon());
                   }
-                  if (opts.size() > 1) {
+                  if (opts.size() > 1 && setAccount == false) {
                     ncRec.accAndCon = 1;
                   }
                   opsMap.put('Account', opts);
               }
 
               if (!opsMap.containsKey('Lead')) {
+                  String backUpLeadId;
                   opts = new List<SelectOption>();
                   opts.add(new SelectOption('none', System.Label.SB_NCLD_Menu_NotToRegister));
                   if (objMap.containsKey(Lead.sObjectType)) {
                     for (sObject sobj : objMap.get(Lead.sObjectType)) {
                       Lead lead = (Lead) sobj;
+                      if (String.isBlank(backUpLeadId)) {
+                        backUpLeadId = lead.Id;
+                      }
                       haveLead = true;
+                      System.debug(leadKey);
+                      System.debug(lead.Id);
+                      if (leadKey == String.valueOf(lead.Id)) {
+                        ncRec.leadId = lead.Id;
+                        setLead = true;
+                        ncRec.accAndCon = 0;
+                      }
                       if ((String.isBlank(ncRec.leadId)
                         || ncRec.leadId == 'none')
-                        && leadSelect) {
+                        && leadSelect
+                        && setLead == false) {
                         ncRec.leadId = lead.Id;
                         ncRec.accAndCon = 0;
                           if (firstSearch) {
@@ -615,9 +654,14 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                       index ++;
                     }
                   }
+                  if (setLead == false && String.isNotBlank(leadKey)) {
+                    ncRec.leadId = backUpLeadId;
+                    ncRec.accAndCon = 0;
+                  }
                   if (leadCreateable) {
                     opts.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
                     if (String.isBlank(ncRec.leadId)
+                        || leadKey == 'new'
                         || (leadSelect && ncRec.leadId == 'none' && renkeiType == 'Lead')) {
                       ncRec.leadId = 'new';
                       ncRec.accAndCon = 0;
