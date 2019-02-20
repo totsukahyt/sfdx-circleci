@@ -676,7 +676,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
               opts.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
               if (String.isBlank(ncRec.leadId)
                   || leadKey == 'new'
-                  || (leadSelect && ncRec.leadId == 'none' && (renkeiType == 'Lead' || firstSearch == true))) {
+                  || (leadSelect && ncRec.leadId == 'none' && firstSearch == true)) {
                 ncRec.leadId = 'new';
                 ncRec.accAndCon = 0;
               }
