@@ -231,19 +231,48 @@ public with sharing class SB_NameCard_LeadRegistController
 
             // キャンペーン
             if (this.nameCard.campaign__c != null && (leadRec.isNew || this.campaign != this.nameCard.campaign__c)) { //try
-                Database.insert(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, ContactId=this.nameCard.SmartViscaf__contact__c));
+             Database.DMLOptions dml = new Database.DMLOptions();
+
+             dml.OptAllOrNone = false;
+            
+             List< CampaignMember > cas = new List< CampaignMember >();
+              cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, ContactId=this.nameCard.SmartViscaf__contact__c));
+             
+              SB_NameCard_LeadCrudFls.screate(cas,dml);
             }
 
             // 名刺
+            
+              Database.DMLOptions namecarddml = new Database.DMLOptions();
+             
+              namecarddml.OptAllOrNone = false;
+             
+              List< SmartViscaf__NameCard__c > names = new List< SmartViscaf__NameCard__c >();
+             
             if (this.nameCard.campaign__c != null && this.nameCard.campaign__c != this.campaign) {
-                Database.update(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id, Campaign__c=this.nameCard.campaign__c));
+             
+                names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id, Campaign__c=this.nameCard.campaign__c));
+                
+                SB_NameCard_LeadCrudFls.supdate(names, namecarddml);
             } else if (this.nameCard.SmartViscaf__lead__c != lead.Id) {
-                Database.update(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id));
+            
+                names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id));
+                
+                SB_NameCard_LeadCrudFls.supdate(names, namecarddml);
             }
 
             // ToDo
             if (this.registTodo) {
-                Database.insert(SB_NameCard_LeadRegist.getTodo(leadId, ownerId, this.todo.Subject, this.todo.ActivityDate));
+                 Database.DMLOptions dml = new Database.DMLOptions();
+                
+                 dml.OptAllOrNone = false;
+                
+                 List< Task > todos = new List< Task >();
+                
+                 todos.add(SB_NameCard_LeadRegist.getTodo(leadId, ownerId, this.todo.Subject, this.todo.ActivityDate));
+                           SB_NameCard_LeadCrudFls.screate(todos,dml);
+
+                SB_NameCard_LeadCrudFls.screate(todos,dml);
             }
             pageRef = (new ApexPages.StandardController(lead)).view();
         } catch (Exception e) {

@@ -196,14 +196,25 @@
 		nc.SmartViscaf__email__c = 'test@sbnc.example.com';
 		nc.SmartViscaf__mobile__c = '090-1111-1111';
 		nc.SmartViscaf__card_exchange_date__c = Date.today();
-		Database.insert(nc);
+
+        Database.DMLOptions dml = new Database.DMLOptions();
+
+        dml.OptAllOrNone = false;
+
+        SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml);
+
 		System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
 	}
 
 	private static void insertLead(SmartViscaf__NameCard__c nc)
 	{
 		Lead lead = SB_NameCard_LeadRegist.getLead(null, nc, null);
-		Database.insert(lead);
+        Database.DMLOptions dml = new Database.DMLOptions();
+
+        dml.OptAllOrNone = false;
+
+        SB_NameCard_LeadCrudFls.screate(new List<Lead>{lead},dml);
+
 		System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 	}
 

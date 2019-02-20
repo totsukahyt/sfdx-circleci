@@ -283,9 +283,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         }
     
         if (leadList.size() <= 0) return 0;
-        Database.DMLOptions dml = new Database.DMLOptions();
+            Database.DMLOptions dml = new Database.DMLOptions();
 
-        dml.OptAllOrNone = false;
+            dml.OptAllOrNone = false;
 
         // リード
         this.setResult(SB_NameCard_LeadCrudFls.screate(leadList,dml), ncRecList);
@@ -335,7 +335,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
         //SB_NameCard_LeadCrudFls.screateLead(leadList);
 
-             Database.DMLOptions dml = new Database.DMLOptions();
+        Database.DMLOptions dml = new Database.DMLOptions();
 
         //エラーなってでも保存続く
         dml.OptAllOrNone = false;
@@ -383,7 +383,15 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         for (Integer i = 0, len = leadList.size(); i < len; i++) {
             cmList.add(new CampaignMember(CampaignId=campId, LeadId=leadList[i].Id, ContactId=ncRecList[i].nameCard.SmartViscaf__contact__c));
         }
-        if (cmList.size() > 0) Database.insert(cmList, true);
+        if (cmList.size() > 0)
+        {
+            Database.DMLOptions dml = new Database.DMLOptions();
+
+            dml.OptAllOrNone = true;
+        
+            SB_NameCard_LeadCrudFls.screate(cmList,dml);
+         
+         }
     }
 
     // 名刺
@@ -401,7 +409,16 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 ncList.add(new SmartViscaf__NameCard__c(Id=ncRecList[i].nameCard.Id, SmartViscaf__lead__c=leadId));
             }
         }
-        if (ncList.size() > 0) Database.update(ncList, true);
+
+        if (ncList.size() > 0)
+        {
+            Database.DMLOptions dml = new Database.DMLOptions();
+
+            dml.OptAllOrNone = true;
+    
+            SB_NameCard_LeadCrudFls.supdate(leadList, dml);
+
+        }
     }
 
     // ToDo
@@ -420,7 +437,16 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 ownerId = leadList[i].OwnerId;
             todoList.add(SB_NameCard_LeadRegist.getTodo(leadId, ownerId, subject, ncRecList[i].nameCard.SmartViscaf__card_exchange_date__c));
         }
-        if (todoList.size() > 0) Database.insert(todoList, true);
+
+        if (todoList.size() > 0)
+        {
+            Database.DMLOptions dml = new Database.DMLOptions();
+
+            dml.OptAllOrNone = true;
+           
+            SB_NameCard_LeadCrudFls.screate(todoList,dml);
+
+         }
     }
 
     // キャンセル

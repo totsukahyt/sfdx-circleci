@@ -18,7 +18,11 @@
         Account acc = new Account();
         List<SObject> objets = new List<SObject>();
         objets.add(acc);
-        SB_NameCard_LeadCrudFls.screate(objets);
+         Database.DMLOptions dml = new Database.DMLOptions();
+
+         dml.OptAllOrNone = false;
+
+        SB_NameCard_LeadCrudFls.screate(objets,dml);
         Test.stopTest();
     }
 
@@ -26,26 +30,16 @@
     {
   
         Test.startTest();
+        
+        Database.DMLOptions dml = new Database.DMLOptions();
 
-        SB_NameCard_LeadCrudFls.supdate(new List<SObject>{new Account()});
-
-        Test.stopTest();
-    }
-    
-
-    @isTest private static void test3()
-    {
-
-
-        Test.startTest();
-    SB_NameCard_LeadCrudFls.isCreateable('Account');
-    SB_NameCard_LeadCrudFls.isCreateableError('Account');
-    SB_NameCard_LeadCrudFls.isUpdateable('Account');
-    SB_NameCard_LeadCrudFls.isUpdateableError('Account');
-
+        dml.OptAllOrNone = false;
+        
+        SB_NameCard_LeadCrudFls.supdate(new List<SObject>{new Account()},dml);
 
         Test.stopTest();
     }
+
     
           private static testMethod void test6()
     {
@@ -68,7 +62,11 @@
 		SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
     System.runAs(u2) {
         try{
-           SB_NameCard_LeadCrudFls.screate(new List<SObject>{nc});
+            Database.DMLOptions dml = new Database.DMLOptions();
+
+            dml.OptAllOrNone = false;
+         
+            SB_NameCard_LeadCrudFls.screate(new List<SObject>{nc},dml);
         }catch(Exception e)
         {}
          }
@@ -96,8 +94,12 @@
         	insertNameCard();
 		SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
     System.runAs(u2) {
-        try{
-           SB_NameCard_LeadCrudFls.supdate(new List<SObject>{nc});
+        try{ 
+             Database.DMLOptions dml = new Database.DMLOptions();
+
+             dml.OptAllOrNone = false;
+             
+             SB_NameCard_LeadCrudFls.supdate(new List<SObject>{nc},dml);
         }catch(Exception e)
         {}
          }
@@ -119,14 +121,28 @@
         nc.SmartViscaf__email__c = 'test@sbnc.example.com';
         nc.SmartViscaf__mobile__c = '090-1111-1111';
         nc.SmartViscaf__card_exchange_date__c = Date.today();
-        Database.insert(nc);
+         Database.DMLOptions dml = new Database.DMLOptions();
+
+        dml.OptAllOrNone = false;
+
+        SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml);
+
         System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
     }
 
     private static void insertLead(SmartViscaf__NameCard__c nc)
     {
         Lead lead = SB_NameCard_LeadRegist.getLead(null, nc, null);
-        Database.insert(lead);
+         
+          Database.DMLOptions dml = new Database.DMLOptions();
+
+          dml.OptAllOrNone = false;
+         
+          List<Lead> leads = new List<Lead>();
+          
+          leads.add(lead);
+       
+          SB_NameCard_LeadCrudFls.screate(leads,dml);
         System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
     }
 

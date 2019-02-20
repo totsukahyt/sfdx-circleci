@@ -10,7 +10,7 @@
  *  @Version 3      2016.8.xx getPopulatedFieldsAsMap を使って入力のあった項目に絞ってすべて検査  メソッドを整理
  *
  **/
-global class SB_NameCard_LeadCrudFls {
+ global class SB_NameCard_LeadCrudFls {
   public class CrudFlsException extends exception {}
 
 
@@ -24,54 +24,52 @@ global class SB_NameCard_LeadCrudFls {
   }
 
 
-global static List<Database.SaveResult> screate(List<SObject> os, Database.DMLOptions dml) {
-
-
-        Schema.SObjectType targetType = os[0].getSObjectType();
-        Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
-        Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
-        Set<String> keys = getCheckFields(os);    // 入力のあった項目s]
-        System.debug(keys.size());
-      // 入力のあった項目が作成可能でないと例外
-      for (String key : keys) {
-        // String k = key.removeStart(namespace);   // SVのカスタム項目だとネームスペースがついてるので、とる  -> 37.0あたりでは不要
-        schema.describeFieldResult descField = m.get(key).getDescribe();
-        if (descField.getType() != DisplayType.location        // 2015.01.22  Location 型は isCreateable() とかでエラーになる。
+  global static List<Database.SaveResult> screate(List<SObject> os, Database.DMLOptions dml) {
+    Schema.SObjectType targetType = os[0].getSObjectType();
+    Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
+    Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
+    Set<String> keys = getCheckFields(os);    // 入力のあった項目s]
+    System.debug(keys.size());
+    // 入力のあった項目が作成可能でないと例外
+    for (String key : keys) {
+      // String k = key.removeStart(namespace);   // SVのカスタム項目だとネームスペースがついてるので、とる  -> 37.0あたりでは不要
+      schema.describeFieldResult descField = m.get(key).getDescribe();
+      if (descField.getType() != DisplayType.location        // 2015.01.22  Location 型は isCreateable() とかでエラーになる。
           && descField.isPermissionable()           // 権限設定出来る項目だけ
           && descField.isCreateable() == false      // 作成可能?
           && descField.isAutoNumber() == false      // 自動採番?
           && descField.isCalculated() == false) {   // 数式?
-            throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotCreateable,
-            new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
-        }
+        throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotCreateable,
+          new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
+      }
 
-         }
-           List<Database.SaveResult> sr = Database.insert(os, dml);
-            return sr;
-     }
+    }
+    List<Database.SaveResult> sr = Database.insert(os, dml);
+    return sr;
+  }
 
 
-    global static List<Database.SaveResult> supdate(List<SObject> os, Database.DMLOptions dml) {
-        Schema.SObjectType targetType = os[0].getSObjectType();
-        Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
-        Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
-        Set<String> keys = getCheckFields(os);    // 入力のあった項目s
-      // 入力のあった項目が作成可能でないと例外
-      for (String key : keys) {
-        // String k = key.removeStart(namespace);   // SVのカスタム項目だとネームスペースがついてるので、とる  -> 37.0あたりでは不要
-        schema.describeFieldResult descField = m.get(key).getDescribe();
-        if (descField.getType() != DisplayType.location        // 2015.01.22  Location 型は isCreateable() とかでエラーになる。
+  global static List<Database.SaveResult> supdate(List<SObject> os, Database.DMLOptions dml) {
+    Schema.SObjectType targetType = os[0].getSObjectType();
+    Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
+    Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
+    Set<String> keys = getCheckFields(os);    // 入力のあった項目s
+    // 入力のあった項目が作成可能でないと例外
+    for (String key : keys) {
+      // String k = key.removeStart(namespace);   // SVのカスタム項目だとネームスペースがついてるので、とる  -> 37.0あたりでは不要
+      schema.describeFieldResult descField = m.get(key).getDescribe();
+      if (descField.getType() != DisplayType.location        // 2015.01.22  Location 型は isCreateable() とかでエラーになる。
           && descField.isPermissionable()           // 権限設定出来る項目だけ
           && descField.isUpdateable() == false      // 作成可能?
           && descField.isAutoNumber() == false      // 自動採番?
           && descField.isCalculated() == false) {   // 数式?
-           throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotUpdateable,
-            new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
-        } 
-      }
-       List<Database.SaveResult> sr = Database.update(os, dml);
-    return sr;
-}
+         throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotUpdateable,
+          new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
+       }
+     }
+     List<Database.SaveResult> sr = Database.update(os, dml);
+     return sr;
+   }
 
 
 }

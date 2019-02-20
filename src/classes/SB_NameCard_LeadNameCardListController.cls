@@ -131,10 +131,21 @@ public with sharing class SB_NameCard_LeadNameCardListController
 			}
 
 			sp = Database.setSavepoint();
-			Database.update(updLead);
+
+			 Database.DMLOptions leaddml = new Database.DMLOptions();
+
+             leaddml.OptAllOrNone = false;
+             
+             SB_NameCard_LeadCrudFls.supdate(new List<Lead>{updLead}, leaddml);
 
 			if (ncRec.nameCard.SmartViscaf__lead__c != updLead.Id) {
-				Database.update(new SmartViscaf__NameCard__c(Id=ncRec.nameCard.Id, SmartViscaf__lead__c=updLead.Id));
+
+
+			 Database.DMLOptions dml = new Database.DMLOptions();
+
+             dml.OptAllOrNone = false;
+
+			 SB_NameCard_LeadCrudFls.supdate(new List<SmartViscaf__NameCard__c>{new SmartViscaf__NameCard__c(Id=ncRec.nameCard.Id, SmartViscaf__lead__c=updLead.Id)},dml);
 			}
 			pageRef = (new ApexPages.StandardController(updLead)).view();
 		} catch (Exception e) {
