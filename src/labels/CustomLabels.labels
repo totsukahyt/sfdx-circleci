@@ -253,6 +253,13 @@
         <value>ToDoの所有者はキューに設定する事ができません</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_MSG_QUEUES_LEAD_ERROR</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>選択されたキュー(キューId)ではリードにサポートされていません</shortDescription>
+        <value>選択されたキュー({0})ではリードにサポートされていません</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_MSG_Regist_Error</fullName>
         <language>ja</language>
         <protected>true</protected>

@@ -474,7 +474,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             leadId = Id.valueOf(ncRec.leadId);
 
-             if(!Lead.sObjectType.getDescribe().isUpdateable()) {
+             if(!Lead.sObjectType.getDescribe().isUpdateable() && this.leadOverwrite) {
                  throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
               }
             //if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException('リードが重複しています');
@@ -534,7 +534,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
         // リード
         //SV_DEV-755 無効なユーザでTODO登録したときのエラー
-        this.setResult(SB_NameCard_LeadCrudFls.supdate(leadList, dml), ncRecList, Lead.getSObjectType(), false);
+        if (this.leadOverwrite) {
+            this.setResult(SB_NameCard_LeadCrudFls.supdate(leadList, dml), ncRecList, Lead.getSObjectType(), false);
+        }
 
         // キャンペーンメンバー
         // SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。

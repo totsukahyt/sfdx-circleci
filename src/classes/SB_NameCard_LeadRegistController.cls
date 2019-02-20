@@ -312,10 +312,9 @@ public with sharing class SB_NameCard_LeadRegistController
             } else {
               Schema.DescribeSObjectResult tar = Lead.sObjectType.getDescribe();
 
-                 if(!Lead.sObjectType.getDescribe().isUpdateable())
-                   {
-                       throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
-                   }
+                if(!Lead.sObjectType.getDescribe().isUpdateable() && this.leadOverwrite) {
+                   throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
+                }
 
                 if (leadRec.pageLead == null) {
                     String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
