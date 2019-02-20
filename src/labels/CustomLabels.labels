@@ -334,7 +334,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>Smallリード</shortDescription>
-        <value>lead</value>
+        <value>リード</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_SpecifiedWhenCreateNew</fullName>

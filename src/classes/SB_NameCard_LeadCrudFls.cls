@@ -22,19 +22,19 @@ global class SB_NameCard_LeadCrudFls {
   // // private static String namespace = SB_NameCard_Util.getNamespacePrefix_x();
 
   // そもそも オブジェクトが内部処理用なので、ユーザの権限に依存しないもの
-  private static Set<Schema.SObjectType> ignoreObjects {
-    get {
-      if (ignoreObjects == null) {
-        ignoreObjects  = new Set<Schema.SObjectType> {
-          User.sObjectType          // ユーザ
-          , SmartViscaf__SmartViscaConfig__c.sObjectType   // SVカスタム設定
-          //    , Schema.getGlobalDescribe().get('Lead')
-        };
-      }
-      return ignoreObjects;
-    }
-    Set;
-  }
+  //private static Set<Schema.SObjectType> ignoreObjects {
+  //  get {
+  //    if (ignoreObjects == null) {
+  //      ignoreObjects  = new Set<Schema.SObjectType> {
+  //        User.sObjectType          // ユーザ
+  //        , SmartViscaf__SmartViscaConfig__c.sObjectType   // SVカスタム設定
+  //        //    , Schema.getGlobalDescribe().get('Lead')
+  //      };
+  //    }
+  //    return ignoreObjects;
+  //  }
+  //  Set;
+  //}
 
   // 入力のあった項目API名を抽出する。
   private static Set<String> getCheckFields(List<SObject> os) {
@@ -45,16 +45,16 @@ global class SB_NameCard_LeadCrudFls {
     return result;
   }
 
-  // CRDU FLS チェック付き 作成
-  public static void screate(List<SObject> os, Boolean opt_allOrNone) {
-    if (os == null || os.size() == 0){
-      return;
-    }
-    Database.DMLOptions dml = new Database.DMLOptions();
-    dml.OptAllOrNone = opt_allOrNone;
-    screateDuplicate(os, dml);
+  //// CRDU FLS チェック付き 作成
+  //public static void screate(List<SObject> os, Boolean opt_allOrNone) {
+  //  if (os == null || os.size() == 0){
+  //    return;
+  //  }
+  //  Database.DMLOptions dml = new Database.DMLOptions();
+  //  dml.OptAllOrNone = opt_allOrNone;
+  //  screateDuplicate(os, dml);
 
-  }
+  //}
 
 global static void screateLead(List<SObject> os) {
 
@@ -62,7 +62,8 @@ global static void screateLead(List<SObject> os) {
 Schema.SObjectType targetType = os[0].getSObjectType();
 Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
 Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
- Set<String> keys = getCheckFields(os);    // 入力のあった項目s
+ Set<String> keys = getCheckFields(os);    // 入力のあった項目s]
+    System.debug(keys.size());
       // 入力のあった項目が作成可能でないと例外
       for (String key : keys) {
         // String k = key.removeStart(namespace);   // SVのカスタム項目だとネームスペースがついてるので、とる  -> 37.0あたりでは不要
@@ -103,94 +104,94 @@ Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
 
   // CRDU FLS チェック付き 作成
   // DMLOptions指定、結果を返す。 重複管理用で追加
-  global static List<Database.SaveResult> screateDuplicate(List<SObject> os, Database.DMLOptions dml) {
-    if (os == null || os.isEmpty()) {
-      return null;
-    }
-    if (ignoreObjects.contains(os[0].getSObjectType()) == false && Test.isRunningTest() == false) {
-      // Get Describe Result of the SObject
-      Schema.SObjectType targetType = os[0].getSObjectType();
-      if (targetType == null) {
-        throw new CrudFlsException('Object not found.');
-      }
+  //global static List<Database.SaveResult> screateDuplicate(List<SObject> os, Database.DMLOptions dml) {
+  //  if (os == null || os.isEmpty()) {
+  //    return null;
+  //  }
+  //  if (ignoreObjects.contains(os[0].getSObjectType()) == false && Test.isRunningTest() == false) {
+  //    // Get Describe Result of the SObject
+  //    Schema.SObjectType targetType = os[0].getSObjectType();
+  //    if (targetType == null) {
+  //      throw new CrudFlsException('Object not found.');
+  //    }
 
-      Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
-      // オブジェクト作成権限があるか
-      if (!sobjResult.isCreateable()) {
-        throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_CrudNotCreateable, new String[] {sobjResult.label}));
-      }
+  //    Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
+  //    // オブジェクト作成権限があるか
+  //    if (!sobjResult.isCreateable()) {
+  //      throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_CrudNotCreateable, new String[] {sobjResult.label}));
+  //    }
 
-      Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
-      Set<String> keys = getCheckFields(os);    // 入力のあった項目s
-      // 入力のあった項目が作成可能でないと例外
-      for (String key : keys) {
-        // String k = key.removeStart(namespace);   // SVのカスタム項目だとネームスペースがついてるので、とる  -> 37.0あたりでは不要
-        schema.describeFieldResult descField = m.get(key).getDescribe();
-        if (descField.getType() != DisplayType.location        // 2015.01.22  Location 型は isCreateable() とかでエラーになる。
-          && descField.isPermissionable()           // 権限設定出来る項目だけ
-          && descField.isCreateable() == false      // 作成可能?
-          && descField.isAutoNumber() == false      // 自動採番?
-          && descField.isCalculated() == false) {   // 数式?
-            throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotCreateable,
-                                      new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
-        }
-      }
-    }
+  //    Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
+  //    Set<String> keys = getCheckFields(os);    // 入力のあった項目s
+  //    // 入力のあった項目が作成可能でないと例外
+  //    for (String key : keys) {
+  //      // String k = key.removeStart(namespace);   // SVのカスタム項目だとネームスペースがついてるので、とる  -> 37.0あたりでは不要
+  //      schema.describeFieldResult descField = m.get(key).getDescribe();
+  //      if (descField.getType() != DisplayType.location        // 2015.01.22  Location 型は isCreateable() とかでエラーになる。
+  //        && descField.isPermissionable()           // 権限設定出来る項目だけ
+  //        && descField.isCreateable() == false      // 作成可能?
+  //        && descField.isAutoNumber() == false      // 自動採番?
+  //        && descField.isCalculated() == false) {   // 数式?
+  //          throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotCreateable,
+  //                                    new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
+  //      }
+  //    }
+  //  }
 
-    // INSERT
-    List<Database.SaveResult> sr = Database.insert(os, dml);
-    return sr;
-  }
-
-  // CRDU FLS チェック付き 更新
-  public static void supdate(List<SObject> os, Boolean opt_allOrNone){
-    if (os == null || os.isEmpty()) {
-      return;
-    }
-    Database.DMLOptions dml = new Database.DMLOptions();
-    dml.OptAllOrNone = opt_allOrNone;
-    supdateDuplicate(os, dml);
-  }
+  //  // INSERT
+  //  List<Database.SaveResult> sr = Database.insert(os, dml);
+  //  return sr;
+  //}
 
   // CRDU FLS チェック付き 更新
-  // DMLOptions指定、結果を返す。 重複管理用で追加
-  global static List<Database.SaveResult> supdateDuplicate(List<SObject> os, Database.DMLOptions dml) {
-    if (os == null || os.isEmpty()) {
-      return null;
-    }
+  //public static void supdate(List<SObject> os, Boolean opt_allOrNone){
+  //  if (os == null || os.isEmpty()) {
+  //    return;
+  //  }
+  //  Database.DMLOptions dml = new Database.DMLOptions();
+  //  dml.OptAllOrNone = opt_allOrNone;
+  //  supdateDuplicate(os, dml);
+  //}
 
-    if (ignoreObjects.contains(os[0].getSObjectType()) == false && Test.isRunningTest() == false) {
-      Schema.SObjectType targetType = os[0].getSObjectType();
-      if (targetType == null) {
-          throw new CrudFlsException('Object not found.');
-      }
+  //// CRDU FLS チェック付き 更新
+  //// DMLOptions指定、結果を返す。 重複管理用で追加
+  //global static List<Database.SaveResult> supdateDuplicate(List<SObject> os, Database.DMLOptions dml) {
+  //  if (os == null || os.isEmpty()) {
+  //    return null;
+  //  }
 
-      Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
-      // オブジェクトの編集権限があるか
-      if (!sobjResult.isUpdateable()) {
-        throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_CrudNotUpdateable, new String[] {sobjResult.label}));
-      }
+  //  if (ignoreObjects.contains(os[0].getSObjectType()) == false && Test.isRunningTest() == false) {
+  //    Schema.SObjectType targetType = os[0].getSObjectType();
+  //    if (targetType == null) {
+  //        throw new CrudFlsException('Object not found.');
+  //    }
 
-      Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
-      Set<String> keys = getCheckFields(os);    // 入力のあった項目s
-      // 入力のあった項目が編集可能でないと例外
-      for (String key : keys) {
-        // String k = key.removeStart(namespace);   // SVのカスタム項目だとネームスペースがついてるので、とる  -> 37.0あたりでは不要
-        schema.describeFieldResult descField = m.get(key).getDescribe();
-        if (descField.getType() != DisplayType.location         // 2015.01.22  Location 型は isCreateable() とかでエラーになる。
-          && descField.isPermissionable()       // 権限設定出来る項目だけ
-          && descField.isUpdateable() == false      // 更新可能？
-          && descField.isAutoNumber() == false      // 自動採番?
-          && descField.isCalculated() == false) {   // 数式?
-            throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotUpdateable,
-                                      new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
-        }
-      }
-    }
+  //    Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
+  //    // オブジェクトの編集権限があるか
+  //    if (!sobjResult.isUpdateable()) {
+  //      throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_CrudNotUpdateable, new String[] {sobjResult.label}));
+  //    }
 
-    List<Database.SaveResult> sr = Database.update(os, dml);
-    return sr;
-  }
+  //    Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
+  //    Set<String> keys = getCheckFields(os);    // 入力のあった項目s
+  //    // 入力のあった項目が編集可能でないと例外
+  //    for (String key : keys) {
+  //      // String k = key.removeStart(namespace);   // SVのカスタム項目だとネームスペースがついてるので、とる  -> 37.0あたりでは不要
+  //      schema.describeFieldResult descField = m.get(key).getDescribe();
+  //      if (descField.getType() != DisplayType.location         // 2015.01.22  Location 型は isCreateable() とかでエラーになる。
+  //        && descField.isPermissionable()       // 権限設定出来る項目だけ
+  //        && descField.isUpdateable() == false      // 更新可能？
+  //        && descField.isAutoNumber() == false      // 自動採番?
+  //        && descField.isCalculated() == false) {   // 数式?
+  //          throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotUpdateable,
+  //                                    new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
+  //      }
+  //    }
+  //  }
+
+  //  List<Database.SaveResult> sr = Database.update(os, dml);
+  //  return sr;
+  //}
 
     //オブジェクト編集権限あるか
     global static Boolean isCreateable(Sobject objects)
@@ -338,39 +339,39 @@ Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
 //         screate(new List<SObject>{o});
 //     }*/
 //
-    public static String defaultRecordType(String sobjectname)
-      {
-        String recordTypeName;
-        List<Schema.RecordTypeInfo> rs =  Schema.getGlobalDescribe().get(sobjectname).getDescribe().getRecordTypeInfos();
-        for (RecordTypeInfo r : rs)
-          {
-            if(r.isDefaultRecordTypeMapping() && r.isAvailable())
-              {
-                 recordTypeName =  r.getRecordTypeId();
-                }
-          }
-          return recordTypeName;
-      }
+    //public static String defaultRecordType(String sobjectname)
+    //  {
+    //    String recordTypeName;
+    //    List<Schema.RecordTypeInfo> rs =  Schema.getGlobalDescribe().get(sobjectname).getDescribe().getRecordTypeInfos();
+    //    for (RecordTypeInfo r : rs)
+    //      {
+    //        if(r.isDefaultRecordTypeMapping() && r.isAvailable())
+    //          {
+    //             recordTypeName =  r.getRecordTypeId();
+    //            }
+    //      }
+    //      return recordTypeName;
+    //  }
 
-    public static List<RecordTypeInfo> getRecordType(String sobjectname)
-      {
+    //public static List<RecordTypeInfo> getRecordType(String sobjectname)
+    //  {
 
-        List<Schema.RecordTypeInfo> rs =  Schema.getGlobalDescribe().get(sobjectname).getDescribe().getRecordTypeInfos();
-        List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
-        for (RecordTypeInfo r : rs)
-          {
-            if(r.isAvailable()){
-                recordtypes.add(r);
-             }
-          }
-          //isMasterメソード使えるにはWinter'16　APIバージョン35.0以降でなければならない、
-          //そのため、今最後のレコードタイプMasterをリストから削除します
-          if(recordtypes.size()>0)
-          {
-              recordtypes.remove(recordtypes.size()-1);
-            }
-          return recordtypes;
-      }
+    //    List<Schema.RecordTypeInfo> rs =  Schema.getGlobalDescribe().get(sobjectname).getDescribe().getRecordTypeInfos();
+    //    List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
+    //    for (RecordTypeInfo r : rs)
+    //      {
+    //        if(r.isAvailable()){
+    //            recordtypes.add(r);
+    //         }
+    //      }
+    //      //isMasterメソード使えるにはWinter'16　APIバージョン35.0以降でなければならない、
+    //      //そのため、今最後のレコードタイプMasterをリストから削除します
+    //      if(recordtypes.size()>0)
+    //      {
+    //          recordtypes.remove(recordtypes.size()-1);
+    //        }
+    //      return recordtypes;
+    //  }
 //
 //
 //   //
