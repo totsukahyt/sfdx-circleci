@@ -216,6 +216,23 @@
                       </span>
                     </th>
 
+                    <th style="{!if(v.showType == 'Contact' , 'position:static;', 'display: none;')}" class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanSmartViscaf__email__c" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_SmartViscaf__email__c}" class="slds-truncate">
+                            {!v.labelMap.cardLabel_SmartViscaf__email__c}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
 
 
 
@@ -313,6 +330,12 @@
                     <td style="{!if(v.showType != 'Lead', 'min-width: 100px;', 'display: none;')}" role="gridcell">
                       <div style="{!if(v.fieldMap.SmartViscaf__mobile__c.width != '', 'width:' + v.fieldMap.SmartViscaf__mobile__c.width + 'px', '')}" class="slds-truncate">
                           {!obj.cObjectMap.SmartViscaf__mobile__c.value}
+                      </div>
+                    </td>
+
+                    <td style="{!if(v.showType == 'Contact' , 'min-width: 100px;', 'display: none;')}" role="gridcell">
+                      <div style="{!if(v.fieldMap.SmartViscaf__email__c.width != '', 'width:' + v.fieldMap.SmartViscaf__email__c.width + 'px', '')}" class="slds-truncate">
+                          {!obj.cObjectMap.SmartViscaf__email__c.value}
                       </div>
                     </td>
 
