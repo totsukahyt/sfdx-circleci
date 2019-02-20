@@ -1,7 +1,7 @@
 /*
  * (c) 2016 Sunbridge Inc.
  *
- * リードに登録
+ * リードに登録this.isAllowDuplicateSave;
  */
 
 public with sharing class SB_NameCard_LeadRegistController
@@ -87,7 +87,9 @@ public with sharing class SB_NameCard_LeadRegistController
 
             this.nameCard = SB_NameCard_LeadRegist.getNameCard(sc.getId());
             //if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
-            if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_BusinessCardNotFound);
+            if (this.nameCard == null) {
+                throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_BusinessCardNotFound);
+            }
 
             if (String.isBlank(this.nameCard.SmartViscaf__email__c) && (String.isNotBlank(this.nameCard.SmartViscaf__person_name_last__c) || String.isNotBlank(this.nameCard.SmartViscaf__person_name_first__c))) {
                 this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
@@ -189,14 +191,14 @@ public with sharing class SB_NameCard_LeadRegistController
             Id leadId, ownerId;
             if (leadRec.isNew) {
 
-                 Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
-               if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
-                      {
-                             throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotCreateable,new String[]{tar.label})) ;
-                          }
-                          
+                Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
+                if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
+                {
+                    throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotCreateable,new String[]{tar.label})) ;
+                }
+
                 if (this.nameCard.OwnerId == null) {
-                String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
+                    String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
 
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
                     throw new SB_NameCard_LeadRegist.LeadRegistException(str);
@@ -234,52 +236,54 @@ public with sharing class SB_NameCard_LeadRegistController
 
             // キャンペーン
             if (this.nameCard.campaign__c != null && (leadRec.isNew || this.campaign != this.nameCard.campaign__c)) { //try
-             Database.DMLOptions dml = new Database.DMLOptions();
 
-             dml.OptAllOrNone = false;
-            
-             List< CampaignMember > cas = new List< CampaignMember >();
-              cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, ContactId=this.nameCard.SmartViscaf__contact__c));
-             
-              SB_NameCard_LeadCrudFls.screate(cas,dml);
+                Database.DMLOptions dml = new Database.DMLOptions();
+
+                dml.OptAllOrNone = false;
+
+                List< CampaignMember > cas = new List< CampaignMember >();
+                cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, ContactId=this.nameCard.SmartViscaf__contact__c));
+
+                SB_NameCard_LeadCrudFls.screate(cas,dml);
             }
 
             // 名刺
-            
-              Database.DMLOptions namecarddml = new Database.DMLOptions();
-             
-              namecarddml.OptAllOrNone = false;
-             
-              List< SmartViscaf__NameCard__c > names = new List< SmartViscaf__NameCard__c >();
-             
+
+            Database.DMLOptions namecarddml = new Database.DMLOptions();
+
+            namecarddml.OptAllOrNone = false;
+
+            List< SmartViscaf__NameCard__c > names = new List< SmartViscaf__NameCard__c >();
+
             if (this.nameCard.campaign__c != null && this.nameCard.campaign__c != this.campaign) {
-             
+
                 names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id, Campaign__c=this.nameCard.campaign__c));
-                
+
                 SB_NameCard_LeadCrudFls.supdate(names, namecarddml);
             } else if (this.nameCard.SmartViscaf__lead__c != lead.Id) {
-            
+
                 names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id));
-                
+
                 SB_NameCard_LeadCrudFls.supdate(names, namecarddml);
             }
 
             // ToDo
             if (this.registTodo) {
-                 Database.DMLOptions dml = new Database.DMLOptions();
-                
-                 dml.OptAllOrNone = false;
-                
-                 List< Task > todos = new List< Task >();
-                
-                 todos.add(SB_NameCard_LeadRegist.getTodo(lead.Id, ownerId, this.todo.Subject, this.todo.ActivityDate,this.todo.Description));
-                           SB_NameCard_LeadCrudFls.screate(todos,dml);
+                Database.DMLOptions dml = new Database.DMLOptions();
+
+                dml.OptAllOrNone = false;
+
+                List< Task > todos = new List< Task >();
+
+                todos.add(SB_NameCard_LeadRegist.getTodo(lead.Id, ownerId, this.todo.Subject, this.todo.ActivityDate,this.todo.Description));
+                SB_NameCard_LeadCrudFls.screate(todos,dml);
 
                 SB_NameCard_LeadCrudFls.screate(todos,dml);
             }
             pageRef = (new ApexPages.StandardController(lead)).view();
         } catch (Exception e) {
             if (sp != null) Database.rollback(sp);
+
             ApexPages.addMessages(e);
         }
         return pageRef;
@@ -290,8 +294,7 @@ public with sharing class SB_NameCard_LeadRegistController
     {
         Database.DMLOptions dmlOpts = new Database.DMLOptions();
         dmlOpts.DuplicateRuleHeader.allowSave = this.isAllowDuplicateSave; // 重複レコードを保存するか
-        //List<Lead> objets = new List<Lead>();
-        //objets.add(lead);
+
         Database.SaveResult sr = isInsert ? SB_NameCard_LeadCrudFls.screate(lead, dmlOpts)[0] : SB_NameCard_LeadCrudFls.supdate(lead, dmlOpts)[0];
         if (sr.isSuccess()) return;
 
@@ -310,7 +313,9 @@ public with sharing class SB_NameCard_LeadRegistController
     // キャンセル
     public PageReference cancel()
     {
-        if (this.nameCard == null) return null;
+        if (this.nameCard == null) {
+            return null;
+        }
         return (new ApexPages.StandardController(this.nameCard)).view();
     }
 }

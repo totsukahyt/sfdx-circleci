@@ -1,4 +1,10 @@
-<!-- (c) 2012 SunBridge Inc. -->
+<!--
+/*
+ * (c) 2016 Sunbridge Inc.
+ *
+ * リードに登録
+ */
+-->
 <apex:page standardController="SmartViscaf__NameCard__c" extensions="SB_NameCard_LeadRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="true">
     <apex:pageMessages id="pageMsgs" escape="false"/>
 

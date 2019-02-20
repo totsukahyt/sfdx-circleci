@@ -6,7 +6,7 @@
 
 public with sharing class SB_NameCard_LeadBulkRegistController
 {
-      public class LeadBulkRegistControllerException extends exception {}
+    public class LeadBulkRegistControllerException extends exception {}
     // 名刺レコード
     public class NameCardRecord
     {
@@ -55,7 +55,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 if (nameListMap.containsKey(name)) {
                     for (Lead lead : nameListMap.get(name)) {
                         if (idSet.contains(lead.Id)) continue;
-                        nameSelOptList.add(new SelectOption(lead.Id, this.getLabel(lead.Name, lead.Email)));
+                        nameSelOptList.add(new SelectOption(lead.Id, this.getLabel(lead.Name,lead.Email)));
                         idSet.add(lead.Id);
                     }
                 }
@@ -161,7 +161,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     // 検索
     public void search()
     {
-    	    String message = '';
+            String message = '';
         try {
             this.hasError = false;
             Map<Id, Lead> idMap = new Map<Id, Lead>();
@@ -172,11 +172,11 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             for (NameCardRecord ncRec : this.nameCardRecordList) {
                 ncRec.setLeadRecord(idMap, emailListMap, nameListMap);
                 if (ncRec.message != '') {
-                	    message = ncRec.message;
+                        message = ncRec.message;
                 }
             }
             if (message != '') {
-            	    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
             }
         } catch (Exception e) {
             ApexPages.addMessages(e);
@@ -189,10 +189,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         this.leadOwnerIdMap.clear();
         String soql = this.soqlMap.get(this.searchType);
         if (String.isBlank(soql)) return;
-
-        String name;
-
-        for (Lead lead : Database.query(soql)) {
+        String name ='';
+        for (Lead lead :Database.query(soql)) {
             idMap.put(lead.Id, lead);
             this.leadOwnerIdMap.put(lead.Id, lead.OwnerId);
 
@@ -264,7 +262,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         String str = System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV;
         str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
 
-          
+
         Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
         for (NameCardRecord ncRec : this.nameCardRecordList) {
             if (ncRec.leadId != 'new')
@@ -284,7 +282,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, this.insertOption.OwnerId));
             ncRecList.add(ncRec);
         }
-    
+
         if (leadList.size() <= 0) return 0;
             Database.DMLOptions dml = new Database.DMLOptions();
 
@@ -391,9 +389,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             Database.DMLOptions dml = new Database.DMLOptions();
 
             dml.OptAllOrNone = true;
-        
+
             SB_NameCard_LeadCrudFls.screate(cmList,dml);
-         
+
          }
     }
 
@@ -418,7 +416,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             Database.DMLOptions dml = new Database.DMLOptions();
 
             dml.OptAllOrNone = true;
-    
+
             SB_NameCard_LeadCrudFls.supdate(ncList, dml);
 
         }
@@ -446,7 +444,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             Database.DMLOptions dml = new Database.DMLOptions();
 
             dml.OptAllOrNone = true;
-           
+
             SB_NameCard_LeadCrudFls.screate(todoList,dml);
 
          }

@@ -3,14 +3,17 @@
  *
  * リードに登録
  * 共通クラス
+ *
+ *  2016.11.09  コードスキャンで global なメソッドは with sharing が必要とのことなので、 with sharing  を付けた。
  */
 
-global class SB_NameCard_LeadRegist
+global with sharing class SB_NameCard_LeadRegist
 {
     global static final Integer SEARCHTYPE_EMAIL = 1;
     global static final Integer SEARCHTYPE_NAME  = 2;
 
     global class LeadRegistException extends Exception {}
+
 
     // SmartVisca設定
     global class SvConfig
@@ -33,7 +36,9 @@ global class SB_NameCard_LeadRegist
             keyList = new List<String> {'Overwrite', 'RegistTodo'};
             this.setBoolMap(keyList, this.confMap, conf, null);
 
-            if (conf.Id != null && conf.get('LeadRegist_DispCompany__c') != null) this.todoSubject = conf.LeadRegist_TodoSubject__c; // defined in Lead Package
+            if (conf.Id != null && conf.get('LeadRegist_DispCompany__c') != null) {
+                this.todoSubject = conf.LeadRegist_TodoSubject__c; // defined in Lead Package
+            }
         }
 
         private void setBoolMap(List<String> keyList, Map<String, Boolean> bMap, SmartViscaf__SmartViscaConfig__c conf, String keyPrefix)
@@ -82,14 +87,16 @@ global class SB_NameCard_LeadRegist
     }
 
     // SmartVisca設定
-    global static SvConfig svConfig {
+    global static SvConfig svConfig
+    {
         get {
             return (svConfig == null) ? new SvConfig() : svConfig;
         }
     }
 
     // ToDoの状況値
-    global static Map<String, String> todoStatusMap {
+    global static Map<String, String> todoStatusMap
+    {
         get {
             if (todoStatusMap != null) return todoStatusMap;
 
@@ -168,14 +175,14 @@ global class SB_NameCard_LeadRegist
             if (nc.SmartViscaf__lead__c != null) nameIdList.add(nc.SmartViscaf__lead__c);
 
             if ((name = getPersonName(nc)) != null) {
-            String str = EncodingUtil.urlEncode(name,'UTF-8');
-            Blob b = Blob.valueOf(str);
-            String b64 = EncodingUtil.base64Encode(b);
-            System.debug('b64 is' + b64);
-            name = name.replaceAll('\'', b64);
-            name = String.escapeSingleQuotes(name.replaceAll('＼', '_'));
-            name = name.replaceAll(b64, '\'');
-            nameSet.add(name);
+                String str = EncodingUtil.urlEncode(name,'UTF-8');
+                Blob b = Blob.valueOf(str);
+                String b64 = EncodingUtil.base64Encode(b);
+                name = name.replaceAll('\'', b64);
+                name = String.escapeSingleQuotes(name.replaceAll('＼','_'));
+                name = name.replaceAll(b64, '\'');
+                nameSet.add(name);
+
                 //if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
                 //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
             }
@@ -187,15 +194,17 @@ global class SB_NameCard_LeadRegist
         soqlMap.put(SEARCHTYPE_NAME, getSoql(whereList));
     }
 
-        global static void setLastFirstNameSoql(Map<Integer, String> soqlMap, List<Id> nameIdList, Set<String> nameSet,Set<String> lastnameSet,Set<String> firstnameSet, List<SmartViscaf__NameCard__c> ncList)
+    global static void setLastFirstNameSoql(Map<Integer, String> soqlMap, List<Id> nameIdList, Set<String> nameSet,Set<String> lastnameSet,Set<String> firstnameSet, List<SmartViscaf__NameCard__c> ncList)
     {
         String lastName;
         String firstName;
 
         for (SmartViscaf__NameCard__c nc : ncList) {
-            if (nc.SmartViscaf__lead__c != null) nameIdList.add(nc.SmartViscaf__lead__c);
+            if (nc.SmartViscaf__lead__c != null) {
+                nameIdList.add(nc.SmartViscaf__lead__c);
+            }
 
-            if ((lastName = getPersonLastName(nc)) != null){
+            if ((lastName = getPersonLastName(nc)) != null) {
                 String str = EncodingUtil.urlEncode(lastName,'UTF-8');
                 Blob b = Blob.valueOf(str);
                 String b64 = EncodingUtil.base64Encode(b);
@@ -206,7 +215,7 @@ global class SB_NameCard_LeadRegist
                 //if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
                 //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
             }
-                 if ((firstName = getPersonFirstName(nc)) != null) {
+            if ((firstName = getPersonFirstName(nc)) != null) {
                 String str = EncodingUtil.urlEncode(firstName,'UTF-8');
                 Blob b = Blob.valueOf(str);
                 String b64 = EncodingUtil.base64Encode(b);
@@ -218,14 +227,22 @@ global class SB_NameCard_LeadRegist
                 //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
             }
         }
+
         List<String> whereList = new List<String>();
-        if (nameIdList.size() > 0)  whereList.add('Id IN :nameIdList');
+        if (nameIdList.size() > 0)  {
+            whereList.add('Id IN :nameIdList');
+        }
         String str = '';
-        if (lastnameSet.size() > 0) str += ' LastName = :lastnameSet ';
+        if (lastnameSet.size() > 0) {
+            str += ' LastName = :lastnameSet ';
+        }
         if (firstnameSet.size() > 0){
-         str = '(' + str + ' AND FirstName = :firstnameSet' + ')';
-     }
+            str = '(' + str + ' AND FirstName = :firstnameSet' + ')';
+        }
         whereList.add(str);
+        System.debug(firstnameSet);
+        System.debug(lastnameSet);
+        System.debug(getSoql(whereList));
         soqlMap.put(SEARCHTYPE_NAME, getSoql(whereList));
     }
 
@@ -279,7 +296,7 @@ global class SB_NameCard_LeadRegist
         }
 
         return pnMap.get('last_name')+' '+pnMap.get('first_name'); // 姓名
-       
+
     }
 
     // リード

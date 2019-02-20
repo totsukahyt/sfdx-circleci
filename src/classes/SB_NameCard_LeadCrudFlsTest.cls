@@ -6,104 +6,104 @@
  * テスト
  */
 
-@isTest private class SB_NameCard_LeadCrudFlsTest
-{
+ @isTest private class SB_NameCard_LeadCrudFlsTest
+ {
 
     @isTest private static void test1()
     {
-  
-         Test.startTest();
-        
-         Database.DMLOptions dml = new Database.DMLOptions();
 
-         dml.OptAllOrNone = false;
-        
-         Database.SaveResult sr =  SB_NameCard_LeadCrudFls.supdate(new List<SObject>{new Account()},dml)[0];
+       Test.startTest();
 
-         System.assertNotEquals(0,sr.getErrors().size(), 'NameCard error');
+       Database.DMLOptions dml = new Database.DMLOptions();
 
-         Test.stopTest();
-    }
+       dml.OptAllOrNone = false;
+
+       Database.SaveResult sr =  SB_NameCard_LeadCrudFls.supdate(new List<SObject>{new Account()},dml)[0];
+
+       System.assertNotEquals(0,sr.getErrors().size(), 'NameCard error');
+
+       Test.stopTest();
+   }
 
     private static testMethod void test2()
     {
-     Profile prof;
-     try{
-           prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only'];
-         }catch(Exception e){
-           prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = '参照のみ'];
-         }
-         User u = new User(); 
-         // u.Name = 'mydtest@mydexample.com';
-         User u2 = new User(Alias = 'test', Email='newusertest@testorgtest.com',
+        Profile prof;
+        try{
+            prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only'];
+        }catch(Exception e){
+            prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = '参照のみ'];
+        }
+        User u = new User();
+        // u.Name = 'mydtest@mydexample.com';
+        User u2 = new User(Alias = 'test', Email='newusertest@testorgtest.com',
 
-         EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
+        EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
 
-         LocaleSidKey='en_US', ProfileId = prof.Id,
+        LocaleSidKey='en_US', ProfileId = prof.Id,
 
-         TimeZoneSidKey='America/Los_Angeles', UserName='newusertesttest@testorgtest.com');
-        	insertNameCard();
-		 SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-        
-         System.runAs(u2) {
-             try{
-                   Database.DMLOptions dml = new Database.DMLOptions();
+        TimeZoneSidKey='America/Los_Angeles', UserName='newusertesttest@testorgtest.com');
+        insertNameCard();
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
 
-                   dml.OptAllOrNone = false;
-         
-                    Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<SObject>{nc},dml)[0];
-                   
-                    System.assertEquals(null, sr.getErrors().size(), 'NameCard error');
-                 }catch(Exception e)
-                 {  }
-         }
-        
+        System.runAs(u2) {
+            try{
+                Database.DMLOptions dml = new Database.DMLOptions();
+
+                dml.OptAllOrNone = false;
+
+                Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<SObject>{nc},dml)[0];
+
+                System.assertEquals(null, sr.getErrors().size(), 'NameCard error');
+            }catch(Exception e)
+            {  }
+        }
+
     }
 
 
     private static testMethod void test3()
     {
-      Profile prof;
-      try{
-           
-             prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only'];
-          
-          }catch(Exception e){
-          
-             prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = '参照のみ'];
-          
-                              }
-      
-      User u = new User(); 
-      // u.Name = 'mydtest@mydexample.com';
-      User u2 = new User(Alias = 'test', Email='newusertest@testorgtest.com',
+        Profile prof;
+        try{
 
-      EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
+            prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only'];
 
-      LocaleSidKey='en_US', ProfileId = prof.Id,
+        }catch(Exception e){
 
-      
-      TimeZoneSidKey='America/Los_Angeles', UserName='newusertest@testorgtest.com');
-      
-      insertNameCard();
-      
-      SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-      
-      System.runAs(u2) {
-      
-      try{ 
-             Database.DMLOptions dml = new Database.DMLOptions();
+            prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = '参照のみ'];
 
-             dml.OptAllOrNone = false;
-             
-             Database.SaveResult sr = SB_NameCard_LeadCrudFls.supdate(new List<SObject>{nc},dml)[0];
-             
-             System.assertEquals(0, sr.getErrors().size(), 'NameCard error');
+        }
+
+        User u = new User();
+        // u.Name = 'mydtest@mydexample.com';
+        User u2 = new User(Alias = 'test', Email='newusertest@testorgtest.com',
+
+        EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
+
+        LocaleSidKey='en_US', ProfileId = prof.Id,
+
+
+        TimeZoneSidKey='America/Los_Angeles', UserName='newusertest@testorgtest.com');
+
+        insertNameCard();
+
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+
+        System.runAs(u2) {
+
+            try{
+                Database.DMLOptions dml = new Database.DMLOptions();
+
+                dml.OptAllOrNone = false;
+
+                Database.SaveResult sr = SB_NameCard_LeadCrudFls.supdate(new List<SObject>{nc},dml)[0];
+
+                System.assertEquals(0, sr.getErrors().size(), 'NameCard error');
             }
             catch(Exception e)
-           {  }
-                      }
-        
+            {  }
+        }
+
     }
 
     private static void insertNameCard()
@@ -121,7 +121,7 @@
         nc.SmartViscaf__email__c = 'test@sbnc.example.com';
         nc.SmartViscaf__mobile__c = '090-1111-1111';
         nc.SmartViscaf__card_exchange_date__c = Date.today();
-         Database.DMLOptions dml = new Database.DMLOptions();
+        Database.DMLOptions dml = new Database.DMLOptions();
 
         dml.OptAllOrNone = false;
 
@@ -135,18 +135,18 @@
     private static void insertLead(SmartViscaf__NameCard__c nc)
     {
         Lead lead = SB_NameCard_LeadRegist.getLead(null, nc, null);
-         
-          Database.DMLOptions dml = new Database.DMLOptions();
 
-          dml.OptAllOrNone = false;
-         
-          List<Lead> leads = new List<Lead>();
-          
-          leads.add(lead);
-       
-          Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(leads,dml)[0];
+        Database.DMLOptions dml = new Database.DMLOptions();
 
-          System.assertEquals(0, sr.getErrors().size(), 'NameCard error');
+        dml.OptAllOrNone = false;
+
+        List<Lead> leads = new List<Lead>();
+
+        leads.add(lead);
+
+        Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(leads,dml)[0];
+
+        System.assertEquals(0, sr.getErrors().size(), 'NameCard error');
 
         System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
     }
@@ -155,13 +155,14 @@
     {
         System.assertNotEquals(null, company, 'company error');
         SmartViscaf__NameCard__c card = [SELECT Id, SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c,
-            SmartViscaf__address_bld__c, SmartViscaf__address_eng__c, SmartViscaf__company_name__c, SmartViscaf__web_url1__c,
-            SmartViscaf__tel1__c, SmartViscaf__fax1__c, SmartViscaf__title_name__c, SmartViscaf__person_name_last__c,
-            SmartViscaf__person_name_first__c, SmartViscaf__last_name__c, SmartViscaf__first_name__c, SmartViscaf__email__c,
-            SmartViscaf__mobile__c, SmartViscaf__list_name__c, SmartViscaf__memo__c, SmartViscaf__freehandmemo__c, OwnerId
-            FROM SmartViscaf__NameCard__c WHERE SmartViscaf__company_name__c = :company];
-            System.assertNotEquals(null, card, 'getNameCard error');
-            return card;
+
+        SmartViscaf__address_bld__c, SmartViscaf__address_eng__c, SmartViscaf__company_name__c, SmartViscaf__web_url1__c,
+        SmartViscaf__tel1__c, SmartViscaf__fax1__c, SmartViscaf__title_name__c, SmartViscaf__person_name_last__c,
+        SmartViscaf__person_name_first__c, SmartViscaf__last_name__c, SmartViscaf__first_name__c, SmartViscaf__email__c,
+        SmartViscaf__mobile__c, SmartViscaf__list_name__c, SmartViscaf__memo__c, SmartViscaf__freehandmemo__c, OwnerId
+        FROM SmartViscaf__NameCard__c WHERE SmartViscaf__company_name__c = :company];
+        System.assertNotEquals(null, card, 'getNameCard error');
+        return card;
     }
 
     private static SmartViscaf__NameCard__c getNameCard(Id ncId)

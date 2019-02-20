@@ -271,7 +271,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)リードを新規作成する場合は「所有者」を指定してください</shortDescription>
-        <value>&amp;*smallLead*&amp;を新規作成する場合は「所有者」を指定してください</value>
+        <value>&amp;*Lead*&amp;を新規作成する場合は「所有者」を指定してください</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_BulkRegisterToLead</fullName>

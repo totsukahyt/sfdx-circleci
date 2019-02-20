@@ -8,9 +8,10 @@
  *  @Version 1      2014.7.xx
  *  @Version 2      2016.7.xx オブジェクト権限のチェックを追加   かつては ディスクドライブメソッドはガバナ制限があったけど今はなし
  *  @Version 3      2016.8.xx getPopulatedFieldsAsMap を使って入力のあった項目に絞ってすべて検査  メソッドを整理
+ *  @Version 4      2016.11.09  コードスキャンで global なメソッドは with sharing が必要とのことなので、 with sharing  を付けた。
  *
  **/
- global class SB_NameCard_LeadCrudFls {
+ global with sharing class SB_NameCard_LeadCrudFls {
   public class CrudFlsException extends exception {}
 
 
