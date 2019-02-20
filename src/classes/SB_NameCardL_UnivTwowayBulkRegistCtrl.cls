@@ -645,6 +645,12 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
             }
           }
           else {
+            if (haveLead == false) {
+              renkeiType = 'Both';
+            }
+            else {
+              renkeiType = 'Lead';
+            }
             // renkeiType = 'Lead';
           }
         }

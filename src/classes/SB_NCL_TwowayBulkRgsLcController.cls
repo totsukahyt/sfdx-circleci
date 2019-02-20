@@ -53,21 +53,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
             cf.label = (String)sobj.get(field.fieldName);
             cf.value = (String)sobj.get(field.fieldName);
           }
-          if (field.type == 'url') {
-            cf.value = string.format('/one/one.app#/sObject/{0}/view',new String[]{(Id)sobj.get('Id')});
-          }
           if (field.fieldName == 'ToDo' && String.isBlank(fieldListStr) || fieldListStr == '[]') {
             cf.checked = !basicSetting.SmartViscaf__RegistNoToDo__c;
           }
-          if (field.fieldName == 'Address') {
-            String address1 = String.isBlank((String)sobj.get('SmartViscaf__zip_code__c')) ? '' : (String)sobj.get('SmartViscaf__zip_code__c');
-            String address2 = String.isBlank((String)sobj.get('SmartViscaf__address_pref__c')) ? '' : (String)sobj.get('SmartViscaf__address_pref__c');
-            String address3 = String.isBlank((String)sobj.get('SmartViscaf__address__c')) ? '' : (String)sobj.get('SmartViscaf__address__c');
-            String address4 = String.isBlank((String)sobj.get('SmartViscaf__address_bld__c')) ? '' : (String)sobj.get('SmartViscaf__address_bld__c');
-            String address5 = String.isBlank((String)sobj.get('SmartViscaf__address_eng__c')) ? '' : (String)sobj.get('SmartViscaf__address_eng__c');
-            cf.label = address1 + address2 + address3 + address4 + address5;
-            cf.value = address1 + address2 + address3 + address4 + address5;
-          }
+
           cf.type = field.type;
           cf.input = field.input;
           cf.fieldName = field.fieldName;
@@ -81,13 +70,66 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
         cfId.label = (String)sobj.get('Id');
         cfId.value = (String)sobj.get('Id');
         co.cObjectMap.put('Id', cfId);
+
+        SB_NameCardL_BulkRegistDTO.CustomField cfCom = new SB_NameCardL_BulkRegistDTO.CustomField();
+        cfCom.label = (String)sobj.get('SmartViscaf__company_name__c');
+        cfCom.value = (String)sobj.get('SmartViscaf__company_name__c');
+        co.cObjectMap.put('SmartViscaf__company_name__c', cfCom);
+
+        SB_NameCardL_BulkRegistDTO.CustomField cfTitle = new SB_NameCardL_BulkRegistDTO.CustomField();
+        cfTitle.label = (String)sobj.get('SmartViscaf__title_name__c');
+        cfTitle.value = (String)sobj.get('SmartViscaf__title_name__c');
+        co.cObjectMap.put('SmartViscaf__title_name__c', cftitle);
+
+        SB_NameCardL_BulkRegistDTO.CustomField cfDiv = new SB_NameCardL_BulkRegistDTO.CustomField();
+        cfDiv.label = (String)sobj.get('SmartViscaf__division__c');
+        cfDiv.value = (String)sobj.get('SmartViscaf__division__c');
+        co.cObjectMap.put('SmartViscaf__division__c', cfDiv);
+
+        SB_NameCardL_BulkRegistDTO.CustomField cfName = new SB_NameCardL_BulkRegistDTO.CustomField();
+        cfName.label = (String)sobj.get('Name');
+        cfName.value = string.format('/one/one.app#/sObject/{0}/view',new String[]{(Id)sobj.get('Id')});
+        co.cObjectMap.put('Name', cfName);
+
+        SB_NameCardL_BulkRegistDTO.CustomField cfAdd = new SB_NameCardL_BulkRegistDTO.CustomField();
+        String address1 = String.isBlank((String)sobj.get('SmartViscaf__zip_code__c')) ? '' : (String)sobj.get('SmartViscaf__zip_code__c');
+        String address2 = String.isBlank((String)sobj.get('SmartViscaf__address_pref__c')) ? '' : (String)sobj.get('SmartViscaf__address_pref__c');
+        String address3 = String.isBlank((String)sobj.get('SmartViscaf__address__c')) ? '' : (String)sobj.get('SmartViscaf__address__c');
+        String address4 = String.isBlank((String)sobj.get('SmartViscaf__address_bld__c')) ? '' : (String)sobj.get('SmartViscaf__address_bld__c');
+        String address5 = String.isBlank((String)sobj.get('SmartViscaf__address_eng__c')) ? '' : (String)sobj.get('SmartViscaf__address_eng__c');
+        cfAdd.label = address1 + address2 + address3 + address4 + address5;
+        cfAdd.value = address1 + address2 + address3 + address4 + address5;
+        co.cObjectMap.put('Address', cfAdd);
+
+        SB_NameCardL_BulkRegistDTO.CustomField cfMobil = new SB_NameCardL_BulkRegistDTO.CustomField();
+        cfMobil.label = (String)sobj.get('SmartViscaf__mobile__c');
+        cfMobil.value = (String)sobj.get('SmartViscaf__mobile__c');
+        co.cObjectMap.put('SmartViscaf__mobile__c', cfMobil);
+
+
+        SB_NameCardL_BulkRegistDTO.CustomField cfEmail = new SB_NameCardL_BulkRegistDTO.CustomField();
+        cfEmail.label = (String)sobj.get('SmartViscaf__email__c');
+        cfEmail.value = (String)sobj.get('SmartViscaf__email__c');
+        co.cObjectMap.put('SmartViscaf__email__c', cfEmail);
+
+        SB_NameCardL_BulkRegistDTO.CustomField cfAddpref = new SB_NameCardL_BulkRegistDTO.CustomField();
+        cfAddpref.label = (String)sobj.get('SmartViscaf__address_pref__c');
+        cfAddpref.value = (String)sobj.get('SmartViscaf__address_pref__c');
+        co.cObjectMap.put('SmartViscaf__address_pref__c', cfAddpref);
+
         co.id = (Id)sobj.get('Id');
         co.nameCard = sobj;
         // if (String.isBlank(dto.lookUpId)) {
           // dto.lookUpId = co.id;
         // }
+        nameCardObjMap.put(co.id, co);
         dataList.add(co);
       }
+      Map<String, List<String>> recordTypesMap = new Map<String, List<String>>();
+      if (String.isNotBlank(recordTypesMapstr) && recordTypesMapstr != 'null') {
+        recordTypesMap = (Map<String, List<String>>)System.JSON.deserializeStrict(recordTypesMapstr, Map<String, List<String>> .Class);
+      }
+      searchAllLead(saveResult, recordIds, nameCardObjMap, searchType, searchContactType, recordTypesMap);
       //dto.setDataList(ncs);
       System.debug(dataList);
       saveResult.success = true;
@@ -100,12 +142,182 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     return JSON.serialize(saveResult);
   }
 
+   public static String searchAllLead(SB_NameCardL_BulkRegistDTO.SaveResult saveResult, String nameCardIds, Map<Id, SB_NameCardL_BulkRegistDTO.CustomObject> nameCardObjMap, String searchType, String searchContactType, Map<String, List<String>> searchRecordTypesMap) {
+    String message = '';
+    if (saveResult == null) {
+        saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
+    }
+    try {
+        // this.hasError = false;
+        System.debug(nameCardIds);
+        if (String.isBlank(nameCardIds)) {
+          return null;
+        }
+        Set<Id> nameCardIdSet = new Set<Id>((List<Id>)new List<String>(nameCardIds.split(',')));
+
+        // List<SmartViscaf__NameCard__c> nameCards = [Select Name, SmartViscaf__company_name__c, SmartViscaf__division__c, SmartViscaf__title_name__c,
+        //                                              SmartViscaf__address__c, SmartViscaf__mobile__c, SmartViscaf__person_name_last__c, SmartViscaf__person_name_first__c,
+        //                                              SmartViscaf__lead__c, SmartViscaf__email__c
+        //                                         FROM SmartViscaf__NameCard__c
+        //                                         WHERE id in :nameCardIdSet];
+        Set<String> fields = SB_NameCardL_RegistQueryExecutor.getNameCardFields();
+        String query = String.format('SELECT {0} FROM SmartViscaf__NameCard__c WHERE Id = :nameCardIdSet', new String[] { String.join(new List<String>(fields), ', ')});
+        List<SmartViscaf__NameCard__c> nameCards = Database.query(query);
+        // Map<Id, Lead> idMap = new Map<Id, Lead>();
+        // Map<String, List<Lead>> emailListMap = new Map<String, List<Lead>>();
+        // Map<String, List<Lead>> nameListMap = new Map<String, List<Lead>>();
+
+        Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(nameCardIdSet, nameCards, searchType, searchContactType, searchRecordTypesMap);
+        System.debug(sObjectList);
+        Map<Schema.SObjectType, Map<Id, SObject>> sObjectTypemap = new Map<Schema.SObjectType, Map<Id, SObject>>();
+        sObjectTypemap.put(Lead.sObjectType, new Map<Id, SObject>());
+        // for (Id ncId : sObjectList.keySet()) {
+        //   Map<Schema.SObjectType,List<SObject>> stMap = sObjectList.get(ncId);
+        //   for (Schema.SObjectType sobjType : stMap.keySet()) {
+        //     if (!sObjectTypemap.containsKey(sobjType)) {
+        //       sObjectTypemap.put(sobjType, new Map<Id, SObject>());
+        //     }
+        //     for (SObject sObj : stMap.get(sobjType)) {
+        //       sObjectTypemap.get(sobj.getSObjectType()).put((Id)sobj.get('Id'), sobj);
+        //     }
+        //   }
+        // }
+        // sObjectTypemap.put(Lead.sObjectType, new Map<Id, SObject>([Select Id, LastName, FirstName, Email, Name From Lead]));
+        // setLeadMap(idMap, emailListMap, nameListMap, sObjectTypemap.get(Lead.sObjectType).values(), searchType);
+        Map<Id, Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue>> inputPlickListVMap = new Map<Id, Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue>>();
+
+        List<SB_NameCardL_BulkRegistDTO.CustomObject> dataList = new List<SB_NameCardL_BulkRegistDTO.CustomObject>();
+        Boolean haveLead = false;
+        Boolean haveAccount = false;
+        for (SmartViscaf__NameCard__c nc : nameCards) {
+            Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue> inputPlickListMap = new  Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue>();
+            SB_NameCardL_BulkRegistDTO.InputPlickListValue inputPlickListV = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
+            if (String.isBlank(nc.SmartViscaf__company_name__c) || String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(nc).get('last_name'))) {
+                inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(System.Label.SB_NCLD_DontRegister_CompanyNameRequired, 'none'));
+                if (!SmartViscaf.SB_NameCard_Util.isEnablePersonAccount()) {
+                  inputPlickListMap.put('Lead',inputPlickListV);
+                }
+                inputPlickListMap.put('Contact',inputPlickListV);
+                if (SmartViscaf.SB_NameCard_Util.isEnablePersonAccount()
+                  && String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(nc).get('last_name'))) {
+                  SB_NameCardL_BulkRegistDTO.InputPlickListValue inputPlickListV1 = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
+                  inputPlickListV1.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(System.Label.SB_NCLD_DontRegister_NameRequired, 'none'));
+                  inputPlickListMap.put('Lead',inputPlickListV1);
+                }
+            }
+            // setLeadRecord(idMap, emailListMap, nameListMap, nc, inputPlickListV.plickListOptions);
+            // ncRec.setNameCardRecord(ncRec.nameCard, this.searchTypeContact, cIdMap, cEmailMap, cNameMap, cLastNameMap, aIdMap, aNameList);
+            // ncRec.index = i;
+            // if (ncRec.message != '') {
+                    // message = ncRec.message;
+            // }
+            Map<Schema.SObjectType,List<SObject>> sObjectMap;
+            inputPlickListV = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
+            if (!inputPlickListMap.containsKey('Lead')
+              || !inputPlickListMap.containsKey('Contact')) {
+              sObjectMap = sObjectList.get(nc.Id);
+            }
+            if (!inputPlickListMap.containsKey('Lead')) {
+              if (sObjectMap.containsKey(Lead.sObjecttype)) {
+                List<sObject> sLeadList = sObjectMap.get(Lead.sObjecttype);
+                for (sObject obj : sLeadList) {
+                  Lead lead = (Lead)obj;
+                  String label = getLabel(lead.Name, lead.Email);
+                  inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(label, lead.Id));
+                  inputPlickListV.plickListValueMap.put(lead.Id, label);
+                  haveLead = true;
+                }
+              }
+
+              if(Lead.sObjectType.getDescribe().isCreateable()) {
+                String label = System.Label.SB_NCLD_Menu_NewLead;
+                inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(label, 'new'));
+                inputPlickListV.plickListValueMap.put('new', label);
+              }
+              inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(System.Label.SB_NCLD_Menu_NotToRegister, 'none'));
+              inputPlickListV.plickListValueMap.put('none', System.Label.SB_NCLD_Menu_NotToRegister);
+
+              inputPlickListMap.put('Lead',inputPlickListV);
+            }
+
+            if (!inputPlickListMap.containsKey('Contact')) {
+
+              inputPlickListV = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
+              if (sObjectMap.containsKey(Contact.sObjecttype)) {
+                List<sObject> sContactList = sObjectMap.get(Contact.sObjecttype);
+                for (sObject sobj : sContactList) {
+                  Contact con = (Contact)sobj;
+                  String label = con.Account.Name + '(' + getStr(con.Account.Site) + ')' + '/' + con.Name + '(' + getStr(con.Department) + '/' + getStr(con.Email) + ')';
+                  String ids = '';
+                  if (String.isNotBlank(con.AccountId)) {
+                    ids = con.AccountId + ':' + con.Id;
+                  }
+                  else {
+                    ids = ':' + con.Id;
+                  }
+                  inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(label, ids));
+                  inputPlickListV.plickListValueMap.put(con.AccountId + ':' + con.Id, label);
+                  haveAccount = true;
+                }
+              }
+              if (sObjectMap.containsKey(Account.sObjecttype) && Contact.sObjectType.getDescribe().isCreateable()) {
+                List<sObject> sAccountList = sObjectMap.get(Account.sObjecttype);
+                for (sObject sobj : sAccountList) {
+                  Account a = (Account)sobj;
+                  String label = a.Name + '(' + getStr(a.Site) + ')' + '/' + String.format(System.Label.SB_NCLD_Label_CreateNewLeadDEV, new String[]{Contact.sObjecttype.getDescribe().getLabel()});
+                  inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(label, a.Id + ':'));
+                  inputPlickListV.plickListValueMap.put(a.Id + ':', label);
+                  haveAccount = true;
+                }
+              }
+              // String.valueOf(index), c.Account.Name + '(' + SB_NameCard_Util.getStr(c.Account.Site) + ')' + '/' + c.Name + '(' + SB_NameCard_Util.getStr(c.Department) + '/' + SB_NameCard_Util.getStr(c.Email) + ')')
+              if(Contact.sObjectType.getDescribe().isCreateable() && Account.sObjectType.getDescribe().isCreateable()) {
+                inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(System.Label.SB_NCLD_Menu_NewLead + '/' + System.Label.SB_NCLD_Menu_NewLead, 'new'));
+                inputPlickListV.plickListValueMap.put('new', System.Label.SB_NCLD_Menu_NewLead);
+              }
+              inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(System.Label.SB_NCLD_Menu_NotToRegister, 'none'));
+              inputPlickListV.plickListValueMap.put('none', System.Label.SB_NCLD_Menu_NotToRegister);
+
+              inputPlickListMap.put('Contact',inputPlickListV);
+            }
+            nameCardObjMap.get(nc.Id).combobox = inputPlickListMap;
+            // inputPlickListVMap.put(nc.Id, inputPlickListMap);
+        }
+        if (message != '') {
+                // testError = message;
+                // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
+        }
+        if (haveAccount && haveLead) {
+          saveResult.otherMessage.put('showType', 'Both');
+        }
+        else if (haveAccount) {
+          saveResult.otherMessage.put('showType', 'Contact');
+        }
+        else if (haveAccount == false && haveLead == false) {
+          saveResult.otherMessage.put('showType', 'Both');
+        }
+        else {
+          saveResult.otherMessage.put('showType', 'Lead');
+        }
+        // saveResult.success = true;
+        // saveResult.data = inputPlickListVMap;
+    } catch (Exception e) {
+      System.debug(e.getStackTraceString());
+      saveResult.success = false;
+      saveResult.message = e.getMessage();
+      // saveResult.message += e.getStackTraceString();
+      // testError = e.getMessage();
+      // ApexPages.addMessages(e);
+    }
+    return JSON.serialize(saveResult);
+  }
+
   @RemoteAction
   @AuraEnabled
   // タイトルに関する内容ここで取得
   public static String getTitleValue() {
     SB_NameCardL_BulkRegistDTO.TitleValue titleV = new SB_NameCardL_BulkRegistDTO.TitleValue();
-    titleV.titleName = System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact;
+    titleV.titleName = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact, new String[]{LEADLABEL, ACCOUNTLABEL, CONTACTLABEL});
     titleV.iconName = 'standard:account';
     titleV.iconSize = 'large';
     titleV.closeValue = System.Label.SB_NCLD_Label_Close;
@@ -119,8 +331,8 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
   public static String getInputValue() {
     SmartViscaf__NameCardBasicSetting__c basicSetting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
     SB_NameCardL_BulkRegistDTO.InputValue inv = new SB_NameCardL_BulkRegistDTO.InputValue();
-    inv.useNameCardOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{LEADLABEL});
-    inv.useNameCardAccountOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{ACCOUNTLABEL});
+    inv.useNameCardOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{LEADLABEL});
+    inv.useNameCardAccountOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{ACCOUNTLABEL});
     inv.campaignStatusPlick.plickListTitle = System.Label.SB_NCLD_Label_CampaignStatus;
     inv.campaignLabel = SmartViscaf__NameCard__c.Campaign__c.getDescribe().getLabel();
     inv.ownerLabel = LEADLABEL + System.Label.SB_NCLD_Label_Owner;
@@ -210,8 +422,16 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     inv.labelMap.put('AccountContact', Account.sObjecttype.getDescribe().getLabel() + '・' + Contact.sObjecttype.getDescribe().getLabel());
     inv.labelMap.put('LeadLabel', Lead.sObjecttype.getDescribe().getLabel());
     inv.labelMap.put('LeadNew', String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LEADLABEL}));
-    inv.labelMap.put('AccountNew', String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {ACCOUNTLABEL + ',' + CONTACTLABEL}));
+    inv.labelMap.put('AccountNew', String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {ACCOUNTLABEL + ' & ' + CONTACTLABEL}));
     inv.labelMap.put('BothNew', String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {'Record'}));
+    inv.labelMap.put('cardLabel_SmartViscaf__company_name__c', SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__division__c', SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__title_name__c', SmartViscaf__NameCard__c.SmartViscaf__title_name__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_Name', SmartViscaf__NameCard__c.Name.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__address__c', SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__mobile__c', SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__email__c', SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel());
+    inv.labelMap.put('SmartViscaf__address_pref__c', SmartViscaf__NameCard__c.SmartViscaf__address_pref__c.getDescribe().getLabel());
     inv.searchConditionRct.description = System.Label.SB_NCLD_Label_SearchRecordTypeExplanation;
 
     List<RecordTypeInfo> leadRecordTypes = SB_NameCardL_Util.getRecordType(Lead.sObjecttype);
@@ -320,30 +540,22 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> fieldMap = new Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>>();
 
     List<SB_NameCardL_BulkRegistDTO.DataTableColumnField> fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
-                                           'Name',
-                                           'url',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
-                                           'SmartViscaf__email__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
-                                           'SmartViscaf__company_name__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address_pref__c.getDescribe().getLabel(),
-                                           'SmartViscaf__address_pref__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel(),
-                                           'SmartViscaf__division__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__title_name__c.getDescribe().getLabel(),
-                                           'SmartViscaf__title_name__c',
-                                           'string',
-                                           false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__company_name__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__division__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__title_name__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__title_name__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
+    //                                        'Name',
+    //                                        'url',
+    //                                        false));
     // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
     //                                        'Address',
     //                                        'string',
@@ -367,34 +579,34 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     fieldList.add(f1);
     fieldMap.put('Lead', fieldList);
     fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
-                                           'SmartViscaf__company_name__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel(),
-                                           'SmartViscaf__division__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__title_name__c.getDescribe().getLabel(),
-                                           'SmartViscaf__title_name__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
-                                           'Name',
-                                           'url',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
-                                           'Address',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
-                                           'SmartViscaf__mobile__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
-                                           'SmartViscaf__email__c',
-                                           'string',
-                                           false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__company_name__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__division__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__title_name__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__title_name__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
+    //                                        'Name',
+    //                                        'url',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
+    //                                        'Address',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__mobile__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__email__c',
+    //                                        'string',
+    //                                        false));
     SB_NameCardL_BulkRegistDTO.DataTableColumnField f2 = new SB_NameCardL_BulkRegistDTO.DataTableColumnField(String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {ACCOUNTLABEL, CONTACTLABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()}),
                                            'Contact',
                                            'plicklist',
@@ -410,38 +622,34 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     fieldList.add(f2);
     fieldMap.put('Contact', fieldList);
     fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
-        fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
-                                           'Name',
-                                           'url',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
-                                           'SmartViscaf__email__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
-                                           'SmartViscaf__company_name__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address_pref__c.getDescribe().getLabel(),
-                                           'SmartViscaf__address_pref__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel(),
-                                           'SmartViscaf__division__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__title_name__c.getDescribe().getLabel(),
-                                           'SmartViscaf__title_name__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
-                                           'Address',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
-                                           'SmartViscaf__mobile__c',
-                                           'string',
-                                           false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__company_name__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__division__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__title_name__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__title_name__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
+    //                                        'Name',
+    //                                        'url',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
+    //                                        'Address',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__mobile__c',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__email__c',
+    //                                        'string',
+    //                                        false));
     f1 = new SB_NameCardL_BulkRegistDTO.DataTableColumnField(Lead.sObjectType.getDescribe().getLabel(),
                                            'Lead',
                                            'plicklist',
@@ -466,6 +674,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     return JSON.serialize(fieldMap);
     // return fieldList;
   }
+
 
   @RemoteAction
   @AuraEnabled
@@ -700,6 +909,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       if (leadRecordTypeList.size() > 0) {
         Set<Id> leadRecord = new Set<Id>();
         leadRecord.addAll(leadRecordTypeList);
+        System.debug('leadRecordTypeList = ' + leadRecordTypeList);
         queryOption.setRectypeIds(leadRecord);
       }
     }
@@ -709,6 +919,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       if (accountRecordTypeList.size() > 0) {
         Set<Id> accountRecord = new Set<Id>();
         accountRecord.addAll(accountRecordTypeList);
+        System.debug('accountRecord = ' + accountRecord);
         accountQueryOption.setRectypeIds(accountRecord);
       }
     }
@@ -718,6 +929,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       if (contactRecordTypeList.size() > 0) {
         Set<Id> contactRecord = new Set<Id>();
         contactRecord.addAll(contactRecordTypeList);
+        System.debug('contactRecord = ' + contactRecord);
         contactQueryOption.setRectypeIds(contactRecord);
       }
     }
@@ -780,6 +992,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     qExecutor.init(ncList);      // init は オーバーロード されてて、 個別の場合は、これか、 Id をt１つ渡すメソッドをつかって、一括の場合は 複数を渡すのを使います。
     // picker の create もオーバーロード されてて、個別ならこれとかで、一括の場合は Map<Id, List<SObject>> create(Set<Id> cardIds); を名刺レコードIDと 一致するSObjectのリストのマップを返すのを使います。
     Map<Id,Map<Schema.SObjectType, List<SObject>>> otype2objs = picker.create(ncList);
+    System.debug(otype2objs);
     return otype2objs;
   }
 
