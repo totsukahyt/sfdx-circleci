@@ -1,7 +1,7 @@
 /**
  *
  *  SB_NCL_LeadUpdateByCard
- *  リード拡張環境 Lightning名刺で更新用コンポネート Helper
+ *  リード拡張環境 Lightning名刺で更新データ操作用コンポネート Helper
  *
  *
  *
@@ -9,10 +9,11 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author gao
- *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
  *
  **/
 ({
+  // 名刺検索
 	searchCard : function(component, event, helper, targetId) {
 		var action = component.get('c.getUpdateByCard');
     action.setParams({
@@ -37,6 +38,7 @@
     });
     $A.enqueueAction(action);
 	},
+  // 表示項目を取得
   getFields : function(component, event, helper) {
     var action = component.get('c.getFieldList');
     action.setCallback(this,function(response) {
@@ -54,6 +56,7 @@
     });
     $A.enqueueAction(action);
   },
+  // 入力内容を取得
   getInpitV : function(component, event, helper) {
         var action = component.get('c.getInputValue');
     action.setCallback(this,function(response) {
@@ -71,6 +74,7 @@
     });
     $A.enqueueAction(action);
   },
+  // 名刺で更新
   updateNameCard : function(component, event, helper) {
     var targetId = event.getParam("selectId")
     var action = component.get('c.updateLead');

@@ -28,16 +28,16 @@
       <apex:pageBlockSection columns="2">
         <apex:selectRadio label="{!$Label.SB_NCLD_Label_CandidateRegistration}" value="{!renkeiType}">
           <apex:selectOptions value="{!RenkeiTypeList}"/>
-          <apex:actionSupport event="onclick" rerender="pageMsgs, ncRecList, radio, overWrite, newBlock"/>
+          <apex:actionSupport event="onclick" rerender="pageMsgs, ncRecList, radio, overWrite, newBlock, recordTypeSection" oncomplete="resetOwnerDisable();"/>
         </apex:selectRadio>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" id="radio">
-        <apex:selectRadio label="{!$ObjectType.Lead.Label + $Label.SB_NC_SearchCriteria}" value="{!searchType}" rendered="{!renkeiType != 'Contact'}">
+        <apex:selectRadio label="{!searchCriteriaLead}" value="{!searchType}" rendered="{!renkeiType != 'Contact'}">
           <apex:selectOptions value="{!searchTypeList}"/>
           <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList"/>
         </apex:selectRadio>
-        <apex:selectRadio label="{!$ObjectType.Account.Label + '・' + $ObjectType.Contact.Label + $Label.SB_NC_SearchCriteria}" value="{!searchTypeContact}" rendered="{!renkeiType != 'Lead'}">
+        <apex:selectRadio label="{!searchCriteriaAccount}" value="{!searchTypeContact}" rendered="{!renkeiType != 'Lead'}">
           <apex:selectOptions value="{!searchTypeSelectOpts}"/>
           <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList"/>
         </apex:selectRadio>
@@ -141,7 +141,13 @@
 
       </apex:pageBlockTable>
 
-       <apex:pageBlocksection columns="2" id="overWrite">
+      <apex:pageBlocksection columns="3" id="overWrite">
+        <apex:pageBlockSectionItem rendered="{!AND(showUpdateLead, renkeiType != 'Contact')}">
+          <apex:outputPanel >
+          <apex:inputCheckbox disabled="{!NOT($ObjectType.Lead.updateable)}" value="{!leadOverwrite}"/>
+          <apex:outputLabel style="{!IF($ObjectType.Lead.updateable, '', 'color:#999999;')}" value="{!overwriteLeadInfoLabel}"/>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
         <apex:pageBlockSectionItem rendered="{!AND(showUpdateAccount, renkeiType != 'Lead')}">
           <apex:outputPanel >
             <apex:inputCheckbox disabled="{!canNotUpdataAccount}" value="{!accountOverwrite}"/>
@@ -155,15 +161,9 @@
           </apex:outputPanel>
         </apex:pageBlockSectionItem>
 
-        <apex:pageBlockSectionItem rendered="{!AND(showUpdateLead, renkeiType != 'Contact')}">
-          <apex:outputPanel >
-          <apex:inputCheckbox disabled="{!NOT($ObjectType.Lead.updateable)}" value="{!leadOverwrite}"/>
-          <apex:outputLabel style="{!IF($ObjectType.Lead.updateable, '', 'color:#999999;')}" value="{!overwriteLeadInfoLabel}"/>
-          </apex:outputPanel>
-        </apex:pageBlockSectionItem>
       </apex:pageBlocksection>
 
-      <apex:pageBlockSection id="newBlock" rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="2">
+      <apex:pageBlockSection id="newBlock" rendered="{!leadCreateable}"  title="{!if(renkeiType == 'Contact', specifiedWhenCreateNewAccount, if(renkeiType == 'Lead', specifiedWhenCreateNew, specifiedWhenCreateNewBoth))}" columns="2">
         <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}">
           <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign + if(renkeiType == 'Both', $Label.SB_NCLD_Label_Campaign_ForLead, '')}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
@@ -183,58 +183,63 @@
         </apex:pageBlockSectionItem>
 
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}" id="ownerSelectItem">
-          <apex:outputLabel value="{!IF(renkeiType != 'Lead','リード', '') + $Label.SB_NCLD_Label_Owner}" id="ownerinputLabel"/>
+          <apex:outputLabel value="{!$ObjectType.Lead.Label + $Label.SB_NCLD_Label_Owner}" id="ownerinputLabel"/>
           <apex:inputField value="{!ownerlead.OwnerId}" required="false" id="ownerinput"/>
         </apex:pageBlockSectionItem>
 
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Lead'}" id="ownerSelectItem1">
-          <apex:outputLabel value="{!IF(renkeiType != 'Contact','取引先', '') + $Label.SB_NCLD_Label_Owner}" id="ownerinputLabel"/>
+          <apex:outputLabel value="{!$ObjectType.Account.Label + $Label.SB_NCLD_Label_Owner}" id="ownerinputLabel"/>
           <apex:inputField value="{!ownerAccount.OwnerId}" required="false" id="ownerinput"/>
         </apex:pageBlockSectionItem>
 
-        <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}">
+        <apex:pageBlockSectionItem id="leadUseNameCardOwnerSection" rendered="{!renkeiType != 'Contact'}">
           <apex:outputLabel value="{!leadOwnerLabel}"/>
-          <apex:inputCheckbox onchange="changeUserNameCardOwner(this.checked, '');"  value="{!useNameCardOwner}" required="false"/>
+          <apex:inputCheckbox id="leadUseNameCardOwner" onchange="changeUserNameCardOwner(this.checked, '');"  value="{!useNameCardOwner}" required="false"/>
         </apex:pageBlockSectionItem>
 
-        <apex:pageBlockSectionItem rendered="{!renkeiType != 'Lead'}">
+        <apex:pageBlockSectionItem id="accountUseNameCardOwnerSection" rendered="{!renkeiType != 'Lead'}">
           <apex:outputLabel value="{!accountOwnerLabel}"/>
-          <apex:inputCheckbox onchange="changeUserNameCardOwner(this.checked, '1');"  value="{!useNameCardContactOwner}" required="false"/>
+          <apex:inputCheckbox id="accountUseNameCardOwner" onchange="changeUserNameCardOwner(this.checked, '1');"  value="{!useNameCardContactOwner}" required="false"/>
         </apex:pageBlockSectionItem>
+        
+        </apex:pageBlockSection>
+
+        <apex:pageBlockSection id="recordTypeSection" columns="3">
+
 
          <!-- SV_DEV-175 リード登録時にキャンペーン内での状況を選択 -->
         <apex:pageBlockSectionItem rendered="{!AND(showLeadRecType, renkeiType != 'Contact')}">
             <!-- <apex:outputText value=""/> -->
-                <!-- <apex:outputPanel > -->
+                <apex:outputPanel >
                      <!-- <apex:outputText style="color: #4a4a56;" value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/> -->
                     <!-- <br/><br/> -->
-                    <apex:outputLabel style="color: #4a4a56;" value="{!leadRecType}"/>
+                    <apex:outputLabel style="margin-left: 10px; text-align: left; font-weight: bold; white-space: nowrap; color: #4a4a56;" value="{!leadRecType}"/>
                     <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!leadRecordTypeId}" multiselect="false" size="1" disabled="{!Not(leadRecTypeEdit)}">
                         <apex:selectOptions value="{!leadRecordTypeOptions}"/>
                     </apex:selectList>
-                <!-- </apex:outputPanel> -->
+                </apex:outputPanel>
          </apex:pageBlockSectionItem>
         <apex:pageBlockSectionItem rendered="{!AND(showAccountRecType, renkeiType != 'Lead')}">
           <!-- <apex:outputText value=""/> -->
-              <!-- <apex:outputPanel > -->
+              <apex:outputPanel >
                    <!-- <apex:outputText style="color: #4a4a56;" value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/> -->
                   <!-- <br/><br/> -->
-                  <apex:outputLabel style="color: #4a4a56;" value="{!accountRecType}"/>
-                  <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!accountRecTypeId}" multiselect="false" size="1" disabled="{!Not(leadRecTypeEdit)}">
+                  <apex:outputLabel style="text-align: left; font-weight: bold; white-space: nowrap; color: #4a4a56;" value="{!accountRecType}"/>
+                  <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!accountRecTypeId}" multiselect="false" size="1" disabled="{!Not(accountRecTypeEdit)}">
                       <apex:selectOptions value="{!accountRecordTypeOptions}"/>
                   </apex:selectList>
-              <!-- </apex:outputPanel> -->
+              </apex:outputPanel>
        </apex:pageBlockSectionItem>
                <apex:pageBlockSectionItem rendered="{!AND(showContactRecType, renkeiType != 'Lead')}">
           <!-- <apex:outputText value=""/> -->
-              <!-- <apex:outputPanel > -->
+              <apex:outputPanel >
                    <!-- <apex:outputText style="color: #4a4a56;" value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/> -->
                   <!-- <br/><br/> -->
-                  <apex:outputLabel style="color: #4a4a56;" value="{!contactRecType}"/>
-                  <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!contactRecTypeId}" multiselect="false" size="1" disabled="{!Not(leadRecTypeEdit)}">
+                  <apex:outputLabel style="text-align: left; font-weight: bold; white-space: nowrap; color: #4a4a56;" value="{!contactRecType}"/>
+                  <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!contactRecTypeId}" multiselect="false" size="1" disabled="{!Not(contactRecTypeEdit)}">
                       <apex:selectOptions value="{!contactRecordTypeOptions}"/>
                   </apex:selectList>
-              <!-- </apex:outputPanel> -->
+              </apex:outputPanel>
          </apex:pageBlockSectionItem>
       </apex:pageBlockSection>
     </apex:pageBlock>
@@ -332,16 +337,20 @@
                 document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}').style="margin-left:10px;";
                 var oDiv = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_mlktp');
                 var ow = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}');
-                oDiv.onchange = function(){
-                    ow.value = '';
-                    changeOwner();
+                if (oDiv != null) {
+                  oDiv.onchange = function(){
+                      ow.value = '';
+                      changeOwner();
+                  }
                 }
                 document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}').style="margin-left:10px;";
                 var oDiv1 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}' + '_mlktp');
                 var ow1 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}');
-                oDiv1.onchange = function(){
-                    ow1.value = '';
-                    changeOwner();
+                if (oDiv1 != null) {
+                  oDiv1.onchange = function(){
+                      ow1.value = '';
+                      changeOwner();
+                  }
                 }
             }
 
@@ -367,10 +376,25 @@
               }
               submit(index, renkeiType);
             }
+
+            function resetOwnerDisable() {
+              var leadOwnerCheckBox =  document.getElementById('{!$Component.All.blockid.newBlock.leadUseNameCardOwnerSection.leadUseNameCardOwner}');
+              if (leadOwnerCheckBox != null) {
+                changeUserNameCardOwner(leadOwnerCheckBox.checked, '');
+              }
+
+              var leadOwnerCheckBox =  document.getElementById('{!$Component.All.blockid.newBlock.accountUseNameCardOwnerSection.accountUseNameCardOwner}');
+              if (leadOwnerCheckBox != null) {
+                changeUserNameCardOwner(leadOwnerCheckBox.checked, '1');
+              }
             }
 
             initset();
             document.getElementById('allCheckTodo').checked = {!baseSetting.SmartViscaf__RegistNoToDo__c} == false;
+            window.onload = function() {
+              resetOwnerDisable();
+            }
+
           </script>
   </apex:form>
 

@@ -1579,7 +1579,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jyouken.SmartViscaf__NameCardName__c = 'SmartViscaf__accountRegDateTime__c';
     jyouken.SmartViscaf__NameCardDataType__c = 'DATETIME';
     update jyouken;
-    //ce = new SB_NameCardL_RenkeiChecker();
+    ce = new SB_NameCardL_RenkeiChecker();
     System.assertEquals(ce.isIgnore(n2), assertF);
   }
 

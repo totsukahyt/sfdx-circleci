@@ -19,11 +19,14 @@ public with sharing class SB_NameCardL_RegistQueryExecutor {
   public Set<String> orgNameWithParcents { get; private set;}    // 法人格を除いた法人名 %付き 部分一致用
   public Set<String> fullOrgNames { get; private set;}    // 法人格+法人名
   public Set<String> depts { get; private set;}     // 所属
+  //public Boolean nullDepts { get; private set;}     // 所属 が NULLの名刺があったとき
   public Set<String> titles { get; private set;}     // 役職
   public Set<String> deptWithParcents { get; private set;}     // 所属 %付き 部分一致用
   public Set<String> firstnames { get; private set;}    // 名
   public Set<String> lastnames { get; private set;}    // 姓
   public Set<String> emails { get; private set;}    // メアド
+  public Set<String> emailsWithNull { get; private set;}    // メアド NULも含む
+  public Set<String> urls { get; private set;}    // URL
   public Set<String> prefs { get; private set;}    // 都道府県
   public Set<String> cities { get; private set;}   // 市区郡
   public Set<String> streets { get; private set;}   // 町名・番地
@@ -85,12 +88,15 @@ public with sharing class SB_NameCardL_RegistQueryExecutor {
         fullOrgNames.add(card.SmartViscaf__company_name__c);    // 法人格+法人名
       }
       // 部署
+      depts.add(card.SmartViscaf__division__c);
       if (String.isNotBlank(card.SmartViscaf__division__c)) {
-        depts.add(card.SmartViscaf__division__c);
         // 2017.11.xx v1.20.4 SV_DEV-673 会社名に全角バックスラッシュが含まれる名刺を自動連携すると、ORA-01423.9エラーが発生
         String dept = varBindingExchange(card.SmartViscaf__division__c);
         deptWithParcents.add('%' + dept + '%');
       }
+      //else {
+      //  this.nullDepts = true;   // 1つでもNULLのがあったら、NULLあり処理をするので、
+      //}
       // 役職
       titles.add(card.SmartViscaf__title_name__c);
       // 姓名
@@ -145,8 +151,18 @@ public with sharing class SB_NameCardL_RegistQueryExecutor {
       if (card.SmartViscaf__person_name_first__c == null && card.SmartViscaf__first_name__c == null) {
         firstnames.add(null);
       }
-      // メール NULL でも条件にする。
-      emails.add(card.SmartViscaf__email__c);
+      // メール NULL でも条件
+      emailsWithNull.add(card.SmartViscaf__email__c);
+      // メール NULL以外 の条件
+      if (String.isNotBlank(card.SmartViscaf__email__c)) {
+        emails.add(card.SmartViscaf__email__c);
+      }
+      // URL
+      urls.add(card.smartviscaf__web_url1__c);
+      // URL2
+      if (String.isNotBlank(card.smartviscaf__web_url2__c)) {
+        urls.add(card.smartviscaf__web_url2__c);
+      }
       // 電話番号 NULL でも条件にする。
       //if (String.isNotBlank(card.SmartViscaf__tel1__c)) {
         phones.add(card.SmartViscaf__tel1__c);
@@ -224,7 +240,10 @@ public with sharing class SB_NameCardL_RegistQueryExecutor {
     this.firstnames = new Set<String>();
     this.lastnames = new Set<String>();
     this.emails = new Set<String>();
+    this.emailsWithNull = new Set<String>();
+    this.urls = new Set<String>();
     this.depts = new Set<String>();
+    //this.nullDepts = false;
     this.deptWithParcents = new Set<String>();
     this.titles = new Set<String>();
     this.prefs = new Set<String>();
@@ -259,17 +278,25 @@ public with sharing class SB_NameCardL_RegistQueryExecutor {
     this.parentIds.addAll(ids);
   }
 
+  public Boolean haveNullDept() {
+    return this.depts.contains(null);
+  }
+
   //
   public List<SObject> getCandidateRecords(SB_NameCardL_RegistQueryStrategy.QueryStrategy qSt) {
     if (this.cardIds.isEmpty()) {
       throw new SB_NameCardL_RegistQueryExecutorException('not initialized');
     }
     //this.parentIds.clear();
+    System.debug(qSt);
+    if (qSt instanceOf SB_NameCardL_RegistQueryStrategy.ContactQueryStrategy && !qSt.getParentIds().isEmpty()) {
+      this.parentIds.clear();
+      this.parentIds.addAll(qSt.getParentIds());
+    }
     String query = qSt.getQueryString(this);
     System.debug(query);
     return Database.query(query);
   }
-
 
   // レコードID 指定で該当レコードをクエリ
   public List<SObject> getReferencedCandidateRecords(SObjectType otype) {
@@ -368,7 +395,10 @@ public with sharing class SB_NameCardL_RegistQueryExecutor {
     this.firstnames.clear();
     this.lastnames.clear();
     this.emails.clear();
+    this.emailsWithNull.clear();
+    this.urls.clear();
     this.depts.clear();
+    //this.nullDepts = false;
     this.deptWithParcents.clear();
     this.titles.clear();
     this.prefs.clear();
@@ -388,6 +418,10 @@ public with sharing class SB_NameCardL_RegistQueryExecutor {
     //this.personRecTypeIds = new Set<Id>();
     //setupAccountRecordType();
     setupVAlues(cards);
+  }
+
+  public Boolean needRefresh(Set<Id> cardIds) {
+    return !this.cardIds.equals(cardIds);
   }
 
   // 初期化済み？

@@ -57,7 +57,7 @@
         <name>SB_NCLD_Label_Cancel</name>
     </customLabels>
     <customLabels>
-        <label>Candidate Registration</label>
+        <label>Register to</label>
         <name>SB_NCLD_Label_CandidateRegistration</name>
     </customLabels>
     <customLabels>
@@ -193,8 +193,12 @@
         <name>SB_NCLD_Label_ToDoRegistration</name>
     </customLabels>
     <customLabels>
-        <label>to street</label>
+        <label>To Street</label>
         <name>SB_NCLD_Label_To_Street</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Namecard Owner To {0}</label>
+        <name>SB_NCLD_Label_UseNameCardOwnerByObject</name>
     </customLabels>
     <customLabels>
         <label>Please confirm the message</label>
@@ -317,6 +321,18 @@
         <name>SB_NCLD_SpecifyOwnerWhenCreateAcCo</name>
     </customLabels>
     <customLabels>
+        <label>{0} &amp; {1}</label>
+        <name>SB_NCLD_Text_A_AND_B</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}，{1} &amp; {2}</label>
+        <name>SB_NCLD_Text_A_AND_B_AND_C</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} &amp; {1}</label>
+        <name>SB_NCLD_Text_Account_Contact</name>
+    </customLabels>
+    <customLabels>
         <label>Bulk Register to Lead</label>
         <name>SB_NCLD_Text_BulkRegisterToLead</name>
     </customLabels>
@@ -341,8 +357,12 @@
         <name>SB_NCLD_Text_BusinessCardInformation</name>
     </customLabels>
     <customLabels>
-        <label>Update by Business Card</label>
+        <label>Update by {0}</label>
         <name>SB_NCLD_Text_BusinessCardList</name>
+    </customLabels>
+    <customLabels>
+        <label>Update by {0}</label>
+        <name>SB_NCLD_Text_BusinessCardListWindowTitle</name>
     </customLabels>
     <customLabels>
         <label>Lead</label>
@@ -365,12 +385,36 @@
         <name>SB_NCLD_Text_RegisterToLeadDEV</name>
     </customLabels>
     <customLabels>
-        <label>Lead or Account/Contact</label>
+        <label><!-- SB_NCLD_Text_RegisterToLeadDEVTitle --></label>
+        <name>SB_NCLD_Text_RegisterToLeadDEVTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}: Register to {1}</label>
+        <name>SB_NCLD_Text_RegisterToLeadDEVWindowTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to {0} or {1} &amp; {2}</label>
         <name>SB_NCLD_Text_RegisterToLead_OR_Account_Contact</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}: Register to {1} or {2} &amp; {3}</label>
+        <name>SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle</name>
     </customLabels>
     <customLabels>
         <label>Register To {0}s</label>
         <name>SB_NCLD_Text_RegisterToLeadsDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}: Register To {1}s</label>
+        <name>SB_NCLD_Text_RegisterToLeadsDEVWindowTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to {0}s or {1}s &amp; {2}s</label>
+        <name>SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}: Register To {1}s or {2}s ＆ {3}s</label>
+        <name>SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts_WindowTitle</name>
     </customLabels>
     <customLabels>
         <label>lead</label>
@@ -459,6 +503,10 @@
     <customLabels>
         <label><!-- 選択した名刺の数が制限を超過してる --></label>
         <name>SB_NC_TEXT_SELECTEDCARDOVER</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} Search Criteria</label>
+        <name>SB_NC_X_SearchCriteria</name>
     </customLabels>
     <customLabels>
         <label><!-- 重複API名のテスト --></label>

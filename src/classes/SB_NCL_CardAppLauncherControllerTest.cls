@@ -1,3 +1,11 @@
+/*
+ * (c) 2018 Sunbridge Inc.
+ *
+ * LEX名刺で更新Launcherコントローラ テストクラス
+ * @author mao
+ * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX
+ *
+ */
 @isTest
 private class SB_NCL_CardAppLauncherControllerTest {
   private static List<User> insertUser() {

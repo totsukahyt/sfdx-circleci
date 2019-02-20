@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>42.0</apiVersion>
-    <availableInTouch>false</availableInTouch>
+    <availableInTouch>true</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>SB_NCL_PageDispacher</label>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>2</minorNumber>
-        <namespace>MYD2</namespace>
-    </packageVersions>
     <packageVersions>
         <majorNumber>2</majorNumber>
         <minorNumber>0</minorNumber>

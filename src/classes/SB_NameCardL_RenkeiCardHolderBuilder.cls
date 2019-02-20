@@ -95,6 +95,8 @@ public with sharing class SB_NameCardL_RenkeiCardHolderBuilder {
       List<Account> acnts = (List<Account>)qExec.getCandidateRecords(this.acntQst);
       // 　リードを検索
       List<Lead> leads = (List<Lead>)qExec.getCandidateRecords(this.leadQst);
+      // コンバートした アカウント、コンタクトを調べる
+      Map<Id, Account> leadId2Acnt = getLeadId2ConvertedAccount(leads);
       // 名刺ごとに 一致してるかチェックして、対応づける
       for (SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder ch : result) {
         SmartViscaf__NameCard__c card = ch.card;
@@ -105,9 +107,13 @@ public with sharing class SB_NameCardL_RenkeiCardHolderBuilder {
           }
         } //for (Account acnt : acnts) {
         // Lead
-        for (Lead lead : leads) {
+        for (Schema.Lead lead : leads) {
           if (this.leadQst.isMatch(card, lead)) {
             ch.addLeadCandidate(lead);
+            if (leadId2Acnt.containsKey(lead.Id)) {
+              // コンバートしたアカウントを追加
+              ch.addConvertedAccount(lead, leadId2Acnt.get(lead.Id));
+            }
           }
         } // for (Lead lead : leads) {
         // どういう連携をするか決定する。
@@ -115,6 +121,40 @@ public with sharing class SB_NameCardL_RenkeiCardHolderBuilder {
       } // for (SB_NameCardL_RenkeiCardHolder.AccountCardHolder ch : result) {
       return result;
     }
+
+    // 名刺に一致したリードを渡して、取引開始済みになったリードがあったら、コンバートしたアカウント(コンタクト)を収集
+    private Map<Id, Account> getLeadId2ConvertedAccount(List<Lead> leads) {
+      Map<Id, Account> result = new Map<Id, Account> ();
+      Set<Id> acntIds = new Set<Id>();
+      Set<Id> contIds = new Set<Id>();
+      Map<Id, Id> leadId2AcontId = new Map<Id, Id>();
+      for (Lead l : leads) {
+        if (!l.isconverted) {
+          continue;
+        }
+        if (l.ConvertedAccountId != null) {
+          acntIds.add(l.ConvertedAccountId);
+          leadId2AcontId.put(l.Id, l.ConvertedAccountId);
+        }
+        if (l.ConvertedContactId != null) {
+          contIds.add(l.ConvertedContactId);
+        }
+      }
+      if (acntIds.isEmpty()) {
+        return result;
+      }
+      String query = SB_NameCardL_RegistQueryStrategy.getConvertedAccountQuery('acntIds', 'contIds');
+      Map<Id, Account> acnts = new Map<Id, Account> ((List<Account>)Database.query(query));
+      for (Id leadId : leadId2AcontId.keySet()) {
+        Id acntId = leadId2AcontId.get(leadId);
+        if (acnts.containsKey(acntId)) {
+          result.put(leadId, acnts.get(acntId));
+        }
+      }
+      return result;
+    }
+
+
   } // private class LeadAccountsCardHolderBuilder extends CardHolderBuilder {
 
   /********************************************

@@ -1,11 +1,11 @@
 /**
  *
- * SB_NameCard_UpdateByCardBean 名刺で更新コンポネート使用するためのBeanクラス
+ * SB_NCL_UpdateByCardDTO 名刺で更新コンポネート使用するためのBeanクラス
  *
  * Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author gao
- *  @Version 1.12      2018.5.xx SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version リード拡張：Lead Ex. 1.12      2018.5.xx SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
  *
  **/
 

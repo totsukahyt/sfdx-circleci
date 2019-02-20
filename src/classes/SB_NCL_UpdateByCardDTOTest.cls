@@ -1,3 +1,14 @@
+/**
+ *
+ * SB_NCL_UpdateByCardDTOTest 名刺で更新コンポネート使用するためのBeanクラス のテストクラス
+ *
+ * Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author gao
+ *  @Version リード拡張：Lead Ex. 1.12      2018.5.xx SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *
+ **/
+
 @isTest
 private class SB_NCL_UpdateByCardDTOTest {
 

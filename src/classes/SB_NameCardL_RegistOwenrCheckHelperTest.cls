@@ -1,3 +1,13 @@
+/*
+ * (c) 2018 Sunbridge Inc.
+ * SB_NameCardL_RegistOwenrCheckHelper
+ * SB_NameCardL_RegistOwenrCheckHelperクラスのテストクラス
+ *
+ * @author mao
+ * @Version 拡張パッケージ：Lead Ex. 1.12 2018/8/XX
+ *
+ */
+
 @isTest
 public class SB_NameCardL_RegistOwenrCheckHelperTest {
   private static List<User> insertUser() {
@@ -18,7 +28,7 @@ public class SB_NameCardL_RegistOwenrCheckHelperTest {
 
     us.add(u);
     us.add(u1);
-    return us;
+    return [SELECT Id, Name From User Where Id in: us];
   }
 
   private static Id insertQueue(Boolean leadCanUse) {
@@ -786,13 +796,18 @@ public class SB_NameCardL_RegistOwenrCheckHelperTest {
         String todoLabel = Task.getSobjectType().getDescribe().getLabel();
         String message = todoLabel +
                                     System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
-                                    System.Label.SB_NCLD_MSG_QUEUES_ERROR;
+                                    String.format(System.Label.SB_NCLD_MSG_QUEUES_ERROR, new String[]{'group name'});
         System.assertEquals(message, ownerErrorMap.get(nc.Id));
       }
       else if (activeUserError) {
         System.assertEquals(true, !ownerErrorMap.isEmpty());
         System.assertEquals(true, ownerErrorMap.containsKey(nc.Id));
-        System.assertEquals(System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwner, ownerErrorMap.get(nc.Id));
+        if (haveToDo) {
+          System.assertEquals(String.format(System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo, new String[] {us[1].Name}), ownerErrorMap.get(nc.Id));
+        }
+        else {
+          System.assertEquals(System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwner, ownerErrorMap.get(nc.Id));
+        }
       }
     }
   }
@@ -1341,13 +1356,18 @@ public class SB_NameCardL_RegistOwenrCheckHelperTest {
         String todoLabel = Task.getSobjectType().getDescribe().getLabel();
         String message = todoLabel +
                                     System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
-                                    System.Label.SB_NCLD_MSG_QUEUES_ERROR;
+                                    String.format(System.Label.SB_NCLD_MSG_QUEUES_ERROR, new String[]{'group name'});
         System.assertEquals(message, ownerErrorMap.get(nc.Id));
       }
       else if (activeUserError) {
         System.assertEquals(true, !ownerErrorMap.isEmpty());
         System.assertEquals(true, ownerErrorMap.containsKey(nc.Id));
-        System.assertEquals(System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwner, ownerErrorMap.get(nc.Id));
+        if (haveToDo) {
+          System.assertEquals(String.format(System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo, new String[] {us[1].Name}), ownerErrorMap.get(nc.Id));
+        }
+        else {
+          System.assertEquals(System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwner, ownerErrorMap.get(nc.Id));
+        }
       }
       else if (spError) {
         String errorMessage = Lead.getSobjectType().getDescribe().getLabel() +

@@ -98,6 +98,8 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   public String overwriteLeadInfoLabel{get;set;}
   public String registerToLeadLabel{get;set;}
   public String specifiedWhenCreateNew{get;set;}
+  public String specifiedWhenCreateNewAccount{get;set;}
+  public String specifiedWhenCreateNewBoth{get;set;}
   public Boolean saveOK{get;set;}//保存状況
   public Boolean leadRecTypeEdit{get; private set;} //リードレコードタイプを変更できるflag
   public Boolean showLeadRecType{get;private set;} //リードレコードタイプ選択を表示フラグ
@@ -142,8 +144,10 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
 
   public Integer searchField { get; set; }  // 検索条件の項目
   public Integer queryMatch { get; set; }   // 完全一致もする？
-  public Boolean firstSearch { get; set; }   // 初期クエリ
+  public Boolean firstSearch { get; set; }  // 初期クエリ
   public String windowTitle { get; set; }
+  public String searchCriteriaLead { get; set; } // リード検索条件
+  public String searchCriteriaAccount { get; set; } // 取引先取引先責任者検索条件
 
   @TestVisible private static final Integer SEARCHTYPE_DEFAULT = 0;    // 検索方法のデフォルト値
   @TestVisible private static final Integer FIELD_NAMESITE = 0;  // 検索条件の項目
@@ -183,7 +187,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
     PageReference page = ApexPages.currentPage();
     Map<String, String> paras = page.getParameters();
     this.windowTitle = String.format(System.Label.SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts_WindowTitle, new String[] {SmartViscaf__NameCard__c.sObjecttype.getDescribe().getLabel(), LD_LABEL, AC_LABEL, CO_LABEL});
-    this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact, new String[]{LD_LABEL, AC_LABEL, CO_LABEL});
+    this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts, new String[]{LD_LABEL, AC_LABEL, CO_LABEL});
     if (paras.containsKey('vfRetURLInSFX')
       || Test.isRunningTest() && paras.containsKey('runTestLex')) {
       initLex(controller);
@@ -217,9 +221,11 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
       try {
 
           this.registObjs = RegistType.AccountContactLead;
-
+          this.searchCriteriaLead = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {LD_LABEL});
+          this.searchCriteriaAccount = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})});
           this.accountQueryOption = getQueryOption(Account.sObjecttype);
           this.contactQueryOption =  getQueryOption(Contact.sObjecttype);
+          this.contactQueryOption.queryCompany = true; // 会社名は常に 照合
           // if (this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.Lead) {
             this.leadQueryOption =  getQueryOption(Lead.sObjecttype);
           // }
@@ -291,14 +297,16 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
           this.accountCreateable = Account.sObjectType.getDescribe().isCreateable();
           this.contactCreateable = Contact.sObjectType.getDescribe().isCreateable();
 
-          this.leadOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{LD_LABEL});
-          this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{CO_LABEL});
+          this.leadOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{LD_LABEL});
+          this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{CO_LABEL});
 
           this.accountAndContact = String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {AC_LABEL, CO_LABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()});
 
           this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LD_LABEL});
 
           this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL});
+          this.specifiedWhenCreateNewAccount = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {AC_LABEL + ' & ' + CO_LABEL});
+          this.specifiedWhenCreateNewBoth = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {'Record'});
 
           // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
           this.showLeadRecType = leadRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
@@ -307,6 +315,8 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
           this.showContactRecType = contactRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispContactRectype__c;
 
           this.leadRecTypeEdit = leadCreateable && leadRecordTypes.size() > 1;
+          this.accountRecTypeEdit = accountCreateable && accountRecordTypes.size() > 1;
+          this.contactRecTypeEdit = contactCreateable && contactRecordTypes.size() > 1;
 
           this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
 
@@ -367,7 +377,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   public static List<SelectOption> getRenkeiTypeList() {
     List<SelectOption> os = new List<SelectOption>();
     os.add(new SelectOption('Lead', LD_LABEL));
-    os.add(new SelectOption('Contact', Account.sObjecttype.getDescribe().getLabel() + '・' + Contact.sObjecttype.getDescribe().getLabel()));
+    os.add(new SelectOption('Contact', String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})));
     os.add(new SelectOption('Both', System.Label.SB_NCLD_Label_Both_display));
     return os;
   }
@@ -441,7 +451,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
     //opts.add(new SelectOption(String.valueOf(SB_NameCard_Util.SEARCHTYPE_NAME_SITE), '取引先名と所属名で検索'));
     //opts.add(new SelectOption(String.valueOf(SB_NameCard_Util.SEARCHTYPE_NAME), '取引先名のみで検索'));
     String accountNameLabel = Account.Name.getDescribe().getLabel();
-    String str = accountNameLabel + System.Label.SB_NCLD_Label_AND + System.Label.SB_NCLD_Label_Site;
+    String str = String.format(System.Label.SB_NCLD_SearchForAccountAndDepartment, new List<String> {Account.sObjecttype.getDescribe().getLabel()});
     opts.add(new SelectOption(String.valueOf(SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE),str));
     String str1 = accountNameLabel;
     opts.add(new SelectOption(String.valueOf(SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME),str1));
@@ -465,7 +475,10 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
     if (this.accountQueryOption != null) {
       // 部門を検索する？
       this.accountQueryOption.queryDept = (this.searchTypeContact == SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE);
+      System.debug(this.accountQueryOption.queryDept);
       this.accountQueryOption.queryCompany = true; // 会社名は常に 照合
+      // 部門の検索は完全一致？
+      this.accountQueryOption.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch;
       // // 取引先名 は完全に一致？
       // this.accountQueryOption.companyRule = this.queryMatch == QUERY_PERFECT_NO ?
       //       SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
@@ -501,6 +514,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
     qExecutor.init(this.nameCardList);      // init は オーバーロード されてて、 個別の場合は、これか、 Id をt１つ渡すメソッドをつかって、一括の場合は 複数を渡すのを使います。
     // picker の create もオーバーロード されてて、個別ならこれとかで、一括の場合は Map<Id, List<SObject>> create(Set<Id> cardIds); を名刺レコードIDと 一致するSObjectのリストのマップを返すのを使います。
     Map<Id,Map<Schema.SObjectType,List<SObject>>> otype2objs = picker.create(ncList);
+    System.debug(otype2objs);
     return otype2objs;
   }
 
@@ -872,7 +886,6 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
         Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
         System.debug(ownerErrorMap);
         if (!ownerErrorMap.isEmpty()) {
-          str = '<br/>';
           for (Integer i = 0; i<nameCardRecordListDTO.size(); i++) {
             if (ownerErrorMap.containsKey(nameCardRecordListDTO[i].nameCard.id)) {
               nameCardRecordListDTO[i].hasError = true;
@@ -889,7 +902,6 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
         SB_NameCardL_RegistHelper.RegistResponse result = SB_NameCardL_RegistHelper.doRegist(re);
 
         if (result.success == false) {
-          str = '<br/>';
           this.hasError = true;
           if (result.dbErrors!=null) {
             for (Integer i = 0; i<this.nameCardRecordListDTO.size(); i++) {

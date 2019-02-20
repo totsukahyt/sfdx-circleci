@@ -5,61 +5,11 @@
  *
  *  @author sawano
  *  @Version 1      2018.04.xx
+ *  lx v1.12    SV_DEV-1251 【カスタム設定】移行済みリード項目の値が反映されない。 → setupBasicSetting のテスト追加
  *
  **/
 @isTest
 private class SB_NCL_PostInstallScriptTest {
-
-  //private static final String TODO_SUBJECT = 'カスタム設定での名刺交換TODO件名';
-  //private final static String QUERY_FORM = 'SELECT Id, Name, {0} FROM NameCardBasicSetting__c LIMIT 1';
-
-  //public class TestDb extends SB_NC_TestDB {
-
-  //  public override void initializeSmartViscaConfig() {
-  //    svConfig = SmartViscaConfig__c.getOrgDefaults();
-  //      System.debug('a : ' + svConfig.Id);
-  //    svConfig.ToDo__c = false; // ToDo登録しない
-  //    svConfig.ToDoName__c = TODO_SUBJECT; // Label.SB_NC_ExchangeCard; // ToDo件名
-  //    svConfig.AccountNotOverWrite__c = false; // 取引先を名刺情報で上書きしない
-  //    svConfig.ContactNotOverWrite__c = false; // 取引先責任者を名刺情報で上書きしない
-  //    svConfig.DispAccountRectype__c = true; // 取引先レコードタイプ選択を表示する
-  //    svConfig.DispContactRectype__c = true; //
-  //    // +--- 2016.05.xx S1取引先登録対応
-  //  }
-
-  //  // 名刺連携項目マッピング レコードの作成 アカウント用だけ
-  //  public override void initializeMapping() {
-  //    Id rectypeId;
-  //    Map<String, Schema.SObjectField> fields;
-  //    // Account 用
-  //    fields = Account.getSObjectType().getDescribe().fields.getMap();
-  //    rectypeId = rectypeInfos.get('Account').getRecordTypeId();
-  //    for (String src : SV_TO_ACCOUNT.keySet()) {
-  //      for (String dest : SV_TO_ACCOUNT.get(src)) {
-  //        if (fields.get(dest) == null) {      // 名前空間があるときとないときと　
-  //          continue;
-  //        }
-  //        listMapping.add(new SmartViscaf__NameCardRenkeiMapping__c(NameCardName__c=src, TargetName__c=dest, RecordTypeId=rectypeId));
-  //      }
-  //    }
-  //  }
-
-  //  public override void initialize() {
-  //    // SmartVisca設定
-  //    initializeSmartViscaConfig();
-  //      System.debug('1');
-  //    if (svConfig != null) {
-  //      System.debug('2');
-  //      upsert svConfig;
-  //    }
-  //      System.debug('3');
-  //    // 名刺連携項目マッピング
-  //    initializeMapping();
-  //    if (!listMapping.isEmpty()) {
-  //      insert listMapping;
-  //    }
-  //  }
-  //} // public class TestDb extends SB_NC_TestDB
 
   // 連携用マッピングのセットアップのテスト
   @isTest(SeeAllData=true)
@@ -85,6 +35,53 @@ private class SB_NCL_PostInstallScriptTest {
     List<SmartViscaf__NameCardRenkeiMapping__c> afterMappings = [SELECT Id, Name FROM SmartViscaf__NameCardRenkeiMapping__c WHERE RecordType.Name = 'Lead'];
     System.assert(beforeMappings.isEmpty() && defaults.size() == afterMappings.size());
     Test.stopTest();
+  }
+
+  // カスタム設定 SmartViscaConfig が 基本設定に移行されてるのをテスト
+  // 実際には Lead拡張の前バージョンがあるわけでないので、移行ではなく、デフォルト値が入ってることを確認
+  //@isTest
+  //static void test_setupBasicSetting_1toCurrent() {
+  //  SB_NCL_PostInstallScript postinstall = new SB_NCL_PostInstallScript();
+  //  Test.testInstall(postinstall, new Version(1, 10), false);
+  //  List<SmartViscaf__NameCardBasicSetting__c> settings = [SELECT Id, Name,
+  //          SmartViscaf__RegistDispLeadRectype__c, SmartViscaf__RegistLeadNotOverWrite__c FROM SmartViscaf__NameCardBasicSetting__c];
+  //  System.assert(settings.isEmpty() == false);
+  //  System.assertEquals(true, settings[0].SmartViscaf__RegistDispLeadRectype__c);
+  //  System.assertEquals(false, settings[0].SmartViscaf__RegistLeadNotOverWrite__c);
+  //}
+
+  @isTest
+  static void test_setupBasicSetting_1toCurrent() {
+    // 基本設定を作っておく
+    SmartViscaf__NameCardBasicSetting__c setting = new SmartViscaf__NameCardBasicSetting__c();
+    setting.SmartViscaf__RegistDispLeadRectype__c = false;
+    setting.SmartViscaf__RegistLeadNotOverWrite__c = true;
+    insert setting;
+    SB_NCL_PostInstallScript postinstall = new SB_NCL_PostInstallScript();
+    Test.testInstall(postinstall, new Version(1, 10), false);
+    List<SmartViscaf__NameCardBasicSetting__c> settings = [SELECT Id, Name,
+            SmartViscaf__RegistDispLeadRectype__c, SmartViscaf__RegistLeadNotOverWrite__c FROM SmartViscaf__NameCardBasicSetting__c];
+    System.assert(settings.isEmpty() == false);
+    // アップグレードのデフォルト値になってる。
+    System.assertEquals(true, settings[0].SmartViscaf__RegistDispLeadRectype__c);
+    System.assertEquals(false, settings[0].SmartViscaf__RegistLeadNotOverWrite__c);
+  }
+
+  @isTest
+  static void test_setupBasicSetting_2toCurrent() {
+    // 基本設定を作っておく
+    SmartViscaf__NameCardBasicSetting__c setting = new SmartViscaf__NameCardBasicSetting__c();
+    setting.SmartViscaf__RegistDispLeadRectype__c = false;
+    setting.SmartViscaf__RegistLeadNotOverWrite__c = true;
+    insert setting;
+    SB_NCL_PostInstallScript postinstall = new SB_NCL_PostInstallScript();
+    Test.testInstall(postinstall, new Version(2, 10), false);
+    List<SmartViscaf__NameCardBasicSetting__c> settings = [SELECT Id, Name,
+            SmartViscaf__RegistDispLeadRectype__c, SmartViscaf__RegistLeadNotOverWrite__c FROM SmartViscaf__NameCardBasicSetting__c];
+    System.assert(settings.isEmpty() == false);
+    // アップグレードのデフォルト値でない
+    System.assertEquals(false, settings[0].SmartViscaf__RegistDispLeadRectype__c);
+    System.assertEquals(true, settings[0].SmartViscaf__RegistLeadNotOverWrite__c);
   }
 
   @isTest

@@ -1,7 +1,8 @@
 <!-- /**
  *
  *  SB_NCL_Checkbox
- *  リード拡張環境 LightningCheckboxコンポネート
+ *  リード拡張環境 LightningスタイルのCheckBoxコンポネート
+ *  標準Lightning:CheckboxはLightningぽくないので.
  *
  *
  *
@@ -9,7 +10,7 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-511 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12
  *
  **/ -->
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" access="global">
@@ -21,7 +22,7 @@
   <aura:attribute name="checked" type="Boolean"/>
   <aura:attribute name="leftmargin" type="Integer" default="10"/>
   <aura:attribute name="eventName" type="String"/>
-  <aura:registerEvent name="leadBulkRegistEvent" type="c:SB_NCL_BulkRegistComonEvent"/>
+  <aura:registerEvent name="leadBulkRegistEvent" type="c:SB_NCL_BulkRegistCommonEvent"/>
 
   <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
       <aura:renderIf isTrue="{!v.dis == true}">

@@ -45,7 +45,7 @@ public with sharing class SB_NCL_UpdateByCardLcController {
     inputV.checkboxLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[]{Lead.sObjectType.getDescribe().getLabel()});
     inputV.radioTitle = System.Label.SB_NCLD_Label_SearchCondition;
     inputV.radioValue = '1';
-    inputV.checkboxValue = baseSetting.SmartViscaf__RegistLeadNotOverWrite__c && Lead.SObjectType.getDescribe().isUpdateable();
+    inputV.checkboxValue = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c && Lead.SObjectType.getDescribe().isUpdateable();
     return JSON.serialize(inputV);
   }
 

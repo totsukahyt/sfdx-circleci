@@ -339,7 +339,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
   // タイトルに関する内容ここで取得
   public static String getTitleValue() {
     SB_NameCardL_BulkRegistDTO.TitleValue titleV = new SB_NameCardL_BulkRegistDTO.TitleValue();
-    titleV.titleName = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact, new String[]{LEADLABEL, ACCOUNTLABEL, CONTACTLABEL});
+    titleV.titleName = String.format(System.Label.SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts, new String[]{LEADLABEL, ACCOUNTLABEL, CONTACTLABEL});
     titleV.iconName = 'standard:account';
     titleV.iconSize = 'large';
     titleV.closeValue = System.Label.SB_NCLD_Label_Close;
@@ -426,25 +426,25 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     SB_NameCardL_BulkRegistDTO.SearchCondition scc1 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName, String.valueOf(SEARCHTYPE_ACNAME), 'utility:company', '');
     scc1.groupName = 'Contact';
     inv.searchConditions.add(scc1);
-    SB_NameCardL_BulkRegistDTO.SearchCondition scc2 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + andLabel + accountSite, String.valueOf(SEARCHTYPE_ACNAMESITE), 'utility:hierarchy', '');
+    SB_NameCardL_BulkRegistDTO.SearchCondition scc2 = new SB_NameCardL_BulkRegistDTO.SearchCondition(String.format(System.Label.SB_NCLD_Text_A_AND_B, new String[] {accountName, accountSite}), String.valueOf(SEARCHTYPE_ACNAMESITE), 'utility:hierarchy', '');
     scc2.groupName = 'Contact';
     inv.searchConditions.add(scc2);
-    SB_NameCardL_BulkRegistDTO.SearchCondition scc3 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + '、' + accountSite + andLabel + System.Label.SB_NCLD_Label_Prefectures, String.valueOf(SEARCHTYPE_ACNAMESITESTATE), 'utility:signpost', '');
+    SB_NameCardL_BulkRegistDTO.SearchCondition scc3 = new SB_NameCardL_BulkRegistDTO.SearchCondition(String.format(System.Label.SB_NCLD_Text_A_AND_B_AND_C, new String[] {accountName, accountSite, System.Label.SB_NCLD_Label_Prefectures}), String.valueOf(SEARCHTYPE_ACNAMESITESTATE), 'utility:signpost', '');
     scc3.groupName = 'Contact';
     inv.searchConditions.add(scc3);
-    SB_NameCardL_BulkRegistDTO.SearchCondition scc4 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + '、' + accountSite + andLabel + System.Label.SB_NCLD_Label_To_Street, String.valueOf(SEARCHTYPE_NAMECITY), 'utility:pin', '');
+    SB_NameCardL_BulkRegistDTO.SearchCondition scc4 = new SB_NameCardL_BulkRegistDTO.SearchCondition(String.format(System.Label.SB_NCLD_Text_A_AND_B_AND_C, new String[] {accountName, accountSite, System.Label.SB_NCLD_Label_To_Street}), String.valueOf(SEARCHTYPE_NAMECITY), 'utility:pin', '');
     scc4.groupName = 'Contact';
     inv.searchConditions.add(scc4);
-    SB_NameCardL_BulkRegistDTO.SearchCondition scc5 = new SB_NameCardL_BulkRegistDTO.SearchCondition(accountName + '、' + accountSite + andLabel + System.Label.SB_NCLD_Label_Postcode, String.valueOf(SEARCHTYPE_NAMECODE), 'utility:email', '');
+    SB_NameCardL_BulkRegistDTO.SearchCondition scc5 = new SB_NameCardL_BulkRegistDTO.SearchCondition(String.format(System.Label.SB_NCLD_Text_A_AND_B_AND_C, new String[] {accountName, accountSite, System.Label.SB_NCLD_Label_Postcode}), String.valueOf(SEARCHTYPE_NAMECODE), 'utility:email', '');
     scc5.groupName = 'Contact';
     inv.searchConditions.add(scc5);
     inv.searchConditionValueContact = String.valueOf(3);
 
     inv.searchConditionRct.title = System.Label.SB_NCLD_Label_Setting;
-    inv.labelMap.put('AccountContact', Account.sObjecttype.getDescribe().getLabel() + '・' + Contact.sObjecttype.getDescribe().getLabel());
+    inv.labelMap.put('AccountContact', String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {ACCOUNTLABEL, CONTACTLABEL}));
     inv.labelMap.put('LeadLabel', Lead.sObjecttype.getDescribe().getLabel());
     inv.labelMap.put('LeadNew', String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LEADLABEL}));
-    inv.labelMap.put('AccountNew', String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {ACCOUNTLABEL + ' & ' + CONTACTLABEL}));
+    inv.labelMap.put('AccountNew', String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {ACCOUNTLABEL, CONTACTLABEL})}));
     inv.labelMap.put('BothNew', String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {'Record'}));
     inv.labelMap.put('cardLabel_SmartViscaf__company_name__c', SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel());
     inv.labelMap.put('cardLabel_SmartViscaf__division__c', SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel());
@@ -982,7 +982,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     }
     else if (searchContactTypeInt == SEARCHTYPE_ACNAMESITE) {
       accountQueryOption.queryDept = true;
-      // contactQueryOption.queryDept = true;
+      contactQueryOption.queryDept = true;
     }
     else if (searchContactTypeInt == SEARCHTYPE_ACNAMESITESTATE) {
       accountQueryOption.queryDept = true;
@@ -1185,7 +1185,6 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
         Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
         System.debug(ownerErrorMap);
         if (!ownerErrorMap.isEmpty()) {
-          str = '<br/>';
           for (Integer i = 0; i<dataList.size(); i++) {
             if (ownerErrorMap.containsKey(dataList[i].id)) {
               dataList[i].haveError = true;

@@ -1,3 +1,12 @@
+/*
+ * (c) 2018 Sunbridge Inc.
+ *
+ * LEX名刺で更新Launcherコントローラ
+ * @author mao
+ * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX
+ *
+ */
+
 public with sharing class SB_NCL_CardAppLauncherController {
   public class SB_NC_LeadCardAppLauncherControllerException extends Exception {}
 
@@ -6,6 +15,7 @@ public with sharing class SB_NCL_CardAppLauncherController {
   public String component { get; private set; }     // Lightning Componet 名
   // 管理パッケージの名前空間名を
   public String namespace_x { get; private set; }
+  public String windowTitle { get; private set; }
 
   @TestVisible
   private static final Map<String, String> APPCD_COMPONENT = new Map<String, String> {
@@ -17,6 +27,7 @@ public with sharing class SB_NCL_CardAppLauncherController {
   //    LEXで URLで起動させるため、IDを受ける用にVFの中にコンポーネントを展開するので、
   public SB_NCL_CardAppLauncherController() {
     try {
+      this.windowTitle = String.format(System.Label.SB_NCLD_Text_BusinessCardList, new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel()});
       List<ApexClass> classes = [SELECT Name, NamespacePrefix FROM ApexClass WHERE Name IN ('SB_NameCard_LeadBulkRegistController', 'SB_NameCard_LeadNameCardListController', 'SB_NameCard_LeadRegistController') OR NamespacePrefix='SmartViscal'];
       String namesp = '';
       if (!classes.isEmpty()) {

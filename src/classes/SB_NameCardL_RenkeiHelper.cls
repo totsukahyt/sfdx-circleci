@@ -29,6 +29,7 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
     oType2RectypeIds = new Map<SObjectType, Set<Id>>();
     oType2RectypeIds.put(Account.sObjectType, getRecordTypeIds(Account.sObjectType));
     oType2RectypeIds.put(Contact.sObjectType, getRecordTypeIds(Contact.sObjectType));
+    oType2RectypeIds.put(Lead.sObjectType, getRecordTypeIds(Lead.sObjectType));
   }
 
   private static Set<Id> getRecordTypeIds(SObjectType otype) {
@@ -158,7 +159,9 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
         holder.putMessage('[Account duplicate]');   // 2017.04.xx
         continue;
       }
+      System.debug('holder.useExistAccount():' + holder.useExistAccount());
       if (holder.useExistAccount()) {
+        System.debug('1');
         // 既存が1つか
         if (setting.SmartViscaf__RenkeiAccountOverwrite__c) {
           // 更新するとき
@@ -184,6 +187,7 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
       }
       else if (holder.acntProcess == SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Create &&
         setting.SmartViscaf__RenkeiAccountNOExistCreateNew__c && holder.isAccountNotExist()) {
+        System.debug('2');
         // 新規作成する。
         if (companyId2NewAccount.containsKey(holder.companyId)) {
           // すでに別の名刺で新規アカウントを作ってた。
@@ -285,7 +289,7 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
     SB_NameCardL_DMLProcessor.AutoDmlProcessor newLeadProc = new SB_NameCardL_DMLProcessor.AutoDmlProcessor(Lead.sObjectType, false);
     SB_NameCardL_DMLProcessor.AutoDmlProcessor updLeadProc = new SB_NameCardL_DMLProcessor.AutoDmlProcessor(Lead.sObjectType, false);
 
-    Id recTypeId = getValidRecordTypeId(Lead.sObjectType, setting.SmartViscaf__RenkeiContactRecordTypes__c);
+    Id recTypeId = getValidRecordTypeId(Lead.sObjectType, setting.SmartViscaf__RenkeiLeadRecordTypes__c);
 
     for (SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder holder : (List<SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder>)this.holders) {
       // SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder holder = (SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder)h;
@@ -318,7 +322,14 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
         }
         else if (SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c){
           // 既存リードが複数 複数を更新
-          holder.buildUpdAllLeads(leadId2UpdLead.keySet());
+          List<Lead> leads = holder.buildUpdAllLeads(leadId2UpdLead.keySet());
+          if (!leads.isEmpty()) {
+            updLeadProc.addSObjects(leads);
+            for (Lead l : leads) {
+              leadId2UpdLead.put(l.Id, l);
+            }
+            updLeadProc.addCardHolder(holder);
+          }
         }
       }
       else if (holder.leadProcess == SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Create) {
@@ -381,33 +392,34 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   //   System.assert(cardId != null && targetId != null);
   //   cardId2ContactLeadId.put(cardId, targetId);
   // }
-  // キャンペーンID+コンタクトorリードID、ステータスを保持して、CampaignMember レコードを作るクラス
-  private class CampaignMemberBuilder {
-    public Id campId { get; private set; }
-    public Id targetId { get; private set; }
-    public String status { get; private set; }
-    public CampaignMemberBuilder(Id campId, Id targetId, String status) {
-      this.campId = campId;
-      this.targetId = targetId;
-      this.status = status;
-    }
-    public CampaignMember create() {
-      CampaignMember result = null;
-      if (targetId.getSobjectType() == Contact.sObjectType) {
-        result = new CampaignMember(CampaignId=campId, ContactId=targetId, Status = status);
-      }
-      else if (targetId.getSobjectType() == Lead.sObjectType) {
-        result = new CampaignMember(CampaignId=campId, LeadId=targetId, Status = status);
-      }
-      return result;
-    }
-  } // private class CampaignMemberBuilder {
+  //// キャンペーンID+コンタクトorリードID、ステータスを保持して、CampaignMember レコードを作るクラス
+  //private class CampaignMemberBuilder {
+  //  public Id campId { get; private set; }
+  //  public Id targetId { get; private set; }
+  //  public String status { get; private set; }
+  //  public CampaignMemberBuilder(Id campId, Id targetId, String status) {
+  //    this.campId = campId;
+  //    this.targetId = targetId;
+  //    this.status = status;
+  //  }
+  //  public CampaignMember create() {
+  //    CampaignMember result = null;
+  //    if (targetId.getSobjectType() == Contact.sObjectType) {
+  //      result = new CampaignMember(CampaignId=campId, ContactId=targetId, Status = status);
+  //    }
+  //    else if (targetId.getSobjectType() == Lead.sObjectType) {
+  //      result = new CampaignMember(CampaignId=campId, LeadId=targetId, Status = status);
+  //    }
+  //    return result;
+  //  }
+  //} // private class CampaignMemberBuilder {
 
 
   // 既存のキャンペンメンバーになってたら除外する。
-  private void removeExistMember(Map<String, CampaignMemberBuilder> campIdTargetId2Builder, Set<Id> leadIds, Set<Id> contIds) {
-    if (SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateToCampaignMember__c == false) {
+  private void removeExistMember(Map<String, CampaignMember> campIdTargetId2CamMember, Set<Id> leadIds, Set<Id> contIds) {
+    if (SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateToCampaignMember__c == false || campIdTargetId2CamMember.isEmpty()) {
       // 更新をキャンペンメンバーにしてないなら!、チェック不要
+      // キャンペーンメンバーにするのがなくてもチェック不要
       return;
     }
     List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId FROM CampaignMember WHERE LeadId IN :leadIds OR ContactId IN :contIds];
@@ -419,29 +431,56 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
       else if (cm.ContactId != null) {
         campIdTargetId = (String)cm.CampaignId + (String)cm.ContactId;
       }
-      if (campIdTargetId2Builder.containsKey(campIdTargetId)) {
-        campIdTargetId2Builder.remove(campIdTargetId);
+      if (campIdTargetId2CamMember.containsKey(campIdTargetId)) {
+        campIdTargetId2CamMember.remove(campIdTargetId);
       }
     }
   }
+  //private void removeExistMember(Map<String, CampaignMemberBuilder> campIdTargetId2Builder, Set<Id> leadIds, Set<Id> contIds) {
+  //  if (SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateToCampaignMember__c == false) {
+  //    // 更新をキャンペンメンバーにしてないなら!、チェック不要
+  //    return;
+  //  }
+  //  List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId FROM CampaignMember WHERE LeadId IN :leadIds OR ContactId IN :contIds];
+  //  for (CampaignMember cm : cms) {
+  //    String campIdTargetId = null;
+  //    if (cm.LeadId != null) {
+  //      campIdTargetId = (String)cm.CampaignId + (String)cm.LeadId;
+  //    }
+  //    else if (cm.ContactId != null) {
+  //      campIdTargetId = (String)cm.CampaignId + (String)cm.ContactId;
+  //    }
+  //    if (campIdTargetId2Builder.containsKey(campIdTargetId)) {
+  //      campIdTargetId2Builder.remove(campIdTargetId);
+  //    }
+  //  }
+  //}
+
 
   // 作成・更新した リード、コンタクトをキャンペーンメンバーにする。
   private void campaignProc() {
     // キャンペーンID+コンタクトorリードID と CampaignMemberBuilder のリストのマップ
-    Map<String, CampaignMemberBuilder> campIdTargetId2Builder = new  Map<String, CampaignMemberBuilder>();
+    //Map<String, CampaignMemberBuilder> campIdTargetId2Builder = new  Map<String, CampaignMemberBuilder>();
+    //Map<String, CampaignMember> campIdTargetId2Builder = new  Map<String, CampaignMember>();
+    Map<String, CampaignMember> campIdTargetId2CamMember = new  Map<String, CampaignMember>();
     Set<Id> leadIds = new Set<Id>();
     Set<Id> contIds = new Set<Id>();
     // キャンペーンID ごとに 名刺レコード リスト をまとめる。
     for (SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder holder : (List<SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder>)this.holders) {
-      // コンタクトのキャンペーンメンバー指定について調べる。
+      // キャンペーンメンバー指定について調べる。
       if (String.isNotBlank(holder.card.campaign__c)) {
         // リード？
         if (holder.getLeadId() != null &&
             (SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateToCampaignMember__c == true ||      // 統合版自動連携: 更新でもキャンペーンメンバーにする。 か
             holder.getLeadProcessResult() == SB_NameCardL_RegistCardHolder.ProcessResult.CREATE)) {  // 新規作成
           String key = holder.card.campaign__c + (String)holder.getLeadId();
-          if (!campIdTargetId2Builder.containsKey(key)) {
-            campIdTargetId2Builder.put(key, new CampaignMemberBuilder(holder.card.campaign__c, holder.getLeadId(), setting.SmartViscaf__RenkeiCampaignStatus__c));
+          //if (!campIdTargetId2Builder.containsKey(key)) {
+          //  campIdTargetId2Builder.put(key, new CampaignMemberBuilder(holder.card.campaign__c, holder.getLeadId(), setting.SmartViscaf__RenkeiCampaignStatus__c));
+          //  leadIds.add(holder.getLeadId());
+          //}
+          if (!campIdTargetId2CamMember.containsKey(key)) {
+            CampaignMember cm = holder.buildLeadCampaignMember(holder.card.campaign__c, setting.SmartViscaf__RenkeiCampaignStatus__c);
+            campIdTargetId2CamMember.put(key, cm);
             leadIds.add(holder.getLeadId());
           }
         }
@@ -451,24 +490,36 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
             (SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateToCampaignMember__c == true ||      // 統合版自動連携: 更新でもキャンペーンメンバーにする。 か
             holder.getContProcessResult() == SB_NameCardL_RegistCardHolder.ProcessResult.CREATE)) {  // 新規作成
           String key = holder.card.campaign__c + (String)holder.getContactId();
-          if (!campIdTargetId2Builder.containsKey(key)) {
-            campIdTargetId2Builder.put(key, new CampaignMemberBuilder(holder.card.campaign__c, holder.getContactId(), setting.SmartViscaf__RenkeiCampaignStatus__c));
-            contIds.add(holder.getContactId());
-          }
+          //if (!campIdTargetId2Builder.containsKey(key)) {
+          //  campIdTargetId2Builder.put(key, new CampaignMemberBuilder(holder.card.campaign__c, holder.getContactId(), setting.SmartViscaf__RenkeiCampaignStatus__c));
+          //  contIds.add(holder.getContactId());
+          //}
+        if (!campIdTargetId2CamMember.containsKey(key)) {
+          CampaignMember cm = holder.buildContactCampaignMember(holder.card.campaign__c, setting.SmartViscaf__RenkeiCampaignStatus__c);
+          campIdTargetId2CamMember.put(key, cm);
+          contIds.add(holder.getContactId());
+        }
         }
       }
     }
-    if (campIdTargetId2Builder.isEmpty()) {
+    //if (campIdTargetId2Builder.isEmpty()) {
+    //  return;
+    //}
+    if (campIdTargetId2CamMember.isEmpty()) {
       return;
     }
     // 既存のキャンペンメンバーになってたら除外する。
-    removeExistMember(campIdTargetId2Builder, leadIds, contIds);
+    //removeExistMember(campIdTargetId2Builder, leadIds, contIds);
+    removeExistMember(campIdTargetId2CamMember, leadIds, contIds);
     // CampaignMemberBuilder をで キャンペンIDと対象ID、ステータスの キャンペンメンバー レコードを作成
-    List<CampaignMember> cms = new List<CampaignMember>();
-    for (CampaignMemberBuilder builder : campIdTargetId2Builder.values()) {
-      cms.add(builder.create());
+    //List<CampaignMember> cms = new List<CampaignMember>();
+    //for (CampaignMemberBuilder builder : campIdTargetId2Builder.values()) {
+    //  cms.add(builder.create());
+    //}
+    //SmartViscaf.SB_NameCard_CrudFls.screate(cms, true);
+    if (!campIdTargetId2CamMember.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.screate(campIdTargetId2CamMember.values(), true);
     }
-    SmartViscaf.SB_NameCard_CrudFls.screate(cms, true);
   } // private void campaignProc() {
 
   //private void campaignProc() {

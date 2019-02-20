@@ -57,7 +57,7 @@
         <name>SB_NCLD_Label_Cancel</name>
     </customLabels>
     <customLabels>
-        <label>候補登録先</label>
+        <label>登録先</label>
         <name>SB_NCLD_Label_CandidateRegistration</name>
     </customLabels>
     <customLabels>
@@ -109,7 +109,7 @@
         <name>SB_NCLD_Label_Name</name>
     </customLabels>
     <customLabels>
-        <label><!-- 名刺所有者 --></label>
+        <label>名刺所有者</label>
         <name>SB_NCLD_Label_NameCardOwner</name>
     </customLabels>
     <customLabels>
@@ -195,6 +195,10 @@
     <customLabels>
         <label>市区郡まで</label>
         <name>SB_NCLD_Label_To_Street</name>
+    </customLabels>
+    <customLabels>
+        <label>名刺所有者を{0}所有者にする</label>
+        <name>SB_NCLD_Label_UseNameCardOwnerByObject</name>
     </customLabels>
     <customLabels>
         <label>確認してください</label>
@@ -317,6 +321,18 @@
         <name>SB_NCLD_SpecifyOwnerWhenCreateAcCo</name>
     </customLabels>
     <customLabels>
+        <label>{0}と{1}</label>
+        <name>SB_NCLD_Text_A_AND_B</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}、{1}と{2}</label>
+        <name>SB_NCLD_Text_A_AND_B_AND_C</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}・{1}</label>
+        <name>SB_NCLD_Text_Account_Contact</name>
+    </customLabels>
+    <customLabels>
         <label><!-- リードに一括登録 --></label>
         <name>SB_NCLD_Text_BulkRegisterToLead</name>
     </customLabels>
@@ -341,8 +357,12 @@
         <name>SB_NCLD_Text_BusinessCardInformation</name>
     </customLabels>
     <customLabels>
-        <label><!-- 名刺リスト --></label>
+        <label>{0}で更新</label>
         <name>SB_NCLD_Text_BusinessCardList</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}で更新</label>
+        <name>SB_NCLD_Text_BusinessCardListWindowTitle</name>
     </customLabels>
     <customLabels>
         <label>リード</label>
@@ -365,12 +385,36 @@
         <name>SB_NCLD_Text_RegisterToLeadDEV</name>
     </customLabels>
     <customLabels>
-        <label>リードまたは取引先・取引先責任者に登録</label>
+        <label><!-- SB_NCLD_Text_RegisterToLeadDEVTitle --></label>
+        <name>SB_NCLD_Text_RegisterToLeadDEVTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}: {1}に登録</label>
+        <name>SB_NCLD_Text_RegisterToLeadDEVWindowTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}または{1}・{2}に登録</label>
         <name>SB_NCLD_Text_RegisterToLead_OR_Account_Contact</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}: {1}または{2}・{3}に登録</label>
+        <name>SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle</name>
     </customLabels>
     <customLabels>
         <label><!-- リードに一括登録 --></label>
         <name>SB_NCLD_Text_RegisterToLeadsDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}: {1}に一括登録</label>
+        <name>SB_NCLD_Text_RegisterToLeadsDEVWindowTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}または{1}・{2}に一括登録</label>
+        <name>SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}: {1}または{2}・{3}に一括登録</label>
+        <name>SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts_WindowTitle</name>
     </customLabels>
     <customLabels>
         <label><!-- Smallリード --></label>
@@ -459,6 +503,10 @@
     <customLabels>
         <label><!-- 選択した名刺の数が制限を超過してる --></label>
         <name>SB_NC_TEXT_SELECTEDCARDOVER</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}検索条件</label>
+        <name>SB_NC_X_SearchCriteria</name>
     </customLabels>
     <customLabels>
         <label><!-- 重複API名のテスト --></label>

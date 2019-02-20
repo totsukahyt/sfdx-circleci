@@ -36,6 +36,8 @@ public with sharing class SB_NameCardL_RegistCardHolder {
     public Account acnt { get; protected set; }            // この名刺に紐付けるアカウント  新規 OR 更新 OR ヒモ付のみ
     public Contact cont { get; protected set; }            // この名刺に紐付けるコンタクト  新規 OR 更新 OR ヒモ付のみ
     public Lead lead { get; protected set; }            // この名刺に紐付けるコンタクト  新規 OR 更新 OR ヒモ付のみ
+    public CampaignMember contCampaignMember { get; protected set; }            // この名刺で登録したコンタクトで作ったキャンペーンメンバー
+    public CampaignMember leadCampaignMember { get; protected set; }            // この名刺で登録したリードで作ったキャンペーンメンバー
     protected ProcessResult acntResult;
     protected ProcessResult contResult;
     protected ProcessResult leadResult;
@@ -59,7 +61,7 @@ public with sharing class SB_NameCardL_RegistCardHolder {
       this.setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();   // 基本設定
       buildCompanyId();
       buildPersonId();
-      buildLeadKoinId();
+      buildLeadKojinId();
       // this.personId = this.companyId + 'L=' + this.personId;
       this.messages = new List<String>();
     }
@@ -104,12 +106,14 @@ public with sharing class SB_NameCardL_RegistCardHolder {
       this.cont = cont;
       this.contId = cont.Id;    // NULLかも
       this.contResult = ProcessResult.OTHERS;
+      this.todoOwnerId = cont.OwnerId != null ? cont.OwnerId : this.todoOwnerId;    // この名刺でのコンタクトのToDoの任命先 新規のとき : 更新のとき
     }
     // 既存のリードか 新規作成中の リードをセット  同一トランザクションに同じ名刺が他にあったときはこれ
     public virtual void putOthers(Lead l) {
       this.lead = l;
       this.leadId = l.Id;
       this.leadResult = ProcessResult.OTHERS;
+      this.todoOwnerId = l.OwnerId != null ? l.OwnerId : this.todoOwnerId;    // この名刺でのリードのToDoの任命先 新規のとき : 更新のとき
     }
 
     // 既存のアカウントを更新用に作成
@@ -158,7 +162,7 @@ public with sharing class SB_NameCardL_RegistCardHolder {
         this.cont.OwnerId = ownerId;
       }
       // コンタクトの所有者ID をとっておく 新規のときのToDo所有者用
-      this.todoOwnerId = this.cont.OwnerId;
+      this.todoOwnerId = this.cont.OwnerId;   // この名刺でのコンタクトのToDoの任命先
       // this.otype2upserted.put(Contact.sObjectType, this.cont);
       this.contResult = ProcessResult.CREATE;
       return this.cont;
@@ -166,8 +170,9 @@ public with sharing class SB_NameCardL_RegistCardHolder {
 
     // 既存のリードを更新用に作成
     public Lead buildUpdLead() {
-      //bindExistAccount();
-      SmartViscaf.SB_NameCard_RenkeiMapper mapper = SmartViscaf.SB_NameCard_RenkeiMapper.getInstance('Lead', false);    // 本当は TRUE だけど、Leadの場合は false でも問題なし
+      // リード用のマッピングレコードから、変換クラスを作成
+      // 注意）第２引数 本当は true だけど、基本v2.0.2まで、自動連携のとき用で OWNERID 以外で更新してはいけない 項目マップ  RENKEI_DONOT_UPDATE_FIELDS に LEADのがないので NULL Po 例外になるので 更新できないのないし false にしとく
+      SmartViscaf.SB_NameCard_RenkeiMapper mapper = SmartViscaf.SB_NameCard_RenkeiMapper.getInstance('Lead', false);
       this.lead = (Lead)mapper.updateRecord(this.card, this.leadId);
       // this.otype2upserted.put(Schema.Lead.sObjectType, this.lead);
       this.leadResult = ProcessResult.MODIFY;
@@ -177,16 +182,41 @@ public with sharing class SB_NameCardL_RegistCardHolder {
     // 新規にリードを作成
     public Lead buildNewLead(Id rectypeId, Id ownerId) {
       System.assert(this.lead==null);
-      SmartViscaf.SB_NameCard_RenkeiMapper mapper = SmartViscaf.SB_NameCard_RenkeiMapper.getInstance('Lead', false);    // 本当は TRUE だけど、Leadの場合は false でも問題なし
+      // リード用のマッピングレコードから、変換クラスを作成
+      // 注意）第２引数 本当は true だけど、基本v2.0.2まで、自動連携のとき用で OWNERID 以外で更新してはいけない 項目マップ  RENKEI_DONOT_UPDATE_FIELDS に LEADのがないので NULL Po 例外になるので 更新できないのないし false にしとく
+      SmartViscaf.SB_NameCard_RenkeiMapper mapper = SmartViscaf.SB_NameCard_RenkeiMapper.getInstance('Lead', false);
       this.lead = (Lead)mapper.createRecord(this.card, rectypeId);
       if (ownerId != null) {
         this.lead.OwnerId = ownerId;
       }
       // リードの所有者ID をとっておく 新規のときのToDo所有者用
-      this.todoOwnerId = this.lead.OwnerId;
+      this.todoOwnerId = this.lead.OwnerId; // この名刺でのリードのToDoの任命先
       // this.otype2upserted.put(Schema.Lead.sObjectType, this.lead);
       this.leadResult = ProcessResult.CREATE;
       return this.lead;
+    }
+
+    private CampaignMember buildCampaignMember(Id campId, Id targetId, String status) {
+      CampaignMember result = null;
+      if (targetId!=null && targetId.getSobjectType() == Contact.sObjectType) {
+        result = new CampaignMember(CampaignId=campId, ContactId=targetId, Status = status);
+      }
+      else if (targetId!=null && targetId.getSobjectType() == Schema.Lead.sObjectType) {
+        result = new CampaignMember(CampaignId=campId, LeadId=targetId, Status = status);
+      }
+      return result;
+    }
+
+    // コンタクト で キャンペーンメンバーを作成
+    public CampaignMember buildContactCampaignMember(Id campId, String status) {
+      this.contCampaignMember = buildCampaignMember(campId, getContactId(), status);
+      return this.contCampaignMember;
+    }
+
+    // リード で キャンペーンメンバーを作成
+    public CampaignMember buildLeadCampaignMember(Id campId, String status) {
+      this.leadCampaignMember = buildCampaignMember(campId, getLeadId(), status);
+      return this.leadCampaignMember;
     }
 
     public Id getAccountId() {
@@ -282,7 +312,7 @@ public with sharing class SB_NameCardL_RegistCardHolder {
       }
     }
 
-    private void buildLeadKoinId() {
+    private void buildLeadKojinId() {
       this.meishiLeadId = this.card.SmartViscaf__company_name__c;
       Map<String, String> address = SmartViscaf.SB_NameCard_Util.getAddress(this.card);
       if (this.setting.SmartViscaf__RenkeiLeadAddressPref__c) {
@@ -420,18 +450,23 @@ public with sharing class SB_NameCardL_RegistCardHolder {
     public Task createTodoPrototype(Id ownerId) {
       System.debug(this.cont);
       this.todo = new Task();
-      if (this.acntResult != ProcessResult.NONE && this.contResult != ProcessResult.NONE) {
+      if (this.pType != SB_NameCardL_RegistHelper.ProcType.LEAD) {
+        // 取引先の処理をしたとき
         this.todo.WhatId = getAccountId();
         this.todo.WhoId = getContactId();
       }
-      else if (this.leadResult != ProcessResult.NONE) {
+      else {
+        //　リードの処理をしたとき
         this.todo.WhoId = getLeadId();
       }
       this.todo.ActivityDate = todoDate != null ? todoDate : this.card.SmartViscaf__card_exchange_date__c;     //  日付 は指定された日付か 名刺交換日
       // 任命先
       // 2017.04.25 NULLの場合、UserInfo.getUserId();からthis.card.OwnerIdへ変更
       // 2017.12.xx 作成・更新した コンタクトのオーナに変更. SV_DEV-715 「取引先・取引先責任者に登録」の更新時のTodoの任命先は取引先責任者の所有者にする
+      System.debug('ownerId: ' + ownerId);
       this.todo.OwnerId = ownerId != null ? ownerId : (this.todoOwnerId != null ? this.todoOwnerId : this.card.OwnerId);
+      System.debug('this.todoOwnerId: ' + this.todoOwnerId);
+      System.debug('this.todo.OwnerId: ' + this.todo.OwnerId);
       return todo;
     }
 
@@ -513,31 +548,5 @@ public with sharing class SB_NameCardL_RegistCardHolder {
 
 
   } // public class LeadAccountRegistHolder extends AccountRegistHolder {
-
-  ///////////////
-  //
-  ///////////////
-  public abstract class HolderBuilder {
-    public abstract AccountRegistHolder create(SmartViscaf__NameCard__c card);
-  }
-
-  public class AccountHolderBuilder extends HolderBuilder {
-    public override AccountRegistHolder create(SmartViscaf__NameCard__c card) {
-      return new AccountRegistHolder(card);
-    }
-  }
-
-  public class LeadAccountHolderBuilder extends HolderBuilder {
-    public override AccountRegistHolder create(SmartViscaf__NameCard__c card) {
-      return new LeadAccountRegistHolder(card);
-    }
-  }
-
-  public static HolderBuilder createHolderBuilder(Boolean withLead) {
-    if (withLead) {
-      return new LeadAccountHolderBuilder();
-    }
-    return new AccountHolderBuilder();
-  }
 
 }

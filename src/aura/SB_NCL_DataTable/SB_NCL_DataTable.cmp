@@ -17,18 +17,19 @@
  **/ -->
 <aura:component implements="force:appHostable" access="global" >
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-    <aura:attribute name="fieldList" type="List" />
-    <aura:attribute name="title" type="String" />
-    <aura:attribute name="objs" type="List" />
-    <aura:attribute name="fields" type="List" />
-    <aura:attribute name="selectMap" type="Map" />
-    <aura:attribute name="testValue" type="String" />
-    <aura:attribute name="mouseStart" type="string" />
-    <aura:attribute name="oldWidth" type="string" />
-    <aura:attribute name="haveError" type="Boolean" default="false"/>
-    <aura:attribute name="showType" type="String" default="Lead"/>
+    <aura:attribute name="fieldList" type="List" /> <!-- DataTable表示するの -->
+    <aura:attribute name="fieldList2" type="List" /> <!-- DataTable表示するの -->
+    <aura:attribute name="fieldMap" type="Map" default="{aa:222}"/> <!-- DataTable表示するの -->
+    <aura:attribute name="objs" type="List" /> <!-- 表示入力するデータリスト -->
+    <aura:attribute name="selectMap" type="Map" /> <!-- 名刺一覧のデータを保存されてます -->
+    <aura:attribute name="mouseStart" type="string" /> <!-- ヘッダー位置調整の開始位置 -->
+    <aura:attribute name="oldWidth" type="string" /> <!-- ヘッダー位置調整の開始Width -->
+    <aura:attribute name="haveError" type="Boolean" default="false"/> <!-- エラーマック列表示するフラグ -->
+    <aura:attribute name="showType" type="String" default="Lead"/> <!-- 登録タイプ リード 取引先責任者 両方 -->
+    <aura:attribute name="labelMap" type="Map" /> <!-- 入力所の内容と表示保存されてます -->
+     <aura:handler name="change" value="{!v.fieldList}" action="{!c.changeFieldList}"/>
     <aura:handler event="aura:doneRendering" action="{!c.reSetThead }"/>
-    <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistComonEvent" action="{!c.doSomething}"/>
+    <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistCommonEvent" action="{!c.doSomething}"/>
     <aura:handler name="render" value="{!this}" action="{!c.reSetThead}"/>
 
 
@@ -40,6 +41,7 @@
     <aura:method name="reSetThead" action="{!c.reSetThead}" access="PUBLIC"/>
 
       <div class="slds-table_header-fixed_container slds-scrollable_x" style="height: 100%;" onmouseup="{!c.resetColumn}">
+        <!-- ヘッダー部分表示 -->
         <div class="slds-scrollable_y" style="max-height:350px;">
           <div>
             <table classs="dataTable" summary="" class="slds-table slds-table_header-fixed slds-table_bordered slds-table_edit slds-table_resizable-cols">
@@ -48,6 +50,179 @@
                   <aura:renderIf isTrue="{!v.haveError == true}">
                     <th/>
                   </aura:renderIf>
+
+<!--     inv.labelMap.put('cardLabel_SmartViscaf__company_name__c', SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__division__c', SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__title_name__c', SmartViscaf__NameCard__c.SmartViscaf__title_name__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_Name', SmartViscaf__NameCard__c.Name.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__address__c', SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__mobile__c', SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel());
+    inv.labelMap.put('cardLabel_SmartViscaf__email__c', SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel());
+
+ -->
+
+                    <th style="{!if(v.showType != 'Contact', 'position:static;', 'display: none;')}" class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanName" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_Name}" class="slds-truncate">
+                            {!v.labelMap.cardLabel_Name}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
+                    <th style="{!if(v.showType != 'Contact' , 'position:static;', 'display: none;')}" class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanSmartViscaf__email__c" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_SmartViscaf__email__c}" class="slds-truncate">
+                            {!v.labelMap.cardLabel_SmartViscaf__email__c}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
+                     <th style="position:static; " class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanSmartViscaf__company_name__c" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_SmartViscaf__company_name__c}" class="slds-truncate">
+                            {!v.labelMap.cardLabel_SmartViscaf__company_name__c}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
+                    <th style="{!if(v.showType != 'Contact' , 'position:static;', 'display: none;')}" class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanSmartViscaf__address_pref__c" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_SmartViscaf__address_pref__c}" class="slds-truncate">
+                            {!v.labelMap.SmartViscaf__address_pref__c}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
+                    <th style="position:static; " class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanSmartViscaf__division__c" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_SmartViscaf__division__c}" class="slds-truncate">
+                            {!v.labelMap.cardLabel_SmartViscaf__division__c}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
+
+                    <th style="position:static; " class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanSmartViscaf__title_name__c" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_SmartViscaf__title_name__c}" class="slds-truncate">
+                            {!v.labelMap.cardLabel_SmartViscaf__title_name__c}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
+                    <th style="{!if(v.showType == 'Contact', 'position:static;', 'display: none;')}" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanName" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_Name}" class="slds-truncate">
+                            {!v.labelMap.cardLabel_Name}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
+
+                    <th style="{!if(v.showType != 'Lead', 'position:static;', 'display: none;')}" class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanAddress" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_SmartViscaf__address__c}" class="slds-truncate">
+                            {!v.labelMap.cardLabel_SmartViscaf__address__c}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
+                    <th style="{!if(v.showType != 'Lead', 'position:static; ', 'display: none;')}" class="slds-text-title_caps" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="dataTableTheadSpanSmartViscaf__mobile__c" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!v.labelMap.cardLabel_SmartViscaf__mobile__c}" class="slds-truncate">
+                            {!v.labelMap.cardLabel_SmartViscaf__mobile__c}
+                          </span>
+                        </div>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+
+
+
+
+
+
+
+
                   <aura:iteration var="va" items="{!v.fieldList}">
                   <!--   <th scope="col" class="slds-text-title_caps" is="lightning-primitive-header-factory">
                       <div class="slds-truncate" title="{!va.label}">{!va.label}</div>
@@ -61,6 +236,7 @@
                               <span  class="slds-checkbox--faux checkboxleft"></span>
                               <span class="slds-assistive-text"></span>
                             </label>
+                            &nbsp;
                           <span title="{!va.label}" class="slds-truncate">
                             {!va.label}
                           </span>
@@ -76,6 +252,7 @@
                   </aura:iteration>
                 </tr>
               </thead>
+              <!-- 内容表示 -->
               <tbody>
                 <aura:iteration var="obj" items="{!v.objs}" indexVar="indx">
                   <tr style="width: 100%;" class="slds-hint-parent" is="lightning-primitive-datatable-row">
@@ -86,17 +263,69 @@
                         </aura:renderIf>
                       </td>
                     </aura:renderIf>
+
+                    <td style="{!if(v.showType != 'Contact', 'min-width: 100px;', 'display: none;')}" role="gridcell">
+                      <div style="{!if(v.fieldMap.Name.width != '', 'width:' + v.fieldMap.Name.width + 'px', '')}" class="slds-truncate">
+                            <lightning:formattedUrl label="{!obj.cObjectMap.Name.label}" value="{!obj.cObjectMap.Name.value}"/>
+                        </div>
+                    </td>
+
+                    <td style="{!if(v.showType != 'Contact' , 'min-width: 100px;', 'display: none;')}" role="gridcell">
+                      <div style="{!if(v.fieldMap.SmartViscaf__email__c.width != '', 'width:' + v.fieldMap.SmartViscaf__email__c.width + 'px', '')}" class="slds-truncate">
+                          {!obj.cObjectMap.SmartViscaf__email__c.value}
+                      </div>
+                    </td>
+
+                    <td style="min-width: 100px;" role="gridcell">
+                      <div style="{!if(v.fieldMap.SmartViscaf__company_name__c.width != '', 'width:' + v.fieldMap.SmartViscaf__company_name__c.width + 'px', '')}" class="slds-truncate">
+                          {!obj.cObjectMap.SmartViscaf__company_name__c.value}
+                      </div>
+                    </td>
+
+                    <td style="{!if(v.showType != 'Contact' , 'min-width: 100px;', 'display: none;')}" role="gridcell">
+                      <div style="{!if(v.fieldMap.SmartViscaf__address_pref__c.width != '', 'width:' + v.fieldMap.SmartViscaf__address_pref__c.width + 'px', '')}" class="slds-truncate">
+                          {!obj.cObjectMap.SmartViscaf__address_pref__c.value}
+                      </div>
+                    </td>
+
+                    <td style="{!'min-width: 100px;'}" role="gridcell">
+                      <div style="{!if(v.fieldMap.SmartViscaf__division__c.width != '', 'width:' + v.fieldMap.SmartViscaf__division__c.width + 'px', '')}" class="slds-truncate">
+                          {!obj.cObjectMap.SmartViscaf__division__c.value}
+                      </div>
+                    </td>
+                    <td style="{!'min-width: 100px;'}" role="gridcell">
+                      <div style="{!if(v.fieldMap.SmartViscaf__title_name__c.width != '', 'width:' + v.fieldMap.SmartViscaf__title_name__c.width + 'px', '')}" class="slds-truncate">
+                          {!obj.cObjectMap.SmartViscaf__title_name__c.value}
+                      </div>
+                    </td>
+
+                    <td style="{!if(v.showType == 'Contact', 'min-width: 100px;', 'display: none;')}" role="gridcell">
+                      <div style="{!if(v.fieldMap.Name.width != '', 'width:' + v.fieldMap.Name.width + 'px', '')}" class="slds-truncate">
+                            <lightning:formattedUrl label="{!obj.cObjectMap.Name.label}" value="{!obj.cObjectMap.Name.value}"/>
+                        </div>
+                    </td>
+
+                    <td style="{!if(v.showType != 'Lead', 'min-width: 100px;', 'display: none;')}" role="gridcell">
+                      <div style="{!if(v.fieldMap.Address.width != '', 'width:' + v.fieldMap.Address.width + 'px', '')}" class="slds-truncate">
+                          {!obj.cObjectMap.Address.value}
+                      </div>
+                    </td>
+                    <td style="{!if(v.showType != 'Lead', 'min-width: 100px;', 'display: none;')}" role="gridcell">
+                      <div style="{!if(v.fieldMap.SmartViscaf__mobile__c.width != '', 'width:' + v.fieldMap.SmartViscaf__mobile__c.width + 'px', '')}" class="slds-truncate">
+                          {!obj.cObjectMap.SmartViscaf__mobile__c.value}
+                      </div>
+                    </td>
+
                     <aura:iteration var="field" items="{!v.fieldList}">
-                      <!-- <aura:renderIf isTrue="{!field.show == true}"> -->
-                        <!-- <aura:renderIf isTrue="{!field.type == 'plicklist'}"> -->
-                          <c:SB_NCL_DataTableCell index="{!indx}" width="{!field.width}" showType="{!v.showType}" aura:id="{!obj.id + field.fieldName}" eventName="{!field.eventName}" selectMap="{!v.selectMap}" recordId="{!obj.id}" field="{!field}" cObjectMap="{!obj.cObjectMap}"/>
-                        <!-- </aura:renderIf> -->
-
-
-                        <!-- <aura:renderIf isTrue="{!field.type != 'plicklist'}"> -->
-                          <!-- <c:TestDataTableCell field="{!field}" cObjectMap="{!obj.cObjectMap}"/> -->
-                        <!-- </aura:renderIf> -->
-                      <!-- </aura:renderIf> -->
+                        <c:SB_NCL_DataTableCell
+                        index="{!indx}" width="{!field.width}"
+                        showType="{!v.showType}"
+                        aura:id="{!obj.id + field.fieldName}"
+                        eventName="{!field.eventName}"
+                        selectMap="{!obj.combobox}"
+                        recordId="{!obj.id}"
+                        field="{!field}"
+                        cObjectMap="{!obj.cObjectMap}"/>
                     </aura:iteration>
                   </tr>
                 </aura:iteration>

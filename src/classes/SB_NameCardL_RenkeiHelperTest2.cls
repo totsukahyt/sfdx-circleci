@@ -50,6 +50,8 @@ private class SB_NameCardL_RenkeiHelperTest2
               , SmartViscaf__company_name__c= 'サンブリッジ株式会社'
               , SmartViscaf__division__c = '開発部'
               , SmartViscaf__title_name__c = '課長'
+              , SmartViscaf__address_pref__c = '東京都'
+              , SmartViscaf__address__c = '渋谷区恵比寿'
               , campaign__c = listCampaign[0].Id
               , SmartViscaf__delivery_type__c = delivery_type));
       listCard.add(new SmartViscaf__NameCard__c(
@@ -62,9 +64,20 @@ private class SB_NameCardL_RenkeiHelperTest2
               , SmartViscaf__company_name__c= '目黒商事株式会社'
               , SmartViscaf__division__c = '営業部'
               , SmartViscaf__title_name__c = '部長'
+              , SmartViscaf__address_pref__c = '東京都'
+              , SmartViscaf__address__c = '目黒区不動〇〇'
               , campaign__c = listCampaign[0].Id
               , SmartViscaf__delivery_type__c = delivery_type));
     }
+
+    //// 2016.05.xx S1取引先登録対応 設定の初期値
+    //public override void initializeSmartViscaConfig() {
+    //  svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
+    //  // 自動連携のトリガハンドラを呼ぶ
+    //  svConfig.SmartViscaf__TriggerRenkeiTriggerHandler__c = false;
+    //  // Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
+    //  svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true;
+    //}
 
     // 初期データ作成  他に影響のないものだけ
     public override void initialize() {
@@ -115,6 +128,35 @@ private class SB_NameCardL_RenkeiHelperTest2
         insert listLead;
       }
     }
+    // リード
+    public void cloneLead() {
+      List<Lead> leads = new List<Lead>();
+      for (Lead l : [SELECT Id, Name, Company, FirstName, LastName, Title, Email FROM Lead]) {
+        leads.add(l.clone());
+      }
+      //insert leads;
+      // 重複を強行
+      Database.DMLOptions dml = new Database.DMLOptions();
+      dml.DuplicateRuleHeader.AllowSave = true;
+      List<Database.SaveResult> srs = Database.insert(leads, dml);
+    }
+
+    // リードを取引開始する。
+    public void convertLead() {
+      //Set<Id> leadIds = (new Map<Id, SObject>(listLead)).keySet();
+      //List<Lead> leads = [SELECT Id, Name, FirstName, LastName, Company FROM Lead WHERE Id IN :leadIds];
+      List<Lead> leads = [SELECT Id, Name, FirstName, LastName, Company FROM Lead];
+      LeadStatus convertStatus = [SELECT Id, MasterLabel FROM LeadStatus WHERE IsConverted=true LIMIT 1];
+      List<Database.LeadConvert> lcs = new List<Database.LeadConvert>();
+      for (Lead l : leads) {
+        Database.LeadConvert lc = new Database.LeadConvert();
+        lc.setLeadId(l.Id);
+        lc.setConvertedStatus(convertStatus.MasterLabel);
+        lcs.add(lc);
+      }
+      Database.LeadConvertResult[] lcrs = Database.convertLead(lcs);
+    }
+
     // キャンペーンメンバー
     public void createCampaignMember() {
       initializeCampaignMember();
@@ -165,6 +207,9 @@ private class SB_NameCardL_RenkeiHelperTest2
     bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = true; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
+    bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
+    bs.SmartViscaf__RenkeiContactNOExistCreateNew__c = true;  // 取引先責任者を新規作
+    bs.SmartViscaf__RenkeiLeadNOExistCreateNew__c = true; // リードを新規作
     bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
     bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
     bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
@@ -175,10 +220,12 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createAccount();
     db.createNameCard('1');
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
       c.SmartViscaf__delivery_type__c = '2';
     }
     Test.startTest();
@@ -189,19 +236,24 @@ private class SB_NameCardL_RenkeiHelperTest2
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
     // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
-    System.assertEquals(2, leads.size());
+    System.assertEquals(2, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
     //　コンタクトはできてない。
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    System.assertEquals(0, conts.size());
+    System.assertEquals(0, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
     //　リードはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null];
-    System.assertEquals(leads.size(), cms.size());
+    System.assertEquals(2, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null].size());
     //for (SmartViscaf__NameCard__c card :cards) {
     //  System.assertEquals(null, card.SmartViscaf__lead__c);
     //}
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c != null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c == null);
+    }
+    System.assertEquals(2, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント なし
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
-
 
   // 　リード連携は有効で、 リードが出来てキャンペーンメンバーになる。 最初から納品 2
   @isTest
@@ -224,6 +276,9 @@ private class SB_NameCardL_RenkeiHelperTest2
     bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = true; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
+    bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
+    bs.SmartViscaf__RenkeiContactNOExistCreateNew__c = true;  // 取引先責任者を新規作
+    bs.SmartViscaf__RenkeiLeadNOExistCreateNew__c = true; // リードを新規作
     bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
     bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
     bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
@@ -236,25 +291,33 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
     // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
-    System.assertEquals(2, leads.size());
+    System.assertEquals(2, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
     //　コンタクトはできてない。
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    System.assertEquals(0, conts.size());
+    System.assertEquals(0, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
     //　リードはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null];
-    System.assertEquals(leads.size(), cms.size());
+    System.assertEquals(2, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null].size());
     //for (SmartViscaf__NameCard__c card :cards) {
     //  System.assertEquals(null, card.SmartViscaf__lead__c);
     //}
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c != null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c == null);
+    }
+    System.assertEquals(2, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント なし
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
   // 　リード連携は有効で、 リードでなくコンタクトが出来てキャンペーンメンバーになる。 最初から納品 2
@@ -289,23 +352,31 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
-    // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
-    //System.assertEquals(emails.size(), leads.size());
-    System.assertEquals(0, leads.size());
-    //　コンタクトはできてない。
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    System.assertEquals(2, conts.size());
-    //　リードはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(conts.size(), cms.size());
+    // リード なし
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
+    //　コンタクト できてる。
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    //　コンタクトはキャンペンメンバーになってる。
+    System.assertEquals(2, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント なし
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
   // 　リード連携は有効で、 リードが既存で更新して、すでにキャンペーンメンバーなので、キャンペーンメンバーの追加はなし
@@ -342,25 +413,34 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
     // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
-    System.assertEquals(2, leads.size());
+    System.assertEquals(2, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
     //　コンタクトはできてない。
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    System.assertEquals(0, conts.size());
+    System.assertEquals(0, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
     //　リードはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null];
-    System.assertEquals(leads.size(), cms.size());
+    System.assertEquals(2, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null].size());
     //for (SmartViscaf__NameCard__c card :cards) {
     //  System.assertEquals(null, card.SmartViscaf__lead__c);
     //}
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c != null);
+      System.assert(c.SmartViscaf__account__c == null);
+      System.assert(c.SmartViscaf__contact__c == null);
+    }
+    System.assertEquals(2, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント なし
+    System.assertEquals(0, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
   //　リード連携は有効で、 アカウントが既存でコンタクトを作成、かつ リードが既存で紐づけて、それぞれキャンペンメンバーにする。
@@ -396,29 +476,115 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
     // リードを更新してる。
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
-    System.assertEquals(2, leads.size());
+    System.assertEquals(2, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
     //　コンタクトを作ってる。
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
     //System.assertEquals(emails.size(), conts.size());
-    System.assertEquals(2, conts.size());
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
     //　リード、コンタクトはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(cms.size(), leads.size() + conts.size());
+    System.assertEquals(4, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c != null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    System.assertEquals(2, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新してる
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
 
+  //　リード連携は有効で、 リードが既存だが複数なので紐付けない、アカウントが既存でコンタクトを作成せず。
+  @isTest
+  static void test_ignoreLead_Duplicate_skipAccount() {
+    SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
+    svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true; // 2018.03.xx v1.22  Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
+    // Lead 拡張パッケージ v2.0 からの項目
+    svConfig.RenkeiCreateContactOnAcountWithoutLead__c = false; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+    svConfig.RenkeiContactToCampaignMember__c = false;  // デフォルト false 統合版自動連携: 取引先責任者もキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateToCampaignMember__c = false; // デフォルト false 統合版自動連携: 更新でもキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateAllLeadsOnCondition__c = false; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
+    upsert svConfig;
+    // 名刺基本設定
+    SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
+    bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
+    bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiActiveCampaignMember__c = true; // キャンペンメンバー
+    bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
+    bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
+    bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
+    bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
+    insert bs;
+    TestDb db = new TestDb();
+    db.initialize();
+    db.createMapping();
+    db.createAccount();
+    db.createLead();
+    db.cloneLead();// リードを複製する
+    db.createNameCard('1');
+    //List<Lead> newLeads = new List<Lead>();
+    //for (Lead l : [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead]) {
+    //  newLeads.add(l.clone());
+    //}
+    //// 重複を強行
+    //Database.DMLOptions dml = new Database.DMLOptions();
+    //dml.DuplicateRuleHeader.AllowSave = true;
+    //List<Database.SaveResult> srs = Database.insert(newLeads, dml);
+    System.assertEquals(4, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead].size());
+
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
+    for (SmartViscaf__NameCard__c c : cards) {
+      c.SmartViscaf__email__c += '2';      // メアドを変更するようにする。
+      emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
+      c.SmartViscaf__delivery_type__c = '2';
+    }
+    Test.startTest();
+    // 納品 2 に、更新
+    update cards;
+    Test.stopTest();
+
+    //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
+    // リードを更新なし。
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
+    //　コンタクトなし
+    System.assertEquals(0, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    //cards = [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
+    //          WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null];
+    //System.assertEquals(0, [SELECT Id, Name FROM SmartViscaf__NameCard__c WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null].size());
+    //　リード、コンタクト キャンペンメンバー
+    System.assertEquals(0, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c == null);
+    }
+    // リード更新なし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新なし
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
+  }
+
   //　リード連携は有効で、 アカウントが既存でコンタクトを作成せず、リードが既存だが複数なので紐付けない、コンタクトをキャンペンメンバーにする。
   @isTest
-  static void test_ignoreLead_Duplicate() {
+  static void test_updateLead_Duplicate_skipAccount() {
     SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
     svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true; // 2018.03.xx v1.22  Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
     // Lead 拡張パッケージ v2.0 からの項目
@@ -444,43 +610,56 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createMapping();
     db.createAccount();
     db.createLead();
-    // リードを複製する
-    List<Lead> newLeads = new List<Lead>();
-    for (Lead l : [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead]) {
-      newLeads.add(l.clone());
-    }
-    // 重複を強行
-    Database.DMLOptions dml = new Database.DMLOptions();
-    dml.DuplicateRuleHeader.AllowSave = true;
-    List<Database.SaveResult> srs = Database.insert(newLeads, dml);
+    db.cloneLead();// リードを複製する
+    db.createNameCard('1');
+    //List<Lead> newLeads = new List<Lead>();
+    //for (Lead l : [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead]) {
+    //  newLeads.add(l.clone());
+    //}
+    //// 重複を強行
+    //Database.DMLOptions dml = new Database.DMLOptions();
+    //dml.DuplicateRuleHeader.AllowSave = true;
+    //List<Database.SaveResult> srs = Database.insert(newLeads, dml);
+    System.assertEquals(4, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead].size());
 
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
+    for (SmartViscaf__NameCard__c c : cards) {
+      c.SmartViscaf__email__c += '2';      // メアドを変更するようにする。
+      emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
+      c.SmartViscaf__delivery_type__c = '2';
+    }
     Test.startTest();
-    db.createNameCard('2');
+    // 納品 2 に、更新
+    update cards;
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
-    Set<String> emails = new Set<String>();
-    for (SmartViscaf__NameCard__c c : cards) {
-      emails.add(c.SmartViscaf__email__c);
-    }
-    System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
-    // リードを更新してる。
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
-    System.assertEquals(4, leads.size());
-    //　コンタクトを作ってる。
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    //System.assertEquals(emails.size(), conts.size());
-    System.assertEquals(0, conts.size());
-    cards = [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
-              WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null];
-    System.assertEquals(0, cards.size());
-    //　リード、コンタクトはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(cms.size(), 0);
+    // リードを更新
+    System.assertEquals(4, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
+    //　コンタクトなし
+    System.assertEquals(0, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    //cards = [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
+    //          WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null];
+    //System.assertEquals(0, cards.size());
+    //　リード、コンタクト キャンペンメンバー
+    System.assertEquals(0, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c == null);
+    }
+    // リード更新
+    System.assertEquals(4, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新なし
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
-  // リード連携は無効　で、コンタクトが既存で更新、それをキャンペンメンバーにする。
+  // リード連携は有効　で、リードなし、アカウント、コンタクトが既存で更新、それをキャンペンメンバーにする。
   @isTest
   static void test_updateContact_Campaign() {
     SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
@@ -496,7 +675,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     // 名刺基本設定  リード連携は無効　で、 キャンペンメンバー化は有効
     SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
     bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
-    bs.SmartViscaf__RenkeiLeadActive__c = false; // リード連携を有効化
+    bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = true; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
     bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
@@ -513,34 +692,43 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
-    // リードを更新してる。
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
-    System.assertEquals(0, leads.size());
-    //　コンタクトを作ってる。
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    //System.assertEquals(emails.size(), conts.size());
-    System.assertEquals(2, conts.size());
+    // リードを作ってる?
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
+    //　コンタクトを 更新
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
     //　リード、コンタクトはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(conts.size(), cms.size());
+    System.assertEquals(2, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    // リード更新なし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
 
-  // リード連携は無効　で、 キャンペンメンバー化は有効 で コンタクトが作成されて、キャンペンメンバーになる。
+  // リード連携は有効、 キャンペンメンバー化は有効 で コンタクト優先で、コンタクトが作成されて、キャンペンメンバーになる。
   @isTest
   static void test_createContact_Campaign_NoLeadRenkei() {
     SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
     svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true; // 2018.03.xx v1.22  Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
     // Lead 拡張パッケージ v2.0 からの項目
-    svConfig.RenkeiCreateContactOnAcountWithoutLead__c = false; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
-    svConfig.RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateContactOnAcountWithoutLead__c = true; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateContactOnAcountWithLead__c = true;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
     svConfig.RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
     svConfig.RenkeiContactToCampaignMember__c = true;  // デフォルト false 統合版自動連携: 取引先責任者もキャンペーンメンバーにする。
     svConfig.RenkeiUpdateToCampaignMember__c = true; // デフォルト false 統合版自動連携: 更新でもキャンペーンメンバーにする。
@@ -549,7 +737,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     // 名刺基本設定 リード連携は無効　で、 キャンペンメンバー化は有効
     SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
     bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
-    bs.SmartViscaf__RenkeiLeadActive__c = false; // リード連携を有効化
+    bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = true; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
     bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
@@ -565,23 +753,32 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
-    // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
-    //System.assertEquals(emails.size(), leads.size());
-    System.assertEquals(0, leads.size());
-    //　コンタクトはできてない。
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    System.assertEquals(2, conts.size());
-    //　リードはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(conts.size(), cms.size());
+    // リードができてる ?
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
+    //　コンタクトできてる ?
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    // コンタクトはキャンペンメンバーになってる?
+    System.assertEquals(2, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    // リード更新なし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
 
@@ -618,26 +815,35 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
     // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
     //System.assertEquals(emails.size(), leads.size());
-    System.assertEquals(0, leads.size());
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
     //　アカウント
-    List<Account> acnts = [SELECT Id, Name, Site FROM Account];
-    System.assertEquals(2, acnts.size());
+    System.assertEquals(2, [SELECT Id, Name, Site FROM Account].size());
     //　コンタクト
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    System.assertEquals(2, conts.size());
-    //　リードはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(0, cms.size());
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    //　リードはキャンペンメンバーになってない
+    System.assertEquals(0, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    // リード更新なし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
   // リード連携は無効　で、 キャンペンメンバー化は無効 で コンタクトが作成されて、キャンペンメンバーにならない
@@ -673,23 +879,33 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
-    // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
+    // リードができてない
     //System.assertEquals(emails.size(), leads.size());
-    System.assertEquals(0, leads.size());
-    //　コンタクトはできてない。
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    System.assertEquals(2, conts.size());
-    //　リードはキャンペンメンバーになってる。
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(0, cms.size());
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
+    //　コンタクトはできてる。
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    //　リードはキャンペンメンバーになってない
+    System.assertEquals(0, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    // リードなし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
 
@@ -727,29 +943,37 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
     // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
-    //System.assertEquals(emails.size(), leads.size());
-    System.assertEquals(0, leads.size());
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
     //　アカウント
-    List<Account> acnts = [SELECT Id, Name, Site FROM Account];
-    System.assertEquals(2, acnts.size());
+    System.assertEquals(2, [SELECT Id, Name, Site FROM Account].size());
     //　コンタクト
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    System.assertEquals(2, conts.size());
-    cards = [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
-              WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null];
-    System.assertEquals(2, cards.size());
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    //cards = [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
+    //          WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null];
+    System.assertEquals(2, [SELECT Id, Name FROM SmartViscaf__NameCard__c WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null].size());
     // キャンペンメンバ
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(0, cms.size());
+    System.assertEquals(0, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    // リードなし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
   // リード連携は無効　で、 キャンペンメンバー化は無効 で 名刺が重複していて、新規でアカウント、コンタクトを作成する。
@@ -793,29 +1017,38 @@ private class SB_NameCardL_RenkeiHelperTest2
     insert newList;
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
-    // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
+    // リードができてない
     //System.assertEquals(emails.size(), leads.size());
-    System.assertEquals(0, leads.size());
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
     //　アカウント
-    List<Account> acnts = [SELECT Id, Name, Site FROM Account WHERE SmartViscaf__NameCard__c != null];
-    System.assertEquals(2, acnts.size());
+    System.assertEquals(2, [SELECT Id, Name, Site FROM Account WHERE SmartViscaf__NameCard__c != null].size());
     //　コンタクト
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails AND SmartViscaf__NameCard__c != null];
-    System.assertEquals(2, conts.size());
-    cards = [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
-              WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null];
-    System.assertEquals(4, cards.size());
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails AND SmartViscaf__NameCard__c != null].size());
+    //cards = [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
+    //          WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null];
+    System.assertEquals(4, [SELECT Id, Name FROM SmartViscaf__NameCard__c WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null].size());
     // キャンペンメンバ
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(0, cms.size());
+    System.assertEquals(0, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    // リードなし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
   // リード連携は無効　で、 キャンペンメンバー化は無効 で 名刺が重複していて、コンタクトが既存で更新されて、キャンペンメンバーにならない
@@ -857,29 +1090,377 @@ private class SB_NameCardL_RenkeiHelperTest2
     insert newList;
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
       emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
     }
     System.assertEquals(2, emails.size());
     //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
-    // リードができてる
-    List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails];
+    // リード
     //System.assertEquals(emails.size(), leads.size());
-    System.assertEquals(0, leads.size());
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
     //　アカウント
-    List<Account> acnts = [SELECT Id, Name, Site FROM Account];
-    System.assertEquals(2, acnts.size());
+    System.assertEquals(2, [SELECT Id, Name, Site FROM Account].size());
     //　コンタクト
-    List<Contact> conts = [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails];
-    System.assertEquals(2, conts.size());
-    cards = [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
-              WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null];
-    System.assertEquals(4, cards.size());
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    //cards = [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
+    //          WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null];
+    // 名刺
+    System.assertEquals(4, [SELECT Id, Name FROM SmartViscaf__NameCard__c WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null].size());
     // キャンペンメンバ
-    List<CampaignMember> cms = [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null];
-    System.assertEquals(0, cms.size());
+    System.assertEquals(0, [SELECT Id, CampaignId, LeadId, ContactId, FirstName, LastName, Status FROM CampaignMember WHERE LeadId != null OR ContactId != null].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    // リードなし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
+
+  // リードが取引開始済みで、アカウント、コンタクトがあり、更新する。
+  @isTest
+  static void test_updateAccountContact_LeadRenkei_Converted() {
+    // SmartVisca設定
+    SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
+    svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true; // 2018.03.xx v1.22  Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
+    // Lead 拡張パッケージ v2.0 からの項目
+    svConfig.RenkeiCreateContactOnAcountWithoutLead__c = true; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+    svConfig.RenkeiContactToCampaignMember__c = false;  // デフォルト false 統合版自動連携: 取引先責任者もキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateToCampaignMember__c = false; // デフォルト false 統合版自動連携: 更新でもキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
+    upsert svConfig;
+    // 名刺基本設定 リード連携は無効　で、 キャンペンメンバー化も無効
+    SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
+    bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
+    bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiActiveCampaignMember__c = false; // キャンペンメンバー
+    bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
+    bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
+    bs.SmartViscaf__RenkeiContactNOExistCreateNew__c = true;  // 取引先責任者を新規作
+    bs.SmartViscaf__RenkeiLeadNOExistCreateNew__c = true; // リードを新規作
+    bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
+    bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
+    bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
+    insert bs;
+    TestDb db = new TestDb();
+    db.initialize();
+    db.createMapping();
+    //db.createAccount();
+    //db.createContact();
+    db.createLead();
+    db.convertLead();   // 取引開始済みに
+    db.createNameCard('1');
+
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
+    for (SmartViscaf__NameCard__c c : cards) {
+      c.SmartViscaf__email__c += '2';      // メアドを変更するようにする。
+      emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
+      c.SmartViscaf__delivery_type__c = '2';
+    }
+    Test.startTest();
+    // 納品 2 に、更新
+    update cards;
+    Test.stopTest();
+
+    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    //Set<String> emails = new Set<String>();
+    //for (SmartViscaf__NameCard__c c : cards) {
+    //  emails.add(c.SmartViscaf__email__c);  // 変更後のメアド
+    //}
+    System.assertEquals(2, emails.size());
+    //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
+    // リードができてる
+    System.assertEquals(2, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE IsConverted=true].size());
+    //　コンタクトが 更新後のメアドになってる
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    // リード更新なし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新なし
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
+  }
+
+  // リードが取引開始済みだけど、アカウントはあって更新、コンタクトはなくなってて作成
+  @isTest
+  static void test_updateAccountCreateContact_LeadRenkei_Converted() {
+    // SmartVisca設定
+    SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
+    svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true; // 2018.03.xx v1.22  Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
+    // Lead 拡張パッケージ v2.0 からの項目
+    svConfig.RenkeiCreateContactOnAcountWithoutLead__c = true; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+    svConfig.RenkeiContactToCampaignMember__c = false;  // デフォルト false 統合版自動連携: 取引先責任者もキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateToCampaignMember__c = false; // デフォルト false 統合版自動連携: 更新でもキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
+    upsert svConfig;
+    // 名刺基本設定 リード連携は無効　で、 キャンペンメンバー化も無効
+    SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
+    bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
+    bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiActiveCampaignMember__c = false; // キャンペンメンバー
+    bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
+    bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
+    bs.SmartViscaf__RenkeiContactNOExistCreateNew__c = true;  // 取引先責任者を新規作
+    bs.SmartViscaf__RenkeiLeadNOExistCreateNew__c = true; // リードを新規作
+    bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
+    bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
+    bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
+    insert bs;
+    TestDb db = new TestDb();
+    db.initialize();
+    db.createMapping();
+    //db.createAccount();
+    //db.createContact();
+    db.createLead();
+    db.convertLead();   // 取引開始済みに
+    db.createNameCard('1');
+
+    //　コンバートしたコンタクトを削除
+    List<Lead> leads = [SELECT Id, Name, ConvertedAccountId, ConvertedContactId FROM Lead WHERE IsConverted = true];
+    System.assertEquals(2, leads.size());
+    List<Id> acntIds = new List<Id>();
+    List<Id> contIds = new List<Id>();
+    for (Lead l : leads) {
+      acntIds.add(l.ConvertedAccountId);
+      contIds.add(l.ConvertedContactId);
+    }
+    Database.delete(contIds); // コンタクト削除
+    System.assertEquals(acntIds.size(), [SELECT Id FROM Account WHERE Id IN :acntIds].size());
+    System.assertEquals(0, [SELECT Id FROM Contact WHERE Id IN :contIds].size());
+
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    Set<String> emails = new Set<String>();
+    Set<String> prefs = new Set<String>();
+    for (SmartViscaf__NameCard__c c : cards) {
+      c.SmartViscaf__email__c += '2';      // メアドを変更するようにする。
+      emails.add(c.SmartViscaf__email__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
+      c.SmartViscaf__delivery_type__c = '2';
+    }
+
+    Test.startTest();
+    // 納品 2 に、更新
+    update cards;
+    Test.stopTest();
+
+    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    //Set<String> emails = new Set<String>();
+    //for (SmartViscaf__NameCard__c c : cards) {
+    //  emails.add(c.SmartViscaf__email__c);  // 変更後のメアド
+    //}
+    System.assertEquals(2, emails.size());
+    // リードができてる
+    //List<Lead> leads = [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE IsConverted=true];
+    //System.assertEquals(2, leads.size());
+    //　アカウントはある
+    System.assertEquals(acntIds.size(), [SELECT Id, Name FROM Account WHERE Id IN :acntIds].size());
+    //　コンタクトが 更新後のメアドでできてる。
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c != null);
+    }
+    // リードなし
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント更新
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
+  }
+
+  // リードが取引開始済みだけど、アカウント、コンタクト なくなってて なにもせず。
+  @isTest
+  static void test_missingAccountContact_LeadRenkei_Converted() {
+    // SmartVisca設定
+    SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
+    svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true; // 2018.03.xx v1.22  Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
+    // Lead 拡張パッケージ v2.0 からの項目
+    svConfig.RenkeiCreateContactOnAcountWithoutLead__c = true; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+    svConfig.RenkeiContactToCampaignMember__c = false;  // デフォルト false 統合版自動連携: 取引先責任者もキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateToCampaignMember__c = false; // デフォルト false 統合版自動連携: 更新でもキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
+    upsert svConfig;
+    // 名刺基本設定 リード連携は無効　で、 キャンペンメンバー化も無効
+    SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
+    bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
+    bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiActiveCampaignMember__c = false; // キャンペンメンバー
+    bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
+    bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
+    bs.SmartViscaf__RenkeiContactNOExistCreateNew__c = true;  // 取引先責任者を新規作
+    bs.SmartViscaf__RenkeiLeadNOExistCreateNew__c = true; // リードを新規作
+    bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
+    bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
+    bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
+    insert bs;
+    TestDb db = new TestDb();
+    db.initialize();
+    db.createMapping();
+    //db.createAccount();
+    //db.createContact();
+    db.createLead();
+    db.convertLead();   // 取引開始済みに
+    db.createNameCard('1');
+
+    //　コンバートしたコンタクトを削除
+    List<Lead> leads = [SELECT Id, Name, ConvertedAccountId, ConvertedContactId FROM Lead WHERE IsConverted = true];
+    System.assertEquals(2, leads.size());
+    List<Id> acntIds = new List<Id>();
+    List<Id> contIds = new List<Id>();
+    for (Lead l : leads) {
+      acntIds.add(l.ConvertedAccountId);
+      contIds.add(l.ConvertedContactId);
+    }
+    Database.delete(contIds); // コンタクト削除
+    Database.delete(acntIds); // アカウント削除
+    System.assertEquals(0, [SELECT Id FROM Account WHERE Id IN :acntIds].size());
+    System.assertEquals(0, [SELECT Id FROM Contact WHERE Id IN :contIds].size());
+
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    Set<String> emails = new Set<String>();
+    Set<String> companies = new Set<String>();
+    Set<String> prefs = new Set<String>();
+    for (SmartViscaf__NameCard__c c : cards) {
+      c.SmartViscaf__email__c += '2';      // メアドを変更するようにする。
+      emails.add(c.SmartViscaf__email__c);
+      companies.add(c.SmartViscaf__company_name__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
+      c.SmartViscaf__delivery_type__c = '2';
+    }
+
+    Test.startTest();
+    // 納品 2 に、更新
+    update cards;
+    Test.stopTest();
+
+    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    //Set<String> emails = new Set<String>();
+    //for (SmartViscaf__NameCard__c c : cards) {
+    //  emails.add(c.SmartViscaf__email__c);  // 変更後のメアド
+    //}
+    System.assertEquals(2, emails.size());
+    // リード
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
+    //　アカウント
+    System.assertEquals(0, [SELECT Id, Name FROM Account WHERE Name IN :companies].size());
+    //　コンタクト
+    System.assertEquals(0, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c == null);
+      System.assert(c.SmartViscaf__contact__c == null);
+    }
+    // リード
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント
+    System.assertEquals(0, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
+  }
+
+  // リードが取引開始済みだけど、アカウント、コンタクト が多くて何もせず。
+  @isTest
+  static void test_Nooperation_LeadRenkei_ManyConvertedAccounts() {
+    // SmartVisca設定
+    SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
+    svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true; // 2018.03.xx v1.22  Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
+    // Lead 拡張パッケージ v2.0 からの項目
+    svConfig.RenkeiCreateContactOnAcountWithoutLead__c = true; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+    svConfig.RenkeiContactToCampaignMember__c = false;  // デフォルト false 統合版自動連携: 取引先責任者もキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateToCampaignMember__c = false; // デフォルト false 統合版自動連携: 更新でもキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
+    upsert svConfig;
+    // 名刺基本設定 リード連携は無効　で、 キャンペンメンバー化も無効
+    SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
+    bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
+    bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiActiveCampaignMember__c = false; // キャンペンメンバー
+    bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
+    bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
+    bs.SmartViscaf__RenkeiContactNOExistCreateNew__c = true;  // 取引先責任者を新規作
+    bs.SmartViscaf__RenkeiLeadNOExistCreateNew__c = true; // リードを新規作
+    bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
+    bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
+    bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
+    insert bs;
+    TestDb db = new TestDb();
+    db.initialize();
+    db.createMapping();
+    //db.createAccount();
+    //db.createContact();
+    db.createLead();
+    db.cloneLead();   // リードを複製して重複させる。
+    db.convertLead();   // 取引開始済みに
+    db.createNameCard('1');
+
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    Set<String> emails = new Set<String>();
+    Set<String> companies = new Set<String>();
+    Set<String> prefs = new Set<String>();
+    for (SmartViscaf__NameCard__c c : cards) {
+      c.SmartViscaf__email__c += '2';      // メアドを変更するようにする。
+      emails.add(c.SmartViscaf__email__c);
+      companies.add(c.SmartViscaf__company_name__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
+      c.SmartViscaf__delivery_type__c = '2';
+    }
+
+    Test.startTest();
+    // 納品 2 に、更新
+    update cards;
+    Test.stopTest();
+
+    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    //Set<String> emails = new Set<String>();
+    //for (SmartViscaf__NameCard__c c : cards) {
+    //  emails.add(c.SmartViscaf__email__c);  // 変更後のメアド
+    //}
+    System.assertEquals(2, emails.size());
+    //SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.LEAD);
+    // リード
+    System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
+    //　アカウント
+    System.assertEquals(0, [SELECT Id, Name FROM Account WHERE Name IN :companies].size());
+    //　コンタクト
+    System.assertEquals(0, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__account__c == null);
+      System.assert(c.SmartViscaf__contact__c == null);
+    }
+    // リード
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント
+    System.assertEquals(0, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
+
+  }
+
 
 }

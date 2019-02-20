@@ -1,3 +1,12 @@
+/*
+ * (c) 2016 Sunbridge Inc.
+ *
+ * 統合一括DTOクラス のテストクラス
+ * @Version 1 201８/08/XX 
+ *
+ */
+
+
 @isTest
 public class SB_NameCardL_BulkRegistDTOTest {
 

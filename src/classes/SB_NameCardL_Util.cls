@@ -13,6 +13,26 @@
  **/
 public with sharing class SB_NameCardL_Util {
 
+  // 項目の選択リスト値の API名 - ラベル のMAP を取得
+  public static Map<String, String> getPickListMap(Schema.SObjectField d) {
+    Map<String, String> result = new Map<String, String>();
+    try {
+      Schema.DescribeFieldResult F = d.getDescribe();
+      List<Schema.PicklistEntry> P = F.getPicklistValues();
+      for (Schema.PicklistEntry ent : P) {
+        if (ent.isActive()) {
+          result.put(ent.getValue(), ent.getLabel());
+        }
+        if (ent.isDefaultValue()) {
+          System.debug('Default : ' + ent.getLabel());
+        }
+      }
+    } catch (Exception e) {
+      System.debug(e);
+    }
+    return result;
+  }
+
   // 活動状況の選択肢を取得, キーは 'Completed' か 'NotStarted' のみ有効
   public static Map<String, String> taskStatusValues {
     get {
@@ -52,12 +72,14 @@ public with sharing class SB_NameCardL_Util {
   //  return result;
   //}
 
-  // 取引先・取引先責任者登録 の 取引先の表示項目設定
+  // リードあるいは、取引先・取引先責任者登録 の 取引先の表示項目設定
   private static final String REGIST_ACCOUNT_QUERYFIELD = 'BillingPostalCode, BillingState:2, BillingCity, BillingStreet, Site:2';
-  // 取引先・取引先責任者登録 の 取引先責任者の表示項目設定
+  // リードあるいは、取引先・取引先責任者登録 の 取引先責任者の表示項目設定
   private static final String REGIST_CONTACT_QUERYFIELD = 'Department:2, Title:2, Email:2, MailingPostalCode, MailingState, MailingCity, MailingStreet';
-  // 取引先・取引先責任者登録 の 取引先責任者の表示項目設定
+  // リードあるいは、取引先・取引先責任者登録 の 取引先責任者の表示項目設定
   private static final String REGIST_LEAD_QUERYFIELD = 'Company:2, Title:2, Email:2, PostalCode, State, City, Street';
+  // リードあるいは、取引先・取引先責任者登録 の キャンペーン 一覧の表示条件 上限件数; 「状況」をカンマ区切り; 「種別」をカンマ区切り
+  private static final String REGIST_CAMPAIGN_LIST = '5; ;';  //
 
   public static SmartViscaf__SmartViscaConfig__c smartViscaConfig {
     get {
@@ -87,14 +109,19 @@ public with sharing class SB_NameCardL_Util {
         // LEX版 CRM登録* 個別 関連
         // CRMに登録 の 取引先の表示項目設定
         smartViscaConfig.SmartViscaf__SRegistQueryAccountFields1__c = String.isBlank(smartViscaConfig.SmartViscaf__SRegistQueryAccountFields1__c) ?
-        REGIST_ACCOUNT_QUERYFIELD : smartViscaConfig.SmartViscaf__SRegistQueryAccountFields1__c;
+                  REGIST_ACCOUNT_QUERYFIELD : smartViscaConfig.SmartViscaf__SRegistQueryAccountFields1__c;
         // CRMに登録 の 取引先責任者の表示項目設定
         smartViscaConfig.SmartViscaf__SRegistQueryContactFields1__c = String.isBlank(smartViscaConfig.SmartViscaf__SRegistQueryContactFields1__c) ?
-        REGIST_CONTACT_QUERYFIELD : smartViscaConfig.SmartViscaf__SRegistQueryContactFields1__c;
+                  REGIST_CONTACT_QUERYFIELD : smartViscaConfig.SmartViscaf__SRegistQueryContactFields1__c;
         // CRMに登録 の リードの表示項目設定
         smartViscaConfig.SRegistQueryLeadFields1__c = String.isBlank(smartViscaConfig.SRegistQueryLeadFields1__c) ?
-        REGIST_LEAD_QUERYFIELD : smartViscaConfig.SRegistQueryLeadFields1__c;
-
+                  REGIST_LEAD_QUERYFIELD : smartViscaConfig.SRegistQueryLeadFields1__c;
+         // リードまたは取引先に登録の際、ともに既存がない場合、リードのリストを表示
+        smartViscaConfig.LeadRegist_DefaultShowLeadListNoExsiting__c = smartViscaConfig.LeadRegist_DefaultShowLeadListNoExsiting__c != null ?
+                  smartViscaConfig.LeadRegist_DefaultShowLeadListNoExsiting__c : true;
+        // LEX 版 CRMに登録 の キャンペーン 一覧の表示条件 表示件数の上限と、表示するキャンペーンのステータス
+        //smartViscaConfig.LeadRegist_CampaignList__c = String.isBlank(smartViscaConfig.LeadRegist_CampaignList__c) ?
+        //          REGIST_CAMPAIGN_LIST : smartViscaConfig.LeadRegist_CampaignList__c;
       }
       return smartViscaConfig;
     }

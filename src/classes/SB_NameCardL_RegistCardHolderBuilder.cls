@@ -56,8 +56,35 @@ public with sharing class SB_NameCardL_RegistCardHolderBuilder {
   };
 
   /////////////
-  // CardHolder配列を作るクラスの基底
+  // CardHolder を作るクラスの
   /////////////
+  public abstract class HolderBuilder {
+    public abstract SB_NameCardL_RegistCardHolder.AccountRegistHolder create(SmartViscaf__NameCard__c card);
+  }
+
+  // アカウント用 CardHolder を作るクラス
+  public class AccountHolderBuilder extends HolderBuilder {
+    public override SB_NameCardL_RegistCardHolder.AccountRegistHolder create(SmartViscaf__NameCard__c card) {
+      return new SB_NameCardL_RegistCardHolder.AccountRegistHolder(card);
+    }
+  }
+
+  // リード対応用 CardHolder を作るクラス
+  public class LeadAccountHolderBuilder extends HolderBuilder {
+    public override SB_NameCardL_RegistCardHolder.AccountRegistHolder create(SmartViscaf__NameCard__c card) {
+      return new SB_NameCardL_RegistCardHolder.LeadAccountRegistHolder(card);
+    }
+  }
+
+  // CardHolder を作るクラスを作る
+  public static HolderBuilder createHolderBuilder(Boolean withLead) {
+    if (withLead) {
+      return new LeadAccountHolderBuilder();
+    }
+    return new AccountHolderBuilder();
+  }
+
+
   // private abstract class CardHolderBuilder {
   //   //public CardHolderBuilder() {}
   //   public abstract List<SB_NameCardL_RegistCardHolder.CardHolder> create(List<SB_NameCardL_RegistHelper.RegistTarget> targets);
@@ -94,20 +121,9 @@ public with sharing class SB_NameCardL_RegistCardHolderBuilder {
   // }
 
   /////////////
-  // 取引先登録用の CardHolder配列を作るクラス
-  /////////////
-  // public class RegistCardHolderBuilder extends CardHolderBuilder {
-  // 名詞から マッピングをもとに対象のレコードを作る クラス たち 、必要な名詞の項目を知るため
-  // private List<SmartViscaf.SB_NameCard_RenkeiMapper> mappers;
-
-  public SB_NameCardL_RegistCardHolderBuilder() {
-  }
-
-  // protected override List<SmartViscaf.SB_NameCard_RenkeiMapper> getMappers() {
-  //   return mappers;
-  // }
-
+  // CardHolder配列を作る
   // 登録元名刺と 対象レコードの情報を装填
+  /////////////
   public List<SB_NameCardL_RegistCardHolder.AccountRegistHolder> create(List<SB_NameCardL_RegistHelper.RegistTarget> targets) {
     List<SB_NameCardL_RegistCardHolder.AccountRegistHolder> result = new List<SB_NameCardL_RegistCardHolder.AccountRegistHolder>();
     Set<Id> sourceCardIds = new Set<Id>();
@@ -162,7 +178,7 @@ public with sharing class SB_NameCardL_RegistCardHolderBuilder {
       }
     }
 
-    SB_NameCardL_RegistCardHolder.HolderBuilder holderBuilder = SB_NameCardL_RegistCardHolder.createHolderBuilder(leadProcess);
+    HolderBuilder holderBuilder = createHolderBuilder(leadProcess);
 
     for (Integer n = 0; n < targets.size(); n++) {
       SB_NameCardL_RegistHelper.RegistTarget t = targets.get(n);

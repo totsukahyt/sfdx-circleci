@@ -1,3 +1,15 @@
+/**
+ *
+ * SB_NameCardL_RegistQueryMatcher
+ *
+ *  レコードをクエリしたあと、名刺に該当するアカウント、コンタクト、リードか、項目ごとに調べるクラス
+ *
+ * Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2018.4.xx
+ *
+ **/
 public with sharing class SB_NameCardL_RegistQueryMatcher {
 
   // // 検索オプション
@@ -130,7 +142,7 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
 
 
   ////////////////////////////////
-  // 値の一致をチェックするときの対応付けを保持するクラス
+  // 名刺の特定の項目と 対象レコードの特定の項目を比べる クラス
   //  任意の項目用のみ。。
   ////////////////////////////////
   public class FieldComparator {
@@ -150,20 +162,30 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
     }
   }
 
-  private static List<FieldComparator> createFieldComparators(SmartViscaf__NameCardBasicSetting__c setting) {
-    List<FieldComparator> result = new List<FieldComparator>();
-    if (String.isNotBlank(setting.SmartViscaf__RenkeiSpecificItems__c)) {
-      result.add(new FieldComparator('SmartViscaf__memo__c', setting.SmartViscaf__RenkeiSpecificItems__c));
-    }
-    return result;
-  }
+  //private static List<FieldComparator> createFieldComparators(SmartViscaf__NameCardBasicSetting__c setting) {
+  //  List<FieldComparator> result = new List<FieldComparator>();
+  //  if (String.isNotBlank(setting.SmartViscaf__RenkeiSpecificItems__c)) {
+  //    result.add(new FieldComparator('SmartViscaf__memo__c', setting.SmartViscaf__RenkeiSpecificItems__c));
+  //  }
+  //  return result;
+  //}
 
   //////////////////
   // Matcher
   //////////////////
 
   public abstract class Matcher {
+    private List<FieldComparator> fcomps;     // 名刺 特定の項目と 対象レコードの特定の項目を比べる クラスのインスタンスの リスト
+
     public abstract Boolean isMatch(SmartViscaf__NameCard__c card, SObject dest);
+    // fcomps を作る。
+    public void setExtensionFields(Map<String, String> card2target) {
+      this.fcomps = new List<FieldComparator>();
+      for (String key : card2target.keySet()) {
+        String target = card2target.get(key);
+        this.fcomps.add(new FieldComparator(key, target));
+      }
+    }
   }
 
   /////////////////
@@ -179,7 +201,6 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
     private Boolean queryDept;
     private SB_NameCardL_RegistQueryOption.CompanyMatcing companyRule;
     private SB_NameCardL_RegistQueryOption.DeptMatcing deptRule;
-    private List<FieldComparator> fcomps;
     private String altCompanyField;    // アカウント、リードの 会社名 項目を Name や Company 以外の項目として扱う
     //     // (this.extention == null || !this.extention.use || isMatchExtension(card, acnt)) &&
     //     // (!this.queryZip || isMatchZip(card, new List<String> { acnt.BillingPostalCode, acnt.ShippingPostalCode })) &&
@@ -190,20 +211,20 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
     //     // (!this.queryState || card.SmartViscaf__address_pref__c == acnt.BillingState || card.SmartViscaf__address_pref__c == acnt.ShippingState) &&
     //     // (!this.queryDept || isMatchSite(card, acnt.Site)) &&      // containsだと 全角、半角を区別するので、区別しないように
 
-    public AccountMatcher(SB_NameCardL_RegistQueryStrategy.AccountQueryStrategy qs, SmartViscaf__NameCardBasicSetting__c setting) {
-      this.queryZip = qs.queryZip;
-      this.queryUrl = qs.queryUrl;
-      this.queryPhone = qs.queryPhone;
-      this.queryStreet = qs.queryStreet;
-      this.queryCity = qs.queryCity;
-      this.queryState = qs.queryState;
-      this.queryDept = qs.queryDept;
-      this.companyRule = qs.companyRule;
-      this.deptRule = qs.deptRule;
-      this.fcomps = createFieldComparators(setting);
-      this.altCompanyField = qs.altCompanyField;
-      // this.queryZip = qs.queryZip;
-    }
+    //public AccountMatcher(SB_NameCardL_RegistQueryStrategy.AccountQueryStrategy qs, SmartViscaf__NameCardBasicSetting__c setting) {
+    //  this.queryZip = qs.queryZip;
+    //  this.queryUrl = qs.queryUrl;
+    //  this.queryPhone = qs.queryPhone;
+    //  this.queryStreet = qs.queryStreet;
+    //  this.queryCity = qs.queryCity;
+    //  this.queryState = qs.queryState;
+    //  this.queryDept = qs.queryDept;
+    //  this.companyRule = qs.companyRule;
+    //  this.deptRule = qs.deptRule;
+    //  this.fcomps = createFieldComparators(setting);
+    //  this.altCompanyField = qs.altCompanyField;
+    //  // this.queryZip = qs.queryZip;
+    //}
 
     public AccountMatcher(SB_NameCardL_RegistQueryStrategy.AccountQueryStrategy qs) {
       this.queryZip = qs.queryZip;
@@ -250,15 +271,16 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
         companyName = acnt.Name;
       }
       return
+        acnt.Id == card.SmartViscaf__account__c ||
         (this.fcomps ==null || this.fcomps.isEmpty() || isMatchExtensions(card, acnt)) &&
+        (card.SmartViscaf__company_name__c == companyName || isMatchKaishaMei(card, companyName, this.companyRule)) &&
         (!this.queryZip || isMatchZip(card, new List<String> { acnt.BillingPostalCode, acnt.ShippingPostalCode })) &&
         (!this.queryUrl || isMatchUrl(card, acnt.WebSite)) &&
         (!this.queryPhone || isMatchPhone(card, acnt.Phone)) &&
         (!this.queryStreet || isMatchStreet(street_nobld, new List<String> { acnt.BillingStreet, acnt.ShippingStreet })) &&
         (!this.queryCity || city == acnt.BillingCity || city == acnt.ShippingCity) &&
         (!this.queryState || card.SmartViscaf__address_pref__c == acnt.BillingState || card.SmartViscaf__address_pref__c == acnt.ShippingState) &&
-        (!this.queryDept || isMatchSite(card, acnt.Site, this.deptRule)) &&      // containsだと 全角、半角を区別するので、区別しないように
-        (card.SmartViscaf__company_name__c == companyName || isMatchKaishaMei(card, companyName, this.companyRule));
+        (!this.queryDept || isMatchSite(card, acnt.Site, this.deptRule));      // containsだと 全角、半角を区別するので、区別しないように
     }
 
   } // public class AccountMatcher extends Matcher {
@@ -270,11 +292,19 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
     private Boolean queryEmail;
     private Boolean queryFirstName;
     private Boolean queryLastName;
+    private Boolean queryCompany;
+    private Boolean queryDept;
+    private SB_NameCardL_RegistQueryOption.CompanyMatcing companyRule;
+    private SB_NameCardL_RegistQueryOption.DeptMatcing deptRule;
 
     public ContactMatcher(SB_NameCardL_RegistQueryStrategy.ContactQueryStrategy qs) {
       this.queryEmail = qs.queryEmail;
       this.queryFirstName = qs.queryFirstName;
       this.queryLastName = qs.queryLastName;
+      this.queryCompany = qs.queryCompany;
+      this.queryDept = qs.queryDept;
+      this.companyRule = qs.companyRule;
+      this.deptRule = qs.deptRule;
     }
 
     public override Boolean isMatch(SmartViscaf__NameCard__c card, SObject target) {
@@ -284,9 +314,12 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       String last_name = pnMap.get('last_name');
       String first_name = pnMap.get('first_name');
       return
-        (!this.queryEmail || card.SmartViscaf__email__c == cont.Email) &&
-        (!this.queryFirstName || first_name == cont.FirstName) &&
-        (!this.queryLastName || last_name == cont.LastName);
+        cont.Id == card.SmartViscaf__contact__c ||
+        ((!this.queryEmail || card.SmartViscaf__email__c == cont.Email) ||
+        ((!this.queryFirstName || first_name == cont.FirstName) &&
+        (!this.queryLastName || last_name == cont.LastName) &&
+        (!this.queryCompany || isMatchKaishaMei(card, cont.Account.Name, this.companyRule)) &&
+        (!this.queryDept || isMatchSite(card, cont.Account.Site, this.deptRule) || isMatchSite(card, cont.Department, this.deptRule))));
     }
 
   } // public class ContactMatcher extends Matcher {
@@ -345,6 +378,7 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       String last_name = pnMap.get('last_name');
       String first_name = pnMap.get('first_name');
       return
+        l.Id == card.SmartViscaf__lead__c ||
         (!this.queryEmail || card.SmartViscaf__email__c == l.Email) &&
         (!this.queryFirstName || first_name == l.FirstName) &&
         (!this.queryLastName || last_name == l.LastName) &&

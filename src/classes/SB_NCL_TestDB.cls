@@ -158,6 +158,7 @@ public virtual class SB_NCL_TestDB {
   public List<Account> listAccount;
   public List<Campaign> listCampaign; // キャンペーン
   public List<CampaignMember> listCampaignMember; // キャンペーンメンバー
+  public List<CampaignMemberStatus> listCampaignMemberStatus; // キャンペーンメンバーステータス
 
 
   public SB_NCL_TestDB() {
@@ -175,6 +176,7 @@ public virtual class SB_NCL_TestDB {
     listAccount = new List<Account>();
     listCampaign = new List<Campaign>();    // キャンペーン
     listCampaignMember = new List<CampaignMember> (); // キャンペーンメンバー
+    listCampaignMemberStatus = new List<CampaignMemberStatus>(); // キャンペーンメンバーステータス
   }
 
   private void createSObject(List<sObject> objs, String objName, Map<String, Object> values) {
@@ -348,6 +350,10 @@ public virtual class SB_NCL_TestDB {
     // svConfig.SmartViscaf__SRegistQueryContactFields1__c = Label.SB_NC_RegistQueryContactFields;    // 2016.05.xx S1取引先登録対応
     // svConfig.SmartViscaf__SRegistQueryContactFields2__c = Label.SB_NC_RegistQueryContactFields;    // 2016.05.xx S1取引先登録対応
     // +--- 2016.05.xx S1取引先登録対応
+    // 自動連携のトリガハンドラを呼ぶ
+    svConfig.SmartViscaf__TriggerRenkeiTriggerHandler__c = false;
+    // Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
+    svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true;
     // Lead 拡張パッケージ v2.0 からの項目
     // 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
     svConfig.RenkeiCreateContactOnAcountWithoutLead__c = false; // デフォルト false

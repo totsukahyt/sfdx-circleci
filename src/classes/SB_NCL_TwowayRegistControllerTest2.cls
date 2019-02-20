@@ -1,3 +1,15 @@
+/**
+ *
+ * SB_NCL_TwowayRegistControllerTest2
+ *   LEX版  取引先登録（個別）、取引先登録（一括）のテストクラス
+ *   SB_NC_SVCameraLauncherController と SB_NCL_TwowayRegistController のテストクラス
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2016.11.xx
+ *
+ **/
 @isTest
 private class SB_NCL_TwowayRegistControllerTest2
 {
@@ -14,6 +26,7 @@ private class SB_NCL_TwowayRegistControllerTest2
       svConfig.RenkeiContactToCampaignMember__c = false;  // デフォルト false 統合版自動連携: 取引先責任者もキャンペーンメンバーにする。
       svConfig.RenkeiUpdateToCampaignMember__c = false; // デフォルト false 統合版自動連携: 更新でもキャンペーンメンバーにする。
       svConfig.RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
+      svConfig.LeadRegist_CampaignList__c = '10;true ;In Progress, Planned,進行中; Email, Other'; // リードに登録 キャンペーンリスト
     }
 
     // 名刺基本設定
@@ -41,9 +54,34 @@ private class SB_NCL_TwowayRegistControllerTest2
     //  listContact.add(new Contact(AccountId=listAccount[1].Id, FirstName='次郎', LastName='不動前', Title='部長', Email='user01@meguro.co.jp'));
     //}
 
+    //　キャンペーン
+    public override void initializeCampaign() {
+      listCampaign.add(new Campaign(Name='キャンペーン01', IsActive=true, Status='進行中', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='キャンペーン02', IsActive=true, Status='進行中', Type = 'Other'));
+      listCampaign.add(new Campaign(Name='完了ようキャンペーン', IsActive=true, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン01', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン02', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン03', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン04', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン05', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン06', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン07', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン08', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン09', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン10', IsActive=false, Status='完了', Type = 'Email'));
+      listCampaign.add(new Campaign(Name='無効キャンペーン11', IsActive=false, Status='完了', Type = 'Email'));
+    }
+
+    //　キャンペーンメンバーステータス
+    public void initializeCampaignMemberStatus() {
+      listCampaignMemberStatus.add(new CampaignMemberStatus(CampaignId=listCampaign[0].Id, IsDefault=true, Label='進行中'));
+      listCampaignMemberStatus.add(new CampaignMemberStatus(CampaignId=listCampaign[0].Id, IsDefault=false, Label='計画中'));
+    }
+
+
     public override void initializeLead() {
-      listLead.add(new Lead(Company='サンブリッジ株式会社', FirstName='太郎', LastName='恵比寿', Title='課長', Email='user01@sunbridge.com'));
-      listLead.add(new Lead(Company='目黒商事株式会社', FirstName='次郎', LastName='不動前', Title='部長', Email='user01@meguro.co.jp'));
+      listLead.add(new Lead(Company='サンブリッジ株式会社', FirstName='太郎', LastName='恵比寿', Title='課長', Email='user01@sunbridge.com', OwnerId=UserInfo.getUserId()));
+      listLead.add(new Lead(Company='目黒商事株式会社', FirstName='次郎', LastName='不動前', Title='部長', Email='user01@meguro.co.jp', OwnerId=UserInfo.getUserId()));
     }
 
     //public void initializeCampaignMember() {
@@ -116,6 +154,10 @@ private class SB_NCL_TwowayRegistControllerTest2
       if (listCampaign.isEmpty() == false) {
           insert listCampaign;
       }
+      initializeCampaignMemberStatus();
+      if (listCampaignMemberStatus.isEmpty() == false) {
+          insert listCampaignMemberStatus;
+      }
       // リード
       initializeLead();
       if (listLead.isEmpty() == false) {
@@ -147,17 +189,96 @@ private class SB_NCL_TwowayRegistControllerTest2
     System.assertEquals(2, [SELECT Id, Name FROM Lead WHERE NameCard__c != null].size());
   }
 
+  // getCampaigns のテスト
+  @isTest
+  static void test_getCampaigns() {
+    // 有効なものだけでは、上限にたっしないので、有効なものすべて
+    System.assertEquals(4, SB_NCL_TwowayRegistController.getCampaignOptions().size());
+    // 無効なのを有効にする
+    List<Campaign> cams = [SELECT Id, Name, Status, IsActive FROM Campaign WHERE IsActive=false];
+    for (Campaign cam : cams) {
+      cam.IsActive = true;
+    }
+    update cams;
+    // 有効なものだけで、上限をこえるのて、StatusとTypeで絞られる+ 2
+    System.assertEquals(4, SB_NCL_TwowayRegistController.getCampaignOptions().size());
+  }
 
-	@isTest
-	static void itShould()
-	{
-		// Given
+  @isTest
+  static void test_getCampaignStatusList() {
+    List<SB_NCL_TwowayRegistController.CampaignStatus> camsts = SB_NCL_TwowayRegistController.getCampaignStatusList();
+    Integer count = 0;
+    for (Schema.PicklistEntry entry : CampaignMember.Status.getDescribe().getPicklistValues()) {
+      if (entry.isActive()) {
+        count++;
+      }
+    }
+    System.assertEquals(count, camsts.size());
+  }
 
+  @isTest
+  static void test_getCampaignStatusList2() {
+    List<Campaign> cams = [SELECT Id, Name FROM Campaign WHERE Name= 'キャンペーン01'];
+    List<CampaignMemberStatus> cammemsts = SB_NCL_TwowayRegistController.getCampaignMemberStatusList(cams[0].Id);
+    System.assertEquals(2, cammemsts.size());
+  }
 
-		// When
+  //  searchLead のテスト
+  @isTest
+  static void test_searchLead() {
+    List<Lead> leads = [SELECT Id, Name, Owner.Id, Owner.Name FROM Lead];
+    Id[] ids = new Id[1];
+    ids[0] = leads[0].Id;
+    Test.setFixedSearchResults(ids);
+    List<SB_NCL_RegistOptionCreater.RegistOption> options = SB_NCL_TwowayRegistController.searchLead(leads[0].Name, null);
+    System.assertEquals(1, options.size());
 
+    // レコードタイプが辺で例外
+    Boolean bFalt = false;
+    List<String> recTypes = new List<String> {'1234567890', '1234567890'};
+    options.clear();
+    try {
+      options = SB_NCL_TwowayRegistController.searchLead(leads[0].Name, recTypes);
+    }
+    catch(Exception ex) {
+      bFalt = true;
+    }
+    System.assertEquals(0, options.size());
+  }
 
-		// Then
+  //　searchCampaign のテスト
+  @isTest
+  static void test_searchCampaign() {
+    List<Campaign> cams = [SELECT Id, Name FROM Campaign];
+    Id[] ids = new Id[1];
+    ids[0] = cams[0].Id;
+    Test.setFixedSearchResults(ids);
+    List<Campaign> options = SB_NCL_TwowayRegistController.searchCampaign(cams[0].Name);
+    System.assertEquals(1, options.size());
+  }
 
-	}
+  @isTest
+  static void test_getRecordById() {
+    // lx 2.0
+    Lead l = [SELECT Id FROM Lead limit 1];
+    SObject leadRec = SB_NCL_TwowayRegistController.getRecordById(l.Id);
+    System.assertEquals(l.Id, leadRec.Id);
+
+  }
+
+  // searchSObjects Queue
+  @isTest
+  static void test_searchSObjectsInQueue() {
+    List<QueueSobject> qss = [SELECT Id, QueueId, QUeue.Name, SobjectType FROM QueueSobject WHERE SobjectType = 'Lead'];
+    String word;
+    if (!qss.isEmpty()) {
+      word = qss[0].QUeue.Name;
+    }
+    else {
+      word = 'ABCXYZ';
+    }
+    List<SOBject> res = SB_NCL_TwowayRegistController.searchSObjects(word, 'Queue', null);
+    System.assert((qss.isEmpty() && res.isEmpty()) || !res.isEmpty());
+  }
+
 }

@@ -4,7 +4,7 @@
  *
  *      登録先候補の 取引先、取引先責任者を 収集するクラスの1つ
  *
- *     アカウントは SOSL して 所定以上なら、SOQLで完全一致検索する
+ *     SOQLでカウントして続ける。
  *
  *     KDDI様向け 管理パッケージ：SmartViscaRgq1 SB_Sv_UiRegistSoqlCountCanCreater がベース
  *
@@ -68,6 +68,12 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
     if (this.accountQs != null && this.contactQs != null) {
       createAccountsContacts();
     }
+    else if (this.accountQs != null) {
+      createAccounts();
+    }
+    else if (this.contactQs != null) {
+      createContacts();
+    }
     if (this.leadQs != null) {
       createLeads();
     }
@@ -85,6 +91,12 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
 
     if (this.accountQs != null && this.contactQs != null) {
       createAccountsContacts();
+    }
+    else if (this.accountQs != null) {
+      createAccounts();
+    }
+    else if (this.contactQs != null) {
+      createContacts();
     }
     if (this.leadQs != null) {
       createLeads();
@@ -105,6 +117,12 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
 
     if (this.accountQs != null && this.contactQs != null) {
       createAccountsContacts();
+    }
+    else if (this.accountQs != null) {
+      createAccounts();
+    }
+    else if (this.contactQs != null) {
+      createContacts();
     }
     if (this.leadQs != null) {
       createLeads();
@@ -205,6 +223,74 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
     //}
     //if (!conts.isEmpty()) {
       this.otype2Objs.put(Contact.SObjectType, conts);
+    //}
+    return this.otype2Objs;
+  }
+
+  // 候補のアカウント、コンタクトを収集
+  // 名刺レコードから
+  private Map<SObjectType, List<SObject>> createContacts() {
+    this.otype2Objs.remove(Account.sObjectType);
+    //SB_NameCardL_RegistQueryExecutor qExecutor = SB_NameCardL_RegistQueryExecutor.getInstance();
+    // 1. コンタクトを収集
+    //initContactQueryStrategy();  // クエリ方法を初期化
+    List<Contact> conts = this.qExecutor.getCandidateRecords(this.contactQs);
+    //if (!conts.isEmpty()) {
+      this.otype2Objs.put(Contact.SObjectType, conts);
+    //}
+    return this.otype2Objs;
+  }
+
+  // 候補のアカウントを収集
+  // 名刺レコードから
+  private Map<SObjectType, List<SObject>> createAccounts() {
+    this.otype2Objs.remove(Account.sObjectType);
+    //SB_NameCardL_RegistQueryExecutor qExecutor = SB_NameCardL_RegistQueryExecutor.getInstance();
+    // 2. 部分一致する アカウント を カウント
+    //initAccountQueryStrategy(); // クエリ方法を初期化
+    this.queryProc = QueryProcess.PARTIAL;  // 最初は部分一致   のはず。
+    Integer partialMatchAccount = this.qExecutor.getCandidateRecordCount(this.accountQs);
+
+    System.debug(partialMatchAccount);
+    List<Account> acnts; //  = new List<Account>();
+    if (0 <= partialMatchAccount && partialMatchAccount < getAccountTableThreshold()) {
+      // 少なかったら
+      // 3.1. 部分一致する アカウント と 名刺から参照してるアカウントを収集
+      acnts = this.qExecutor.getCandidateRecords(this.accountQs);
+    }
+    else {
+      // 多かったら
+      // 3.2. 完全一致するアカウントを収集
+      this.accountQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch); // 完全一致
+      this.queryProc = QueryProcess.PERFECT;
+      acnts = this.qExecutor.getCandidateRecords(this.accountQs);
+      if (acnts.size() > getAccountTableThreshold()) {
+        // 完全一致するアカウントでも多かったら  すてる。
+        this.queryProc = QueryProcess.ABANDON;
+        acnts.clear();
+        // 名刺からアカウント参照してるアカウントを抽出 新仕様なので注意
+        List<Account> referencedAccounts = this.qExecutor.getReferencedCandidateRecords(Account.sObjectType);
+        if (referencedAccounts != null && !referencedAccounts.isEmpty()) {
+          acnts.addAll(referencedAccounts);
+        }
+      }
+      //Map<Id, Account> id2Account = new Map<Id, Account>();
+      //if (!acnts.isEmpty()) {
+      //  id2Account.putAll(acnts);
+      //}
+      //if (cards[0].SmartViscaf__account__c != null && id2Account.containsKey(cards[0].SmartViscaf__account__c) == false) {
+      //  // 4. 名刺から参照してるアカウントを追加  超過する可能性があるけど、まあ大丈夫でしょう。
+      //  Account linkedAccount = getReferencedCandidateRecords(cards[0].SmartViscaf__account__c);
+      //  acnts.add(linkedAccount);
+      //  if (conts.size() + acnts.size() > getAccountTableThreshold()) {
+      //    // 大丈夫でなかった、テストで指摘された 修正 v 1.1
+      //    this.queryProc = QueryProcess.ABANDON;
+      //    acnts.clear();
+      //  }
+      //}
+    }
+    //if (!acnts.isEmpty()) {
+      this.otype2Objs.put(Account.SObjectType, acnts);
     //}
     return this.otype2Objs;
   }

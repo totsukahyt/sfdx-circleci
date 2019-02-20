@@ -141,6 +141,7 @@ private class SB_NameCardL_RegistQueryExecutorTest
     SB_NameCardL_RegistQueryExecutor instance = SB_NameCardL_RegistQueryExecutor.getInstance();
     instance.init(id2card.keySet());
     System.assert(instance.isInitialized());
+    System.assert(instance.needRefresh(id2card.keySet()) == false);
     List<Account> acnts = (List<Account>)instance.getReferencedCandidateRecords(Account.sObjectType);
     System.assertEquals(2, acnts.size());
     List<Contact> conts = (List<Contact>)instance.getReferencedCandidateRecords(Contact.sObjectType);

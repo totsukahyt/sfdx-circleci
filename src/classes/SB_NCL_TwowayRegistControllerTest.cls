@@ -263,7 +263,7 @@ private class SB_NCL_TwowayRegistControllerTest
       SB_NCL_PageDispacherController ctrl1 = new SB_NCL_PageDispacherController();
       PageReference pageRef2 = ctrl1.init();
       // Classic の 取引先登録画面
-      System.assertEquals('SB_NameCard_TwowayRegist', ctrl1.toPage);
+      System.assertEquals('SB_NameCardL_TwowayRegist', ctrl1.toPage);
       Test.setCurrentPage(pageRef2);
       SB_NCL_TwowayRegistController ctrl2 = new SB_NCL_TwowayRegistController();
       System.assertEquals(objs[0].Id, ctrl2.targetId);
@@ -433,7 +433,8 @@ private class SB_NCL_TwowayRegistControllerTest
     query_opt.queryCity = true;      // 市区郡を条件にして検索
     query_opt.queryZip = true;       // 郵便番号を条件にして検索
     Account acnt = [SELECT Id, Name FROM Account WHERE Name = :cards[0].SmartViscaf__company_name__c LIMIT 1];
-    List<SB_NCL_RegistOptionCreater.RegistOption> options = SB_NCL_TwowayRegistController.getContactOptions(cards[0].Id, acnt.Id, query_opt);
+    query_opt.parentIds = new List<Id>{ acnt.Id };
+    List<SB_NCL_RegistOptionCreater.RegistOption> options = SB_NCL_TwowayRegistController.getContactOptions(cards[0].Id, query_opt);
     System.assert(options.isEmpty() == false);
     for (SB_NCL_RegistOptionCreater.RegistOption opt : options) {
       System.assertEquals(false, opt.selected);
@@ -455,6 +456,7 @@ private class SB_NCL_TwowayRegistControllerTest
     SB_NCL_TwowayRegistController.RegistRequest req = new SB_NCL_TwowayRegistController.RegistRequest();
     req.targets = new List<SB_NCL_TwowayRegistController.RegistTarget>();
     SB_NCL_TwowayRegistController.RegistTarget target = new SB_NCL_TwowayRegistController.RegistTarget();
+    target.pType2 = 1; // pType => SB_NameCardL_RegistHelper.ProcType.ACCOUNT;
     target.cardId = cards[0].Id;
     target.acntId = acnt.Id;
     target.contId = cont.Id;
@@ -604,13 +606,13 @@ private class SB_NCL_TwowayRegistControllerTest
     System.assert(!res.isEmpty());
   }
 
-  // getRecordById
-  @isTest
-  static void test_getRecordById1() {
-    List<SmartViscaf__NameCard__c> objs = [SELECT Id, Name FROM SmartViscaf__NameCard__c limit 10];
-    SOBject obj = SB_NCL_TwowayRegistController.getRecordById('SmartViscaf__NameCard__c', objs[0].Id);
-    System.assertEquals(objs[0].Id, obj.Id);
-  }
+  //// getRecordById
+  //@isTest
+  //static void test_getRecordById1() {
+  //  List<SmartViscaf__NameCard__c> objs = [SELECT Id, Name FROM SmartViscaf__NameCard__c limit 10];
+  //  SOBject obj = SB_NCL_TwowayRegistController.getRecordById('SmartViscaf__NameCard__c', objs[0].Id);
+  //  System.assertEquals(objs[0].Id, obj.Id);
+  //}
 
   @isTest
   static void test_getRecordById2() {
@@ -621,6 +623,7 @@ private class SB_NCL_TwowayRegistControllerTest
     Contact cont = [SELECT Id FROM Contact limit 1];
     SObject contRec = SB_NCL_TwowayRegistController.getRecordById(cont.Id);
     System.assertEquals(cont.Id, contRec.Id);
+
   }
 
 

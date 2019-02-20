@@ -144,6 +144,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
   public Integer searchField { get; set; }  // 検索条件の項目
   public Integer queryMatch { get; set; }   // 完全一致もする？
   public Boolean firstSearch { get; set; }   // 初期クエリ
+  public String windowTitle { get; set; } 
 
   @TestVisible private static final Integer SEARCHTYPE_DEFAULT = 0;    // 検索方法のデフォルト値
   @TestVisible private static final Integer FIELD_NAMESITE = 0;  // 検索条件の項目
@@ -185,6 +186,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
       PageReference page = ApexPages.currentPage();
       Map<String, String> paras = page.getParameters();
       Boolean bLex = false;
+      this.windowTitle = String.format(System.Label.SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts_WindowTitle, new String[] {SmartViscaf__NameCard__c.sObjecttype.getDescribe().getLabel()});
       if (paras.containsKey('vfRetURLInSFX')) {
         bLex = true;
         this.retUrl = paras.get('vfRetURLInSFX');
@@ -268,21 +270,19 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
           this.updateForAccount = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_TwowayBulkRegistController.AC_LABEL});
           //ラベル:既存の取引先責任者の情報を名刺情報で上書きする
           this.updateForContact =  String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_TwowayBulkRegistController.CO_LABEL});
-
-          this.useNameCardOwner = false;
-          this.useNameCardContactOwner = false;
-
+          this.useNameCardOwner = true;
+          this.useNameCardContactOwner = true;
           this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
           this.accountCreateable = Account.sObjectType.getDescribe().isCreateable();
           this.contactCreateable = Contact.sObjectType.getDescribe().isCreateable();
           this.leadOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{LD_LABEL});
           this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{CO_LABEL});
           this.accountAndContact = String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {AC_LABEL, CO_LABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()});
-          this.registerToLeadLabel = System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact;
+          this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact, new String[] {LD_LABEL, AC_LABEL, CO_LABEL});
           this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LD_LABEL});
           this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL});
           this.specifiedWhenCreateNewAccount = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {AC_LABEL + ' & ' + CO_LABEL});
-          this.specifiedWhenCreateNewBoth = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL + ' or ' + AC_LABEL + ' & ' + CO_LABEL});
+          this.specifiedWhenCreateNewBoth = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {'Record'});
 
           // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
           this.showLeadRecType = leadRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
@@ -592,7 +592,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
                         && leadSelect) {
                         ncRec.leadId = lead.Id;
                         ncRec.accAndCon = 0;
-                          if (leadSelect) {
+                          if (firstSearch) {
                             renkeiType = 'Lead';
                           }
                       }
@@ -627,7 +627,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
               renkeiType = 'Both';
             }
             else {
-              renkeiType = 'Account';
+              renkeiType = 'Contact';
             }
           }
           else {

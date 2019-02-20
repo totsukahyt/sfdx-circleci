@@ -1,3 +1,15 @@
+/**
+ *
+ * SB_NCL_UpdateByCardLcController 名刺で更新Lightning Controller のテストクラス
+ *
+ * Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author gao
+ *  @Version 拡張パッケージ：Lead Ex. 1.12      2018.5.xx SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *
+ **/
+
+
 @isTest
 private class SB_NCL_UpdateByCardLcControllerTest {
    private static List<User> insertUser() {

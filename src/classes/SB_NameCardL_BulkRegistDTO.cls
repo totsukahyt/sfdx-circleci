@@ -64,6 +64,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
     @AuraEnabled public Map<String, CustomField> cObjectMap {get; set;}
     @AuraEnabled public Id id {get; set;}
     @AuraEnabled public Boolean haveError {get; set;}
+    @AuraEnabled public Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue> combobox {get; set;}
     // -------------------- Lightning 用 end -------------------- //
 
     // -------------------- Classic 用 start -------------------- //
@@ -226,6 +227,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
     @AuraEnabled public String searchConditionValueContact {get; set;} // 選択されたクエリ条件
     @AuraEnabled public SearchConditionRecordType searchConditionRct {get; set;} // レコードタイプ条件エリア情報
     @AuraEnabled public String searchRecordTypes {get; set;} // 選択されたレコードタイプ
+    @AuraEnabled public Map<String, List<String>> searchRecordTypesMap {get; set;} // 選択されたレコードタイプマップ
     @AuraEnabled public List<InputPlickListValue> InputPlickListValues {get; set;} // レコードタイプ登録に関する入力
     @AuraEnabled public Boolean showRecordType {get; set;} // レコードタイプ登録に関する入力
     @AuraEnabled public List<InputRegistOverWritValue> inputRegistOverWritValues {get; set;} // 上書き登録に関する入力
@@ -269,6 +271,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
       this.searchConditionValueContact = '';
       this.searchConditionRct = new SearchConditionRecordType();
       this.searchRecordTypes = '';
+      this.searchRecordTypesMap = new Map<String, List<String>>();
       this.InputPlickListValues = new List<InputPlickListValue>();
       this.inputRegistOverWritValues = new List<InputRegistOverWritValue>();
       this.campaignId = '';

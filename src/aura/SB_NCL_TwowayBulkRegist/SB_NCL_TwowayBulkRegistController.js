@@ -65,7 +65,7 @@
         var fieldMap = cmp.get("v.fieldMap");
         var selectMap = cmp.get("v.selectMap");
         var dl = cmp.get("v.dataList");
-        cmp.set("v.fieldList", fieldMap[value]);
+        // cmp.set("v.fieldList", null);
         // cmp.set("v.dataList", null);
         // cmp.set("v.selectMap", null);
         // cmp.set("v.selectMap", selectMap);
@@ -86,19 +86,25 @@
               if (inputV.InputPlickListValues[i].canShow) {
                 inputV.InputPlickListValues[i].show = inputV.leadAuthority.isCreateable;
               }
-              inputV.newSectionLabel = inputV.labelMap['LeadNew'];
+              if (value == 'Lead') {
+                inputV.newSectionLabel = inputV.labelMap['LeadNew'];
+              }
             }
             else if (i == 1) {
               if (inputV.InputPlickListValues[i].canShow) {
                 inputV.InputPlickListValues[i].show = inputV.accountAuthority.isCreateable;
               }
-              inputV.newSectionLabel = inputV.labelMap['AccountNew'];
+              if (value == 'Contact') {
+                inputV.newSectionLabel = inputV.labelMap['AccountNew'];
+              }
             }
             else if (i == 2) {
               if (inputV.InputPlickListValues[i].canShow) {
                 inputV.InputPlickListValues[i].show = inputV.contactAuthority.isCreateable;
               }
-              inputV.newSectionLabel = inputV.labelMap['BothNew'];
+              if (value == 'Both') {
+                inputV.newSectionLabel = inputV.labelMap['BothNew'];
+              }
             }
             if (inputV.inputRegistOverWritValues[i].canShow == true) {
               inputV.inputRegistOverWritValues[i].show = true;
@@ -120,6 +126,7 @@
         }
         inputV.searchConditions = arr;
         cmp.set("v.inputV", inputV);
+        cmp.set("v.fieldList", fieldMap[value]);
         // $A.get('e.force:refreshView').fire();
       }
     }

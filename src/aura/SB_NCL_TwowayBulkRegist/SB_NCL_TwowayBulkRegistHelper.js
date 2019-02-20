@@ -31,9 +31,20 @@
         if (result.success) {
           cmp.set("v.dataCount", result.data.length);
           var ids = targetIds.split(',');
-          cmp.set('v.lookUpId', ids[0]);
+          // cmp.set('v.lookUpId', ids[0]);
           // cmp.set('v.inputV.ownerId', result[0].cObjectMap['OwnerId'].value);
-          cmp.set("v.dataList", result.data);    // 対象の名刺一覧
+          if (isInit == false){
+            var dataList = cmp.get("v.dataList");
+            for (var i = 0; i < result.data.length; i++) {
+               result.data[i].cObjectMap.Lead = dataList[i].cObjectMap.Lead;
+               result.data[i].cObjectMap.Contact = dataList[i].cObjectMap.Contact;
+               result.data[i].cObjectMap.ToDo = dataList[i].cObjectMap.ToDo;
+            }
+            cmp.set("v.dataList", result.data);
+          }
+          else {
+            cmp.set("v.dataList", result.data);    // 対象の名刺一覧
+          }
           cmp.set('v.firstLoading', false);
           if (isInit) {
             cmp.set("v.showPlickListType", result.otherMessage.showType);

@@ -21,7 +21,11 @@ private class SB_NameCardL_RenkeiHelperTest
 
     public virtual override void initializeBasicSetting() {
       SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
+      //bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
+      //bs.SmartViscaf__RenkeiLeadActive__c = false;
+      //bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;
       bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
+      //bs.SmartViscaf__RenkeiContactNOExistCreateNew__c = true;
       bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
       bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
     //  SmartViscaf__NameCardBasicSetting__c bs = new SmartViscaf__NameCardBasicSetting__c(
@@ -373,7 +377,7 @@ private class SB_NameCardL_RenkeiHelperTest
     ', SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c, SmartViscaf__address_bld__c, SmartViscaf__address_eng__c' +
     ', SmartViscaf__card_exchange_date__c, SmartViscaf__list_name__c, OwnerId, Owner.Name, SmartViscaf__Parent__c, SmartViscaf__tenshokugonomeishi__c, SmartViscaf__account__c, SmartViscaf__contact__c' +
     ', SmartViscaf__lead__c, campaign__c' +
-    ', SmartViscaf__freehandmemo__c, SmartViscaf__memo__c, SmartViscaf__web_url1__c, SmartViscaf__email__c, SmartViscaf__tel1__c, SmartViscaf__tel2__c, SmartViscaf__mobile__c, SmartViscaf__fax1__c' +
+    ', SmartViscaf__freehandmemo__c, SmartViscaf__memo__c, SmartViscaf__web_url1__c, SmartViscaf__web_url2__c, SmartViscaf__email__c, SmartViscaf__tel1__c, SmartViscaf__tel2__c, SmartViscaf__mobile__c, SmartViscaf__fax1__c' +
     ', SmartViscaf__image_id__c, SmartViscaf__bk_image_id__c, SmartViscaf__width__c, SmartViscaf__height__c, SmartViscaf__bk_width__c, SmartViscaf__bk_height__c' +
     ', SmartViscaf__RenkeiMessage__c' +    // 2017.04.xx
     ', SmartViscaf__isNotOverwrite__c, SmartViscaf__isNotOverContactwrite__c';

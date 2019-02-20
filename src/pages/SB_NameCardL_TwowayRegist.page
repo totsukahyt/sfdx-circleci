@@ -201,7 +201,7 @@
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 
-    <apex:pageBlockSection onclick="changeRenkeiRadio('Contact');" title="{!$ObjectType.Account.Label + '・' + $ObjectType.Contact.Label}" columns="1" id="contactData">
+    <apex:pageBlockSection onclick="changeRenkeiRadio('Contact');" title="{!accountContact}" columns="1" id="contactData">
     <apex:pageBlockSectionItem >
               <apex:outputLabel value="{!$Label.SB_NCLD_Label_SearchCondition}"/>
               <apex:selectRadio value="{!searchField}">
@@ -344,7 +344,7 @@
     </apex:pageBlockSectionItem>
   </apex:pageBlockSection>
 
-            <apex:pageBlockSection id="newSelect" rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="2">
+            <apex:pageBlockSection id="newSelect" rendered="{!leadCreateable}"  title="{!if(renkeiType == 'Contact', specifiedWhenCreateNewAccount, if(renkeiType == 'Lead', specifiedWhenCreateNew, specifiedWhenCreateNewBoth))}" columns="2">
                <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
                 <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}" >
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>

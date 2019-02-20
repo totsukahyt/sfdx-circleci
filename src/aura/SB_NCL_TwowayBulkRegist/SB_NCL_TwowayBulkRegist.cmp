@@ -1,7 +1,7 @@
 <!-- /**
  *
  *  SB_NCL_RecordTypeConditionModal
- *  リード拡張環境 一括統合用コンポネート 
+ *  リード拡張環境 Lightning一括統合データ操作コンポネート
  *
  *
  *
@@ -9,40 +9,37 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12     2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
  *
  **/ -->
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" controller="SB_NCL_TwowayBulkRgsLcController">
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-  <aura:attribute name="retUrl" type="String"/>
-  <aura:attribute name="viewId" type="String"/>
-  <aura:attribute name="viewLabel" type="String"/>
-  <aura:attribute name="fromId" type="String"/>
-  <aura:attribute name="fromLabel" type="String"/>
-  <aura:attribute name="mycolumns" type="List" />
-  <aura:attribute name="testValue" type="String" />
-  <aura:attribute name="fieldList" type="List" />
-  <aura:attribute name="fieldMap" type="Sobject" />
-  <aura:attribute name="inputV" type="Sobject" />
-  <aura:attribute name="titleV" type="Sobject" />
-  <aura:attribute name="dataList" type="Sobject" />
-  <aura:attribute name="dataMap" type="Map" />
+  <aura:attribute name="retUrl" type="String"/> <!-- 戻るのurl -->
+  <aura:attribute name="viewId" type="String"/> <!-- パンくずViewId -->
+  <aura:attribute name="viewLabel" type="String"/> <!-- パンくずViewLabel -->
+  <aura:attribute name="fromId" type="String"/> <!-- パンくず名刺Id -->
+  <aura:attribute name="fromLabel" type="String"/> <!-- パンくず名刺Label -->
+  <aura:attribute name="fieldList" type="List" /> <!-- 項目リスト -->
+  <aura:attribute name="fieldMap" type="Sobject" /> <!-- 画面表示項目Map -->
+  <aura:attribute name="inputV" type="Sobject" /> <!-- 画面入力内容 -->
+  <aura:attribute name="titleV" type="Sobject" /> <!-- タイトル関する内容 -->
+  <aura:attribute name="dataList" type="Sobject" /> <!-- 名刺一覧内容 -->
   <aura:attribute name="cardList" type="List" />
   <aura:attribute name="lookUpId" type="Sobject" />
-  <aura:attribute name="selectMap" type="Map"/>
-  <aura:attribute name="working" type="Boolean"/>
-  <aura:attribute name="dataCount" type="Integer"/>
-  <aura:attribute name="firstLoading" type="Boolean" default="true"/>
-  <aura:attribute name="showPlickListType" type="String"/>
-  <aura:attribute name="allSearchConditions" type="List"/>
-  <aura:attribute name="errorMsg" type="String" />
-  <aura:attribute name="showErrorMsg" type="String" />
-  <aura:attribute name="dataHasError" type="Boolean" default="false"/>
+  <aura:attribute name="selectMap" type="Map"/> <!-- 対象の名刺一覧 -->
+  <aura:attribute name="working" type="Boolean"/> <!-- 読み込み中フラグ -->
+  <aura:attribute name="dataCount" type="Integer"/> <!-- 対象名刺数 -->
+  <aura:attribute name="firstLoading" type="Boolean" default="true"/> <!-- 最初画面開く際の読み込み中フラグ -->
+  <aura:attribute name="showPlickListType" type="String"/> <!-- 選択リスト表示タイプ -->
+  <aura:attribute name="allSearchConditions" type="List"/> <!-- 全ての検索条件 -->
+  <aura:attribute name="errorMsg" type="String" /> <!-- エラーメッセージ -->
+  <aura:attribute name="showErrorMsg" type="String" /> <!-- エラー表示フラグ -->
+  <aura:attribute name="dataHasError" type="Boolean" default="false"/> <!-- 登録に関するエラー -->
 
   <aura:attribute name="sobj" type="Sobject" />
 
   <aura:handler name="changeSearchCondition" event="c:SB_NCL_ChangeSearchConditionEvent" action="{!c.changeSearchCondition}"/>
-  <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistComonEvent" action="{!c.doSomething}"/>
+  <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistCommonEvent" action="{!c.doSomething}"/>
 
   <aura:renderIf isTrue="{!v.working}">
     <aura:renderIf isTrue="{!v.firstLoading}">
@@ -59,8 +56,8 @@
     </aura:renderIf>
   </aura:renderIf>
 
-  <div class="slds-tabs--default" style="position: absolute; top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto; height: 100%;">
-    <c:SB_NCL_BulkRegistComon aura:id="bulkRegistComon" inputV="{!v.inputV}"
+  <div class="slds-tabs--default" style=" top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto; height: 100%;">
+    <c:SB_NCL_BulkRegistCommon aura:id="bulkRegistCommon" inputV="{!v.inputV}"
                                         titleV="{!v.titleV}"
                                         dataList="{!v.dataList}"
                                         fieldList="{!v.fieldList}"

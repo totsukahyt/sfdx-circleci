@@ -62,7 +62,6 @@
       amap.SmartViscaf__BasicSetting__c = setting.Id;
       testmapplist.add(amap);
 
-
       insert testmapplist;
     }
 
@@ -947,6 +946,7 @@
         ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
         // ctrl.registTodo = true;
         PageReference savePageRef = ctrl.saveLead();
+        System.assertEquals(null, ctrl.testError);
         System.assertNotEquals(null, savePageRef, 'Save error');
 
         nc = getNameCard(nc.Id);
@@ -1740,5 +1740,11 @@
         setting.SmartViscaf__RegistToDoSubject__c = flage ? '交換true' : '交換false';
         setting.SmartViscaf__RegistNoToDo__c = !flage;
         upsert setting;
+        SmartViscaf__SmartViscaConfig__c conf = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId());
+        if (conf.Id == null) conf = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId());
+        if (conf.Id == null) conf = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
+        conf.LeadRegist_RegistTodo__c = flage;
+        conf.LeadRegist_TodoSubject__c = flage ? '交換true' : '交換false';
+        upsert conf;
     }
 }

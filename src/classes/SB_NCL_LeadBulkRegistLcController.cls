@@ -5,6 +5,7 @@ public with sharing class SB_NCL_LeadBulkRegistLcController {
 
   @RemoteAction
   @AuraEnabled
+  // 全てのデータをここで取得
   public static String getAllData(String recordIds, String fieldListStr, String searchType, String recordType) {
     SB_NameCardL_BulkRegistDTO.SaveResult saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
     try{
@@ -74,6 +75,7 @@ public with sharing class SB_NCL_LeadBulkRegistLcController {
 
   @RemoteAction
   @AuraEnabled
+  // タイトルに関する内容ここで取得
   public static String getTitleValue() {
     SB_NameCardL_BulkRegistDTO.TitleValue titleV = new SB_NameCardL_BulkRegistDTO.TitleValue();
     titleV.titleName = String.format(System.Label.SB_NCLD_Text_RegisterToLeadsDEV, new String[]{Lead.sObjecttype.getDescribe().getLabel()});
@@ -86,6 +88,7 @@ public with sharing class SB_NCL_LeadBulkRegistLcController {
 
   @RemoteAction
   @AuraEnabled
+  // 入力に関する内容はここで取得
   public static String getInputValue() {
     SB_NameCardL_BulkRegistDTO.InputValue inv = new SB_NameCardL_BulkRegistDTO.InputValue();
     SB_NameCardL_BulkRegistDTO.InputPlickListValue inputR = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
@@ -143,6 +146,7 @@ public with sharing class SB_NCL_LeadBulkRegistLcController {
 
   @RemoteAction
   @AuraEnabled
+  // 画面表示項目リストここで取得
   public static String getFieldList() {
     Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> fieldMap = new Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>>();
     List<SB_NameCardL_BulkRegistDTO.DataTableColumnField> fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
@@ -208,6 +212,7 @@ public with sharing class SB_NCL_LeadBulkRegistLcController {
 
   @RemoteAction
   @AuraEnabled
+  // 検索
   public static String searchAllLead(String nameCardIds, String searchType, String searchRecordTypes) {
     String message = '';
     SB_NameCardL_BulkRegistDTO.SaveResult saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
@@ -304,55 +309,7 @@ public with sharing class SB_NCL_LeadBulkRegistLcController {
     return label;
   }
 
-  // public static void setLeadRecord(Map<Id, Lead> idMap, Map<String, List<Lead>> emailListMap, Map<String, List<Lead>> nameListMap,
-  //                            SmartViscaf__NameCard__c nameCard, List<SB_NameCardL_BulkRegistDTO.LabelValue> leadSelOptList) {
-  //   leadSelOptList.clear();
-  //   Set<Id> idSet = new Set<Id>();
-  //   List<SB_NameCardL_BulkRegistDTO.LabelValue> emailSelOptList = new List<SB_NameCardL_BulkRegistDTO.LabelValue>();
-  //   List<SB_NameCardL_BulkRegistDTO.LabelValue> nameSelOptList = new List<SB_NameCardL_BulkRegistDTO.LabelValue>();
-  //   if (idMap != null && idMap.containsKey(nameCard.SmartViscaf__lead__c)) {
-  //     Lead lead = idMap.get(nameCard.SmartViscaf__lead__c);
-  //     leadSelOptList.add(new SB_NameCardL_BulkRegistDTO.LabelValue(getLabel(lead.Name, lead.Email), lead.Id));
-  //     idSet.add(lead.Id);
-  //   }
-  //   if (emailListMap != null && emailListMap.containsKey(nameCard.SmartViscaf__email__c)) {
-  //     for (Lead lead : emailListMap.get(nameCard.SmartViscaf__email__c)) {
-  //       if (idSet.contains(lead.Id)) {
-  //         continue;
-  //       }
-  //       emailSelOptList.add(new SB_NameCardL_BulkRegistDTO.LabelValue(getLabel(lead.Name, lead.Email), lead.Id));
-  //       idSet.add(lead.Id);
-  //     }
-  //   }
-  //   if (nameListMap != null) {
-  //     String name = SB_NameCard_LeadRegist.getPersonName(nameCard);
-  //     if (nameListMap.containsKey(name)) {
-  //       for (Lead lead : nameListMap.get(name)) {
-  //         if (idSet.contains(lead.Id)) {
-  //           continue;
-  //         }
-  //         nameSelOptList.add(new SB_NameCardL_BulkRegistDTO.LabelValue(getLabel(lead.Name,lead.Email), lead.Id));
-  //         idSet.add(lead.Id);
-  //       }
-  //     }
-  //   }
-  //   Integer Leadnumber = Lead.sObjectType.getDescribe().isCreateable() == true ? 998 : 999;
-  //   if (leadSelOptList.size() + emailSelOptList.size() + nameSelOptList.size() <= Leadnumber) {
-  //     leadSelOptList.addAll(emailSelOptList);
-  //     leadSelOptList.addAll(nameSelOptList);
-  //   } else {
-  //     // String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV);
-  //     //this.message = '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。';
-  //     // this.message = String.format(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV, new String[] {LEADLABEL});
-  //   }
-  //   if(Lead.sObjectType.getDescribe().isCreateable()) {
-  //     leadSelOptList.add(new SB_NameCardL_BulkRegistDTO.LabelValue(System.Label.SB_NCLD_Menu_NewLead, 'new'));
-  //   }
-  //   leadSelOptList.add(new SB_NameCardL_BulkRegistDTO.LabelValue(System.Label.SB_NCLD_Menu_NotToRegister, 'none'));
-  // }
-
-
-
+  // 検索用メソッド
   public static Map<Id,Map<Schema.SObjectType,List<SObject>>> buildCandidateList(Set<Id> ncList, List<SmartViscaf__NameCard__c> nameCardList,
                                                                                 String searchType, String searchRecordTypes) {
     List<SB_NameCardL_RegistQueryOption> queryOptions = new List<SB_NameCardL_RegistQueryOption>();
@@ -508,7 +465,6 @@ public with sharing class SB_NCL_LeadBulkRegistLcController {
                   haveNew = true;
                   if (!useNameCardOwner && String.isBlank(ownerId)) {
                     //(関連)リードを新規作成する場合は「所有者」を指定してください
-                    // String noOwnerIdErrorMessage = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
                     String noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {LEADLABEL});
                     throw new SB_NameCard_LeadRegist.LeadRegistException(noOwnerIdErrorMessage);
                   }
@@ -666,16 +622,6 @@ public with sharing class SB_NCL_LeadBulkRegistLcController {
           } else {
             // this.hasError = false;
           }
-
-          //Integer i = this.insertLead();
-          //i += this.updateLead();
-          //String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
-          //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
-          //System.debug(str);
-          //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
-
-          //pageRef = this.retUrl;
-          //
           message += 'save ok';
       }
       catch (Exception e) {

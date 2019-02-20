@@ -44,8 +44,13 @@ public with sharing class SB_NameCardL_DMLProcessor {
     public void addCardHolder(SB_NameCardL_RegistCardHolder.CardHolder holder) {
       this.holders.add(holder);
       SObject obj = holder.getSObject(this.otype);
-      System.debug('obj.Id: ' + obj.Id);
-      this.objs.add(obj);
+      if (obj != null) {
+        this.objs.add(obj);
+      }
+    }
+
+    public void addSObjects(List<SObject> objs) {
+      this.objs.addAll(objs);
     }
 
     protected abstract void setErrors();

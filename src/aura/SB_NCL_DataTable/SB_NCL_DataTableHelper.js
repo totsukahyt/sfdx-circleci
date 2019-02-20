@@ -1,7 +1,7 @@
 /**
  *
  *  SB_NCL_DataTable
- *  リード拡張環境 一括統合用DataTable Helper
+ *  リード拡張環境 Lightning一括画面のデータを表示するためのコンポネート Helper
  *
  *
  *
@@ -9,7 +9,8 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-511 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12
+ *  @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
  *
  **/
 ({

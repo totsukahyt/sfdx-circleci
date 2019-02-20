@@ -81,7 +81,7 @@ private class SB_NameCardL_RegistHelperTest
 
   // 名刺からリードを作って、キャンペーンメンバーも作る
   @isTest
-  static void test_doRegist_Lead_Create() {
+  static void test_doRegistEx_Lead_Create() {
     TestDb db = new TestDb();
     db.initialize();
     db.appendNameCard();
@@ -105,7 +105,7 @@ private class SB_NameCardL_RegistHelperTest
     SB_NameCardL_RegistHelper.TodoParam todoParam = new SB_NameCardL_RegistHelper.TodoParam('件名:名刺交換', Date.today(), 'ToDoのコメント', u.Id);
     SB_NameCardL_RegistHelper.RegistRequest req = new SB_NameCardL_RegistHelper.RegistRequest(targets, acntParam, contParam, leadParam, todoParam);
     //　実行
-    SB_NameCardL_RegistHelper.RegistResponse res = SB_NameCardL_RegistHelper.doRegist(req);
+    SB_NameCardL_RegistHelper.RegistResponse res = SB_NameCardL_RegistHelper.doRegistEx(req);
     //　結果確認
     System.assert(res.success);
     System.assertEquals(2, res.registeds.size());

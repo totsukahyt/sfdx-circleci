@@ -1,0 +1,46 @@
+/**
+ *
+ *  SB_NCL_BulkRegistComon
+ *  リード拡張環境 Lightning リードまたは取引先・取引先責任者に登録画面[一括登録画面]を表示入力用の共通コンポネート CSS
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 拡張パッケージ：Lead Ex. 1.12
+ *
+ **/
+.THIS.titleTop{
+  position: fixed;
+  width: 100%;
+  margin-top: -1px;
+  z-index: 8999;
+}
+
+.THIS .disLeft {
+  text-align: left;
+  display: true;
+  z-index: 90002;
+  pointer-events: none;
+}
+
+.THIS .disLead {
+  /*margin-top: -5px;*/
+}
+
+.THIS .disContact {
+  border-top-color: rgb(215, 215, 215);
+  border-top-width:1px;
+  border-top-style:solid;
+}
+
+.THIS .disLeft a {
+  margin-left: -30px;
+  color: #797373 !important;
+}
+
+.THIS .top10 {
+  margin-top: 20px;
+}

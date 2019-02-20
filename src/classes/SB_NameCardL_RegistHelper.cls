@@ -16,7 +16,15 @@
  **/
 public with sharing class SB_NameCardL_RegistHelper  {
   public class SB_NameCardL_RegistHelperException extends Exception {}
+
+  //public static final Integer ProcNone = 0;
+  //public static final Integer ProcAccount = 1;
+  //public static final Integer ProcLead = 2;
+  //public static final Integer ProcBoth = 3;
+  //public enum ProcType2 { ProcNone, ProcAccount, ProcLead, ProcBoth } //
   public enum ProcType { NONE, ACCOUNT, LEAD, BOTH } //
+
+
 
   // 処理の実行は この 　staticメソッドを外部から呼び出します。
   public static RegistResponse doRegist(RegistRequest req) {
@@ -25,6 +33,18 @@ public with sharing class SB_NameCardL_RegistHelper  {
     proc.run();
     return proc.getRegistResponse();
   }
+
+  // 所有者が適切かチェックしてから登録処理をします。
+  // 処理の実行は この 　staticメソッドを外部から呼び出します。
+  public static RegistResponse doRegistEx(RegistRequest req) {
+    System.debug('RegistRequest: ' +  req);
+    SB_NameCardL_RegistHelper proc = new SB_NameCardL_RegistHelper(req);
+    if (proc.canRegist(req)) {
+      proc.run();
+    }
+    return proc.getRegistResponse();
+  }
+
 
   // +--------------------------------------------------------+
   // +---- リクエスト用 ----+
@@ -61,17 +81,18 @@ public with sharing class SB_NameCardL_RegistHelper  {
   }
   // +---- リクエスト 対象のオブジェクトID と ToDo オン・オフ を保持する用 クラス----+
   public virtual class RegistTarget {
-    @TestVisible public ProcType pType { get; private set; }     //  名刺のID 必須
-    @TestVisible public Id cardId { get; private set; }     //  名刺のID 必須
-    @TestVisible public Id acntId { get; private set; }     //  アカウントのID acntParam で NULL なら 新規作成する
-    @TestVisible public Id contId { get; private set; }     //  コンタクトのID contParam で NULL なら 新規作成する
-    @TestVisible public Id leadId { get; private set; }     //  リードのIDを想定 leadParam で NULL なら 新規作成する 未実装
-    @TestVisible public Id contCampaignId { get; private set; }     //  コンタクトを キャンペーンメンバーにする。
-    @TestVisible public String contCampaignStatus { get; private set; }     //  コンタクト キャンペーンメンバーのステータス
-    @TestVisible public Id leadCampaignId { get; private set; }     //  リード を キャンペーンメンバーにする。
-    @TestVisible public String leadCampaignStatus { get; private set; }     //  リード キャンペーンメンバーのステータス
-    @TestVisible public Boolean createTodo { get; private set; }   // TRUE： ToDoを作る
-    @TestVisible public Date todoDate { get; private set; }        // ToDoの日付
+    @TestVisible public ProcType pType { get; protected set; }     //  Accountの処理か Leadの処理か
+    @TestVisible public Integer pType2 { get; protected set; }     //  ProcType の JSRemoteing用 暫定
+    @TestVisible public Id cardId { get; protected set; }     //  名刺のID 必須
+    @TestVisible public Id acntId { get; protected set; }     //  アカウントのID acntParam で NULL なら 新規作成する
+    @TestVisible public Id contId { get; protected set; }     //  コンタクトのID contParam で NULL なら 新規作成する
+    @TestVisible public Id leadId { get; protected set; }     //  リードのIDを想定 leadParam で NULL なら 新規作成する 未実装
+    @TestVisible public Id contCampaignId { get; protected set; }     //  コンタクトを キャンペーンメンバーにする。
+    @TestVisible public String contCampaignStatus { get; protected set; }     //  コンタクト キャンペーンメンバーのステータス
+    @TestVisible public Id leadCampaignId { get; protected set; }     //  リード を キャンペーンメンバーにする。
+    @TestVisible public String leadCampaignStatus { get; protected set; }     //  リード キャンペーンメンバーのステータス
+    @TestVisible public Boolean createTodo { get; protected set; }   // TRUE： ToDoを作る
+    @TestVisible public Date todoDate { get; protected set; }        // ToDoの日付
     public RegistTarget() {}
     // 2017.04.xx
     public RegistTarget(ProcType pType, Id cardId, Id acntId, Id contId, Id leadId, Boolean createTodo, Date todoDate) {
@@ -84,9 +105,28 @@ public with sharing class SB_NameCardL_RegistHelper  {
       this.todoDate = todoDate;      // 2017.04.25 null だったら名刺交換日、名刺交換日もNULLなら Date.today();
     }
 
-    //// 既存からの以降用にとっとく、あとで削除
-    //public RegistTarget(Id cardId, Id acntId, Id contId, Id leadId, Boolean createTodo, Date todoDate) {
-    //  this.pType = ProcType.NONE;
+    //  ProcType の JSRemoteing用 暫定
+    Public void convertProcType() {
+      System.assert(pType2 != null);
+      switch on this.pType2 {
+        when 1 {
+             this.pType = ProcType.ACCOUNT;
+        }
+        when 2 {
+          this.pType = ProcType.LEAD;
+        }
+        when 3 {
+          this.pType = ProcType.BOTH;
+        }
+        when else {
+          this.pType = ProcType.NONE;
+        }
+      }
+    }
+
+    //// LEX 版 SB_NCL_TwowayRegistContoller の registAccountContact からのとき
+    //public RegistTarget(Integer pType, Id cardId, Id acntId, Id contId, Id leadId, Boolean createTodo, Date todoDate) {
+    //  this.pType = pType == null || pType == 0 ? ProcType.ACCOUNT : ProcType.LEAD;
     //  this.cardId = cardId;
     //  this.acntId = acntId;
     //  this.contId = contId;
@@ -174,9 +214,22 @@ public with sharing class SB_NameCardL_RegistHelper  {
 
 
     private Map<Id, SObject> querySObjects(String objName, Set<Id> ids) {
-      Set<Id> targetIds = ids;
-      String query = 'SELECT Id, Name, OwnerId, Owner.Name FROM ' + objName + ' WHERE Id IN :targetIds';
-      return new Map<Id, SObject> (Database.query(query));
+      Map<Id, SObject> result = new Map<Id, SObject>();
+      if (!ids.isEmpty()) {
+        Set<Id> targetIds = ids;
+        List<String> fields = new List<String>{'Id', 'Name'};
+        if (objName != 'CampaignMember') {
+          fields.add('OwnerId');
+          fields.add('Owner.Name');
+        }
+        else {
+          fields.add('LeadOrContactId');
+          fields.add('Status');
+        }
+        String query = String.format('SELECT {0} FROM {1} WHERE Id IN :targetIds', new String[] { String.join(fields, ', '), objName });
+        result.putAll(Database.query(query));
+      }
+      return result;
     }
 
     public RegistResponse(RegistRequest req) {
@@ -191,24 +244,57 @@ public with sharing class SB_NameCardL_RegistHelper  {
       Set<Id> acntIds = new Set<Id>();
       Set<Id> contIds = new Set<Id>();
       Set<Id> leadIds = new Set<Id>();
+      Set<Id> cmIds = new Set<Id>(); // コンタクトかリードのキャンペーンメンバー
+      //Set<Id> leadCmIds = new Set<Id>(); // リードのキャンペーンメンバー
       for (SB_NameCardL_RegistCardHolder.AccountRegistHolder holder : holders ) {
-        acntIds.add(holder.getAccountId());
-        contIds.add(holder.getContactId());
-        leadIds.add(holder.getLeadId());
+        if (holder.getAccountId() != null) {
+          acntIds.add(holder.getAccountId());
+        }
+        if (holder.getContactId() != null) {
+          contIds.add(holder.getContactId());
+        }
+        if (holder.getLeadId() != null) {
+          leadIds.add(holder.getLeadId());
+        }
+        if (holder.getLeadId() != null) {
+          leadIds.add(holder.getLeadId());
+        }
+        if (holder.contCampaignMember != null && holder.contCampaignMember.Id != null) {
+          cmIds.add(holder.contCampaignMember.Id);
+        }
+        if (holder.leadCampaignMember != null && holder.leadCampaignMember.Id != null) {
+          cmIds.add(holder.leadCampaignMember.Id);
+        }
       }
       Map<Id, SObject> acnts = querySObjects('Account', acntIds);
       Map<Id, SObject> conts = querySObjects('Contact', contIds);
       Map<Id, SObject> leads = querySObjects('Lead', leadIds);
+      Map<Id, SObject> cms = querySObjects('CampaignMember', cmIds);
       //resetRegistedSObjects(cardId2Registed);   // Inseet or Update 後のレコードに 入れ換え  TODO 入れ換えずに RegistedSummary をあたしいレコードで作る。
       this.registeds = new Map<Id, RegistedSummary>();
       for (SB_NameCardL_RegistCardHolder.AccountRegistHolder holder : holders) {
         RegistedSummary sum = new RegistedSummary(holder.card.Id);
-        SObject acnt = acnts.get(holder.getAccountId());
-        sum.addRecord(acnt);
-        SObject cont = conts.get(holder.getContactId());
-        sum.addRecord(cont);
-        SObject lead = leads.get(holder.getLeadId());
-        sum.addRecord(lead);
+        if (holder.getAccountId() != null) {
+          SObject acnt = acnts.get(holder.getAccountId());
+          sum.addRecord(acnt);
+        }
+        if (holder.getContactId() != null) {
+          SObject cont = conts.get(holder.getContactId());
+          sum.addRecord(cont);
+        }
+        if (holder.getLeadId() != null) {
+          SObject lead = leads.get(holder.getLeadId());
+          sum.addRecord(lead);
+        }
+        // CampaignMember
+        if (holder.contCampaignMember != null && holder.contCampaignMember.Id != null) {
+          SObject cm = cms.get(holder.contCampaignMember.Id);
+          sum.addRecord(cm);
+        }
+        if (holder.leadCampaignMember != null && holder.leadCampaignMember.Id != null) {
+          SObject cm = cms.get(holder.leadCampaignMember.Id);
+          sum.addRecord(cm);
+        }
         if (holder.todo != null) {
           sum.addRecord(holder.todo);
         }
@@ -234,6 +320,19 @@ public with sharing class SB_NameCardL_RegistHelper  {
       this.messages = error.messages;
     }
 
+    // 所有者チェック でエラーがあったらこれをよんで、エラー内容をセット して、終わる。
+    public void setOwnerCheckError(Map<Id, String> owner2Error) {
+      this.success = false;
+      this.messages = new List<String>();
+      for (RegistTarget target : this.req.targets) {
+        if (owner2Error.containsKey(target.cardId)) {
+          this.messages.add(owner2Error.get(target.cardId));
+        }
+      }
+      this.message = String.join(this.messages, '/r/n');
+      this.success =false;
+    }
+
   }   // RegistResponse
 
   public class RegistedSummary {
@@ -241,7 +340,10 @@ public with sharing class SB_NameCardL_RegistHelper  {
     public SObjectInfo acnt { get; private set; }
     public SObjectInfo cont { get; private set; }
     public SObjectInfo lead { get; private set; }
+    public SObjectInfo contCampaignMember { get; private set; }
+    public SObjectInfo leadCampaignMember { get; private set; }
     public SObjectInfo todo { get; private set; }
+
     //public RegistedSummary(RegistedSObjects registed) {
     //  this.cardId = registed.cardId;
     //  for (SObjectType otype : registed.objs.keySet()) {
@@ -275,11 +377,20 @@ public with sharing class SB_NameCardL_RegistHelper  {
       else if (obj.getSObjectType() == Contact.sObjectType) {
         cont = info;
       }
+      else if (obj.getSObjectType() == Schema.Lead.sObjectType) {
+        lead = info;
+      }
+      else if (obj.getSObjectType() == CampaignMember.sObjectType) {
+        Id lcId = (Id)(String)obj.get('LeadOrContactId');
+        if (lcId.getSObjectType() == Schema.Lead.sObjectType) {
+          leadCampaignMember = info;
+        }
+        else if (lcId.getSObjectType() == Contact.sObjectType) {
+          contCampaignMember = info;
+        }
+      }
       else if (obj.getSObjectType() == Task.sObjectType) {
         todo = info;
-      }
-      else {
-        lead = info;
       }
     }
   }
@@ -289,11 +400,18 @@ public with sharing class SB_NameCardL_RegistHelper  {
     public Object name { get; private set; }
     public Id ownerId { get; private set; }
     public Object ownerName { get; private set; }
+    public Object status { get; private set; }
     public SObjectInfo(SObject obj) {
       this.id = obj.Id;
-      this.ownerid = (Id)obj.get('OwnerId');
-      SObject ownerUser = obj.getSObject('Owner');
-      this.ownerName = ownerUser != null ? ownerUser.get('Name') : null;
+      if (obj.Id.getSObjectType() != CampaignMember.sObjecttype) {
+        // CampaignMember では Owener がない
+        this.ownerid = (Id)obj.get('OwnerId');
+        SObject ownerUser = obj.getSObject('Owner');
+        this.ownerName = ownerUser != null ? ownerUser.get('Name') : null;
+      }
+      else {
+        this.status = obj.get('Status');
+      }
       if (obj.getSObjectType() == Task.sObjectType || obj.getSObjectType() == Event.sObjectType) {
         this.name = obj.get('Subject');
       }
@@ -366,6 +484,21 @@ public with sharing class SB_NameCardL_RegistHelper  {
     this.success = false;
     this.req = req;
     this.result = new RegistResponse(this.req);
+  }
+
+  // 登録処理ができるか確認。1. 所有者が適切か
+  public Boolean canRegist(RegistRequest req) {
+    if (req.targets.isEmpty()) {
+      throw new SB_NameCardL_RegistHelperException('Request do not have target Id.');
+    }
+    this.result.process = 'CheckOwner';
+    // 所有者のチェック
+    Map<Id, String> owner2Error = SB_NameCardL_RegistOwenrCheckHelper.doCheck(req);
+    if (!owner2Error.isEmpty()) {
+      this.result.setOwnerCheckError(owner2Error);
+      return false;
+    }
+    return true;
   }
 
   public void run() {
@@ -674,9 +807,9 @@ public with sharing class SB_NameCardL_RegistHelper  {
     Set<Id> cardIds = new Set<Id>(this.cardId2ContactLeadId.keySet());
     List<Task> tasks = [SELECT Id, WhoId, WhatId FROM Task WHERE WhoId=null AND WhatId IN :cardIds];
     for(Task t : tasks) {
-      Id contId = this.cardId2ContactLeadId.get(t.WhatId);
-      if (contId == null) continue;
-      t.WhoId = contId;
+      Id contLeadId = this.cardId2ContactLeadId.get(t.WhatId);
+      if (contLeadId == null) continue;
+      t.WhoId = contLeadId;
     }
     if (!tasks.isEmpty()) {
       SMartViscaf.SB_NameCard_CrudFls.supdate(tasks, false);
@@ -688,9 +821,9 @@ public with sharing class SB_NameCardL_RegistHelper  {
     Set<Id> cardIds = new Set<Id>(this.cardId2ContactLeadId.keySet());
     List<Event> events = [SELECT Id, WhoId, WhatId FROM Event WHERE WhoId=null AND WhatId IN :cardIds];
     for(Event e : events) {
-      Id contId = this.cardId2ContactLeadId.get(e.WhatId);
-      if (contId == null) continue;
-      e.WhoId = contId;
+      Id contLeadId = this.cardId2ContactLeadId.get(e.WhatId);
+      if (contLeadId == null) continue;
+      e.WhoId = contLeadId;
     }
     if (!events.isEmpty()) {
       SMartViscaf.SB_NameCard_CrudFls.supdate(events, false);
@@ -708,57 +841,69 @@ public with sharing class SB_NameCardL_RegistHelper  {
     SmartViscaf.SB_NameCard_CrudFls.supdate(cards, true);
   }
 
-  // キャンペーンID+コンタクトorリードID、ステータスを保持して、CampaignMember レコードを作るクラス
-  private class CampaignMemberBuilder {
-    public Id campId { get; private set; }
-    public Id targetId { get; private set; }
-    public String status { get; private set; }
-    public CampaignMemberBuilder(Id campId, Id targetId, String status) {
-      this.campId = campId;
-      this.targetId = targetId;
-      this.status = status;
-    }
-    public CampaignMember create() {
-      CampaignMember result = null;
-      if (targetId.getSobjectType() == Contact.sObjectType) {
-        result = new CampaignMember(CampaignId=campId, ContactId=targetId, Status = status);
-      }
-      else if (targetId.getSobjectType() == Lead.sObjectType) {
-        result = new CampaignMember(CampaignId=campId, LeadId=targetId, Status = status);
-      }
-      return result;
-    }
-  }
+  //// キャンペーンID+コンタクトorリードID、ステータスを保持して、CampaignMember レコードを作るクラス
+  //private class CampaignMemberBuilder {
+  //  public Id campId { get; private set; }
+  //  public Id targetId { get; private set; }
+  //  public String status { get; private set; }
+  //  public CampaignMemberBuilder(Id campId, Id targetId, String status) {
+  //    this.campId = campId;
+  //    this.targetId = targetId;
+  //    this.status = status;
+  //  }
+  //  public CampaignMember create() {
+  //    CampaignMember result = null;
+  //    if (targetId.getSobjectType() == Contact.sObjectType) {
+  //      result = new CampaignMember(CampaignId=campId, ContactId=targetId, Status = status);
+  //    }
+  //    else if (targetId.getSobjectType() == Lead.sObjectType) {
+  //      result = new CampaignMember(CampaignId=campId, LeadId=targetId, Status = status);
+  //    }
+  //    return result;
+  //  }
+  //}
 
   // 作成・更新した リード・コンタクトをキャンペーンメンバーにする。
   private void campaignProc() {
     // キャンペーンID+コンタクトorリードID と CampaignMemberBuilder のリストのマップ
-    Map<String, CampaignMemberBuilder> campIdTargetId2Builder = new  Map<String, CampaignMemberBuilder>();
+    //Map<String, CampaignMemberBuilder> campIdTargetId2Builder = new  Map<String, CampaignMemberBuilder>();
+    Map<String, CampaignMember> campIdTargetId2CamMember = new  Map<String, CampaignMember>();
     // キャンペーンID ごとに 名刺レコード リスト をまとめる。
     for (SB_NameCardL_RegistCardHolder.AccountRegistHolder holder : (List<SB_NameCardL_RegistCardHolder.AccountRegistHolder>)this.holders) {
       // コンタクトのキャンペーンメンバー指定について調べる。
       if (holder.isContactCampaignMember() && holder.getContactId() != null) {
         String key = (String)holder.getContactCampaignId() + (String)holder.getContactId();
-        if (!campIdTargetId2Builder.containsKey(key)) {
-          campIdTargetId2Builder.put(key, new CampaignMemberBuilder(holder.getContactCampaignId(), holder.getContactId(), holder.getContactCampaignStatus()));
+        //if (!campIdTargetId2Builder.containsKey(key)) {
+        //  campIdTargetId2Builder.put(key, new CampaignMemberBuilder(holder.getContactCampaignId(), holder.getContactId(), holder.getContactCampaignStatus()));
+        //}
+        if (!campIdTargetId2CamMember.containsKey(key)) {
+          CampaignMember cm = holder.buildContactCampaignMember(holder.getContactCampaignId(), holder.getContactCampaignStatus());
+          campIdTargetId2CamMember.put(key, cm);
         }
       }
       // リードのキャンペーンメンバー指定について調べる。
       if (holder.isLeadCampaignMember() && holder.getLeadId() != null) {
         String key = (String)holder.getLeadCampaignId() + (String)holder.getLeadId();
-        if (!campIdTargetId2Builder.containsKey(key)) {
-          campIdTargetId2Builder.put(key, new CampaignMemberBuilder(holder.getLeadCampaignId(), holder.getLeadId(), holder.getLeadCampaignStatus()));
+        //if (!campIdTargetId2Builder.containsKey(key)) {
+        //  campIdTargetId2Builder.put(key, new CampaignMemberBuilder(holder.getLeadCampaignId(), holder.getLeadId(), holder.getLeadCampaignStatus()));
+        //}
+        if (!campIdTargetId2CamMember.containsKey(key)) {
+          CampaignMember cm = holder.buildLeadCampaignMember(holder.getLeadCampaignId(), holder.getLeadCampaignStatus());
+          campIdTargetId2CamMember.put(key, cm);
         }
       }
     }
-    if (campIdTargetId2Builder.isEmpty()) {
-      return;
+    //if (campIdTargetId2Builder.isEmpty()) {
+    //  return;
+    //}
+    //List<CampaignMember> cms = new List<CampaignMember>();
+    //for (CampaignMemberBuilder builder : campIdTargetId2Builder.values()) {
+    //  cms.add(builder.create());
+    //}
+    //SmartViscaf.SB_NameCard_CrudFls.screate(cms, true);
+    if (!campIdTargetId2CamMember.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.screate(campIdTargetId2CamMember.values(), true);
     }
-    List<CampaignMember> cms = new List<CampaignMember>();
-    for (CampaignMemberBuilder builder : campIdTargetId2Builder.values()) {
-      cms.add(builder.create());
-    }
-    SmartViscaf.SB_NameCard_CrudFls.screate(cms, true);
   }
 
 }

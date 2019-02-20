@@ -24,7 +24,7 @@ public with sharing class SB_NCL_NameCardDTO  {
               //', SmartViscaf__image_id__c, SmartViscaf__width__c, SmartViscaf__height__c, SmartViscaf__bk_image_id__c, SmartViscaf__bk_width__c, SmartViscaf__bk_height__c' +
               //', SmartViscaf__list_name__c, SmartViscaf__freehandmemo__c, SmartViscaf__memo__c' +
               ', SmartViscaf__isNotOverwrite__c, SmartViscaf__isNotOverContactwrite__c' +
-              ', LastModifiedDate, SmartViscaf__card_exchange_date__c, OwnerId, Owner.Name';
+              ', LastModifiedDate, SmartViscaf__card_exchange_date__c, OwnerId, Owner.Name, Owner.IsActive';
 
   public static final String NC_QUERY_FIELDS = 'Id, Name, SmartViscaf__Parent__c, SmartViscaf__name_kana__c'  +
               ', SmartViscaf__account__c, SmartViscaf__contact__c' +
@@ -36,7 +36,7 @@ public with sharing class SB_NCL_NameCardDTO  {
               ', SmartViscaf__image_id__c, SmartViscaf__width__c, SmartViscaf__height__c, SmartViscaf__bk_image_id__c, SmartViscaf__bk_width__c, SmartViscaf__bk_height__c' +
               ', SmartViscaf__list_name__c, SmartViscaf__freehandmemo__c, SmartViscaf__memo__c' +
               ', SmartViscaf__isNotOverwrite__c, SmartViscaf__isNotOverContactwrite__c' +
-              ', LastModifiedDate, SmartViscaf__card_exchange_date__c, OwnerId, Owner.Name';
+              ', LastModifiedDate, SmartViscaf__card_exchange_date__c, OwnerId, Owner.Name, Owner.IsActive';
 
   @AuraEnabled public String id { get; private set; }              // レコードID
   @AuraEnabled public String parentId { get; private set; }      // 最新の名刺
@@ -51,6 +51,7 @@ public with sharing class SB_NCL_NameCardDTO  {
   @AuraEnabled public DateTime lastModifiedDate { get; private set; }
   @AuraEnabled public String ownerId { get; private set; }
   @AuraEnabled public String ownerName { get; private set; }
+  @AuraEnabled public Boolean ownerActive { get; private set; } // lx 2.0
   @AuraEnabled public Date card_exchange_date { get; private set; }
   @AuraEnabled public String zip_code { get; private set; }
   @AuraEnabled public String address_pref { get; private set; }
@@ -128,6 +129,7 @@ public with sharing class SB_NCL_NameCardDTO  {
     this.lastModifiedDate = fields.contains('LastModifiedDate') ? card.LastModifiedDate : null;
     this.ownerId = fields.contains('OwnerId') ? card.OwnerId : null;
     this.ownerName = fields.contains('Owner') ? card.Owner.Name : null;     // Nameはある前庭で
+    this.ownerActive = fields.contains('Owner') ? card.Owner.IsActive : null;     // lx2.0
     this.card_exchange_date = fields.contains('SmartViscaf__card_exchange_date__c') ? card.SmartViscaf__card_exchange_date__c : null;       // 名刺交換 : null日
     this.zip_code = fields.contains('SmartViscaf__zip_code__c') ? card.SmartViscaf__zip_code__c : null;
     this.address_pref = fields.contains('SmartViscaf__address_pref__c') ? card.SmartViscaf__address_pref__c : null;
@@ -176,6 +178,7 @@ public with sharing class SB_NCL_NameCardDTO  {
     this.lastModifiedDate = card.LastModifiedDate;
     this.ownerId = card.OwnerId;
     this.ownerName = card.Owner.Name;
+    this.ownerActive = card.Owner.IsActive;     // lx2.0
     this.card_exchange_date = card.SmartViscaf__card_exchange_date__c;       // 名刺交換日
     this.zip_code = card.SmartViscaf__zip_code__c;
     this.address_pref = card.SmartViscaf__address_pref__c;

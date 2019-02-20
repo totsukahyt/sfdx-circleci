@@ -8,13 +8,13 @@
 
   Copyright (C) 2016-2018 SunBridge Inc. All Rights Reserved.
 -->
-<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false"
-    controller="SB_NCL_TwowayRegistController">
+<apex:page docType="html-5.0" applyHtmlTag="true" showHeader="true" sidebar="false" standardStylesheets="false"
+    controller="SB_NCL_TwowayRegistController" title="{!windowTitle}">
 
 <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
 <head>
-  <title>リードまたは取引先・取引先責任者へ登録</title>
+  <title>{!windowTitle}</title>
   <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"/> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
 <!--   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
@@ -27,7 +27,7 @@
   <apex:slds />
 
   <script type="text/javascript">
-    // var SLDS_URL = "{!urlRoot}" + "{!URLFOR($Asset.SLDS, '')}";  // Edge用 v1.22 2017.11.xx
+    // var SLDS_URL = "{!urlRoot}" + "{!URLFOR($Asset.SLDS, '')}";  // Edge用 v1.22 2017.11.xx → lx 2.0 Edgeも他と一緒でよくなってた
     var SLDS_URL = "{!URLFOR($Asset.SLDS, '')}";  // Edge以外用 v1.22 2017.11.xx
     var namespace = "{!JSENCODE(namespace)}";     // sawano 2017.10.xx v1.21 for conde scan
     var vfValue = {

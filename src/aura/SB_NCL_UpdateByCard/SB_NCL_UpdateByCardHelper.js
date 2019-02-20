@@ -1,7 +1,7 @@
 /**
  *
  *  SB_NCL_UpdateByCard
- *  リード拡張環境 Lightning名刺で更新共通コンポネート Helper
+ *  リード拡張環境 Lightning名刺で更新画面表示入力用コンポネート Helper
  *
  *
  *
@@ -9,7 +9,7 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author gao
- *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
  *
  **/
 ({

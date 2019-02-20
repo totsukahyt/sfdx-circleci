@@ -25,6 +25,7 @@ global with sharing Class SB_NameCardL_RenkeiTriggerHandler extends SmartViscaf.
       }
     }
     if(!renkeiCards.isEmpty()) {
+      doneInsert(); // 自動連携を実行する場合に やったことにする。
       if (SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RenkeiLeadActive__c
             || SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RenkeiActiveCampaignMember__c) {
         System.debug(SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RenkeiLeadActive__c);
@@ -41,7 +42,6 @@ global with sharing Class SB_NameCardL_RenkeiTriggerHandler extends SmartViscaf.
 
   //名刺を更新時の連携操作
   global override void onBeforeUpdate(List<SObject> newObjs, Map<Id, SObject> oldMap) {
-    doneUpdate();
     List<SmartViscaf__NameCard__c> renkeiCards = new List<SmartViscaf__NameCard__c>();
     for (SmartViscaf__NameCard__c ne :  (List<SmartViscaf__NameCard__c>)newObjs) {
       SmartViscaf__NameCard__c ol = (SmartViscaf__NameCard__c)oldMap.get(ne.Id);
@@ -57,6 +57,7 @@ global with sharing Class SB_NameCardL_RenkeiTriggerHandler extends SmartViscaf.
     }
     // System.debug(renkeiCards);
     if(!renkeiCards.isEmpty()) {
+      doneUpdate(); // 自動連携を実行する場合に やったことにする。名寄せのトリガで UPSERT のとき、INSERTで名寄せトリガでUPDATEされるので、Updateが２回走るので。
       if (SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RenkeiLeadActive__c
             || SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RenkeiActiveCampaignMember__c) {
         // リードに自動連系

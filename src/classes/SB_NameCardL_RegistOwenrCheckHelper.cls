@@ -1,3 +1,19 @@
+/*
+ * (c) 2018 Sunbridge Inc.
+ * SB_NameCardL_RegistOwenrCheckHelper
+ * 統合画面登録,リードに登録時の所有者チェック
+ * 機能
+ * 1,ToDo場合の無効ユーザ,キューチェック
+ * 2,取引先と責任者の場合無効ユーザ,キューチェック
+ * 3,リードに登録に場合無効ユーザ,キューのチェック
+ *
+ *
+ * @author mao
+ * @Version 拡張パッケージ：Lead Ex. 1.12 2018/8/XX
+ *
+ */
+
+
 public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
 
   private static String todoLabel = Task.getSobjectType().getDescribe().getLabel();
@@ -15,6 +31,8 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
     Set<Id> needCheckContactUseCardOwner = new Set<Id>();
     // ToDo名刺所有者使用
     Set<Id> needCheckToDoUseCardOwner = new Set<Id>();
+    // ToDo名刺所有者使用
+    Set<Id> todoUseOwner = new Set<Id>();
 
     // Key所有者ID  Value使用する名刺
     Map<Id, List<Id>> needCheckUserActiveMap = new Map<Id, List<Id>>();
@@ -24,6 +42,9 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
 
     // ToDo責任者ユーザ使用
     Map<Id, List<Id>> needCheckToDoUseContactOwner = new Map<Id, List<Id>>();
+
+    // ToDoキューName検索
+    Map<Id, Id> todoQueueName = new Map<Id, Id>();
 
 
 
@@ -50,11 +71,12 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
 
                 // ToDo登録の場合キューを選択していればエラー通知
                 if (ret.createTodo) {
-                  String errorMessage = 
-                  todoLabel +
-                            System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
-                            System.Label.SB_NCLD_MSG_QUEUES_ERROR;
-                  ownerErrorMap.put(ret.cardId, errorMessage);
+                  // String errorMessage = 
+                  // todoLabel +
+                  //           System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
+                  //           System.Label.SB_NCLD_MSG_QUEUES_ERROR;
+                  // ownerErrorMap.put(ret.cardId, errorMessage);
+                  todoQueueName.put(ret.cardId, req.leadParam.ownerid);
                   continue;
                 }
               }
@@ -78,6 +100,7 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
                 needCheckToDoUseLeadOwner.put(ret.leadId, new List<Id>());
               }
               needCheckToDoUseLeadOwner.get(ret.leadId).add(ret.cardId);
+              todoUseOwner.add(ret.cardId);
             }
           }
         }
@@ -124,6 +147,9 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
           }
           // 取引先責任者新規作成
           if (String.isBlank(ret.contId)) {
+            if (ret.createTodo) {
+              todoUseOwner.add(ret.cardId);
+            }
             // 名刺所有者使用
             if (String.isBlank(req.contParam.ownerid)) {
               // 取引先新規,名刺所有者使用
@@ -149,6 +175,7 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
                 needCheckToDoUseContactOwner.put(ret.contId, new List<Id>());
               }
               needCheckToDoUseContactOwner.get(ret.contId).add(ret.cardId);
+              todoUseOwner.add(ret.cardId);
             }
           }
         }
@@ -158,6 +185,7 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
     // ToDoしよう責任者所有者
     if (!needCheckToDoUseContactOwner.isEmpty()) {
       List<Contact> cons = [SELECT Id,
+                                   Owner.Name,
                                    OwnerId,
                                    Owner.IsActive
                               FROM Contact
@@ -166,7 +194,7 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
         // 責任者所有者が無効
         if (c.Owner.IsActive == false) {
           for (Id ncId : needCheckToDoUseContactOwner.get(c.Id)) {
-            ownerErrorMap.put(ncId, System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwner);
+            ownerErrorMap.put(ncId, String.format(System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo, new String[] {c.Owner.Name}));
             continue;
           }
         }
@@ -176,6 +204,7 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
 
     if (!needCheckToDoUseLeadOwner.isEmpty()) {
       List<Lead> leads = [SELECT Id,
+                                   Owner.Name,
                                    OwnerId,
                                    Owner.IsActive
                               FROM Lead
@@ -184,17 +213,18 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
         // 責任者所有者が無効
         if (le.Owner.IsActive == false) {
           for (Id ncId : needCheckToDoUseLeadOwner.get(le.Id)) {
-            ownerErrorMap.put(ncId, System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwner);
+            ownerErrorMap.put(ncId, String.format(System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo, new String[] {le.Owner.Name}));
             continue;
           }
         }
         else if (isQueue(le.OwnerId)) {
           for (Id ncId : needCheckToDoUseLeadOwner.get(le.Id)) {
-            String errorMessage = 
-            todoLabel +
-                                  System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
-                                  System.Label.SB_NCLD_MSG_QUEUES_ERROR;
-            ownerErrorMap.put(ncId, errorMessage);
+            // String errorMessage = 
+            // todoLabel +
+            //                       System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
+            //                       System.Label.SB_NCLD_MSG_QUEUES_ERROR;
+            // ownerErrorMap.put(ncId, errorMessage);
+            todoQueueName.put(ncId, le.OwnerId);
             continue;
           }
         }
@@ -206,6 +236,7 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
       || !needCheckAccountUseCardOwner.isEmpty()
       || !needCheckContactUseCardOwner.isEmpty()) {
       List<SmartViscaf__NameCard__c> ncs = [SELECT Id,
+                                                   Owner.Name,
                                                    OwnerId,
                                                    Owner.IsActive
                                               FROM SmartViscaf__NameCard__c
@@ -220,7 +251,13 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
         }
         // 無効ユーザ
         if (nc.Owner.IsActive == false) {
-          ownerErrorMap.put(nc.Id, System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwner);
+          if (needCheckToDoUseCardOwner.contains(nc.Id) ||
+              todoUseOwner.contains(nc.Id)) {
+            ownerErrorMap.put(nc.Id, String.format(System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo, new String[] {nc.Owner.Name}));
+          }
+          else {
+            ownerErrorMap.put(nc.Id, System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwner);
+          }
           continue;
         }
         //ユーザ以外の場合
@@ -232,11 +269,12 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
             continue;
           }
           if (needCheckToDoUseCardOwner.contains(nc.Id)) {
-              String errorMessage = 
-                  todoLabel +
-                            System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
-                            System.Label.SB_NCLD_MSG_QUEUES_ERROR;
-              ownerErrorMap.put(nc.Id, errorMessage);
+              // String errorMessage = 
+              //     todoLabel +
+              //               System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
+              //               System.Label.SB_NCLD_MSG_QUEUES_ERROR;
+              // ownerErrorMap.put(nc.Id, errorMessage);
+              todoQueueName.put(nc.Id, nc.OwnerId);
           }
           if (needCheckLeadUseCardOwner.contains(nc.Id)) {
             queueMap.put(nc.Id, nc.OwnerId);
@@ -272,6 +310,23 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
           }
         }
       }
+    }
+
+    if (!todoQueueName.isEmpty()) {
+      List<QueueSobject> qss = [Select QueueId, SobjectType, Queue.Name
+                                    FROM QueueSobject
+                                   WHERE QueueId = :todoQueueName.values()];
+      Map<Id, String> qMap = new Map<Id, String>();
+      for (QueueSobject qs : qss) {
+        qMap.put(qs.QueueId, qs.Queue.Name);
+      }
+      for (Id cardId : todoQueueName.keySet()) {
+        String errorMessage = 
+          todoLabel +
+                                System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
+                                String.format(System.Label.SB_NCLD_MSG_QUEUES_ERROR, new String[]{qMap.get(todoQueueName.get(cardId))});
+          ownerErrorMap.put(cardId, errorMessage);
+    }
     }
     return ownerErrorMap;
   }

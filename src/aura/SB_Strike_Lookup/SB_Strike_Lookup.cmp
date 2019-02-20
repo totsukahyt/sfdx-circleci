@@ -90,7 +90,7 @@ License: BSD 3-Clause License
     <aura:attribute name="userLabel" type="String" default="false"/>
     <aura:attribute name="queueLabel" type="String" default="false"/>
 
-    <aura:registerEvent name="leadBulkRegistEvent" type="c:SB_NCL_BulkRegistComonEvent"/>
+    <aura:registerEvent name="leadBulkRegistEvent" type="c:SB_NCL_BulkRegistCommonEvent"/>
 
     <!-- Strike Lookup -->
     <ui:scrollerWrapper aura:id="lookup" class="{!'slds-form-element slds-lookup slds-is-open ' + if(v.error, 'slds-has-error ', '') + if(v.isMobile, 'sl-lookup--mobile ', '') + if(v.openMenu, 'sl-lookup--open ', '') + v.class}">
@@ -107,7 +107,7 @@ License: BSD 3-Clause License
             </c:SB_Strike_Tooltip>
         </aura:if>
         <aura:if isTrue="{!v.haveQueue}">
-            <div style="float: left; width: 85px; margin-top: -2px;">
+            <div style="float: left; width: 85px; margin-top: -5px;">
               <lightning:select name="ownerGroup" label="" disabled="{!v.disabled}" value="{!v.ownerLookUpObj}" onchange="{!c.changeOwnerGroup}">
                 <option value="User">{!v.userLabel}</option>
                 <option value="QueueSobject">{!v.queueLabel}</option>
@@ -115,7 +115,7 @@ License: BSD 3-Clause License
               
             </div>
         </aura:if>
-        <div style="{!'float: left;width:' + if(v.haveQueue == true, 'calc(100% - 85px)', '100%')}" class="{!'slds-form-element__control slds-input-has-icon slds-input-has-icon--right' + if(v.disabled, ' sl-disabled', '')}" onclick="{!c.cancelLookup}">
+        <div style="{!'float: left;width:' + if(v.haveQueue == true, 'calc(100% - 85px);clear: none; margin-top:1px;', '100%')}" class="{!'slds-form-element__control slds-input-has-icon slds-input-has-icon--right' + if(v.disabled, ' sl-disabled', '')}" onclick="{!c.cancelLookup}">
             <div class="{!'slds-pill_container' + if(or(not(empty(v.value)), greaterthan(v.initCallsRunning, 0)), '', ' slds-hide')}">
                 <span class="{!'slds-pill slds-size--1-of-1' + if(greaterthan(v.initCallsRunning, 0), ' sl-pill--loading', '')}">
                     <aura:if isTrue="{!and(not(empty(v.iconName)), equals(v.initCallsRunning, 0))}">

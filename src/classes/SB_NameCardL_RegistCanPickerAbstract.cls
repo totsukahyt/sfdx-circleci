@@ -9,12 +9,7 @@
  *
  **/
 public abstract class SB_NameCardL_RegistCanPickerAbstract {
-
-  private static final Map<Integer, String> QUERY_ORGNAME = new Map<Integer, String> {
-    0 => '取引先名は法人格を除いて検索',
-    1 => '取引先名は法人格を除いて部分一致検索',
-    2 => '取引先名は完全一致検索'
-  };
+  public class SB_NameCardL_RegistCanPickerAbstractException extends Exception {}
 
   // クエリで上限を超えたときメッセージを表示するため、
   public enum QueryProcess { PARTIAL, PERFECT, ABANDON } // 部分一致検索, 完全一致検索, 完全一致検索でも多くて捨てた
@@ -50,6 +45,8 @@ public abstract class SB_NameCardL_RegistCanPickerAbstract {
   protected SB_NameCardL_RegistQueryStrategy.AccountQueryStrategy accountQs;
   protected SB_NameCardL_RegistQueryStrategy.ContactQueryStrategy contactQs;
   protected SB_NameCardL_RegistQueryStrategy.LeadQueryStrategy leadQs;
+  // コンタクトのサブクエリを含む アカウント クエリ 用
+  protected SB_NameCardL_RegistQueryStrategy.AccountContactQueryStrategy acntContQs;
 
   protected SB_NameCardL_RegistQueryExecutor qExecutor;
 
@@ -77,6 +74,7 @@ public abstract class SB_NameCardL_RegistCanPickerAbstract {
   // クエリオプションに従って、QueryStrategy を作っておきます。
   public void init(List<SB_NameCardL_RegistQueryOption> queryOptions) {
     for (SB_NameCardL_RegistQueryOption qo : queryOptions) {
+      System.debug('qo.recTypeIds: ' + qo.recTypeIds.size());
       if (qo.target == Account.sObjectType) {
         // アカウント用のクエリ戦略
         initAccountQueryStrategy(qo);
@@ -92,6 +90,54 @@ public abstract class SB_NameCardL_RegistCanPickerAbstract {
         initLeadQueryStrategy(qo);
         this.otype2QueryStrategy.put(Lead.sObjectType, this.leadQs);
       }
+    }
+  }
+
+  // 検索対象1つ用 初期化メソッド
+  public void init(SB_NameCardL_RegistQueryOption qo) {
+    if (qo.target == Account.sObjectType) {
+      // アカウント用のクエリ戦略
+      initAccountQueryStrategy(qo);
+      this.otype2QueryStrategy.put(Account.sObjectType, this.accountQs);
+    }
+    else if (qo.target == Contact.sObjectType) {
+      // コンタクト用のクエリ戦略
+      initContactQueryStrategy(qo);
+      this.otype2QueryStrategy.put(Contact.sObjectType, this.contactQs);
+    }
+    else if (qo.target == Lead.sObjectType) {
+      // リード用のクエリ戦略
+      initLeadQueryStrategy(qo);
+      this.otype2QueryStrategy.put(Lead.sObjectType, this.leadQs);
+    }
+  }
+
+
+  public void init(SB_NameCardL_RegistQueryStrategy.QueryStrategy qs) {
+    if (qs instanceOf SB_NameCardL_RegistQueryStrategy.AccountQueryStrategy) {
+      this.accountQs = (SB_NameCardL_RegistQueryStrategy.AccountQueryStrategy)qs;
+    }
+    else if (qs instanceOf SB_NameCardL_RegistQueryStrategy.ContactQueryStrategy) {
+      this.contactQs = (SB_NameCardL_RegistQueryStrategy.ContactQueryStrategy)qs;
+    }
+    else if (qs instanceOf SB_NameCardL_RegistQueryStrategy.LeadQueryStrategy) {
+      this.leadQs = (SB_NameCardL_RegistQueryStrategy.LeadQueryStrategy)qs;
+    }
+    else if (qs instanceOf SB_NameCardL_RegistQueryStrategy.AccountContactQueryStrategy) {
+      // コンタクトのサブクエリを含む アカウント クエリ 用
+      this.acntContQs = (SB_NameCardL_RegistQueryStrategy.AccountContactQueryStrategy)qs;
+    }
+  }
+
+  public void addQueryFields(SObjectType otype, Set<String> fields) {
+    if (otype == Account.sObjecttype) {
+      this.accountQs.addQueryFields(fields);
+    }
+    else if (otype == Contact.sObjecttype) {
+      this.contactQs.addQueryFields(fields);
+    }
+    else if (otype == Lead.sObjecttype) {
+      this.leadQs.addQueryFields(fields);
     }
   }
 

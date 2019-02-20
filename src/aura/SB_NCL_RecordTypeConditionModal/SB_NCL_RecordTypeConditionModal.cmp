@@ -40,12 +40,12 @@
         </header>
         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
           <p>{!v.inputV.searchConditionRct.description}</p>
-          <div class="slds-form-element">
+          <div class="slds-form--compound">
             <div class="slds-form-element__control">
               <div class="slds-m-left--large">
-                <div class="slds-form-element__row">
+                <div class="slds-form-element__row" style="align-items: flex-start;">
                   <aura:iteration var="val" items="{!v.inputV.searchConditionRct.searchConditionRecordTypeOptionGroups}">
-                    <aura:renderIf isTrue="{!and(val.titleId != 'Lead', v.showType != 'Lead') || val.titleId == v.showType || v.showType == 'Both'}">
+                    <aura:renderIf isTrue="{!and(and(val.titleId != 'Lead', v.showType != 'Lead') || val.titleId == v.showType || v.showType == 'Both', val.searchConditionplickListOptions.length > 0)}">
                       <fieldset class="slds-form--compound" style="display: inline-block;vertical-align:top;">
                         <div class="form-element__group">
                           <aura:renderIf isTrue="{!and(val.show, val.searchConditionplickListOptions.length > 0)}">

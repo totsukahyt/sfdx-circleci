@@ -21,73 +21,76 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
   private static final String COUNT_FORM = 'SELECT Count(Id) cnt FROM {0} WHERE {1}';
 
   private static Set<String> accountFields = new Set<String> {
-    'Id',
-    'Name',
-    'Owner.Id',
-    'Owner.Name',
-    'LastModifiedDate',
-    'Site',
-    'BillingState',
-    'BillingCity',
-    'BillingStreet',
-    'BillingPostalCode',
-    'ShippingState',
-    'ShippingCity',
-    'ShippingStreet',
-    'ShippingPostalCode',
-    'WebSite',
-    'Phone',
+    'id',
+    'name',
+    'owner.id',
+    'owner.name',
+    'lastmodifieddate',
+    'site',
+    'billingstate',
+    'billingcity',
+    'billingstreet',
+    'billingpostalcode',
+    'shippingstate',
+    'shippingcity',
+    'shippingstreet',
+    'shippingpostalcode',
+    'website',
+    'phone',
     'fax'
   };
 
   private static Set<String> contactFields = new Set<String> {
-    'Id',
-    'Name',
-    'Owner.Id',
-    'Owner.Name',
-    'LastModifiedDate',
-    'FirstName',
-    'LastName',
-    'Email',
-    'Account.Id',
-    'Account.Name',
-    'Account.Owner.Name',
-    'Account.Owner.Id',
-    'Account.Site',
-    'MailingState',
-    'MailingCity',
-    'MailingStreet',
-    'MailingPostalCode',
-    'OtherState',
-    'OtherCity',
-    'OtherStreet',
-    'OtherPostalCode',
-    'MobilePhone',
-    'Phone',
+    'id',
+    'name',
+    'owner.id',
+    'owner.name',
+    'lastmodifieddate',
+    'firstname',
+    'lastname',
+    'email',
+    'account.id',
+    'account.name',
+    'account.owner.name',
+    'account.owner.id',
+    'account.site',
+    'mailingstate',
+    'mailingcity',
+    'mailingstreet',
+    'mailingpostalcode',
+    'otherstate',
+    'othercity',
+    'otherstreet',
+    'otherpostalcode',
+    'mobilephone',
+    'phone',
     //'fax',
-    'Department',
-    'Title'
+    'department',
+    'title'
   };
 
   private static Set<String> leadFields = new Set<String> {
-    'Id',
-    'Name',
-    'Owner.Id',
-    'Owner.Name',
-    'LastModifiedDate',
-    'FirstName',
-    'LastName',
-    'Company',
-    'Email',
-    'Title',
-    'MobilePhone',
-    'State',
-    'City',
-    'Street',
-    'PostalCode',
-    'WebSite',
-    'Phone',
-    'fax'
+    'id',
+    'name',
+    'owner.id',
+    'owner.name',
+    'lastmodifieddate',
+    'firstname',
+    'lastname',
+    'company',
+    'email',
+    'title',
+    'mobilephone',
+    'state',
+    'city',
+    'street',
+    'postalcode',
+    'website',
+    'phone',
+    'fax',
+    'isconverted',   // 取引開始済み
+    'convertedaccountid',  // 取引開始済み取引先  該当のアカウントが削除されても残るので注意
+    'convertedcontactid'  // 取引開始済み取引先責任者  該当のコンタクトが削除されても残るので注意
   };
 
   private static final Map<SObjectType, Set<String>> OTYPE2QUERY_FIELDS = new Map<SObjectType, Set<String>> {
@@ -96,42 +99,53 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
     Lead.sObjectType => leadFields
   };
 
+  private final static String CONVERTEDACCOUNTQUERY = 'SELECT {0}, (SELECT {1} FROM Contacts WHERE Id IN :{2}) FROM Account WHERE Id IN :{3}';
+  // コンバートされたアカウント、コンタクトを取得する用のSOQL文字列取得
+  public static String getConvertedAccountQuery(String acntIds, String contIds) {
+    String acntFs = String.join(new List<String>(accountFields) , ', ');
+    String contFs = String.join(new List<String>(contactFields), ', ');
+    return String.format(CONVERTEDACCOUNTQUERY, new String[]{ acntFs, contFs, contIds, acntIds });
+  }
+
   // SOQL文字列を返す
   // ids でバインドする前提
   public static String getQueryStringByIds(SObjectType otype) {
     String result;
     String fields = String.join(new List<String>(OTYPE2QUERY_FIELDS.get(otype)), ',');
-    result = String.format(QUERY_FORM, new String[] { fields, otype.getDescribe().getName(), 'Id In :ids' });
+    result = String.format(QUERY_FORM, new String[]{ fields, otype.getDescribe().getName(), 'Id In :ids' });
     return result;
   }
 
   private static Set<String> namecardFields = new Set<String> {
-    'Id',
-    'Name',
-    'Owner.Id',
-    'Owner.Name',
-    'LastModifiedDate',
-    'SmartViscaf__company_name__c',
-    'SmartViscaf__division__c',
-    'SmartViscaf__title_name__c',
-    'SmartViscaf__address_pref__c',
-    'SmartViscaf__address__c',
-    'SmartViscaf__address_bld__c',
-    'SmartViscaf__address_eng__c',
-    'SmartViscaf__zip_code__c',
-    'SmartViscaf__person_name_last__c',
-    'SmartViscaf__last_name__c',
-    'SmartViscaf__person_name_first__c',
-    'SmartViscaf__first_name__c',
-    'SmartViscaf__email__c',
-    'SmartViscaf__tel1__c',
-    'SmartViscaf__tel2__c',
-    'SmartViscaf__mobile__c',
-    'SmartViscaf__memo__c',
-    'SmartViscaf__account__c',
-    'SmartViscaf__contact__c',
-    'SmartViscaf__lead__c',
-    'SmartViscaf__card_exchange_date__c',
+    'id',
+    'name',
+    'owner.id',
+    'owner.name',
+    'lastmodifieddate',
+    'smartviscaf__company_name__c',
+    'smartviscaf__division__c',
+    'smartviscaf__title_name__c',
+    'smartviscaf__address_pref__c',
+    'smartviscaf__address__c',
+    'smartviscaf__address_bld__c',
+    'smartviscaf__address_eng__c',
+    'smartviscaf__zip_code__c',
+    'smartviscaf__person_name_last__c',
+    'smartviscaf__last_name__c',
+    'smartviscaf__person_name_first__c',
+    'smartviscaf__first_name__c',
+    'smartviscaf__email__c',
+    'smartviscaf__tel1__c',
+    'smartviscaf__tel2__c',
+    'smartviscaf__mobile__c',
+    'smartviscaf__web_url1__c',
+    'smartviscaf__web_url2__c',
+    'smartviscaf__memo__c',
+    'smartviscaf__account__c',
+    'smartviscaf__contact__c',
+    'smartviscaf__lead__c',
+    'smartviscaf__card_exchange_date__c',
+    'smartviscaf__parent__c',
     'campaign__c'
   };
 
@@ -360,8 +374,14 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       if (String.isNotBlank(this.altCompanyField)) {
         addQueryFields(new Set<String> { this.altCompanyField });
       }
+      for (Id rid : qo.rectypeIds) {
+        System.debug('rid: ' + rid);
+      }
+      this.rectypeIds = new Set<Id>(qo.rectypeIds);
+      SYstem.debug(this.rectypeIds.size());
     }
 
+    public virtual Set<Id> getParentIds() { return null; }
     //// 画面の取引先登録やリード登録のとき
     //public QueryStrategy(Boolean ikkatu) {
     //  this.ikkatu = ikkatu;
@@ -435,23 +455,27 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
   **/
   public virtual class AccountQueryStrategy extends QueryStrategy {
     public override SObjectType getSObjectType() { return Account.sObjectType; }
-    protected SB_NameCardL_RegistQueryMatcher.AccountMatcher acntMatcher;
+    private String compareToMemo; // 名刺のメモ 項目と比較する取引先の項目
+    //protected SB_NameCardL_RegistQueryMatcher.AccountMatcher acntMatcher;
     // public Comparator extention { get; private set; }
     public AccountQueryStrategy() {
       super();
       this.queryCompany = true;    //  取引先名 デフォルト オン
       this.queryDept = true;    //  部門  デフォルト オン
       this.rectypeIds.addAll(getQueryAccountRectypeIds(null));
-      this.acntMatcher = new SB_NameCardL_RegistQueryMatcher.AccountMatcher(this);
+      this.orderby = 'Name ASC, BillingState ASC NULLS LAST, Site ASC NULLS LAST';
+      //this.acntMatcher = new SB_NameCardL_RegistQueryMatcher.AccountMatcher(this);
     }
 
     public AccountQueryStrategy(SB_NameCardL_RegistQueryOption qo) {
       super(qo);
-      this.acntMatcher = new SB_NameCardL_RegistQueryMatcher.AccountMatcher(this);
+      this.orderby = 'Name ASC, BillingState ASC NULLS LAST, Site ASC NULLS LAST';
+      //this.acntMatcher = new SB_NameCardL_RegistQueryMatcher.AccountMatcher(this);
     }
 
     public AccountQueryStrategy(SmartViscaf__NameCardBasicSetting__c setting) {
       super();
+      this.orderby = 'Name ASC, BillingState ASC NULLS LAST, Site ASC NULLS LAST';
       this.queryState = setting.SmartViscaf__RenkeiAccountAddressPref__c;
       this.queryCity = setting.SmartViscaf__RenkeiAccountCity__c;
       this.queryStreet = setting.SmartViscaf__RenkeiAccount_Street__c;
@@ -473,7 +497,12 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       this.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch;
       //this.rectypeIds = getValidRectypIds(Account.sObjectType, setting.SmartViscaf__RenkeiAccountQueryRecordTypeIds__c);
       this.rectypeIds = getQueryAccountRectypeIds(setting);
-      this.acntMatcher = new SB_NameCardL_RegistQueryMatcher.AccountMatcher(this, setting);
+      //this.acntMatcher = new SB_NameCardL_RegistQueryMatcher.AccountMatcher(this, setting);
+      // 名刺メモと比較する 取引先の項目
+      if (String.isNotBlank(setting.SmartViscaf__RenkeiSpecificItems__c)) {
+        this.compareToMemo = setting.SmartViscaf__RenkeiSpecificItems__c;
+        addQueryFields(new Set<String> { setting.SmartViscaf__RenkeiSpecificItems__c });
+      }
     }
     public void setQueryCompany(Boolean b) {
       this.queryCompany = b;
@@ -482,7 +511,7 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
     public void setQueryDept(Boolean b) {
       this.queryDept = b;
     }
-    // Account 取り出す 項目
+    // Account 取り出す 項目 小文字で指定すること
     public override void addQueryFields(Set<String> fs) {
       accountFields.addAll(fs);
     }
@@ -493,7 +522,6 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       if (this.queryCompany) { // 取引先名 //  && !qexe.fullOrgNames.isEmpty()) {
         String cfield = String.isblank(this.altCompanyField) ? 'Name' : this.altCompanyField;
         if (this.companyRule == SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch || this.companyRule == SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch) {
-
           items.add(cfield + ' LIKE :orgNameWithParcents');
         }
         else { // 完全一致
@@ -501,8 +529,24 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
         }
       }
       if (this.queryDept) { // 取引先 部門 //  && !qexe.depts.isEmpty()) {
+        //if (this.deptRule == SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch) {
+        //  items.add('Site LIKE :deptWithParcents');
+        //}
+        //else {
+        //  items.add('Site IN :depts');
+        //}
         if (this.deptRule == SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch) {
-          items.add('Site LIKE :deptWithParcents');
+          List<String> deptParts = new List<String>();
+          if (!qexe.deptWithParcents.isEmpty()) {
+            deptParts.add('Site LIKE :deptWithParcents');
+          }
+          if (qexe.haveNullDept()) {
+              deptParts.add('Site = null');
+          }
+          if (!deptParts.isEmpty()) {
+            String s = String.join(deptParts, ' OR ');
+            items.add('(' + s + ')');
+          }
         }
         else {
           items.add('Site IN :depts');
@@ -522,12 +566,14 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
         if (this.queryZip) { // 郵便番号 //  && !qexe.zips.isEmpty()) {
           items.add('(BillingPostalCode IN :zips OR ShippingPostalCode IN :zips)');
         }
-        if (this.queryPhone) { // 電話 //  && !qexe.Phone.isEmpty()) {
-          items.add('Phone IN :phones');
-        }
-        if (this.queryUrl) { // Webサイト //  && !qexe.urls.isEmpty()) {
-          items.add('Website IN :urls');
-        }
+        // 電話番号はクエリ条件にせず、Macherで調べる
+        //if (this.queryPhone) { // 電話 //  && !qexe.Phone.isEmpty()) {
+        //  items.add('Phone IN :phones');
+        //}
+        // URLはクエリ条件にせず、Macherで調べる
+        //if (this.queryUrl) { // Webサイト //  && !qexe.urls.isEmpty()) {
+        //  items.add('Website IN :urls');
+        //}
       //}
       // // 名刺 メモ と 指定項目の一致
       // if (this.extention != null && this.extention.use) {
@@ -539,12 +585,19 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
         qexe.acntRecTypeIds.addAll(this.rectypeIds);
         items.add('RecordTypeId IN :acntRecTypeIds');
       }
+      // AND でつなげる
       result = String.join(items, ' AND ');
-
-      // アカウント参照先 あるときだけ
-      if (!qexe.acntIds.isEmpty()) {
-        result = String.format('({0}) OR {1}', new String[] { result, 'Id IN :acntIds'});
+      // ORの部分
+      List<String> orItems = new List<String>();
+      if (String.isNotBlank(result)) {
+        orItems.add('(' + result + ')');
       }
+      // アカウント参照先
+      if (!qexe.acntIds.isEmpty()) {
+        orItems.add('Id IN :acntIds');
+      }
+      // OR でつなげる
+      result = String.join(orItems, ' OR ');
       if (orderby && String.isNotBlank(this.orderBy)) {
         result += ' ORDER BY ' + this.orderBy;
       }
@@ -563,7 +616,14 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
     // }
 
     public virtual override Boolean isMatch(SmartViscaf__NameCard__c card, SObject target) {
-      return this.acntMatcher.isMatch(card, target);
+      SB_NameCardL_RegistQueryMatcher.AccountMatcher matcher = new SB_NameCardL_RegistQueryMatcher.AccountMatcher(this);
+      if (String.isNotBlank(this.compareToMemo)) {
+        Map<String, String> n2a = new Map<String, String> {
+          'SmartViscaf__memo__c' => this.compareToMemo
+        };
+        matcher.setExtensionFields(n2a);
+      }
+      return matcher.isMatch(card, target);
 
     }
 
@@ -575,23 +635,31 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
   **/
   public class ContactQueryStrategy extends QueryStrategy {
     public override SObjectType getSObjectType() { return Contact.sObjectType; }
-    public SB_NameCardL_RegistQueryMatcher.ContactMatcher contMatcher;
-    //public Set<Id> parentIds { get; private set; }
+    //public SB_NameCardL_RegistQueryMatcher.ContactMatcher contMatcher;
+    public Set<Id> parentIds { get; private set; }
+    public override Set<Id> getParentIds() { return this.parentIds; }
     public ContactQueryStrategy() {
       super();
       this.queryLastName = true;  // 姓 デフォルト オン
       this.queryFirstName = true; // 名 デフォルト オン
       this.queryEMail = true; // メールアドレス デフォルト オン
+      this.parentIds = new Set<Id>();
+      this.orderby = 'Account.Name ASC, MailingState ASC NULLS LAST, Department ASC NULLS LAST';
       //this.queryDept = false; // 部署 オフ
       //this.queryTitle = false;
       //this.queryMobile = false;
       //this.deptRule = DeptMatcing.PartialMatch;
       //this.parentIds = new Set<Id>();
-      this.contMatcher = new SB_NameCardL_RegistQueryMatcher.ContactMatcher(this);
+      //this.contMatcher = new SB_NameCardL_RegistQueryMatcher.ContactMatcher(this);
     }
     public ContactQueryStrategy(SB_NameCardL_RegistQueryOption qo) {
       super(qo);
-      this.contMatcher = new SB_NameCardL_RegistQueryMatcher.ContactMatcher(this);
+      this.orderby = 'Account.Name ASC, MailingState ASC NULLS LAST, Department ASC NULLS LAST';
+      this.parentIds = new Set<Id>();
+      if (qo.parentIds != null && !qo.parentIds.isEmpty()) {
+        this.parentIds.addAll(qo.parentIds);
+      }
+      //this.contMatcher = new SB_NameCardL_RegistQueryMatcher.ContactMatcher(this);
     }
     //public ContactQueryStrategy(Boolean ikkatu) {
     //  super(ikkatu);
@@ -627,7 +695,8 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       this.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch;
       //this.parentIds = new Set<Id>();
       this.rectypeIds.addAll(getValidRectypIds(Contact.sObjectType, setting.SmartViscaf__RenkeiContactQueryRecordTypeIds__c));
-      this.contMatcher = new SB_NameCardL_RegistQueryMatcher.ContactMatcher(this);
+      //this.contMatcher = new SB_NameCardL_RegistQueryMatcher.ContactMatcher(this);
+      this.parentIds = new Set<Id>();
     }
     public void setQueryLastName(Boolean b) {
       this.queryLastName = b;
@@ -647,13 +716,14 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
     //public void clearParentIds() {
     //  this.parentIds.clear();
     //}
-    // Contact 取り出す 項目
+    // Contact 取り出す 項目  小文字で指定すること
     public override void addQueryFields(Set<String> fs) {
       contactFields.addAll(fs);
     }
     // Contact の Where 句
     public override String createWhereExpression(SB_NameCardL_RegistQueryExecutor qexe, Boolean orderby) {
       String result;
+      String accountIdItem;
       List<String> items = new List<String>();
       // S1 LEX個別 登録、アカウントを選んだあと、コンタクトを選ぶケース
       //if (!this.parentIds.isEmpty()) {
@@ -661,8 +731,43 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       //  qexe.parentIds.addAll(this.parentIds);
       //  items.add('AccountId IN :parentIds');
       //}
-      if (!qexe.parentIds.isEmpty()) {
-        items.add('AccountId IN :parentIds');
+      if (this.parentIds != null && !this.parentIds.isEmpty()) {
+        accountIdItem = 'AccountId IN :parentIds';
+      }
+      else {
+        if (this.queryCompany) { // 取引先名 //  && !qexe.fullOrgNames.isEmpty()) {
+          String cfield = String.isblank(this.altCompanyField) ? 'Account.Name' : 'Account.' + this.altCompanyField;
+          if (this.companyRule == SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch || this.companyRule == SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch) {
+            items.add(cfield + ' LIKE :orgNameWithParcents');
+          }
+          else { // 完全一致
+            items.add(cfield + ' IN :fullOrgNames');
+          }
+        }
+        if (this.queryDept) { // 取引先 部門 //  && !qexe.depts.isEmpty()) {
+        //  if (this.deptRule == SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch) {
+        //
+        //  }
+        //  else {
+        //    items.add('(Account.Site IN :depts OR Department IN :depts)');
+        //  }
+          if (this.deptRule == SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch) {
+            List<String> deptParts = new List<String>();
+            if (!qexe.deptWithParcents.isEmpty()) {
+              deptParts.add('Account.Site LIKE :deptWithParcents OR Department LIKE :deptWithParcents');
+            }
+            if (qexe.haveNullDept()) {
+                deptParts.add('Account.Site = null OR Department = null');
+            }
+            if (!deptParts.isEmpty()) {
+              String s = String.join(deptParts, ' OR ');
+              items.add('(' + s + ')');
+            }
+          }
+          else {
+            items.add('(Account.Site IN :depts OR Department IN :depts)');
+          }
+        }
       }
       if (this.queryLastName) { // 名
         items.add('LastName IN :lastnames');
@@ -670,17 +775,14 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       if (this.queryFirstName) { // 名
         items.add('FirstName IN :firstnames');
       }
-      if (this.queryEmail) { // メールアドレス
-        items.add('Email IN :emails');
-      }
-      if (this.queryDept) { // 部署 //  && !qexe.depts.isEmpty()) {
-        if (this.deptRule == SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch) {
-          items.add('Department LIKE :deptWithParcents');
-        }
-        else {
-          items.add('Department IN :depts');
-        }
-      }
+      //if (this.queryDept) { // 部署 //  && !qexe.depts.isEmpty()) {
+      //  if (this.deptRule == SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch) {
+      //    items.add('Department LIKE :deptWithParcents');
+      //  }
+      //  else {
+      //    items.add('Department IN :depts');
+      //  }
+      //}
       if (this.queryTitle) { // 役職
         items.add('Title IN :titles');
       }
@@ -699,20 +801,36 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       if (this.queryZip) { // 郵便番号
         items.add('(MailingPostalCode IN :zips OR OtherPostalCode IN :zips)');
       }
-      if (this.queryPhone) { // 電話
-        items.add('Phone IN :phones');
+      // 電話番号はクエリ条件にせず、Macherで調べる
+      //if (this.queryPhone) { // 電話
+      //  items.add('Phone IN :phones');
+      //}
+      // AND でつなげる
+      result = String.join(items, ' AND ');
+      // ORの部分
+      List<String> orItems = new List<String>();
+      if (String.isNotBlank(result)) {
+        orItems.add('(' + result + ')');
       }
+      // メールアドレス
+      if (this.queryEmail) {
+        orItems.add('Email IN :emails');
+      }
+      // OR でつなげる
+      result = String.join(orItems, ' OR ');
       // レコードタイプの条件 あるときだけ
       if (!this.rectypeIds.isEmpty()) {
         qexe.contRecTypeIds.clear();
         qexe.contRecTypeIds.addAll(this.rectypeIds);
-        items.add('RecordTypeId IN :contRecTypeIds');
+        result = String.format('({0}) AND RecordTypeId IN :contRecTypeIds', new String[]{ result });
       }
-      result = String.join(items, ' AND ');
-
+      // 親IDの指定 あるときだけ
+      if (String.isNotBlank(accountIdItem)) {
+        result = String.format('{0} AND ({1})', new String[]{ accountIdItem, result });
+      }
       // コンタクト参照先 あるときだけ
       if (!qexe.contIds.isEmpty()) {
-        result = String.format('({0}) OR {1}', new String[] { result, 'Id IN :contIds'});
+        result = String.format('({0}) OR Id IN :contIds', new String[]{ result });
       }
       if (orderby && String.isNotBlank(this.orderBy)) {
         result += ' ORDER BY ' + this.orderBy;
@@ -725,7 +843,16 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
 
     // 一括でも、Where 句 を厳密にするから、不要？
     public override Boolean isMatch(SmartViscaf__NameCard__c card, SObject target) {
-      return this.contMatcher.isMatch(card, target);
+
+      if (this.parentIds!=null && !this.parentIds.isEmpty()) {
+      // 取引先の指定があったら、取引先をチェック
+        Contact cont = (Contact)target;
+        if (cont.Account.Id == null || !this.parentIds.contains(cont.Account.Id)) {
+          return false;
+        }
+      }
+      SB_NameCardL_RegistQueryMatcher.ContactMatcher matcher = new SB_NameCardL_RegistQueryMatcher.ContactMatcher(this);
+      return matcher.isMatch(card, target);
       // Contact cont = (Contact)target;
       // Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(card);
       // String last_name = pnMap.get('last_name');
@@ -744,8 +871,9 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
   **/
   public class LeadQueryStrategy extends QueryStrategy {
     public override SObjectType getSObjectType() { return Lead.sObjectType; }
-    public SB_NameCardL_RegistQueryMatcher.LeadMatcher leadMatcher;
+    //public SB_NameCardL_RegistQueryMatcher.LeadMatcher leadMatcher;
     //public CompanyMatcing companyRule { get; private set; } // { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+    public Boolean queryExceptConverted { get; private set; } // TRUE: SOQLで取引開始済みを除く
     public LeadQueryStrategy() {
       super();
       this.queryLastName = true;  // 姓 デフォルト オフ
@@ -755,12 +883,16 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       this.queryMobile = false;
       this.queryCompany = false;
       this.queryUrl = false;
+      this.queryExceptConverted = true;
+      this.orderby = 'Company ASC NULLS LAST, State ASC NULLS LAST, Title ASC NULLS LAST, Name ASC NULLS LAST, Email ASC NULLS LAST';
       //this.companyRule = CompanyMatcing.PartialMatch;
-      this.leadMatcher = new SB_NameCardL_RegistQueryMatcher.LeadMatcher(this);
+      //this.leadMatcher = new SB_NameCardL_RegistQueryMatcher.LeadMatcher(this);
     }
     public LeadQueryStrategy(SB_NameCardL_RegistQueryOption qo) {
       super(qo);
-      this.leadMatcher = new SB_NameCardL_RegistQueryMatcher.LeadMatcher(this);
+      this.queryExceptConverted = true;
+      this.orderby = 'Company ASC NULLS LAST, State ASC NULLS LAST, Title ASC NULLS LAST, Name ASC NULLS LAST, Email ASC NULLS LAST';
+      //this.leadMatcher = new SB_NameCardL_RegistQueryMatcher.LeadMatcher(this);
     }
     //public LeadQueryStrategy(Boolean ikkatu) {
     //  super(ikkatu);
@@ -787,6 +919,7 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
 
     public LeadQueryStrategy(SmartViscaf__NameCardBasicSetting__c setting) {
       super();
+      this.orderby = 'Company ASC NULLS LAST, State ASC NULLS LAST, Title ASC NULLS LAST, Name ASC NULLS LAST, Email ASC NULLS LAST';
       // 住所系
       this.queryState = setting.SmartViscaf__RenkeiLeadAddressPref__c;
       this.queryCity = setting.SmartViscaf__RenkeiLeadCity__c;
@@ -795,7 +928,7 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       this.queryPhone = setting.SmartViscaf__RenkeiLeadPhone__c;
       //  注意  3つともオフなら、姓 だけはオンにしてしまう。
       this.queryLastName = !setting.SmartViscaf__RenkeiLeadLastName__c && !setting.SmartViscaf__RenkeiLeadFirstName__c && !setting.SmartViscaf__RenkeiLeadMail__c ? true :  setting.SmartViscaf__RenkeiLeadLastName__c;
-      this.queryFirstName = setting.SmartViscaf__RenkeiContactFirstName__c;
+      this.queryFirstName = setting.SmartViscaf__RenkeiLeadFirstName__c;
       this.queryEMail = setting.SmartViscaf__RenkeiLeadMail__c;
       this.queryTitle = false;
       this.queryMobile = false;
@@ -811,7 +944,8 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
         this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
       }
       this.rectypeIds.addAll(getValidRectypIds(Lead.sObjectType, setting.SmartViscaf__RenkeiLeadQueryRecordTypeIds__c));
-      this.leadMatcher = new SB_NameCardL_RegistQueryMatcher.LeadMatcher(this);
+      //this.leadMatcher = new SB_NameCardL_RegistQueryMatcher.LeadMatcher(this);
+      this.queryExceptConverted = false;    //  　基本設定を読むとき = 自動連携のとき は 取引開始済み を除外しない
     }
     public void setQueryCompany(Boolean b) {
       this.queryCompany = b;
@@ -825,7 +959,12 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
     public void setQueryEMail(Boolean b) {
       this.queryEMail = b;
     }
-    // Lead 取り出す 項目
+    //// 取引開始済みを除外するかどうか
+    //// 自動連携で、候補を探すときは含めて、登録時は除外するので、
+    //public void setQueryExceptConverted(Boolean b) {
+    //  this.queryExceptConverted = b;
+    //}
+    // Lead 取り出す 項目  小文字で指定すること
     public override void addQueryFields(Set<String> fs) {
       leadFields.addAll(fs);
     }
@@ -848,9 +987,12 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       if (this.queryFirstName) { // 名
         items.add('FirstName IN :firstnames');
       }
-      if (this.queryEmail) { // メールアドレス
-        items.add('Email IN :emails');
-      }
+      //if (this.queryLastName && this.queryEmail) { // メールアドレス 姓も条件 なら、メアドの NULL も条件
+      //  items.add('Email IN :emailsWithNull');
+      //}
+      //if (!this.queryLastName && this.queryEmail) { // メールアドレス 姓も条件 じゃないなら、メアドの NULL は除外
+      //  items.add('Email IN :emails');
+      //}
       if (this.queryTitle) { // 役職
         items.add('Title IN :titles');
       }
@@ -869,24 +1011,46 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       if (this.queryZip) { // 郵便番号
         items.add('PostalCode IN :zips');
       }
-      if (this.queryPhone) { // 電話
-        items.add('Phone IN :phones');
-      }
-      if (this.queryUrl) { // Webサイト
-        items.add('Website IN :urls');
-      }
+      // メールアドレス
+      if (this.queryEmail) {
+        items.add('Email IN :emails');
+      }      // 電話番号はクエリ条件にせず、Macherで調べる
+      //if (this.queryPhone) { // 電話
+      //  items.add('Phone IN :phones');
+      //}
+      // URLはクエリ条件にせず、Macherで調べる
+      //if (this.queryUrl) { // Webサイト
+      //  items.add('Website IN :urls');
+      //}
       // レコードタイプの条件 あるときだけ
       if (!this.rectypeIds.isEmpty()) {
         qexe.leadRecTypeIds.clear();
         qexe.leadRecTypeIds.addAll(this.rectypeIds);
         items.add('RecordTypeId IN :leadRecTypeIds');
       }
+      // AND でつなげる
       result = String.join(items, ' AND ');
-
+      // ORの部分
+      List<String> orItems = new List<String>();
+      if (String.isNotBlank(result)) {
+        orItems.add('(' + result + ')');
+      }
+      //// メールアドレス
+      //if (this.queryEmail) {
+      //  orItems.add('Email IN :emails');
+      //}
       // コンタクト参照先 あるときだけ
       if (!qexe.leadIds.isEmpty()) {
-        result = String.format('({0}) OR {1}', new String[] { result, 'Id IN :leadIds'});
+        orItems.add('Id IN :leadIds');
       }
+      // OR でつなげる
+      result = String.join(orItems, ' OR ');
+      //　取引開始済み
+      if (this.queryExceptConverted) {
+        // 除外する
+        result = String.format('({0}) AND IsConverted = false', new String[]{ result });
+      }
+      // Order by
       if (orderby && String.isNotBlank(this.orderBy)) {
         result += ' ORDER BY ' + this.orderBy;
       }
@@ -897,7 +1061,8 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
     }
 
     public override Boolean isMatch(SmartViscaf__NameCard__c card, SObject target) {
-      return this.leadMatcher.isMatch(card, target);
+      SB_NameCardL_RegistQueryMatcher.LeadMatcher matcher = new SB_NameCardL_RegistQueryMatcher.LeadMatcher(this);
+      return matcher.isMatch(card, target);
     }
 
   } // public class LeadQueryStrategy extends QueryStrategy

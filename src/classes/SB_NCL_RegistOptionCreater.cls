@@ -27,22 +27,22 @@ public with sharing class SB_NCL_RegistOptionCreater {
   //private static final Integer BULK_OPT_NEW_CONTACT = 2;   // バルク登録のとき 既存アカウント/新規コンタクト
   //private static final Integer BULK_OPT_NEW_PAIR = 3;    // バルク登録のとき  新規アカウント/新規コンタクト
 
-  public static SmartViscaf__SmartViscaConfig__c smartViscaConfig;
+  //public static SmartViscaf__SmartViscaConfig__c smartViscaConfig;
   // オブジェクトと表示ラベルのマップ
   private static Map<SObjectType, String> sobj2Label;
 
   static {
-    // smartViscaConfig
-    smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId());   //  個人の設定
-    if (smartViscaConfig.Id ==null) {
-        smartViscaConfig =  SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId());   //プロファイルの設定
-    }
-    if (smartViscaConfig.id == null) {
-      smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();    // 組織の設定
-    }
-    if (smartViscaConfig.id == null) {
-      smartViscaConfig.SmartViscaf__ToDo__c = false;   // ToDo登録する。
-    }
+    //// smartViscaConfig
+    //smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId());   //  個人の設定
+    //if (smartViscaConfig.Id ==null) {
+    //    smartViscaConfig =  SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId());   //プロファイルの設定
+    //}
+    //if (smartViscaConfig.id == null) {
+    //  smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();    // 組織の設定
+    //}
+    //if (smartViscaConfig.id == null) {
+    //  smartViscaConfig.SmartViscaf__ToDo__c = false;   // ToDo登録する。
+    //}
     // sobj2Label
     sobj2Label = new Map<SObjectType, String>();
     sobj2Label.put(Account.sObjectType, Account.getSObjectType().getDescribe().getLabel());
@@ -56,17 +56,17 @@ public with sharing class SB_NCL_RegistOptionCreater {
     public Integer summary { get; private set; }   // 要約部の表示の有無 1:要約部のみに表示 2:要約部とモーダル内両方表示  その他、-1とか:要約部に表示しない
     public QueryField(String s) {
       String[] ss = s.split(':\\s*');
-      name = ss[0];
+      name = ss[0].toLowerCase();
       summary = ss.size() > 1 ? Integer.valueOf(ss[1]): -1;
     }
   }
 
-  private static List<QueryField> getQueryField(String source) {
+  private static List<QueryField> createQueryFields(String source) {
     List<QueryField> result = new List<QueryField>();
     if (String.isNotBlank(source)) {
-      String[] lines = source.split(',\\s*');
-      for (String line : lines) {
-        result.add(new QueryField(line));
+      String[] fields = source.split(',\\s*');
+      for (String f : fields) {
+        result.add(new QueryField(f));
       }
     }
     return result;
@@ -78,8 +78,8 @@ public with sharing class SB_NCL_RegistOptionCreater {
       if (accountFields ==null) {
         accountFields = new List<QueryField>();
         List<QueryField>  tempList = new List<QueryField>();
-        tempList = getQueryField(SB_NameCardL_Util.smartViscaConfig.SmartViscaf__SRegistQueryAccountFields1__c);
-        tempList.addAll(getQueryField(SB_NameCardL_Util.smartViscaConfig.SmartViscaf__SRegistQueryAccountFields2__c));
+        tempList = createQueryFields(SB_NameCardL_Util.smartViscaConfig.SmartViscaf__SRegistQueryAccountFields1__c);
+        tempList.addAll(createQueryFields(SB_NameCardL_Util.smartViscaConfig.SmartViscaf__SRegistQueryAccountFields2__c));
         Set<String> tempSet = new Set<String>{'id', 'name'};     // 重複チェック用
         Map<String, Schema.SObjectField > fMap = Account.sObjectType.getDescribe().fields.getMap();
         for (QueryField f : tempList) {
@@ -100,8 +100,8 @@ public with sharing class SB_NCL_RegistOptionCreater {
       if (contactFields ==null) {
         contactFields = new List<QueryField>();
         List<QueryField>  tempList = new List<QueryField>();
-        tempList = getQueryField(SB_NameCardL_Util.smartViscaConfig.SRegistQueryLeadFields1__c);
-        tempList.addAll(getQueryField(SB_NameCardL_Util.smartViscaConfig.SmartViscaf__SRegistQueryContactFields2__c));
+        tempList = createQueryFields(SB_NameCardL_Util.smartViscaConfig.SmartViscaf__SRegistQueryContactFields1__c);
+        tempList.addAll(createQueryFields(SB_NameCardL_Util.smartViscaConfig.SmartViscaf__SRegistQueryContactFields2__c));
         Set<String> tempSet = new Set<String>{'id', 'name'};     // 重複チェック用
         Map<String, Schema.SObjectField > fMap = Contact.sObjectType.getDescribe().fields.getMap();
         for (QueryField f : tempList) {
@@ -122,10 +122,10 @@ public with sharing class SB_NCL_RegistOptionCreater {
       if (leadFields ==null) {
         leadFields = new List<QueryField>();
         List<QueryField>  tempList = new List<QueryField>();
-        tempList = getQueryField(SB_NameCardL_Util.smartViscaConfig.SRegistQueryLeadFields1__c);
-        tempList.addAll(getQueryField(SB_NameCardL_Util.smartViscaConfig.SRegistQueryLeadFields2__c));
+        tempList = createQueryFields(SB_NameCardL_Util.smartViscaConfig.SRegistQueryLeadFields1__c);
+        tempList.addAll(createQueryFields(SB_NameCardL_Util.smartViscaConfig.SRegistQueryLeadFields2__c));
         Set<String> tempSet = new Set<String>{'id', 'name'};     // 重複チェック用
-        Map<String, Schema.SObjectField > fMap = Contact.sObjectType.getDescribe().fields.getMap();
+        Map<String, Schema.SObjectField > fMap = Lead.sObjectType.getDescribe().fields.getMap();
         for (QueryField f : tempList) {
           if (tempSet.contains(f.name.toLowerCase())) continue;      // 重複してたらスキップ
           if (!fMap.containsKey(f.name.toLowerCase())) continue;     // API名不正ならスキップ
@@ -146,10 +146,20 @@ public with sharing class SB_NCL_RegistOptionCreater {
         sobj2Fields = new Map<SObjectType, List<QueryField>>();
         sobj2Fields.put(Account.sObjectType, accountFields);
         sobj2Fields.put(Contact.sObjectType, contactFields);
+        sobj2Fields.put(Lead.sObjectType, leadFields);
       }
       return sobj2Fields;
     }
   }
+
+  private static Set<String> getQueryFields(SObjectType otype) {
+    Set<String> result = new Set<String>();
+    for (QueryField f : sobj2Fields.get(otype)) {
+      result.add(f.name);
+    }
+    return result;
+  }
+
 
   private static final String USER_LANGUAGE = UserInfo.getLanguage().toLowerCase();
   // 端末での表示用に値を整形する
@@ -198,9 +208,9 @@ public with sharing class SB_NCL_RegistOptionCreater {
 
   // 一括登録の選択オプションに文字列として表示する項目
   private static final Map<SObjectType, List<String>> OBJ2OPTION_LABEL_FIELDS = new Map<SObjectType, List<String>> {
-    Account.sObjectType => new List<String> {'Site'},
-    Contact.sObjectType => new List<String> {'Department', 'Email'},
-    Lead.sObjectType => new List<String> {'Company', 'Title', 'Email'}
+    Account.sObjectType => new List<String> {'site'},
+    Contact.sObjectType => new List<String> {'department', 'email'},
+    Lead.sObjectType => new List<String> {'company', 'title', 'email'}
   };
 
   // 一括登録の選択オプションに文字列として表示する項目 OBJ2OPTION_LABEL_FIELDS のうち アクセス権のあるもの
@@ -248,6 +258,7 @@ public with sharing class SB_NCL_RegistOptionCreater {
     public Integer index { get; private set; }
     public Boolean selected { get; private set; }
     public Id id { get; private set; }
+    public String otype { get; private set; }      // "Account", "Contact", "Lead"  lx 2.0
     public Integer type { get; private set; }
     public String title { get; private set; }      // Name とか 表示用の名称
     public String owner { get; private set; }      // 所有者
@@ -265,13 +276,15 @@ public with sharing class SB_NCL_RegistOptionCreater {
       this.index = index;
       this.selected = false;
       this.id = obj.Id;
+      this.otype = obj.Id.getSObjectType().getDescribe().getName();    // オブジェクトの名前 lx 2.0
       this.title = (String)obj.get('Name');
-      this.owner = (String)obj.getSObject('Owner').get('Name');
+      SObject o = obj.getSObject('owner');
+      this.owner = o != null ? (String)o.get('Name') : ''; // テストのき（だけ？）LEAD レコードの、Owner  がなくて、OwnerId になってる。
       this.info = null;
       this.type = type; // OPT_MATH, OPT_SELECT
-      label2val = new Map<String, Object>();
-      summary = new List<Object>();
-      values = new List<Object>();
+      this.label2val = new Map<String, Object>();
+      this.summary = new List<Object>();
+      this.values = new List<Object>();
       Map<String, Schema.SObjectField > fMap = obj.getSObjectType().getDescribe().fields.getMap();
       List<QueryField> fields = sobj2Fields.get(obj.getSObjectType());
       for (QueryField field : fields) {
@@ -286,13 +299,14 @@ public with sharing class SB_NCL_RegistOptionCreater {
           this.values.add(val);
         }
       }
-      System.debug(this.values);
+      //System.debug(this.values);
     }
     // 既存レコードを選択 or 新規追加する とき
     RegistOption(AltRegistOption opt, Integer index, SObjectType otype) {
       this.index = index;
       this.selected = false;
       this.id = null;
+      this.otype = otype.getDescribe().getName();    // オブジェクトの名前   lx 2.0
       String olabel = '';
       if (otype != null) {
         olabel = sobj2Label.get(otype);   // オブジェクトの表示ラベル
@@ -398,41 +412,41 @@ public with sharing class SB_NCL_RegistOptionCreater {
     OPT_NEW => new AltRegistOption(OPT_NEW, Label.SB_NCS1R_Text_CreateNewRecord, Label.SB_NCS1R_Text_CreateNewRecordDiscription)     // '新規{0}追加', '{0}を新たに追加します。'
   };
 
-  // 引数 名刺IDと 検索のオプション
-  public virtual class RegistOptionRequest {
-    public List<Id> ncIds { get; private set; }
-    QueryOption opt { get; private set; }    // 既存の上書き対象のレコードを探すオプション
-    public RegistOptionRequest() {}
-    @TestVisible
-    protected RegistOptionRequest(List<Id> ncIds, QueryOption opt) {
-      this.ncIds = ncIds;
-      this.opt = opt;
-    }
-  }
-
   // 既存の上書き対象のレコードを探すオプション
   public virtual class QueryOption {
+    public Integer registTarget;    // 登録先候補の表示状態 -1: 初期表示、0: 両方、1: アカウント、2:リード
+                                    // -1 初期表示時のみ
+                                    // → 取引先があれば、取引先のみ、リードがあってもださない ＝ 1。
+                                    // → カスタム設定 リードまたは取引先に登録の際、ともに既存がない場合、リードのリストを表示(LeadRegist_DefaultShowLeadListNoExsiting__c)
+                                    //   TRUEなら 両方がなければ、リードを出す。＝ 2
+                                    //   FALSEなら 両方なければ、取引先を出す。＝ 1
     public Boolean bulkRegist;      // TURE:一括登録 FALSE:個別登録
     public Boolean querySite;      // 所属名を条件にして検索 0: 取引先名と所属名で検索 1,その他: 取引先名のみで検索
     public Boolean queryState;     // 都道府県を条件にして検索
     public Boolean queryCity;      // 市区郡を条件にして検索
     public Boolean queryZip;       // 郵便番号を条件にして検索
-    public Boolean queryLeadName;   // lx 2.0
-    public Boolean queryLeadEMail;      // lx 2.0
+    public Boolean queryPersonName;   // lx 2.0
+    public Boolean queryPersonEMail;      // lx 2.0
+    public List<Id> parentIds;               // lx 2.0
     public List<String> acntRecTypeIds;  // アカウントのレコードタイプ名を条件にする
     public List<String> contRecTypeIds;  // コンタクトのレコードタイプ名を条件にする
     public List<String> leadRecTypeIds;  // lx 2.0 リードのレコードタイプ名を条件にする
     public QueryOption() {
+      this.registTarget = -1;
       this.bulkRegist = false;
       this.querySite = false;
       this.queryState = false;
       this.queryCity = false;
       this.queryZip = false;
-      this.queryLeadName = false;   // lx 2.0
-      this.queryLeadEMail = true;  // lx 2.0
+      this.queryPersonName = false;   // lx 2.0
+      this.queryPersonEMail = true;  // lx 2.0
+      this.parentIds = null; // lx 2.0
       this.acntRecTypeIds = null;
       this.contRecTypeIds = null;
       this.leadRecTypeIds = null;
+    }
+    public Boolean haveParents() {
+      return this.parentIds != null && !this.parentIds.isEmpty();
     }
   }
 
@@ -672,8 +686,8 @@ public with sharing class SB_NCL_RegistOptionCreater {
     for(QueryField f : ff) {
       result.add(f.name);
     }
-    result.add('Id');
-    result.add('Name');
+    result.add('id');
+    result.add('name');
     if (otype == Contact.sObjectType) {
       String[] ss = CONT_FIELDS.split(', *');
       for (String s : ss) {
@@ -683,7 +697,7 @@ public with sharing class SB_NCL_RegistOptionCreater {
     return result;
   }
 
-  private static final String CONT_FIELDS = 'FirstName, LastName, Email, AccountId, Account.Name, Department, Owner.Name, Title';
+  private static final String CONT_FIELDS = 'firstname, lastname, email, accountid, account.name, department, owner.name, title';
 
   private String getQueryFieldsString(SObjectType otype) {
     String result = '';
@@ -710,7 +724,7 @@ public with sharing class SB_NCL_RegistOptionCreater {
 
   //
   private static final String ACCOUNT_QUERY = 'SELECT Id, Name, Owner.Name, {0}, ({1}), ({2}) FROM Account WHERE ({3}) {4} ORDER BY Id LIMIT 10000';
-  private static final String CONTACTS_REL_QUERY = 'SELECT Id, Name, FirstName, LastName, Email, AccountId, Account.Name, Department, Owner.Name, Title FROM Contacts WHERE ({0}) {1}';
+  //private static final String CONTACTS_REL_QUERY = 'SELECT Id, Name, FirstName, LastName, Email, AccountId, Account.Name, Department, Owner.Name, Title FROM Contacts WHERE ({0}) {1}';
   private static final String OPO_REL_QUERY = 'SELECT Id, Name, AccountId, Account.Name FROM Opportunities';
 
   @TestVisible
@@ -743,13 +757,13 @@ public with sharing class SB_NCL_RegistOptionCreater {
     for (QueryField f : accountFields) {
       fields.add(f.name);
     }
-    fields.add('Site');
-    fields.add('BillingState');
-    fields.add('ShippingState');
-    fields.add('BillingCity');
-    fields.add('ShippingCity');
-    fields.add('BillingPostalCode');
-    fields.add('ShippingPostalCode');
+    fields.add('site');
+    fields.add('billingstate');
+    fields.add('shippingstate');
+    fields.add('billingcity');
+    fields.add('shippingcity');
+    fields.add('billingpostalcode');
+    fields.add('shippingpostalcode');
     acntF = String.join(new List<String>(fields), ', ');
     //for (String f : fields) {
     //  acntF += f + ', ';
@@ -825,6 +839,57 @@ public with sharing class SB_NCL_RegistOptionCreater {
     return acnts;
   }
 
+
+  //// 複数の名刺レコードに対して既存リードの候補を収集 lx 2.0
+  //private List<Account> getAccounts(Set<Id> cardIds, QueryOption opt) {
+  //  SB_NameCardL_RegistQueryExecutor qex = SB_NameCardL_RegistQueryExecutor.getInstance();
+  //  if (!qex.isInitialized() || qex.needRefresh(cardIds)) {
+  //    // 初クエリ or 名刺セット変更
+  //    qex.init(cardIds);
+  //  }
+
+  //  SB_NameCardL_RegistQueryOption qo = SB_NameCardL_RegistQueryOption.convertQueryOption(Account.sObjectType, opt);
+  //  SB_NameCardL_RegistQueryStrategy.QueryStrategy qs = SB_NameCardL_RegistQueryStrategy.createQueryStrategy(qo);
+  //  Set<String> fields = new Set<String>();
+  //  for (QueryField f : accountFields) {
+  //    fields.add(f.name);
+  //  }
+  //  qs.addQueryFields(fields);
+  //  return qex.getCandidateRecords(qs);
+  //}
+
+  //// 1つの名刺レコードに対して既存リードの候補を収集 lx 2.0
+  //private List<Account> getAccounts(Id cardId, QueryOption opt) {
+  //  Set<Id> ids = new Set<Id> { cardId };
+  //  return getAccounts(ids, opt);
+  //}
+
+
+  //// 複数の名刺レコードに対して既存リードの候補を収集 lx 2.0
+  //private List<Lead> getLeads(Set<Id> cardIds, QueryOption opt) {
+  //  SB_NameCardL_RegistQueryExecutor qex = SB_NameCardL_RegistQueryExecutor.getInstance();
+  //  if (!qex.isInitialized() || qex.needRefresh(cardIds)) {
+  //    // 初クエリ or 名刺セット変更
+  //    qex.init(cardIds);
+  //  }
+
+  //  SB_NameCardL_RegistQueryOption qo = SB_NameCardL_RegistQueryOption.convertQueryOption(Lead.sObjectType, opt);
+  //  SB_NameCardL_RegistQueryStrategy.QueryStrategy qs = SB_NameCardL_RegistQueryStrategy.createQueryStrategy(qo);
+  //  Set<String> fields = new Set<String>();
+  //  for (QueryField f : leadFields) {
+  //    fields.add(f.name);
+  //  }
+  //  qs.addQueryFields(fields);
+  //  return qex.getCandidateRecords(qs);
+  //}
+
+  //// 1つの名刺レコードに対して既存リードの候補を収集 lx 2.0
+  //private List<Lead> getLeads(Id cardId, QueryOption opt) {
+  //  Set<Id> ids = new Set<Id> { cardId };
+  //  return getLeads(ids, opt);
+  //}
+
+
   //// アカウント、コンタクトの名前の条件
   //@TestVisible
   //private static void getCardValues(List<SmartViscaf__NameCard__c> cards, Set<String>companies, Set<String> names, Set<String> mails) {
@@ -861,18 +926,18 @@ public with sharing class SB_NCL_RegistOptionCreater {
     return result;
   }
 
-  // アカウント、コンタクトを検索するときに必要な名刺データをクエリ
-  @TestVisible
-  private static SmartViscaf__NameCard__c getNameCardSimpleFields(Id targetId) {
-    Id id = targetId;
-    String query = 'SELECT ' + SB_NCL_NameCardDTO.NC_QUERY_SIMPLE_FIELDS + ' FROM SmartViscaf__NameCard__c WHERE Id = :id';
-    //result = new  Map<Id,SObject>(Database.query(query));
-    List<SmartViscaf__NameCard__c> cards = Database.query(query);
-    if (cards.isEmpty()) {
-      throw new SB_NCL_RegistOptionCreaterException(Label.SB_MSG_IllegalRequest + 'Id : ' + targetId);
-    }
-    return cards[0];
-  }
+  //// アカウント、コンタクトを検索するときに必要な名刺データをクエリ
+  //@TestVisible
+  //private static SmartViscaf__NameCard__c getNameCardSimpleFields(Id targetId) {
+  //  Id id = targetId;
+  //  String query = 'SELECT ' + SB_NCL_NameCardDTO.NC_QUERY_SIMPLE_FIELDS + ' FROM SmartViscaf__NameCard__c WHERE Id = :id';
+  //  //result = new  Map<Id,SObject>(Database.query(query));
+  //  List<SmartViscaf__NameCard__c> cards = Database.query(query);
+  //  if (cards.isEmpty()) {
+  //    throw new SB_NCL_RegistOptionCreaterException(Label.SB_MSG_IllegalRequest + 'Id : ' + targetId);
+  //  }
+  //  return cards[0];
+  //}
 
   /*
   *  getRegistOptions
@@ -880,20 +945,20 @@ public with sharing class SB_NCL_RegistOptionCreater {
   *
   */
   //public List<Card_RegistOption> getRegistOptions(List<Id> ncIds, SB_NC_AccountBulkRegistController.QueryOption opt) {
-  public List<Card_RegistOption> getRegistOptions(RegistOptionRequest req) {
+  public List<Card_RegistOption> getRegistOptions(List<Id> cardIds, QueryOption opt) {
     List<Card_RegistOption> result = new List<Card_RegistOption>();
     Map<Id, Card_RegistOption> card2Option = new Map<Id, Card_RegistOption>();
     // 選択されてる　名刺について値を抽出
-    List<SmartViscaf__NameCard__c> cards = getNameCardsSimpleFields(req.ncIds);
+    List<SmartViscaf__NameCard__c> cards = getNameCardsSimpleFields(cardIds);
     // 該当するアカウントを抽出
-    List<Account> acnts = getAccounts(cards, req.opt);
+    List<Account> acnts = getAccounts(cards, opt);
     // 名刺にアカウント、コンタクトを紐付け、選択可能な登録オプションを作成
     for (SmartViscaf__NameCard__c card : cards) {
-      Card_RegistOption reg_opt = createCardRegistOption(card, acnts, req.opt);
+      Card_RegistOption reg_opt = createCardRegistOption(card, acnts, opt);
       card2Option.put(card.Id, reg_opt);
     }
     // リストの順に並び替え
-    for (Id ncId : req.ncIds) {
+    for (Id ncId : cardIds) {
       result.add(card2Option.get(ncId));
       System.debug('Card_RegistOption options: ' + card2Option.get(ncId).options);
     }
@@ -901,208 +966,376 @@ public with sharing class SB_NCL_RegistOptionCreater {
   }
 
 
-  // 取引先責任者の名前の条件
-  @TestVisible
-  private static Set<String> getContactNameSet(SmartViscaf__NameCard__c card) {
-    Set<String> result = new Set<String>();
-    Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(card);
-    String last_name = pnMap.get('last_name');
-    String first_name = pnMap.get('first_name');
-    if (String.isNotEmpty(last_name) && String.isNotEmpty(first_name)) {
-      result.add(last_name + ' ' + first_name);
-    }
-    else if (String.isNotEmpty(last_name)) {
-      result.add(last_name);
-      result.add(last_name + '%');
-    }
-    return result;
-  }
+  //// 取引先責任者の名前の条件
+  //@TestVisible
+  //private static Set<String> getContactNameSet(SmartViscaf__NameCard__c card) {
+  //  Set<String> result = new Set<String>();
+  //  Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(card);
+  //  String last_name = pnMap.get('last_name');
+  //  String first_name = pnMap.get('first_name');
+  //  if (String.isNotEmpty(last_name) && String.isNotEmpty(first_name)) {
+  //    result.add(last_name + ' ' + first_name);
+  //  }
+  //  else if (String.isNotEmpty(last_name)) {
+  //    result.add(last_name);
+  //    result.add(last_name + '%');
+  //  }
+  //  return result;
+  //}
 
   // 検索結果以外の アカウント、コンタクト 更新、追加の オプションを 追加
-  //   enabelSelect その他を選択して更新 が可能か アカウント新規作成の場合はない。
-  private static void addAltRegitOption(List<RegistOption> opt, SObjectType otype, Boolean enabelSelect) {
+  //   enableLookup その他を選択して更新 が可能か アカウント新規作成の場合はない。
+  private static void addAltRegitOption(List<RegistOption> opt, SObjectType otype, Boolean enableLookup) {
     AltRegistOption alt = null;
-    if (enabelSelect) {  // アカウントを選ばれてないとコンタクトは選択できないの
+    if (enableLookup) {  // アカウントを選ばれてないとコンタクトは選択できないの
       alt = ALT_REGIST_OPTIONS.get(OPT_SELECT);      // その他を更新
       opt.add(new RegistOption(alt, opt.size(), otype));
     }
     DescribeSObjectResult dsr = otype.getDescribe();
-    if (dsr.isCreateable()) {  // 新規追加出来ないユーザでは 新規オプションはおくらない。
+    if (dsr.isCreateable()) {  // 新規追加出来ないユーザでは 新規オプションは作らない。
       alt = ALT_REGIST_OPTIONS.get(OPT_NEW);      // 新規追加
       opt.add(new RegistOption(alt, opt.size(), otype));
     }
   }
 
-  // getAccountOptions での コンタクトへのサブクエリの文字列取得
-  private static String getContactSubQuery(Set<String> names, String email, Set<String> contRIds, Id contId) {
-    String result = '';
-    // コンタクトのクエリ
-    if (String.isNotBlank(email)) {
-      // メアドがあれば、メアドからコンタクト取得 メアドが一致していればOK
-      result = 'Email=:email';
-    }
-    else if (!names.isEmpty()) {
-      // メアドがなくて、姓名があれば、姓名からコンタクト取得
-      result = 'Name LIKE :names';
-    }
-    if (contRIds != null && !contRIds.isEmpty() && !Test.isRunningTest()) {
-      result += ' AND RecordTypeId IN :contRIds';
-    }
-    if (String.isNotBlank(contId)) {
-      result = '(' + result + ') OR Id=:contId';
-    }
-    result = '(SELECT Id FROM Contacts WHERE ' + result + ')';
-    return result;
+  //// getAccountOptions での コンタクトへのサブクエリの文字列取得
+  //private static String getContactSubQuery(Set<String> names, String email, Set<String> contRIds, Id contId) {
+  //  String result = '';
+  //  // コンタクトのクエリ
+  //  if (String.isNotBlank(email)) {
+  //    // メアドがあれば、メアドからコンタクト取得 メアドが一致していればOK
+  //    result = 'Email=:email';
+  //  }
+  //  else if (!names.isEmpty()) {
+  //    // メアドがなくて、姓名があれば、姓名からコンタクト取得
+  //    result = 'Name LIKE :names';
+  //  }
+  //  if (contRIds != null && !contRIds.isEmpty() && !Test.isRunningTest()) {
+  //    result += ' AND RecordTypeId IN :contRIds';
+  //  }
+  //  if (String.isNotBlank(contId)) {
+  //    result = '(' + result + ') OR Id=:contId';
+  //  }
+  //  result = '(SELECT Id FROM Contacts WHERE ' + result + ')';
+  //  return result;
+  //}
+
+  //// getAccountOptions での WHERE句 の文字列取得
+  //private static String getAccountCondition(SmartViscaf__NameCard__c card, Set<String> acntRIds, QueryOption opt, Boolean partial) {
+  //  List<String> conds = new List<String>();  //
+  //  //List<String> conds = new List<String>();  //
+  //  // 会社名
+  //  if (String.isNotBlank(card.SmartViscaf__company_name__c)) {
+  //    if (partial) {
+  //      // 部分一致
+  //      // 2017.11.xx v1.20.4 SV_DEV-673 会社名に全角バックスラッシュが含まれる名刺を自動連携すると、ORA-01423.9エラーが発生
+  //      String accountName = SmartViscaf.SB_NameCard_Util.getStringForPartialMatch(SmartViscaf.SB_NameCard_Util.getCompanyName(card.SmartViscaf__company_name__c));     // 法人格抜き社名 検索用エスケープ
+  //      conds.add('Name LIKE \'%' + String.escapeSingleQuotes(accountName) + '%\'');
+  //    }
+  //    else {
+  //      String accountName = SmartViscaf.SB_NameCard_Util.getStringForPartialMatch(card.SmartViscaf__company_name__c);     // 社名 検索用エスケープ
+  //      conds.add('Name = \'' + String.escapeSingleQuotes(accountName) + '\'');
+  //    }
+  //  }
+  //  else {
+  //    conds.add('Name = null');
+  //  }
+  //  // 所属
+  //  if (opt != null && opt.querySite) {    // 所属を使う
+  //    if (String.isNotBlank(card.SmartViscaf__division__c)) {
+  //      if (partial) {
+  //      // 部分一致
+  //        String dept = SmartViscaf.SB_NameCard_Util.getStringForPartialMatch(card.SmartViscaf__division__c);     // 部署名 検索用エスケープ
+  //        conds.add('Site LIKE \'%' + dept + '%\'');
+  //      }
+  //      else {
+  //        conds.add('Site = \'' + card.SmartViscaf__division__c + '\'');
+  //      }
+  //    }
+  //    else {
+  //      conds.add('Site = null');
+  //    }
+  //  }
+  //  // 都道府県
+  //  if (opt != null && opt.queryState) {
+  //    if (String.isNotBlank(card.SmartViscaf__address_pref__c)) { // 名刺の都道府県があるとき
+  //      conds.add('(BillingState=\'' + String.escapeSingleQuotes(card.SmartViscaf__address_pref__c)
+  //                + '\' OR ShippingState=\'' + String.escapeSingleQuotes(card.SmartViscaf__address_pref__c) + '\')');
+  //    }
+  //    else {
+  //      conds.add('(BillingState=null OR ShippingState=null)');
+  //    }
+  //  }
+  //  // 市区郡
+  //  if (opt != null && opt.queryCity) {
+  //    Map<String, String> addrs = SmartViscaf.SB_NameCard_Util.getAddress(card);
+  //    String city = addrs.get('city');
+  //    if (String.isNotBlank(city)) {  // 名刺に市区郡がある
+  //      conds.add('(BillingCity=\'' + String.escapeSingleQuotes(city) + '\' OR ShippingCity=\'' + String.escapeSingleQuotes(city) + '\')');
+  //    }
+  //    else {
+  //      conds.add('(BillingCity=null OR ShippingCity=null)');
+  //    }
+  //  }
+  //  // 郵便番号
+  //  if (opt != null && opt.queryZip) {
+  //    if (String.isNotBlank(card.SmartViscaf__zip_code__c)) {  // 名刺に郵便番号がある
+  //      conds.add('(BillingPostalCode=\'' + String.escapeSingleQuotes(card.SmartViscaf__zip_code__c)
+  //              + '\' OR ShippingPostalCode=\'' + String.escapeSingleQuotes(card.SmartViscaf__zip_code__c) + '\')');
+  //    }
+  //    else {
+  //      conds.add('(BillingPostalCode=null OR ShippingPostalCode=null)');
+  //    }
+  //  }
+  //  // アカウント レコードタイプ 条件
+  //  if (acntRIds != null && !acntRIds.isEmpty() && !Test.isRunningTest()) {   // テストのときは つかわない
+  //    conds.add('RecordTypeId IN :acntRIds');
+  //  }
+  //  return String.join(conds, ' AND ');
+  //}
+
+  ////////////////////////////////////////
+  // Wizard 形式用の 登録先候補作るくんたち
+  ////////////////////////////////////////
+  private interface OptionListBuilder {
+    List<RegistOption> run(Id cardId, QueryOption opt);
   }
 
-  // getAccountOptions での WHERE句 の文字列取得
-  private static String getAccountCondition(SmartViscaf__NameCard__c card, Set<String> acntRIds, QueryOption opt, Boolean partial) {
-    List<String> conds = new List<String>();  //
-    //List<String> conds = new List<String>();  //
-    // 会社名
-    if (String.isNotBlank(card.SmartViscaf__company_name__c)) {
-      if (partial) {
-        // 部分一致
-        // 2017.11.xx v1.20.4 SV_DEV-673 会社名に全角バックスラッシュが含まれる名刺を自動連携すると、ORA-01423.9エラーが発生
-        String accountName = SmartViscaf.SB_NameCard_Util.getStringForPartialMatch(SmartViscaf.SB_NameCard_Util.getCompanyName(card.SmartViscaf__company_name__c));     // 法人格抜き社名 検索用エスケープ
-        conds.add('Name LIKE \'%' + String.escapeSingleQuotes(accountName) + '%\'');
+  // Wizard 形式 1st step アカウントだけで登録先候補作る
+  private class AccountOptionListBuilder implements OptionListBuilder {
+    public List<RegistOption> run(Id cardId, QueryOption opt) {
+      List<RegistOption> result = new List<RegistOption>();
+      // 1. 検索の準備
+      SB_NameCardL_RegistQueryOption qo = SB_NameCardL_RegistQueryOption.convertQueryOption(Account.sObjectType, opt);
+      // 2. 検索
+      SB_NameCardL_RegistCanPickerAbstract picker = new SB_NameCardL_RegistSoqlCountCanPicker();
+      picker.init(qo);
+      picker.addQueryFields(Account.sObjectType, getQueryFields(Account.sObjectType));
+      Map<SObjectType, List<SObject>> otype2objs = picker.create(cardId);
+      // 3. 検索結果から、候補リストを作る
+      for (SObject obj : otype2objs.get(Account.sObjectType)) {
+        // 既存のアカウント
+        result.add(new AccountOption((Account)obj, result.size(), OPT_MATH));
+      }
+      // アカウントその他ルックアップ、新規追加
+      addAltRegitOption(result, Account.sObjectType, true);
+      return result;
+    }
+  }
+
+  // Wizard 形式 1st step リードだけで登録先候補作る
+  private class LeadOptionListBuilder implements OptionListBuilder {
+    public List<RegistOption> run(Id cardId, QueryOption opt) {
+      List<RegistOption> result = new List<RegistOption>();
+      // 1. 検索の準備
+      SB_NameCardL_RegistQueryOption qo = SB_NameCardL_RegistQueryOption.convertQueryOption(Lead.sObjectType, opt);
+      // 2. 検索
+      SB_NameCardL_RegistCanPickerAbstract picker = new SB_NameCardL_RegistSoqlCountCanPicker();
+      picker.init(qo);
+      picker.addQueryFields(Lead.sObjectType, getQueryFields(Lead.sObjectType));
+      Map<SObjectType, List<SObject>> otype2objs = picker.create(cardId);
+      // 3. 検索結果から、候補リストを作る
+      for (SObject obj : otype2objs.get(Lead.sObjectType)) {
+        // 既存のアカウント
+        result.add(new RegistOption(obj, result.size(), OPT_MATH));
+      }
+      // アカウントその他ルックアップ、新規追加
+      addAltRegitOption(result, Lead.sObjectType, true);
+      return result;
+    }
+  }
+
+  // Wizard 形式 1st step アカウントとリードで登録先候補作る
+  private class AccountLeadOptionListBuilder implements OptionListBuilder {
+    public List<RegistOption> run(Id cardId, QueryOption opt) {
+      List<RegistOption> result = new List<RegistOption>();
+      // 1. 検索の準備
+      List<SB_NameCardL_RegistQueryOption> queryOptions = new List<SB_NameCardL_RegistQueryOption>();
+      queryOptions.add(SB_NameCardL_RegistQueryOption.convertQueryOption(Account.sObjectType, opt));
+      queryOptions.add(SB_NameCardL_RegistQueryOption.convertQueryOption(Lead.sObjectType, opt));
+      // 2. 検索
+      SB_NameCardL_RegistCanPickerAbstract picker = new SB_NameCardL_RegistSoqlCountCanPicker();
+      picker.init(queryOptions);
+      picker.addQueryFields(Account.sObjectType, getQueryFields(Account.sObjectType));
+      picker.addQueryFields(Lead.sObjectType, getQueryFields(Lead.sObjectType));
+      Map<SObjectType, List<SObject>> otype2objs = picker.create(cardId);
+      // 3. 検索結果から、候補リストを作る
+      // 3.1 リードを入れる。
+      for (SObject obj : otype2objs.get(Lead.sObjectType)) {
+        // 既存のリード
+        result.add(new RegistOption(obj, result.size(), OPT_MATH));
+      }
+      // リードその他ルックアップ、新規追加
+      addAltRegitOption(result, Lead.sObjectType, true);
+      // 3.2 アカウントを入れる。
+      for (SObject obj : otype2objs.get(Account.sObjectType)) {
+        // 既存のアカウント
+        result.add(new AccountOption((Account)obj, result.size(), OPT_MATH));
+      }
+      // アカウントその他ルックアップ、新規追加
+      addAltRegitOption(result, Account.sObjectType, true);
+      return result;
+    }
+  }
+  // Wizard 形式 1st step アカウントとリードを対象に検索して、アカウントを優先で登録先候補作る
+  // LEX 個別の 初期表示 既存アカウントがあればアカウントで、アカウントなくリードあればリードで、両方なければ設定によりどちらか一方
+  private class AccountYusenOptionListBuilder implements OptionListBuilder {
+    public List<RegistOption> run(Id cardId, QueryOption opt) {
+      List<RegistOption> result = new List<RegistOption>();
+      // 1. 検索の準備
+      List<SB_NameCardL_RegistQueryOption> queryOptions = new List<SB_NameCardL_RegistQueryOption>();
+      queryOptions.add(SB_NameCardL_RegistQueryOption.convertQueryOption(Account.sObjectType, opt));
+      queryOptions.add(SB_NameCardL_RegistQueryOption.convertQueryOption(Lead.sObjectType, opt));
+      // 2. 検索
+      SB_NameCardL_RegistCanPickerAbstract picker = new SB_NameCardL_RegistSoqlCountCanPicker();
+      picker.init(queryOptions);
+      picker.addQueryFields(Account.sObjectType, getQueryFields(Account.sObjectType));
+      picker.addQueryFields(Lead.sObjectType, getQueryFields(Lead.sObjectType));
+      Map<SObjectType, List<SObject>> otype2objs = picker.create(cardId);
+      // 3. 検索結果から、候補リストを作る
+      // アカウントがあればアカウントのみ
+      if (!otype2objs.get(Account.sObjectType).isEmpty()) {
+        // アカウントがあった
+        for (SObject obj : otype2objs.get(Account.sObjectType)) {
+          // 既存のアカウント
+          result.add(new AccountOption((Account)obj, result.size(), OPT_MATH));
+        }
+        // アカウントその他ルックアップ、新規追加
+        addAltRegitOption(result, Account.sObjectType, true);
+      }
+      else if (!otype2objs.get(Lead.sObjectType).isEmpty()) {
+        // アカウントなくて リードがあった
+        for (SObject obj : otype2objs.get(Lead.sObjectType)) {
+          // 既存のリード
+          result.add(new RegistOption(obj, result.size(), OPT_MATH));
+        }
+        // リードその他ルックアップ、新規追加
+        addAltRegitOption(result, Lead.sObjectType, true);
       }
       else {
-        String accountName = SmartViscaf.SB_NameCard_Util.getStringForPartialMatch(card.SmartViscaf__company_name__c);     // 社名 検索用エスケープ
-        conds.add('Name = \'' + String.escapeSingleQuotes(accountName) + '\'');
-      }
-    }
-    else {
-      conds.add('Name = null');
-    }
-    // 所属
-    if (opt != null && opt.querySite) {    // 所属を使う
-      if (String.isNotBlank(card.SmartViscaf__division__c)) {
-        if (partial) {
-        // 部分一致
-          String dept = SmartViscaf.SB_NameCard_Util.getStringForPartialMatch(card.SmartViscaf__division__c);     // 部署名 検索用エスケープ
-          conds.add('Site LIKE \'%' + dept + '%\'');
+        // アカウント、リードともなかった。
+        if (SB_NameCardL_Util.smartViscaConfig.LeadRegist_DefaultShowLeadListNoExsiting__c)  {
+          // カスタム設定 リードまたは取引先に登録の際、ともに既存がない場合、リードのリストを表示
+          // リードその他ルックアップ、新規追加
+          addAltRegitOption(result, Lead.sObjectType, true);
         }
         else {
-          conds.add('Site = \'' + card.SmartViscaf__division__c + '\'');
+          // アカウントその他ルックアップ、新規追加
+          addAltRegitOption(result, Account.sObjectType, true);
         }
       }
-      else {
-        conds.add('Site = null');
-      }
+      return result;
     }
-    // 都道府県
-    if (opt != null && opt.queryState) {
-      if (String.isNotBlank(card.SmartViscaf__address_pref__c)) { // 名刺の都道府県があるとき
-        conds.add('(BillingState=\'' + String.escapeSingleQuotes(card.SmartViscaf__address_pref__c)
-                  + '\' OR ShippingState=\'' + String.escapeSingleQuotes(card.SmartViscaf__address_pref__c) + '\')');
-      }
-      else {
-        conds.add('(BillingState=null OR ShippingState=null)');
-      }
-    }
-    // 市区郡
-    if (opt != null && opt.queryCity) {
-      Map<String, String> addrs = SmartViscaf.SB_NameCard_Util.getAddress(card);
-      String city = addrs.get('city');
-      if (String.isNotBlank(city)) {  // 名刺に市区郡がある
-        conds.add('(BillingCity=\'' + String.escapeSingleQuotes(city) + '\' OR ShippingCity=\'' + String.escapeSingleQuotes(city) + '\')');
-      }
-      else {
-        conds.add('(BillingCity=null OR ShippingCity=null)');
-      }
-    }
-    // 郵便番号
-    if (opt != null && opt.queryZip) {
-      if (String.isNotBlank(card.SmartViscaf__zip_code__c)) {  // 名刺に郵便番号がある
-        conds.add('(BillingPostalCode=\'' + String.escapeSingleQuotes(card.SmartViscaf__zip_code__c)
-                + '\' OR ShippingPostalCode=\'' + String.escapeSingleQuotes(card.SmartViscaf__zip_code__c) + '\')');
-      }
-      else {
-        conds.add('(BillingPostalCode=null OR ShippingPostalCode=null)');
-      }
-    }
-    // アカウント レコードタイプ 条件
-    if (acntRIds != null && !acntRIds.isEmpty() && !Test.isRunningTest()) {   // テストのときは つかわない
-      conds.add('RecordTypeId IN :acntRIds');
-    }
-    return String.join(conds, ' AND ');
   }
 
-  /**
-  *
-  *  getAccountOptions 名刺に該当する登録可能な取引先オプションを取得
-  *     2018.02.xx v1.22 LDV を考慮 カウントしてから 抽出
-  *
-  **/
+  // Wizard 形式 2st step コンタクトの登録先候補作る
+  private class ContactOptionListBuilder implements OptionListBuilder {
+    public List<RegistOption> run(Id cardId, QueryOption opt) {
+      List<RegistOption> result = new List<RegistOption>();
+      if (opt.haveParents()) {
+        // 1. 検索の準備
+        SB_NameCardL_RegistQueryOption qo = SB_NameCardL_RegistQueryOption.convertQueryOption(Contact.sObjectType, opt);
+        // 2. 検索
+        SB_NameCardL_RegistCanPickerAbstract picker = new SB_NameCardL_RegistSoqlCountCanPicker();
+        picker.init(qo);
+        picker.addQueryFields(Contact.sObjectType, getQueryFields(Contact.sObjectType));
+        Map<SObjectType, List<SObject>> otype2objs = picker.create(cardId);
+        // 3. 検索結果から、候補リストを作る
+        for (SObject obj : otype2objs.get(Contact.sObjectType)) {
+          // 既存のアカウント
+          result.add(new RegistOption(obj, result.size(), OPT_MATH));
+        }
+      }
+      // アカウントその他ルックアップ、新規追加
+      addAltRegitOption(result, Contact.sObjectType, opt.haveParents());
+      return result;
+    }
+  }
+
+  // Wizard 形式 1st step 登録先対象選択に応じで登録先候補作るくんをインスタンス化
+  private static OptionListBuilder createOptionListBuilder(Integer registTarget) {
+    if (registTarget == 1) { // Account
+      return new AccountOptionListBuilder();
+    }
+    else if (registTarget == 2) { // Lead
+      return new LeadOptionListBuilder();
+    }
+    else if (registTarget == 0) { // Both
+      return new AccountLeadOptionListBuilder();
+    }
+    // registTarget == -1 初期、既存の有無によりどちらか一方
+    return new AccountYusenOptionListBuilder();
+  }
+
+  ///**
+  //*
+  //*  getAccountOptions 名刺に該当する登録可能な取引先オプションを取得
+  //*     2018.02.xx v1.22 LDV を考慮 カウントしてから 抽出
+  //*   lx 2.0  新クエリクラス に移行
+  //**/
   public static List<RegistOption> getAccountOptions(Id cardId, QueryOption opt) {
     System.debug(opt);
-    List<RegistOption> result = new List<RegistOption>();
-    // 該当の名刺
-    SmartViscaf__NameCard__c card = getNameCardSimpleFields(cardId);
-    Set<String> names = getContactNameSet(card);
-    String email = card.SmartViscaf__email__c; // 名刺のメールアドレス
-    Id acntId = card.SmartViscaf__account__c; // リンクしてる登録済のアカウント
-    Id contId = card.SmartViscaf__contact__c; // リンクしてる登録済のコンタクト
-    String dept = card.SmartViscaf__division__c;  // 部署
-    String pref = card.SmartViscaf__address_pref__c; // 都道府県
-    Map<String, String> addrs = SmartViscaf.SB_NameCard_Util.getAddress(card);
-    String city = addrs.get('city');    // 市区郡
-    String zip = card.SmartViscaf__zip_code__c;      // 郵便番号
-    // アカウントのレコードタイプ
-    Set<String> acntRIds = null;    // アカウントのレコードタイプ 条件
-    if (opt != null && opt.acntRecTypeIds !=null && !opt.acntRecTypeIds.isEmpty()) {
-      acntRIds = new Set<String>(opt.acntRecTypeIds);
-    }
-    Set<String> contRIds = null;   // コンタクトのレコードタイプ 条件
-    if (opt != null && opt.contRecTypeIds !=null && !opt.contRecTypeIds.isEmpty()) {
-      contRIds = new Set<String>(opt.contRecTypeIds);
-    }
-
-    // アカウントの部分一致条件
-    String conditon = getAccountCondition(card, acntRIds, opt, true);
-    // 部分一致での該当件数を得る
-    String query = String.format('SELECT Count(Id) cnt FROM Account WHERE (({0}) OR ID = :acntId) AND IsDeleted = false',
-                                new String[] { conditon });
-    System.debug('++Account Count SOQL : '+ query);
-    List<AggregateResult> ars = Database.query(query);
-    Integer count = 0;
-    for (AggregateResult ar : ars) {
-      count = (Integer)ar.get('cnt');
-      break;
-    }
-    // 抽出項目
-    Set<String> fields = new Set<String>();
-    fields.add('Id');
-    fields.add('Name');
-    fields.add('Owner.Name');
-    fields.add('Site');
-    for (QueryField f : accountFields) {
-      fields.add(f.name);
-    }
-    // コンタクトへのサブクエリ
-    fields.add(getContactSubQuery(names, email, contRIds, contId));
-    // 商談のサブクエリ
-    fields.add('(SELECT Id FROM Opportunities)');
-    // アカウント部分一致での該当件数を調べる
-    if (count >=  999) {
-      // 完全一致条件にする。
-      conditon = getAccountCondition(card, acntRIds, opt, false);
-    }
-    // アカウントをクエリする
-    query = String.format('SELECT {0} cnt FROM Account WHERE (({1}) OR ID = :acntId) AND IsDeleted = false ORDER BY Account.Name ASC, Site ASC NULLS LAST LIMIT 999',
-                                new String[] {String.join(new List<String>(fields), ', '), conditon});
-    System.debug('++Account SOQL : '+ query);
-    List<account> acnts = Database.query(query);  // SOQL
-    if (acnts.size() >= 999) {
-      acnts.clear();
-    }
-    for(Account acnt : acnts) {
-      result.add(new AccountOption(acnt, result.size(), OPT_MATH));
-    }
-    addAltRegitOption(result, Account.sObjectType, true);
-    return result;
+    OptionListBuilder builder = createOptionListBuilder(opt.registTarget);
+    return builder.run(cardId, opt);
   }
+
+  //public List<RegistOption> getAccountOptions(Id cardId, QueryOption opt) {
+  //  System.debug(opt);
+  //  List<RegistOption> result = new List<RegistOption>();
+
+  //  // 1. Account
+  //  // まず、既存アカウントを探す
+  //  if (opt.registTarget == -1 || opt.registTarget == 0 || opt.registTarget == 1 ) {
+  //    //List<Account> acnts = getAccounts(cards, opt);
+  //    List<Account> acnts = getAccounts(cardId, opt);
+  //    // アカウントが999 以上だったら候補ださない
+  //    if (acnts.size() < 999) {
+  //      for(Account acnt : acnts) {
+  //        // 既存のアカウント
+  //        result.add(new AccountOption(acnt, result.size(), OPT_MATH));
+  //      }
+  //    }
+  //    // アカウントが999 以上だったら候補ださないけど、既存を使う前提
+  //    if (!acnts.isEmpty() || opt.registTarget == 0 || opt.registTarget == 1) {
+  //      // アカウント 検索、新規追加
+  //      addAltRegitOption(result, Account.sObjectType, true);
+  //    }
+  //    if (acnts.size() >= 999) {
+  //      acnts.clear();
+  //    }
+  //  }
+
+  //  // 2. Lead
+  //  // 既存アカウントの有無にかかわらず、リードを探す
+  //  if ((opt.registTarget == -1 && result.isEmpty()) || opt.registTarget == 0 || opt.registTarget == 2 ) {
+  //    List<Lead> leads = getLeads(cardId, opt);
+  //    if (leads.size() < 999) {
+  //      for(Lead l : leads) {
+  //        result.add(new RegistOption(l, result.size(), OPT_MATH));
+  //      }
+  //    }
+  //    if (!leads.isEmpty() || opt.registTarget == 0 || opt.registTarget == 2) {
+  //      // リード 検索、新規追加
+  //      addAltRegitOption(result, Lead.sObjectType, true);
+  //    }
+  //    if (leads.size() >= 999) {
+  //      leads.clear();
+  //    }
+  //  }
+  //  // アカウントもリードも 既存はない
+  //  if (result.isEmpty()) {
+  //    // カスタム設定 リードまたは取引先に登録の際、ともに既存がない場合、リードのリストを表示
+  //    if (SB_NameCardL_Util.smartViscaConfig.LeadRegist_DefaultShowLeadListNoExsiting__c) {
+  //      // リード 検索、新規追加
+  //      addAltRegitOption(result, Lead.sObjectType, true);
+  //    }
+  //    else {
+  //      // アカウント 検索、新規追加
+  //      addAltRegitOption(result, Account.sObjectType, true);
+  //    }
+  //  }
+  //  return result;
+  //}
 
   /**
   *
@@ -1112,62 +1345,68 @@ public with sharing class SB_NCL_RegistOptionCreater {
   *  ((メールアドレス AND 氏名　AND レコードタイプ) OR 参照先コンタクトID) AND アカウントID AND 未削除
   *
   **/
-  public static List<RegistOption> getContactOptions(Id cardId, Id accountId, QueryOption opt) {
+  public static List<RegistOption> getContactOptions(Id cardId, QueryOption opt) {
     System.debug(opt);
-    List<RegistOption> result = new List<RegistOption>();
-    if (accountId !=null) {
-      // アカウントが指定されてたとき
-      // 名刺の検索
-      SmartViscaf__NameCard__c card = getNameCardSimpleFields(cardId);
-      Set<String> names = getContactNameSet(card);
-      Id contId = card.SmartViscaf__contact__c; // リンクしてる登録済のコンタクト
-      //String query = 'SELECT Id, Name, Owner.Name';
-      // 取得する項目
-      Set<String> fields = new Set<String>();
-      fields.add('Id');
-      fields.add('Name');
-      fields.add('Owner.Name');
-      fields.add('Department');
-      fields.add('Email');
-      fields.add('Title');
-      for (QueryField f : contactFields) {
-        fields.add(f.name);
-        //query += ', ' + f.name;
-      }
-      //query += ' FROM Contact WHERE AccountId = :accountId + '\'';
-      List<String> conds = new List<String>();
-      if (String.isNotBlank(card.SmartViscaf__email__c)) {
-        // メアドがあれば、メアドからコンタクト取得
-        conds.add('email=\'' + String.escapeSingleQuotes(card.SmartViscaf__email__c) + '\'');
-      }
-      if (!names.isEmpty()){
-        // 2017.11.xx v1.20.3 メアド + 氏名 で コンタクトを抽出
-        // SV_DEV-658 LEX画面 :取引先・取引先責任者に登録（個別登録）でメールアドレスのみで取引先責任者の候補が表示される
-        conds.add('Name LIKE :names');
-      }
-      // レコードタイプ名
-      List<String> rids = null;
-      if (opt != null && opt.contRecTypeIds !=null && !opt.contRecTypeIds.isEmpty() && !Test.isRunningTest()) {
-        rids = new List<String>(opt.contRecTypeIds);
-        //query +=   ? '' : ' AND RecordTypeId IN :rids';
-        conds.add('RecordTypeId IN :rids');
-      }
-      String condition = String.join(conds, ' AND ');
-      if (contId != null) {
-        condition = '((' + condition + ') OR Id = :contId)';
-      }
-      String query = String.format('SELECT {0} FROM Contact WHERE {1} AND AccountId = :accountId AND IsDeleted = false ORDER BY Name, LastModifiedDate DESC LIMIT 201'
-            , new String[] { String.join( new List<String>(fields), ', '), condition });
-      //query +=' AND IsDeleted = false ORDER BY Name, LastModifiedDate DESC LIMIT 201';
-      System.debug('++Contact SOQL : '+ query);
-      List<Contact> conts = Database.query(query);  // SOQL
-      for(Contact cont : conts) {
-        result.add(new RegistOption(cont, result.size(), OPT_MATH));
-      }
-    }
-    addAltRegitOption(result, Contact.sObjectType, accountId != null);
-    return result;
+    ContactOptionListBuilder builder = new ContactOptionListBuilder();
+    return builder.run(cardId, opt);
   }
+  //public static List<RegistOption> getContactOptions(Id cardId, QueryOption opt) {
+  //  System.debug(opt);
+  //  Id accountId = opt.parentId;
+  //  List<RegistOption> result = new List<RegistOption>();
+  //  if (accountId !=null) {
+  //    // アカウントが指定されてたとき
+  //    // 名刺の検索
+  //    SmartViscaf__NameCard__c card = getNameCardSimpleFields(cardId);
+  //    Set<String> names = getContactNameSet(card);
+  //    Id contId = card.SmartViscaf__contact__c; // リンクしてる登録済のコンタクト
+  //    //String query = 'SELECT Id, Name, Owner.Name';
+  //    // 取得する項目
+  //    Set<String> fields = new Set<String>();
+  //    fields.add('id');
+  //    fields.add('name');
+  //    fields.add('owner.name');
+  //    fields.add('department');
+  //    fields.add('email');
+  //    fields.add('title');
+  //    for (QueryField f : contactFields) {
+  //      fields.add(f.name);
+  //      //query += ', ' + f.name;
+  //    }
+  //    //query += ' FROM Contact WHERE AccountId = :accountId + '\'';
+  //    List<String> conds = new List<String>();
+  //    if (String.isNotBlank(card.SmartViscaf__email__c)) {
+  //      // メアドがあれば、メアドからコンタクト取得
+  //      conds.add('email=\'' + String.escapeSingleQuotes(card.SmartViscaf__email__c) + '\'');
+  //    }
+  //    if (!names.isEmpty()){
+  //      // 2017.11.xx v1.20.3 メアド + 氏名 で コンタクトを抽出
+  //      // SV_DEV-658 LEX画面 :取引先・取引先責任者に登録（個別登録）でメールアドレスのみで取引先責任者の候補が表示される
+  //      conds.add('Name LIKE :names');
+  //    }
+  //    // レコードタイプ名
+  //    List<String> rids = null;
+  //    if (opt != null && opt.contRecTypeIds !=null && !opt.contRecTypeIds.isEmpty() && !Test.isRunningTest()) {
+  //      rids = new List<String>(opt.contRecTypeIds);
+  //      //query +=   ? '' : ' AND RecordTypeId IN :rids';
+  //      conds.add('RecordTypeId IN :rids');
+  //    }
+  //    String condition = String.join(conds, ' AND ');
+  //    if (contId != null) {
+  //      condition = '((' + condition + ') OR Id = :contId)';
+  //    }
+  //    String query = String.format('SELECT {0} FROM Contact WHERE {1} AND AccountId = :accountId AND IsDeleted = false ORDER BY Name, LastModifiedDate DESC LIMIT 201'
+  //          , new String[] { String.join( new List<String>(fields), ', '), condition });
+  //    //query +=' AND IsDeleted = false ORDER BY Name, LastModifiedDate DESC LIMIT 201';
+  //    System.debug('++Contact SOQL : '+ query);
+  //    List<Contact> conts = Database.query(query);  // SOQL
+  //    for(Contact cont : conts) {
+  //      result.add(new RegistOption(cont, result.size(), OPT_MATH));
+  //    }
+  //  }
+  //  addAltRegitOption(result, Contact.sObjectType, accountId != null);
+  //  return result;
+  //}
 
   // SOSL で 取引先 を検索して RegistOption で返す
   public static List<RegistOption> searchAccount(String word, List<String> recTypes) {
@@ -1189,7 +1428,6 @@ public with sharing class SB_NCL_RegistOptionCreater {
     System.debug('++Account SOSL : '+ query);
     List<List<SObject>> searchList = search.query(query);
     if (searchList.isEmpty() == false && searchList[0].isEmpty() == false) {
-      //List<Account> acnts = getAccounts(searchList[0]);
       for (SObject acnt : searchList[0]) {
         result.add(new AccountOption((Account)acnt, result.size(), OPT_SELECT));
       }
@@ -1203,18 +1441,11 @@ public with sharing class SB_NCL_RegistOptionCreater {
     Id aId = accountId;
     Set<String> recTypeIds = null;
     String searchWord = SB_NameCardL_Util.escapeSOSLYoyakugo(word);
-    //String query = 'FIND {' + searchWord + '} IN ALL FIELDS RETURNING Contact(Id, Name, Owner.Name';
-    //for (QueryField f : contactFields) {
-    //  query += ', ' + f.name;
-    //}
-    ////query += ' WHERE AccountId =\'' + accountId + '\'';
-    //query += ' WHERE AccountId = :aId';
     String query = 'FIND {' + searchWord + '} IN ALL FIELDS RETURNING Contact(';
-    Set<String> fields = new Set<String> { 'Id', 'Name', 'Owner.Name', 'Department' };
+    Set<String> fields = new Set<String> { 'id', 'name', 'owner.name', 'department' };
     for (QueryField f : contactFields) {
       fields.add(f.name);
     }
-    //query += ' WHERE AccountId =\'' + accountId + '\'';
     query += String.join(new List<String>(fields), ', ');
     query += ' WHERE AccountId = :aId';
     if (recTypes != null && recTypes.size() > 0) {
@@ -1242,11 +1473,10 @@ public with sharing class SB_NCL_RegistOptionCreater {
     Set<String> recTypeIds = null;
     String searchWord = SB_NameCardL_Util.escapeSOSLYoyakugo(word);
     String query ='FIND {' + searchWord + '} IN ALL FIELDS RETURNING Lead(';
-    Set<String> fields = new Set<String> { 'Id', 'Name', 'Owner.Name', 'Company', 'EMail', 'FirstName', 'LastName', 'Title'};
+    Set<String> fields = new Set<String> { 'id', 'name', 'owner.name', 'company', 'email', 'firstname', 'lastname', 'title'};
     for (QueryField f : leadFields) {
       fields.add(f.name);
     }
-    //query += ' WHERE AccountId =\'' + accountId + '\'';
     query += String.join(new List<String>(fields), ', ');
     if (recTypes != null && recTypes.size() > 0 ) {
       if (!Account.sObjectType.getDescribe().fields.getMap().containsKey('RecordTypeId')) {
@@ -1259,21 +1489,19 @@ public with sharing class SB_NCL_RegistOptionCreater {
     System.debug('++Lead SOSL : '+ query);
     List<List<SObject>> searchList = search.query(query);
     if (searchList.isEmpty() == false && searchList[0].isEmpty() == false) {
-      //List<Account> acnts = getAccounts(searchList[0]);
-      for (SObject acnt : searchList[0]) {
-        result.add(new AccountOption((Account)acnt, result.size(), OPT_SELECT));
+      for (SObject obj : searchList[0]) {
+        result.add(new RegistOption(obj, result.size(), OPT_SELECT));
       }
     }
     return result;
   }
-
 
   // SOSL で Campaign を検索して Campaign レコード で 返す
   // lx 2.0
   public static List<Campaign> searchCampaign(String word) {
     String searchWord = SB_NameCardL_Util.escapeSOSLYoyakugo(word);
     String query ='FIND {' + searchWord +
-       '} IN ALL FIELDS RETURNING Campaign(Id, Name, Description, SartDate, EndDate, Status, Type WHERE IsActive=true)';
+       '} IN ALL FIELDS RETURNING Campaign(Id, Name, Description, StartDate, EndDate, Status, Type WHERE IsActive=true)';
     System.debug('++Campaign SOSL : '+ query);
     List<List<SObject>> searchList = search.query(query);
     if (searchList.isEmpty() == false) {
@@ -1281,7 +1509,6 @@ public with sharing class SB_NCL_RegistOptionCreater {
     }
     return null;
   }
-
 
   // SOSL で 所定のオブジェクトを検索して RegistOption で返す 親のアカウントのIDを指定可能
   public static List<RegistOption> searchRegistOptions(String word, String objName, Id accountId, List<String> recTypes) {
@@ -1291,31 +1518,32 @@ public with sharing class SB_NCL_RegistOptionCreater {
     String searchWord = SB_NameCardL_Util.escapeSOSLYoyakugo(word);
     Id aId = accountId;
     Set<String> recTypeIds = null;
-    //String query = 'FIND {' + searchWord + '} IN ALL FIELDS RETURNING ' + objName +'(Id, Name, Owner.Name';
-    //// 指定のオブジェクト用の項目を取得
-    //List<QueryField> fields = sobj2Fields.get(otype);
-    //for (QueryField f : fields) {
-    //  query += ', ' + f.name;
-    //}
-
-
     String query = 'FIND {' + searchWord + '} IN ALL FIELDS RETURNING ' + objName +'(';
-    Set<String> fields = new Set<String> { 'Id', 'Name', 'Owner.Name' };
+    Set<String> fields = new Set<String> { 'id', 'name', 'owner.name' };
     fields.addAll(OBJ2OPTION_LABEL_FIELDS.get(otype));
-    for (QueryField f : contactFields) {
+    for (QueryField f : sobj2Fields.get(otype)) {
       fields.add(f.name);
     }
     //query += ' WHERE AccountId =\'' + accountId + '\'';
     query += String.join(new List<String>(fields), ', ');
     //query += ' WHERE AccountId =\'' + accountId + '\'';
-    String conditon = '';
-    conditon += String.isNotBlank(aId) ? ' WHERE AccountId = :aId' : '';
+    //String conditon = '';
+    //conditon += String.isNotBlank(aId) ? ' WHERE AccountId = :aId' : '';
+    List<String> conditons = new List<String>();
+    if (String.isNotBlank(aId)) {
+      conditons.add('AccountId = :aId');
+    }
     if (recTypes != null && recTypes.size() > 0) {
       recTypeIds = new Set<String>(recTypes);
-      conditon += String.isNotBlank(conditon) ? ' AND' : ' WHERE';
-      conditon += ' RecordTypeId IN :recTypeIds';
+      //conditon += String.isNotBlank(conditon) ? ' AND' : ' WHERE';
+      //conditon += ' RecordTypeId IN :recTypeIds';
+      conditons.add('RecordTypeId IN :recTypeIds');
     }
-    query += conditon;
+    if (objName == 'campaign') {
+      conditons.add('IsActive = true');
+    }
+    //query += conditon;
+    query += conditons.isEmpty() ? '' : ' WHERE ' + String.join(new List<String>(conditons), ' AND ');
     query += ')';
     System.debug(String.format('++{0} SOSL : {1}', new String[] {objName, query} ));
     List<List<sObject>> searchList = search.query(query);

@@ -2,15 +2,15 @@
  *
  *  SB_NCL_LeadBulkRegist
  *  リード拡張環境 一括用コンポネート 
- *
+ *  パッケージに入れないので，削除がどうか検討中
+ *  現状(1.12から(1.12含む))使ってない
  *
  *
  *
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-511 [LEX]リードの名刺で更新のLightning版対応
- *
+ *  @Version 拡張パッケージ：Lead Ex. 1.12
  **/ -->
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" controller="SB_NCL_LeadBulkRegistLcController">
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -37,7 +37,7 @@
   <aura:attribute name="sobj" type="Sobject" />
 
   <aura:handler name="changeSearchCondition" event="c:SB_NCL_ChangeSearchConditionEvent" action="{!c.changeSearchCondition}"/>
-  <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistComonEvent" action="{!c.doSomething}"/>
+  <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistCommonEvent" action="{!c.doSomething}"/>
 
   <aura:renderIf isTrue="{!v.working}">
     <aura:renderIf isTrue="{!v.firstLoading}">
@@ -55,7 +55,7 @@
   </aura:renderIf>
 
   <div class="slds-tabs--default" style="position: absolute; top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto; height: 100%;">
-    <c:SB_NCL_BulkRegistComon aura:id="bulkRegistComon" inputV="{!v.inputV}"
+    <c:SB_NCL_BulkRegistCommon aura:id="bulkRegistComon" inputV="{!v.inputV}"
                                   titleV="{!v.titleV}"
                                   dataList="{!v.dataList}"
                                   fieldList="{!v.fieldList}"

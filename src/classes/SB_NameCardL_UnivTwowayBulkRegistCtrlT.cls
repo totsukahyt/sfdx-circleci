@@ -220,7 +220,7 @@ public class SB_NameCardL_UnivTwowayBulkRegistCtrlT {
                              FROM Lead];
       System.assertEquals(1, leas.size());
 
-      PageReference pageRef = Page.SB_NameCardL_TwowayBulkRegist;
+      PageReference pageRef = Page.SB_NameCardL_UnivTwowayBulkRegist;
       pageRef.getParameters().put('retUrl', '/home/home.jsp');
       Test.setCurrentPage(pageRef);
       ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncs);
@@ -265,7 +265,7 @@ public class SB_NameCardL_UnivTwowayBulkRegistCtrlT {
                              FROM Lead];
       System.assertEquals(1, leas.size());
 
-      PageReference pageRef = Page.SB_NameCardL_TwowayBulkRegist;
+      PageReference pageRef = Page.SB_NameCardL_UnivTwowayBulkRegist;
       pageRef.getParameters().put('retUrl', '/home/home.jsp');
       Test.setCurrentPage(pageRef);
       ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncs);

@@ -53,7 +53,7 @@ public with sharing class SB_NCL_TwowayRegistController {
   public String viewLabel { get; private set; } // 選択したビューの名称
   public String urlRoot { get; private set; } // Edge での LEX のとき用 URL の プロトコル+ホスト名 部分 ex. https://svdev06-dev-ed--c.ap0.visual.force.com
   public Boolean isIE { get; private set; }   // 2017.08.xx IE を区別する
-
+  public String windowTitle { get; private set; }  // Windowタイトル <apex:page title ではでないので
   // 詳細画面で開いたら名刺レコードID
   public Id targetId { get; private set; }
   // ビューで選択されたオブジェクト VF の方にはIDのリストでバインドされる。
@@ -67,6 +67,11 @@ public with sharing class SB_NCL_TwowayRegistController {
    **/
   public SB_NCL_TwowayRegistController() {
     try {
+      this.windowTitle = String.format(Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle, // {0}: {1}または{2}・{3}に登録
+            new String[] { SmartViscaf__NameCard__c.getSobjectType().getDescribe().getLabel(),
+                            Lead.getSobjectType().getDescribe().getLabel(),
+                            Account.getSobjectType().getDescribe().getLabel(),
+                            Contact.getSobjectType().getDescribe().getLabel() });
       PageReference page = ApexPages.currentPage();
       System.debug('URL: ' + page.getUrl());
       Map<String, String> paras = page.getParameters();
@@ -335,7 +340,7 @@ public with sharing class SB_NCL_TwowayRegistController {
         if (info.isAvailable() == false) continue;   // ユーザが使用可能なものだけ
         if (info.isMaster() == true) continue;   // マスターは除外
         if (info.isDefaultRecordTypeMapping() && !this.infos.isEmpty()) {
-         // デフォルトは一番目に
+          // デフォルトは一番目に
           this.infos.add(0, new RecordTypeInfo(info));
         }
         else {
@@ -371,20 +376,16 @@ public with sharing class SB_NCL_TwowayRegistController {
    *
    **/
   //// 引数 名刺IDと 検索のオプション
-  public class RegistOptionRequest extends SB_NCL_RegistOptionCreater.RegistOptionRequest {
-    @TestVisible
-    private RegistOptionRequest(List<Id> ncIds, QueryOption opt) {
-      super(ncIds, opt);
+  // 引数 名刺IDと 検索のオプション
+  public class RegistOptionRequest {
+    public List<Id> ncIds { get; private set; }
+    public QueryOption opt { get; private set; }    // 既存の上書き対象のレコードを探すオプション
+    public RegistOptionRequest() {}
+    public RegistOptionRequest(List<Id> ncIds, QueryOption opt) {
+      this.ncIds = ncIds;
+      this.opt = opt;
     }
   }
-  //  public List<Id> ncIds;
-  //  QueryOption opt;    // 既存の上書き対象のレコードを探すオプション
-  //  public RegistOptionRequest(List<Id> ncIds, QueryOption opt) {
-  //    this.ncIds = ncIds;
-  //    this.opt = opt;
-  //  }
-  //}
-
   //// 既存の上書き対象のレコードを探すオプション
   public class QueryOption extends SB_NCL_RegistOptionCreater.QueryOption {}
   //  public Boolean bulkRegist;      // TURE:一括登録 FALSE:個別登録
@@ -392,24 +393,19 @@ public with sharing class SB_NCL_TwowayRegistController {
   //  public Boolean queryState;     // 都道府県を条件にして検索
   //  public Boolean queryCity;      // 市区郡を条件にして検索
   //  public Boolean queryZip;       // 郵便番号を条件にして検索
+  //  public Boolean queryPersonName;   // lx 2.0
+  //  public Boolean queryPersonEMail;      // lx 2.0
+  //  public List<Id> parentIds;               // lx 2.0
   //  public List<String> acntRecTypeIds;  // アカウントのレコードタイプ名を条件にする
   //  public List<String> contRecTypeIds;  // コンタクトのレコードタイプ名を条件にする
-  //  public QueryOption() {
-  //    this.bulkRegist = false;
-  //    this.querySite = false;
-  //    this.queryState = false;
-  //    this.queryCity = false;
-  //    this.queryZip = false;
-  //    this.acntRecTypeIds = null;
-  //    this.contRecTypeIds = null;
-  //  }
-  //}
+  //  public List<String> leadRecTypeIds;  // lx 2.0 リードのレコードタイプ名を条件にする
+
 
   // getRegistOptions 　名刺単位の選択可能なオプションを返す。
   @RemoteAction
   public static List<SB_NCL_RegistOptionCreater.Card_RegistOption> getRegistOptions(RegistOptionRequest req) {
     SB_NCL_RegistOptionCreater creater = new SB_NCL_RegistOptionCreater();
-    return creater.getRegistOptions(req);
+    return creater.getRegistOptions(req.ncIds, req.opt);
   }
 
   /**
@@ -432,12 +428,14 @@ public with sharing class SB_NCL_TwowayRegistController {
 
   /**
   *
-  *  getAccountOptions 名刺に該当する取引先を取得
+  *  getAccountOptions 名刺に該当する取引先、リードを取得
   *
   **/
   @RemoteAction
   public static List<SB_NCL_RegistOptionCreater.RegistOption> getAccountOptions(Id cardId, QueryOption opt) {
     System.debug(opt);
+//    return SB_NCL_RegistOptionCreater.getAccountOptions(cardId, opt);
+    //SB_NCL_RegistOptionCreater creater = new SB_NCL_RegistOptionCreater();
     return SB_NCL_RegistOptionCreater.getAccountOptions(cardId, opt);
   }
 
@@ -447,12 +445,63 @@ public with sharing class SB_NCL_TwowayRegistController {
   *
   **/
   @RemoteAction
-  public static List<SB_NCL_RegistOptionCreater.RegistOption> getContactOptions(Id cardId, Id accountId, QueryOption opt) {
+  public static List<SB_NCL_RegistOptionCreater.RegistOption> getContactOptions(Id cardId, QueryOption opt) {
     System.debug(opt);
-    return SB_NCL_RegistOptionCreater.getContactOptions(cardId, accountId, opt);
+    return SB_NCL_RegistOptionCreater.getContactOptions(cardId, opt);
 
   }
 
+
+  /**
+  *
+  *  getCampaignOptions キャンペーンの選択肢のリスト
+  *
+  **/
+  // キャンペーン選択で表示するキャンペーンのリストを返す
+  @RemoteAction
+  public static List<SB_NCL_RegistCampaignOptionCreater.CampaignOption> getCampaignOptions() {
+    return SB_NCL_RegistCampaignOptionCreater.createCampaignOptions();
+  }
+
+  /**
+  *  getCampaignStatusList キャンペーンの状況のリスト
+  **/
+  public class CampaignStatus {
+    public String label;
+    public String value;
+    public Boolean defaultValue;
+    public CampaignStatus(Schema.PicklistEntry entry) {
+      this.label = entry.getLabel();
+      this.value = entry.getValue();
+      this.defaultValue = entry.isDefaultValue();
+    }
+  }
+  // キャンペーンメンバー オブジェクト の状況のリスト
+  @RemoteAction
+  public static List<CampaignStatus> getCampaignStatusList() {
+    List<CampaignStatus> result = new List<CampaignStatus>();
+    for (Schema.PicklistEntry entry : CampaignMember.Status.getDescribe().getPicklistValues()) {
+      if (entry.isActive()) {
+        result.add(new CampaignStatus(entry));
+      }
+    }
+    return result;
+  }
+
+  /**
+  *  getCampaignMemberStatusList 該当キャンペーンの キャンペーンメンバーの状況 のリスト
+  **/
+  @RemoteAction
+  public static List<CampaignMemberStatus> getCampaignMemberStatusList(Id campaignId) {
+    //List<CampaignStatus> result = new List<CampaignStatus>();
+    //List<CampaignMemberStatus> camss = [SELECT Id, CampaignId, HasResponded, IsDefault, Label, SortOrder
+    //                                  FROM CampaignMemberStatus Where CampaignId = :campaignId Order By SortOrder];
+    //for (CampaignMemberStatus cams : camss) {
+    //  result.add(new CampaignStatus(cams));
+    //}
+    return [SELECT Id, CampaignId, HasResponded, IsDefault, Label, SortOrder
+                                      FROM CampaignMemberStatus Where CampaignId = :campaignId Order By SortOrder];
+  }
 
   /**
   *
@@ -468,14 +517,20 @@ public with sharing class SB_NCL_TwowayRegistController {
     //  public RegistParam someParam { get; private set; }
     //  public TodoParam todoParam { get; private set; }
   // 対象のオブジェクトIDたち  クライアント側で参照して値をセットする
-  public class RegistTarget extends SB_NameCardL_RegistHelper.RegistTarget {}
-    //public virtual class RegistTarget {
-    //  public Id cardId { get; private set; }
-    //  public Id acntId { get; private set; }
-    //  public Id contId { get; private set; }
-    //  public Id someId { get; private set; }
-    //  public Boolean makeTodo { get; private set; }
-    //  public Date todoDate { get; private set; }
+  public class RegistTarget extends SB_NameCardL_RegistHelper.RegistTarget {
+    //public ProcType pType { get; private set; }     //  名刺のID 必須
+    //public Id cardId { get; private set; }     //  名刺のID 必須
+    //public Id acntId { get; private set; }     //  アカウントのID acntParam で NULL なら 新規作成する
+    //public Id contId { get; private set; }     //  コンタクトのID contParam で NULL なら 新規作成する
+    //public Id leadId { get; private set; }     //  リードのIDを想定 leadParam で NULL なら 新規作成する 未実装
+    //public Id contCampaignId { get; private set; }     //  コンタクトを キャンペーンメンバーにする。
+    //public String contCampaignStatus { get; private set; }     //  コンタクト キャンペーンメンバーのステータス
+    //public Id leadCampaignId { get; private set; }     //  リード を キャンペーンメンバーにする。
+    //public String leadCampaignStatus { get; private set; }     //  リード キャンペーンメンバーのステータス
+    //public Boolean createTodo { get; private set; }   // TRUE： ToDoを作る
+    //public Date todoDate { get; private set; }        // ToDoの日付
+  }
+
   //　登録のオプション クライアント側で参照して値をセットする
   public class RegistParam extends SB_NameCardL_RegistHelper.RegistParam {}
     //public virtual class RegistParam {
@@ -500,9 +555,18 @@ public with sharing class SB_NCL_TwowayRegistController {
     //SB_NameCardL_RegistHelper proc = new SB_NC_RegistExecutor(req);
     //SB_NameCardL_RegistHelper.RegistResponse result = proc.run();
     //return result;
-    return SB_NameCardL_RegistHelper.doRegist(req);
+    for (SB_NameCardL_RegistHelper.RegistTarget target : req.targets) {
+      target.convertProcType();
+    }
+    return SB_NameCardL_RegistHelper.doRegistEx(req);
   }
 
+
+  /**
+  *
+  * SOSLのメソッド
+  *
+  **/
   // SOSL で 取引先 を検索して RegistOption で返す
   @RemoteAction
   public static List<SB_NCL_RegistOptionCreater.RegistOption> searchAccount(String word, List<String> recTypes) {
@@ -527,27 +591,6 @@ public with sharing class SB_NCL_TwowayRegistController {
     return SB_NCL_RegistOptionCreater.searchCampaign(word);
   }
 
-  public class CampaignStatus {
-    public String label;
-    public String value;
-    public Boolean defaultValue;
-    public CampaignStatus(Schema.PicklistEntry entry) {
-      this.label = entry.getLabel();
-      this.value = entry.getValue();
-      this.defaultValue = entry.isDefaultValue();
-    }
-  }
-  // キャンペーンの状況のデフォルト
-  @RemoteAction
-  public static List<CampaignStatus> getCampaignStatusList() {
-    List<CampaignStatus> result = new List<CampaignStatus>();
-    for (Schema.PicklistEntry entry : Campaign.Status.getDescribe().getPicklistValues()) {
-      if (entry.isActive()) {
-        result.add(new CampaignStatus(entry));
-      }
-    }
-    return result;
-  }
 
   // SOSL で 所定のオブジェクトを検索して RegistOption で返す 親のアカウントのIDを指定可能
   @RemoteAction
@@ -615,7 +658,7 @@ public with sharing class SB_NCL_TwowayRegistController {
     'user' =>  'Id, Name, Username, Email, Division, Title'
   };
 
-  static final String FIND_DEF_FIELDS = 'Id, Name, Owner.Name';
+  static final String FIND_DEF_FIELDS = 'id, name, owner.name';
 
   private static String getFindFields(String objName) {
     if (objName2Fields.containsKey(objName)) {
@@ -626,9 +669,10 @@ public with sharing class SB_NCL_TwowayRegistController {
 
 
   private static final Map<SObjectType, String> otype2Fields = new Map<SObjectType, String> {
-    User.sObjectType =>  'Id, Name, Username, Email, Division, Title',
-    Account.sObjectType =>  'Id, Name, Owner.Name',
-    Contact.sObjectType =>  'Id, Name, Owner.Name'
+    User.sObjectType =>  'id, name, username, email, division, title',
+    Account.sObjectType =>  'id, name, owner.name',
+    Contact.sObjectType =>  'id, name, owner.name',
+    Lead.sObjectType =>  'id, name, owner.name' // lx 2.0
   };
 
   private static String getFindFields(SObjectType otype) {
@@ -641,16 +685,30 @@ public with sharing class SB_NCL_TwowayRegistController {
   // SOSL で 所定のオブジェクトを検索して RegistOption で返す 親のアカウントのIDを指定可能
   @RemoteAction
   public static List<SOBject> searchSObjects(String word, String objName, List<String> recTypes) {
+    if (objName == 'Queue') {
+      // キューのルックアップ は SOSLではなく
+      return searchQueue(word, 'Lead');
+    }
     String oname = SB_NameCardL_Util.getManagedObjectName(objName);
     SObjectType otype = Schema.getGlobalDescribe().get(oname);
     System.assert(otype != null);
     String searchWord = SB_NameCardL_Util.escapeSOSLYoyakugo(word);
     Set<String> recTypeIds = null;
     String query = 'FIND {' + searchWord + '} IN ALL FIELDS RETURNING ' + oname +'(' + getFindFields(objName.toLowerCase());
+    //if (recTypes != null && recTypes.size() > 0) {
+    //  recTypeIds = new Set<String>(recTypes);
+    //  query += ' WHERE RecordTypeId IN :recTypeIds';
+    //}
+    //query += conditon;
+    List<String> conditons = new List<String>();
     if (recTypes != null && recTypes.size() > 0) {
       recTypeIds = new Set<String>(recTypes);
-      query += ' WHERE RecordTypeId IN :recTypeIds';
+      conditons.add('RecordTypeId IN :recTypeIds');
     }
+    if (objName == 'campaign' || objName == 'user') {   // lx 2.0
+      conditons.add('IsActive = true');
+    }
+    query += conditons.isEmpty() ? '' : ' WHERE ' + String.join(new List<String>(conditons), ' AND ');
     query += ')';
     System.debug(String.format('++{0} SOSL : {1}', new String[] {oname, query} ));
     List<List<sObject>> searchList = search.query(query);
@@ -659,6 +717,20 @@ public with sharing class SB_NCL_TwowayRegistController {
     }
     return null;
   }
+
+  @RemoteAction
+  public static List<SOBject> searchQueue(String word, String objName) {
+    List<SObject> result = new List<SObject>();
+    String query = String.format('SELECT Id, Queue.Id, Queue.Name, SobjectType FROM QueueSobject WHERE SobjectType = \'\'{0}\'\' AND Queue.Name LIKE \'\'%{1}%\'\'',
+                new String[] { objName, word });
+    System.debug(query);
+    List<QueueSobject> objs = Database.query(query);
+    for (QueueSobject obj : objs) {
+      result.add(obj.getSObject('Queue'));
+    }
+    return result;
+  }
+
 
   private static final String QUERY_ID_FORMAT = 'SELECT {0} FROM {1} WHERE Id = \'\'{2}\'\'';
 

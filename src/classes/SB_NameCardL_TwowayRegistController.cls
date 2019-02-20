@@ -429,6 +429,8 @@ public with sharing class SB_NameCardL_TwowayRegistController {
   public String overwriteLeadInfoLabel{get;set;}
   public String createNewLeadLabel{get;set;}
   public String specifiedWhenCreateNew{get;set;}
+  public String specifiedWhenCreateNewAccount{get;set;}
+  public String specifiedWhenCreateNewBoth{get;set;}
   public Boolean leadCreateable{get;set;}
   public Boolean leadRecTypeEdit{get; private set;} //リードレコードタイプを変更できるflag
   public Boolean showLeadRecType{get;private set;} //リードレコードタイプ選択を表示フラグ
@@ -454,8 +456,8 @@ public with sharing class SB_NameCardL_TwowayRegistController {
   public String  contactRecTypeId{get; set;}//選んだの取引先責任者レコードタイプ
   public String  accountRecType{get; private set;}//取引先レコードタイプの表示ラベル
   public String  contactRecType{get; private set;}//取引先責任者レコードタイプの表示ラベル
-  public Boolean accountRecTypeEdit{get; private set;}//取引先レコードタイプ編集不可
-  public Boolean contactRecTypeEdit{get; private set;}//取引先責任者レコードタイプ編集不可
+  public Boolean accountRecTypeEdit{get; private set;}//取引先レコードタイプ編集可能
+  public Boolean contactRecTypeEdit{get; private set;}//取引先責任者レコードタイプ編集可能
   public Boolean showAccountRecType{get; private set;}//取引先レコードタイプ表示するか
   public Boolean showContactRecType{get; private set;}//取引先責任者レコードタイプ表示するか
   public Boolean showRecTypeSectionItem{get; private set;}//レコードタイプのSectionItemを表示するか
@@ -472,6 +474,8 @@ public with sharing class SB_NameCardL_TwowayRegistController {
   public Boolean contactOverwrite { get; set; } // 取引責任者を上書きs
   public Boolean dispDuplicateCheck { get; set; }
   public Account pageAccount { get; set; }
+  public String windowTitle { get; set; }
+  public String accountContact { get; set; }
 
   public Boolean isFirst = true;
 
@@ -562,13 +566,21 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
   public SB_NameCardL_TwowayRegistController(ApexPages.StandardController sc) {
     try {
+          this.accountContact = String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL});
+          this.windowTitle = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle, new String[] {SmartViscaf__NameCard__c.sObjecttype.getDescribe().getLabel(), LEADLABEL, AC_LABEL, CO_LABEL});
           this.candidateTable = new List<CandidateRecord>();
           this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
           this.screenData = new ScreenData();
           this.registObjs = RegistType.AccountContactLead;
           this.accountQueryOption = getQueryOption(Account.sObjecttype);
           this.accountQueryOption.queryCompany = true; // 会社名は常に 照合
+
           this.contactQueryOption =  getQueryOption(Contact.sObjecttype);
+          // this.contactQueryOption.queryLastName = true; // 姓は常に 照合
+          // this.contactQueryOption.queryFirstName = true; // 名は常に 照合
+          // this.contactQueryOption.queryEMail = true; // メールは常に 照合
+          this.contactQueryOption.queryCompany = true; // 会社名は常に 照合
+
           if (this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.Lead) {
             this.leadQueryOption =  getQueryOption(Lead.sObjecttype);
           }
@@ -587,11 +599,12 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
           this.createNewLeadLabel = String.format(System.Label.SB_NCLD_Label_CreateNewLeadDEV, new String[] {LEADLABEL});
 
-          this.registerToLeadLabel = System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact;
+          this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact, new String[] {LEADLABEL, AC_LABEL, CO_LABEL});
 
           this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LEADLABEL});
 
           this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LEADLABEL});
+          this.specifiedWhenCreateNewAccount = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})});
 
           if (this.svConfig.config.id == null) {
             this.searchField = FIELD_NAMESITE;
@@ -751,7 +764,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
               throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_MSG_CompanyNameMissing);
             }
             else {
-              String str = Account.sObjecttype.getDescribe().getLabel() + '・' + Contact.sObjecttype.getDescribe().getLabel() + ' : ' + System.Label.SB_NCLD_MSG_CompanyNameMissing;
+              String str = String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL}) + ' : ' + System.Label.SB_NCLD_MSG_CompanyNameMissing;
               if (String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(nameCard).get('last_name'))) {
                 str += '<br/>' + Lead.sObjectType.getDescribe().getLabel() + ' : ' + System.Label.SB_NCLD_MSG_NameMissing;
               }
@@ -861,7 +874,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
   public static List<SelectOption> getRenkeiTypeList() {
     List<SelectOption> os = new List<SelectOption>();
     os.add(new SelectOption('Lead', Lead.sObjectType.getDescribe().getLabel()));
-    os.add(new SelectOption('Contact', Account.sObjecttype.getDescribe().getLabel() + '・' + Contact.sObjecttype.getDescribe().getLabel()));
+    os.add(new SelectOption('Contact', String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})));
     return os;
   }
 
@@ -918,6 +931,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
   public PageReference saveContact() {
     try {
+            System.debug(this.accountRecTypeId);
       CandidateRecord accRec;
       //System.debug('save: accountTable: size: ' + this.accountTable.size() + ' index: ' + this.accountTableIndex);
       System.debug('accountTableIndex is ' + this.accountTableIndex);
@@ -973,6 +987,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
         // SB_NC_SpecifyOwnerWhenCreateAcCo
         throw new LeadRegistControllerException(System.Label.SB_NCLD_SpecifyOwnerWhenCreateAcCo);
       }
+      System.debug(this.accountRecTypeId);
       SB_NameCardL_RegistHelper.RegistParam acre = new SB_NameCardL_RegistHelper.RegistParam('Account',this.accountOverwrite,this.accountRecTypeId,acc.Id == null ? pageAccount.OwnerId : acc.OwnerId,this.isAllowDuplicateSave);
 
       if (this.contactRecTypeEdit == false) {
@@ -1180,13 +1195,14 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       this.accountQueryOption.companyRule = this.queryMatch == QUERY_PERFECT_NO ?
             SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
       // 部門の検索は完全一致？
-      this.accountQueryOption.deptRule = this.queryMatch == QUERY_PERFECT_NO ?
-            SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.DeptMatcing.FullMatch;
+      this.accountQueryOption.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.FullMatch;
       queryOptions.add(this.accountQueryOption);
     }
     if (this.contactQueryOption !=null) {
+      this.contactQueryOption.queryDept = (this.searchField == FIELD_NAMESITE);
       queryOptions.add(this.contactQueryOption);
     }
+    
     if (this.leadQueryOption != null) {
       if (this.searchType == SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL) {
         this.leadQueryOption.queryLastName = false;
