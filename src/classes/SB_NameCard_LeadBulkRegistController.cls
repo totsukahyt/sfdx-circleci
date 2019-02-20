@@ -8,7 +8,7 @@
  *                        SV_DEV-755 無効なユーザでTODO登録したときのエラー
  *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
  *                        SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
- *
+ *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
  *
  */
 
@@ -388,7 +388,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         insertCampaignMember(this.insertOption.campaign__c, leadList, ncRecList, campStatus);
 
         // 名刺
-        updateNameCard(leadList, ncRecList, this.insertOption.campaign__c);
+        // SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
+        updateNameCard(leadList, ncRecList, this.insertOption.campaign__c, false);
 
         // ToDo
         // if(!useNameCardOwner && String.valueOf(this.ownerlead.ownerId).startsWith('005')) {
@@ -445,7 +446,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         // insertCampaignMember(this.insertOption.campaign__c, leadList, ncRecList, campStatus);
 
         // 名刺
-        updateNameCard(leadList, ncRecList, this.insertOption.campaign__c);
+        // SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
+        updateNameCard(leadList, ncRecList, this.insertOption.campaign__c, true);
 
         // ToDo
         insertTodo(leadList, ncRecList);
@@ -523,14 +525,20 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // 名刺
-    private static void updateNameCard(List<Lead> leadList, List<NameCardRecord> ncRecList, Id campId) {
+    // SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
+    private static void updateNameCard(List<Lead> leadList, List<NameCardRecord> ncRecList, Id campId, Boolean isUpdate) {
         List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
         Id leadId;
 
         for (Integer i = 0, len = leadList.size(); i < len; i++) {
             leadId = leadList[i].Id;
             if (campId != null && ncRecList[i].nameCard.campaign__c != campId) {
+              // SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
+              if (!isUpdate) {
                 ncList.add(new SmartViscaf__NameCard__c(Id=ncRecList[i].nameCard.Id, SmartViscaf__lead__c=leadId, campaign__c=campId));
+              } else {
+                ncList.add(new SmartViscaf__NameCard__c(Id=ncRecList[i].nameCard.Id, SmartViscaf__lead__c=leadId));
+              }
             }
             else if (leadId != ncRecList[i].nameCard.SmartViscaf__lead__c) {
 

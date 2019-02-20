@@ -9,6 +9,7 @@
  *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
  *                        SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
  *                        SV_DEV-542 重複エラーが出たときのラジオボタン選択について
+ *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
  */
 
 public with sharing class SB_NameCard_LeadRegistController
@@ -371,8 +372,13 @@ public with sharing class SB_NameCard_LeadRegistController
             List< SmartViscaf__NameCard__c > names = new List< SmartViscaf__NameCard__c >();
 
             if (this.nameCard.campaign__c != null && this.nameCard.campaign__c != this.campaign) {
-
-                names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id, Campaign__c=this.nameCard.campaign__c));
+                //SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
+                //新規の場合のみCampaign__c設定
+                if (leadRec.isNew) {
+                    names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=pageLead.Id, Campaign__c=this.nameCard.campaign__c));
+                } else {
+                    names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=pageLead.Id));
+                }
 
                 SB_NameCard_LeadCrudFls.supdate(names, namecarddml);
             } else if (this.nameCard.SmartViscaf__lead__c != lead.Id) {
