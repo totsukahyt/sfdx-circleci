@@ -5,7 +5,7 @@
  * @author kou
  * @Version 拡張パッケージ：Lead Ex. 1.12 2018/8/XX
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
- *
+ * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1236 Classic画面の「リードまたは取引先・取引先責任者に登録」「リードまたは取引先・取引先責任者に登録*」一括登録でリードのレコードタイプを設定していない場合に取引先・取引先責任者のレコードタイプが選択できない。
  */
 
 public with sharing class SB_NameCardL_TwowayBulkRegistController {
@@ -97,6 +97,8 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
   public String overwriteLeadInfoLabel{get;set;}
   public String registerToLeadLabel{get;set;}
   public String specifiedWhenCreateNew{get;set;}
+  public String specifiedWhenCreateNewAccount{get;set;}
+  public String specifiedWhenCreateNewBoth{get;set;}
   public Boolean saveOK{get;set;}//保存状況
   public Boolean leadRecTypeEdit{get; private set;} //リードレコードタイプを変更できるflag
   public Boolean showLeadRecType{get;private set;} //リードレコードタイプ選択を表示フラグ
@@ -134,6 +136,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
   public String  updateForAccount{get; private set;}//既存の取引先責任者の情報を名刺情報で上書きする
   public String  renkeiType{get; set;}//既存の取引先責任者の情報を名刺情報で上書きする
   public Integer searchTypeContact { get; set; }
+  public String accountAndContact { get; set; } // 取引先(部門)/取引先責任者(部署/メール)
 
   public String  leadOwnerLabel{get; set;}//既存の取引先責任者の情報を名刺情報で上書きする
   public String  accountOwnerLabel { get; set; }
@@ -276,6 +279,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
           this.leadOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{LD_LABEL});
           this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{CO_LABEL});
 
+          this.accountAndContact = String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {AC_LABEL, CO_LABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()});
 
           // --------------------- changelabel start ---------------------
           // this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadsDEV);
@@ -285,6 +289,8 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
           this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LD_LABEL});
           // this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
           this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL});
+          this.specifiedWhenCreateNewAccount = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {AC_LABEL + ' & ' + CO_LABEL});
+          this.specifiedWhenCreateNewBoth = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL + ' or ' + AC_LABEL + ' & ' + CO_LABEL});
 
           // --------------------- changelabel end ---------------------
           // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
@@ -429,10 +435,9 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
 
     //opts.add(new SelectOption(String.valueOf(SB_NameCard_Util.SEARCHTYPE_NAME_SITE), '取引先名と所属名で検索'));
     //opts.add(new SelectOption(String.valueOf(SB_NameCard_Util.SEARCHTYPE_NAME), '取引先名のみで検索'));
-    String accountNameLabel = Account.Name.getDescribe().getLabel();
-    String str = accountNameLabel + System.Label.SB_NCLD_Label_AND + System.Label.SB_NCLD_Label_Site;
+    String str = String.format(System.Label.SB_NCLD_SearchForAccountAndDepartment, new List<String> {Account.sObjecttype.getDescribe().getLabel()});
     opts.add(new SelectOption(String.valueOf(SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE),str));
-    String str1 = accountNameLabel;
+    String str1 = Account.Name.getDescribe().getLabel();
     opts.add(new SelectOption(String.valueOf(SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME),str1));
 
     return opts;

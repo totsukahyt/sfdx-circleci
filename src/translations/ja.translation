@@ -37,16 +37,20 @@
         <name>SB_NCLD_Label_ActivityDate</name>
     </customLabels>
     <customLabels>
-        <label>両方表示</label>
+        <label>両方</label>
         <name>SB_NCLD_Label_Both_display</name>
     </customLabels>
     <customLabels>
-        <label><!-- キャンペーン --></label>
+        <label>キャンペーン</label>
         <name>SB_NCLD_Label_Campaign</name>
     </customLabels>
     <customLabels>
-        <label><!-- キャンペーンメンバー状況 --></label>
+        <label>キャンペーンメンバーの状況</label>
         <name>SB_NCLD_Label_CampaignStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>（リードのみ指定可能）</label>
+        <name>SB_NCLD_Label_Campaign_ForLead</name>
     </customLabels>
     <customLabels>
         <label><!-- キャンセル --></label>
@@ -129,11 +133,15 @@
         <name>SB_NCLD_Label_Position</name>
     </customLabels>
     <customLabels>
+        <label>郵便番号</label>
+        <name>SB_NCLD_Label_Postcode</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 都道府県 --></label>
         <name>SB_NCLD_Label_Prefectures</name>
     </customLabels>
     <customLabels>
-        <label><!-- SB_NCLD_Label_Queue --></label>
+        <label>キュー</label>
         <name>SB_NCLD_Label_Queue</name>
     </customLabels>
     <customLabels>
@@ -185,11 +193,23 @@
         <name>SB_NCLD_Label_ToDoRegistration</name>
     </customLabels>
     <customLabels>
+        <label>市区郡まで</label>
+        <name>SB_NCLD_Label_To_Street</name>
+    </customLabels>
+    <customLabels>
+        <label>確認してください</label>
+        <name>SB_NCLD_Label_WarningConfirm</name>
+    </customLabels>
+    <customLabels>
         <label><!-- SB_NCLD_MSG_CanNotSetInActiveUserToOwner --></label>
         <name>SB_NCLD_MSG_CanNotSetInActiveUserToOwner</name>
     </customLabels>
     <customLabels>
-        <label><!-- 会社名、姓を設定してください --></label>
+        <label><!-- SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo --></label>
+        <name>SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo</name>
+    </customLabels>
+    <customLabels>
+        <label>会社名、姓を設定してください</label>
         <name>SB_NCLD_MSG_CompanyNameMissing</name>
     </customLabels>
     <customLabels>
@@ -221,11 +241,15 @@
         <name>SB_NCLD_MSG_NameMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- ToDoの所有者はキューに設定する事ができません --></label>
+        <label>名刺が選択されていません。</label>
+        <name>SB_NCLD_MSG_NotSelectNameCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_MSG_QUEUES_ERROR --></label>
         <name>SB_NCLD_MSG_QUEUES_ERROR</name>
     </customLabels>
     <customLabels>
-        <label><!-- 選択されたキュー(キューId)ではリードにサポートされていません --></label>
+        <label><!-- SB_NCLD_MSG_QUEUES_LEAD_ERROR --></label>
         <name>SB_NCLD_MSG_QUEUES_LEAD_ERROR</name>
     </customLabels>
     <customLabels>
@@ -357,7 +381,7 @@
         <name>SB_NCLD_Text_SpecifiedWhenCreateNew</name>
     </customLabels>
     <customLabels>
-        <label><!-- SB_NCLD_Text_SpecifiedWhenOverWrite --></label>
+        <label>上書きの指定</label>
         <name>SB_NCLD_Text_SpecifiedWhenOverWrite</name>
     </customLabels>
     <customLabels>
@@ -395,6 +419,14 @@
     <customLabels>
         <label><!-- 新規作成の概要 --></label>
         <name>SB_NCS1R_Text_CreateNewRecordDiscription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- キャンペーンメンバーに追加しない。 --></label>
+        <name>SB_NCS1R_Text_NoCampaignMember</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- キャンペーンメンバーに追加しない。 --></label>
+        <name>SB_NCS1R_Text_NoCampaignMemberDiscription</name>
     </customLabels>
     <customLabels>
         <label><!-- 自動選択以外を選択 --></label>
