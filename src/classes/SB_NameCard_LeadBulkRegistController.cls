@@ -59,16 +59,21 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                     }
                 }
             }
-            if (this.leadSelOptList.size() + emailSelOptList.size() + nameSelOptList.size() <= 999) {
+            Integer Leadnumber = SB_NameCard_LeadRegist.isCreateable(new Lead()) == true ? 998 : 999;
+            if (this.leadSelOptList.size() + emailSelOptList.size() + nameSelOptList.size() <= Leadnumber) {
                 this.leadSelOptList.addAll(emailSelOptList);
                 this.leadSelOptList.addAll(nameSelOptList);
             } else {
                 //this.message = '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。';
                 this.message = System.Label.SB_NCLD_Msg_DisplayUnderConditions;
             }
-            //this.leadSelOptList.add(new SelectOption('new', '新規作成'));
-            this.leadSelOptList.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
-            SelectOption ss = leadSelOptList[1];
+            //this.leadSelOptList.add(new SelectOption('new', '新規作成'))
+             if(SB_NameCard_LeadRegist.isCreateable(new Lead()))
+             {
+                this.leadSelOptList.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
+             }
+             Integer i = leadSelOptList.size()>1 ? 1 : 0;
+            SelectOption ss = leadSelOptList[i];
             this.leadId = ss.getValue();
             this.hasError = false;
         }
@@ -239,7 +244,15 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
 
         for (NameCardRecord ncRec : this.nameCardRecordList) {
-            if (ncRec.leadId != 'new') continue;
+            if (ncRec.leadId != 'new')
+            {
+                SB_NameCard_LeadRegist.isUpdateableError(new Lead());
+                continue;
+            }else
+            {
+              SB_NameCard_LeadRegist.isCreateable(new Lead());  
+            }
+
 
             if (this.insertOption.OwnerId == null) {
                 //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');

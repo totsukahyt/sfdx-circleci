@@ -69,6 +69,43 @@ global class SB_NameCard_LeadRegist
         }
     }
 
+     //作成権限あるか判断
+    global static Boolean isCreateable(Sobject objects)
+    {
+       Schema.SObjectType targetType = objects.getSobjectType();
+       Schema.DescribeSObjectResult tar = targetType.getDescribe();
+       return tar.isCreateable();
+    }
+ 
+    //編集権限あるか
+    global static Boolean isUpdateable(Sobject objects)
+    {
+        Schema.SObjectType targetType = objects.getSobjectType();
+        Schema.DescribeSObjectResult tar = targetType.getDescribe();
+        return tar.isUpdateable();
+    }
+
+      global static Void isCreateableError(Sobject objects)
+    {
+       Schema.SObjectType targetType = objects.getSobjectType();
+       Schema.DescribeSObjectResult tar = targetType.getDescribe();
+       if(!tar.isCreateable())
+       {
+        throw new LeadRegistException(String.format(System.Label.SB_MSG_CrudNotCreateable,new String[]{tar.label})) ;
+       }
+    }
+ 
+    //編集権限あるか
+    global static void isUpdateableError(Sobject objects)
+    {
+        Schema.SObjectType targetType = objects.getSobjectType();
+        Schema.DescribeSObjectResult tar = targetType.getDescribe();
+        if(!tar.isUpdateable())
+        {
+            throw new LeadRegistException(String.format(System.Label.SB_MSG_CrudNotUpdateable, new String[]{tar.label}));
+        }
+    }
+
     // インスタンス化させない
     private SB_NameCard_LeadRegist() {}
 

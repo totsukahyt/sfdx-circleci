@@ -102,7 +102,8 @@ public with sharing class SB_NameCard_LeadRegistController
             List<Lead> leadList = this.getLeadList();
 
             if (leadList != null) {
-                if (leadList.size() <= 998) {
+            Integer Leadnumber = SB_NameCard_LeadRegist.isCreateable(new Lead()) ? 998 : 999;
+                if (leadList.size() <= Leadnumber) {
                     for (Lead lead : leadList) {
                         this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
                     }
@@ -120,7 +121,11 @@ public with sharing class SB_NameCard_LeadRegistController
             ApexPages.addMessages(e);
         }
         this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), true));
-        this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), false));
+       if(SB_NameCard_LeadRegist.isCreateable(new Lead()))
+         {
+           this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), false));
+         }
+
     }
 
     // リード
@@ -128,6 +133,7 @@ public with sharing class SB_NameCard_LeadRegistController
     {
         String soql = this.soqlMap.get(this.searchType);
         if (String.isBlank(soql)) return null;
+        System.debug(soql);
         return Database.query(soql);
     }
 
@@ -161,14 +167,15 @@ public with sharing class SB_NameCard_LeadRegistController
             }
             LeadRecord leadRec = this.leadRecordList.get(this.leadRecordListIndex);
             Id leadId, ownerId;
-
             if (leadRec.isNew) {
+                SB_NameCard_LeadRegist.isCreateableError(new Lead());
                 if (this.nameCard.OwnerId == null) {
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
                     throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLead);
                 }
                 ownerId = this.nameCard.OwnerId;
             } else {
+                 SB_NameCard_LeadRegist.isUpdateableError(new Lead());
                 if (leadRec.lead == null) {
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
                     throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SelectLead);
