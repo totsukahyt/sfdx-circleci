@@ -607,13 +607,18 @@ private class SB_NameCardL_TwowayRegistControllerTest {
       Test.setCurrentPage(pageRef);
       ApexPages.StandardController sc = new ApexPages.StandardController(cards[0]);
       SB_NameCardL_TwowayRegistController ctrl = new SB_NameCardL_TwowayRegistController(sc);
-      List<RecordTypeInfo> LEADRECORDTYPES = SB_NameCardL_TwowayRegistController.getRecordType(Lead.sObjectType);
+      List<RecordTypeInfo> leadRecordTypes = SB_NameCardL_TwowayRegistController.getRecordType(Lead.sObjectType);
       ctrl.leadRecordListIndex = 0;
       ctrl.checkRadio();
       System.assertEquals(false, ctrl.leadRecTypeEdit);
       ctrl.leadRecordListIndex = ctrl.leadRecordList.size() - 1;
       ctrl.checkRadio();
-      System.assertEquals(true, ctrl.leadRecTypeEdit);
+      if (leadRecordTypes.size() > 1 && Lead.sObjectType.getDescribe().isCreateable()) {
+        System.assertEquals(true, ctrl.leadRecTypeEdit);
+      }
+      else {
+        System.assertEquals(false, ctrl.leadRecTypeEdit);
+      }
     }
   }
 
