@@ -4,6 +4,7 @@
  * 統合版一括登録Lex コントローラ
  * @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
+ * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1231 LEX画面「リードまたは取引先・取引先責任者に登録*」一括登録で、ビル情報・英語住所が住所項目に表示されない。
  *
  */
 public with sharing class SB_NCL_TwowayBulkRgsLcController {
@@ -62,6 +63,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
           }
           if (field.fieldName == 'ToDo' && String.isBlank(fieldListStr) || fieldListStr == '[]') {
             cf.checked = !basicSetting.SmartViscaf__RegistNoToDo__c;
+          }
+          if (field.fieldName == 'Address') {
+            cf.label = (String)sobj.get('SmartViscaf__address__c') + ' ' + (String)sobj.get('SmartViscaf__address_eng__c');
+            cf.value = (String)sobj.get('SmartViscaf__address__c') + ' ' + (String)sobj.get('SmartViscaf__address_eng__c');
           }
           cf.type = field.type;
           cf.input = field.input;
@@ -318,7 +323,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'url',
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
-                                           'SmartViscaf__address__c',
+                                           'Address',
                                            'string',
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
@@ -357,7 +362,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'url',
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
-                                           'SmartViscaf__address__c',
+                                           'Address',
                                            'string',
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
@@ -400,7 +405,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'url',
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
-                                           'SmartViscaf__address__c',
+                                           'Address',
                                            'string',
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
