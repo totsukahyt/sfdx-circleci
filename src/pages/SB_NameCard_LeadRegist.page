@@ -11,10 +11,10 @@
     <apex:form id="All">
 
         <apex:inputHidden id="leadRecordListIndex" value="{!leadRecordListIndex}"/>
-        <apex:actionFunction action="{!changeowner}" name="changeowner" reRender="todode,selectowner"/>
-
-        <apex:pageBlock title="{!registerToLeadLabel}">
+        <apex:actionFunction action="{!changeOwner}" name="changeOwner" reRender="todode,selectowner"/>
         <apex:actionFunction name="save"  action="{!save}" reRender="pageMsgs,blockid,leadRecordListIndex" oncomplete="endLoad();"/>
+        <apex:actionFunction action="{!checkRadio}" name="checkRadio" reRender="lRecordType"/>
+        <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
             <apex:pageBlockButtons >
                 <apex:outputPanel id="save">
                 <!-- rerender="pageMsgs, save,All"  -->
@@ -74,7 +74,7 @@
                     <apex:pageBlockTable id="leadRecordList" value="{!leadRecordList}" var="leadRecord">
                         <apex:column style="width:15px;">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Select}</apex:facet>
-                            <input id="leadRecordList{!leadRecord.index}" type="radio" name="leadRecordsIndex" value="{!leadRecord.index}" onclick="document.getElementById('{!$Component.leadRecordListIndex}').value=this.value;"/>
+                            <input id="leadRecordList{!leadRecord.index}" type="radio" name="leadRecordsIndex" value="{!leadRecord.index}" onclick="document.getElementById('{!$Component.leadRecordListIndex}').value=this.value;checkRadio();"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Company']}">
@@ -96,7 +96,7 @@
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Name}</apex:facet>
                             <apex:outputText value="{!createNewLeadLabel}" rendered="{!leadRecord.isNew}"/>
                             <apex:inputField value="{!leadRecord.lookUpNameCard.SmartViscaf__lead__c}" rendered="{!NOT(ISBLANK(leadRecord.lookUpNameCard))}">
-                                <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs,time,ownername,email,title,state,company" >
+                                <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs,time,ownerName,email,title,state,company" >
                                 <!-- oncomplete="document.getElementById('leadRecordList{!leadRecord.index}').checked='checked'" -->
                                     <apex:param name="lookUpIndex" assignto="{!lookUpIndex}" value="{!leadRecord.index}"/>
                                 </apex:actionSupport>
@@ -122,12 +122,24 @@
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Owner}</apex:facet>
                             <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(leadRecord.lead.OwnerId))}">
                                 <a href="/{!leadRecord.lead.OwnerId}" id="lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}" onblur="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onfocus="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();">
-                                    <apex:outputText id="ownername" value="{!leadRecord.lead.Owner.Name}"/>
+                                    <apex:outputText id="ownerName" value="{!leadRecord.lead.Owner.Name}"/>
                                 </a>
                             </apex:outputPanel>
                         </apex:column>
                     </apex:pageBlockTable>
                 </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem rendered="{!showLeadRecType}">
+                    <apex:outputText value=""/>
+                        <apex:outputPanel >
+                            <apex:outputText value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/>
+                            <br/><br/>
+                            <apex:outputLabel  value="{!leadRecType}"/>
+                            <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!leadRecordTypeId}" multiselect="false" size="1" disabled="{!Not(leadRecTypeEdit)}">
+                                <apex:selectOptions value="{!leadRecordTypeOptions}"/>
+                            </apex:selectList>
+                        </apex:outputPanel>
+                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value=""/>
@@ -146,7 +158,7 @@
 
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_Owner}"/>
-                    <apex:inputField onchange="changeowner();"  value="{!lead.OwnerId}" required="false"/>
+                    <apex:inputField onchange="changeOwner();"  value="{!lead.OwnerId}" required="false"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 

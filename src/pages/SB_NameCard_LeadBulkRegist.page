@@ -82,15 +82,26 @@
         </apex:column>
       </apex:pageBlockTable>
 
-      <apex:pageBlockSection rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="1">
+      <apex:pageBlockSection rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="2">
         <apex:pageBlockSectionItem >
           <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}"/>
           <apex:inputField value="{!insertOption.campaign__c}"/>
         </apex:pageBlockSectionItem>
 
+        <apex:pageBlockSectionItem rendered="{!showLeadRecType}">
+            <apex:outputText value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/>
+        </apex:pageBlockSectionItem>
+
         <apex:pageBlockSectionItem >
           <apex:outputLabel value="{!$Label.SB_NCLD_Label_Owner}"/>
           <apex:inputField value="{!ownerlead.OwnerId}" required="false"/>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem rendered="{!showLeadRecType}">
+            <apex:outputLabel  value="{!leadRecType}"/>
+            <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!leadRecordTypeId}" multiselect="false" size="1" disabled="{!Not(leadRecTypeEdit)}">
+                <apex:selectOptions value="{!leadRecordTypeOptions}"/>
+            </apex:selectList>
         </apex:pageBlockSectionItem>
       </apex:pageBlockSection>
     </apex:pageBlock>

@@ -113,6 +113,38 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     public String registerToLeadLabel{get;set;}
     public String specifiedWhenCreateNew{get;set;}
     public Boolean saveOK{get;set;}//保存状況
+    public Boolean leadRecTypeEdit{get; private set;} //リードレコードタイプを変更できるflag
+    public Boolean showLeadRecType{get;private set;} //リードレコードタイプ選択を表示フラグ
+    public String leadRecType{get;set;}    //ラベルSB_NCLD_Label_LeadRecType リードレコードタイプ
+    public String leadRecordTypeId{get;set;} //リードレコードタイプID
+    public static SmartViscaf__SmartViscaConfig__c smartViscaConfig {
+        get{
+            if (smartViscaConfig == null){
+                smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId()); // 個人の設定
+                if (smartViscaConfig.Id ==null) {
+                     smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId()); //プロファイルの設定
+                }
+                if (smartViscaConfig.id == null) {
+                    smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults(); // 組織の設定
+                }
+                if (smartViscaConfig.id == null) {
+                    smartViscaConfig.LeadRegist_DispEmail__c = true;
+                    smartViscaConfig.LeadRegist_DispLastModifiedDate__c = true;
+                    smartViscaConfig.LeadRegist_DispOwner__c = true;
+                    smartViscaConfig.LeadRegist_DispState__c = true;
+                    smartViscaConfig.LeadRegist_Overwrite__c = true;
+                    smartViscaConfig.LeadRegist_DispTitle__c = true;
+                    smartViscaConfig.LeadRegist_DispLeadRectype__c = true;
+                }
+                smartViscaConfig.LeadRegist_TodoSubject__c = String.isBlank(smartViscaConfig.LeadRegist_TodoSubject__c) ? System.Label.SB_NCLD_Text_BusinessCardExchange : smartViscaConfig.LeadRegist_TodoSubject__c;
+            }
+            return smartViscaConfig;
+        }
+        set;
+    }
+
+    //すべてのレコードタイプを取得
+    private static final List<RecordTypeInfo> LEADRECORDTYPES = SB_NameCard_LeadRegistController.getRecordType('Lead');
 
 
     public SB_NameCard_LeadBulkRegistController(ApexPages.StandardSetController controller)
@@ -143,6 +175,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
 
+            this.showLeadRecType = LEADRECORDTYPES.size() > 1 && smartViscaConfig.LeadRegist_DispLeadRectype__c;
+
+            this.leadRecTypeEdit = leadCreateable;
 
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadOverwrite = SB_NameCard_LeadRegist.svConfig.overwrite();
@@ -153,6 +188,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             this.insertOption = new SmartViscaf__NameCard__c(OwnerId=UserInfo.getUserId());
             this.ownerlead = new Lead();
             this.hasError = false;
+            //リードに関する設定
+            setRecord();
 
             SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
             //SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
@@ -161,6 +198,21 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         } catch (Exception e) {
             ApexPages.addMessages(e);
         }
+    }
+
+    //レコードタイプをに関する初期設定
+    public void setRecord() {
+        leadRecordTypeId = SB_NameCard_LeadRegistController.defaultRecordType('Lead');
+        leadRecType = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_LeadRecType);
+    }
+
+    //リードレコードタイプ選択リストoptopn
+    public List<SelectOption> getleadrecordtypeOptions() {
+        List<SelectOption> options = new List<SelectOption>();
+        for (RecordTypeInfo r : LEADRECORDTYPES) {
+            options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
+        }
+        return options;
     }
 
     // 検索条件
@@ -302,7 +354,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
               {
                  throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
               }
-            leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, this.ownerlead.OwnerId));
+
+            //MYD Todoレコードタイプ
+            leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, this.ownerlead.OwnerId,this.leadRecordTypeId));
             ncRecList.add(ncRec);
         }
 
@@ -351,7 +405,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             leadIdSet.add(leadId);
 
             if (this.leadOverwrite) {
-                leadList.add(SB_NameCard_LeadRegist.getLead(leadId, ncRec.nameCard, this.leadOwnerIdMap.get(leadId)));
+                leadList.add(SB_NameCard_LeadRegist.getLead(leadId, ncRec.nameCard, this.leadOwnerIdMap.get(leadId),null));
             } else {
                 leadList.add(new Lead(Id=leadId, NameCard__c=ncRec.nameCard.Id));
             }

@@ -82,7 +82,7 @@ global with sharing class SB_NameCard_LeadRegist
     global static String changeleadlabel(String str)
     {
         str = str.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
-        str = str.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
+        str = str.replace('&*Lead*&',Schema.getGlobalDescribe().get('Lead').getDescribe().getLabel());
         return str;
     }
 
@@ -300,37 +300,45 @@ global with sharing class SB_NameCard_LeadRegist
     }
 
     // リード
-    global static Lead getLead(Id leadId, SmartViscaf__NameCard__c nc, Id ownerId)
+    global static Lead getLead(Id leadId, SmartViscaf__NameCard__c nc, Id ownerId, Id recordtype)
     {
-        Lead lead = new Lead(Id=leadId);
+        Lead lead1;
+        if (String.isNotBlank(recordtype)) {
+            lead1 = (Lead)Lead.sObjectType.newSObject(recordtype, false);
+            lead1.put('RecordTypeId',recordtype);
+        }
+        else {
+            lead1 = (Lead)Lead.sObjectType.newSObject(null, false);
+        }
+        lead1.id = leadId;
 
-        lead.PostalCode = nc.SmartViscaf__zip_code__c;
-        lead.State = nc.SmartViscaf__address_pref__c;
+        lead1.PostalCode = nc.SmartViscaf__zip_code__c;
+        lead1.State = nc.SmartViscaf__address_pref__c;
 
         Map<String, String> adMap = SmartViscaf.SB_NameCard_Util.getAddress(nc);
-        lead.City = adMap.get('city');
-        lead.Street = adMap.get('street');
+        lead1.City = adMap.get('city');
+        lead1.Street = adMap.get('street');
 
-        lead.Company = nc.SmartViscaf__company_name__c;
-        lead.Website = nc.SmartViscaf__web_url1__c;
-        lead.Phone = nc.SmartViscaf__tel1__c;
-        lead.Fax = nc.SmartViscaf__fax1__c;
-        lead.Title = nc.SmartViscaf__title_name__c;
+        lead1.Company = nc.SmartViscaf__company_name__c;
+        lead1.Website = nc.SmartViscaf__web_url1__c;
+        lead1.Phone = nc.SmartViscaf__tel1__c;
+        lead1.Fax = nc.SmartViscaf__fax1__c;
+        lead1.Title = nc.SmartViscaf__title_name__c;
 
         Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(nc);
-        lead.LastName = pnMap.get('last_name');
-        lead.FirstName = pnMap.get('first_name');
+        lead1.LastName = pnMap.get('last_name');
+        lead1.FirstName = pnMap.get('first_name');
 
-        lead.Email = nc.SmartViscaf__email__c;
-        lead.MobilePhone = nc.SmartViscaf__mobile__c;
+        lead1.Email = nc.SmartViscaf__email__c;
+        lead1.MobilePhone = nc.SmartViscaf__mobile__c;
 
-        lead.NameCard__c = nc.Id;
-        lead.NameCardListName__c = nc.SmartViscaf__list_name__c;
-        lead.NameCardMemo__c = nc.SmartViscaf__memo__c;
-        lead.NameCardFreehandmemo__c = nc.SmartViscaf__freehandmemo__c;
-        if (ownerId != null) lead.OwnerId = ownerId;
+        lead1.NameCard__c = nc.Id;
+        lead1.NameCardListName__c = nc.SmartViscaf__list_name__c;
+        lead1.NameCardMemo__c = nc.SmartViscaf__memo__c;
+        lead1.NameCardFreehandmemo__c = nc.SmartViscaf__freehandmemo__c;
+        if (ownerId != null) lead1.OwnerId = ownerId;
 
-        return lead;
+        return lead1;
     }
 
     // ToDo

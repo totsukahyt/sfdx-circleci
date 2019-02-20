@@ -134,7 +134,7 @@
 
     private static void insertLead(SmartViscaf__NameCard__c nc)
     {
-        Lead lead = SB_NameCard_LeadRegist.getLead(null, nc, null);
+        Lead lead = SB_NameCard_LeadRegist.getLead(null, nc, null,null);
 
         Database.DMLOptions dml = new Database.DMLOptions();
 
@@ -155,7 +155,6 @@
     {
         System.assertNotEquals(null, company, 'company error');
         SmartViscaf__NameCard__c card = [SELECT Id, SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c,
-
         SmartViscaf__address_bld__c, SmartViscaf__address_eng__c, SmartViscaf__company_name__c, SmartViscaf__web_url1__c,
         SmartViscaf__tel1__c, SmartViscaf__fax1__c, SmartViscaf__title_name__c, SmartViscaf__person_name_last__c,
         SmartViscaf__person_name_first__c, SmartViscaf__last_name__c, SmartViscaf__first_name__c, SmartViscaf__email__c,

@@ -63,8 +63,42 @@ public with sharing class SB_NameCard_LeadRegistController
     public String createNewLeadLabel{get;set;}
     public String specifiedWhenCreateNew{get;set;}
     public Boolean leadCreateable{get;set;}
+    public Boolean leadRecTypeEdit{get; private set;} //リードレコードタイプを変更できるflag
+    public Boolean showLeadRecType{get;private set;} //リードレコードタイプ選択を表示フラグ
+    public String leadRecType{get;set;}    //ラベルSB_NCLD_Label_LeadRecType リードレコードタイプ
+    public String leadRecordTypeId{get;set;} //リードレコードタイプID
+
+    public static SmartViscaf__SmartViscaConfig__c smartViscaConfig {
+        get{
+            if (smartViscaConfig == null){
+                smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId()); // 個人の設定
+                if (smartViscaConfig.Id ==null) {
+                     smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId()); //プロファイルの設定
+                }
+                if (smartViscaConfig.id == null) {
+                    smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults(); // 組織の設定
+                }
+                if (smartViscaConfig.id == null) {
+                    smartViscaConfig.LeadRegist_DispEmail__c = true;
+                    smartViscaConfig.LeadRegist_DispLastModifiedDate__c = true;
+                    smartViscaConfig.LeadRegist_DispOwner__c = true;
+                    smartViscaConfig.LeadRegist_DispState__c = true;
+                    smartViscaConfig.LeadRegist_Overwrite__c = true;
+                    smartViscaConfig.LeadRegist_DispTitle__c = true;
+                    smartViscaConfig.LeadRegist_DispLeadRectype__c = true;
+                }
+                smartViscaConfig.LeadRegist_TodoSubject__c = String.isBlank(smartViscaConfig.LeadRegist_TodoSubject__c) ? System.Label.SB_NCLD_Text_BusinessCardExchange : smartViscaConfig.LeadRegist_TodoSubject__c;
+            }
+            return smartViscaConfig;
+        }
+        set;
+    }
+
 
     public Boolean isAllowDuplicateSave { get; private set; }
+
+    //すべてのレコードタイプを取得
+    private static final List<RecordTypeInfo> LEADRECORDTYPES = SB_NameCard_LeadRegistController.getRecordType('Lead');
 
     public SB_NameCard_LeadRegistController(ApexPages.StandardController sc)
     {
@@ -79,8 +113,11 @@ public with sharing class SB_NameCard_LeadRegistController
 
             this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
 
-            this.canEditTodo = true;
+            this.showLeadRecType = LEADRECORDTYPES.size() > 1 && smartViscaConfig.LeadRegist_DispLeadRectype__c;
 
+            this.leadRecTypeEdit = leadCreateable;
+
+            this.canEditTodo = true;
 
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadRecordListIndex = -1;
@@ -92,6 +129,9 @@ public with sharing class SB_NameCard_LeadRegistController
             this.leadOverwrite = this.svConfig.overwrite();
             this.todo.Subject  = this.svConfig.todoSubject();
             this.registTodo    = this.svConfig.registTodo();
+
+            //レコードタイプに関する設定
+            setRecord();
 
             this.nameCard = SB_NameCard_LeadRegist.getNameCard(sc.getId());
             this.lead = new Lead(OwnerId=this.nameCard.OwnerId);
@@ -114,6 +154,29 @@ public with sharing class SB_NameCard_LeadRegistController
         } catch (Exception e) {
             ApexPages.addMessages(e);
         }
+    }
+
+    //レコードタイプをに関する初期設定
+    public void setRecord() {
+        leadRecordTypeId = SB_NameCard_LeadRegistController.defaultRecordType('Lead');
+        leadRecType = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_LeadRecType);
+    }
+
+    public void checkRadio() {
+        LeadRecord lea = this.leadRecordList[this.leadRecordListIndex];
+
+        if (Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable()) {
+            this.leadRecTypeEdit = lea.lookUpNameCard == null && lea.lead == null && LEADRECORDTYPES.size() > 1;
+        }
+    }
+
+    //リードレコードタイプ選択リストoptopn
+    public List<SelectOption> getleadRecordTypeOptions() {
+        List<SelectOption> options = new List<SelectOption>();
+        for (RecordTypeInfo r : LEADRECORDTYPES) {
+            options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
+        }
+        return options;
     }
 
     // 検索条件
@@ -232,7 +295,7 @@ public with sharing class SB_NameCard_LeadRegistController
             }
             Lead lead;
             if (this.leadOverwrite || leadRec.isNew) {
-                lead = SB_NameCard_LeadRegist.getLead(leadId, this.nameCard, ownerId);
+                lead = SB_NameCard_LeadRegist.getLead(leadId, this.nameCard, ownerId,this.leadRecTypeEdit == true ? this.leadRecordTypeId : null);
             } else {
                 lead = new Lead(Id=leadId, NameCard__c = this.namecard.Id);
             }
@@ -312,11 +375,38 @@ public with sharing class SB_NameCard_LeadRegistController
                 throw new SB_NameCard_LeadRegist.LeadRegistException(duplicateResult.getErrorMessage());
             } else {
                 throw new SB_NameCard_LeadRegist.LeadRegistException(err.getMessage());
+
+    //オブジェクトでフォールトのレコードタイプIDを取得
+    public static String defaultRecordType(String sobjectname){
+        String recordTypeId;
+        List<Schema.RecordTypeInfo> rs =  Schema.getGlobalDescribe().get(sobjectname).getDescribe().getRecordTypeInfos();
+        for (RecordTypeInfo r : rs) {
+            if (r.isDefaultRecordTypeMapping() && r.isAvailable()) {
+                 recordTypeId =  r.getRecordTypeId();
             }
         }
+          return recordTypeId;
     }
 
-    public void changeowner()
+    //レコードタイプを取得
+    public static List<RecordTypeInfo> getRecordType(String sobjectname){
+
+        List<Schema.RecordTypeInfo> rs =  Schema.getGlobalDescribe().get(sobjectname).getDescribe().getRecordTypeInfos();
+        List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
+        for (RecordTypeInfo r : rs) {
+            if (r.isAvailable()) {
+                recordtypes.add(r);
+            }
+        }
+            //isMasterメソード使えるにはWinter'16　APIバージョン35.0以降でなければならない、
+            //そのため、今最後のレコードタイプMasterをリストから削除します
+        if (recordtypes.size()>0) {
+            recordtypes.remove(recordtypes.size()-1);
+        }
+        return recordtypes;
+    }
+
+    public void changeOwner()
     {
         if(String.isNotBlank(this.lead.ownerId)){
              if(String.valueOf(this.lead.ownerId).startsWith('005')){
