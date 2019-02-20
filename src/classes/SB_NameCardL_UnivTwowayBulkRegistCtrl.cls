@@ -175,23 +175,17 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   //すべてのレコードタイプを取得
   private static final List<RecordTypeInfo> contactRecordTypes = SB_NameCardL_Util.getRecordType(Contact.sObjectType);
 
-  public Boolean isLex {get; set;}
-
   public SB_NameCardL_UnivTwowayBulkRegistCtrl(ApexPages.StandardSetController controller) {
     PageReference page = ApexPages.currentPage();
     Map<String, String> paras = page.getParameters();
     if (paras.containsKey('vfRetURLInSFX')
       || Test.isRunningTest() && paras.containsKey('runTestLex')) {
       initLex(controller);
-      isLex = true;
     }
     else {
       initClassic(controller);
-      isLex = false;
     }
     String uiThemeDisplayed = UserInfo.getUiThemeDisplayed();
-    // SV_DEV-1156 LEXかクラシックかの判定がオフィシャルな方法に変更
-    this.isLex = uiThemeDisplayed == 'Theme4u' || uiThemeDisplayed == 'Theme4d';
   }
 
 

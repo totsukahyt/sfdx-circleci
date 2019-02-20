@@ -10,7 +10,7 @@
 <apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCardL_UnivTwowayBulkRegistCtrl" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
 <apex:pageMessages id="pageMsgs" escape="false"/>
 
-  <apex:form id="All" rendered="{!Not(isLex)}">
+  <apex:form id="All" rendered="{!and($User.UIThemeDisplayed != 'Theme4u', $User.UIThemeDisplayed != 'Theme4d')}">
     <apex:actionFunction action="{!saveLead}" name="save" reRender="pageMsgs,saveflage,nameCardTable, ncRecList" oncomplete="saveClick();"/>
     <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newBlock" oncomplete="initset();"/>
     <apex:actionFunction name="changeOwner" reRender="newBlock" oncomplete="initset();"/>
@@ -336,7 +336,7 @@
           </script>
   </apex:form>
 
-  <apex:outputPanel rendered="{!isLex}">
+  <apex:outputPanel rendered="{!or($User.UIThemeDisplayed == 'Theme4u', $User.UIThemeDisplayed == 'Theme4d') }">
     <apex:pageMessages />
     <apex:includeLightning />
 
