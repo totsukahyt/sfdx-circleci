@@ -9,7 +9,7 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
  *
  **/ -->
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" access="global">
@@ -44,7 +44,7 @@
                   <aura:iteration var="val" items="{!v.inputV.searchConditionRct.searchConditionRecordTypeOptionGroups}">
                     <fieldset class="slds-form--compound" style="display: inline-block;vertical-align:top;">
                       <div class="form-element__group">
-                        <aura:renderIf isTrue="{!val.show}">
+                        <aura:renderIf isTrue="{!and(val.show, val.searchConditionplickListOptions.length > 0)}">
                           <fieldset class="slds-form-element" name="{!val.titleId}">
                             <legend class="slds-form-element__label slds-form-element__label--top">
                                 {!val.title}
