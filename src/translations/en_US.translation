@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label>Object: {0} is not createable.</label>
+        <name>SB_MSG_CrudNotCreateable</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} is not updateable.</label>
+        <name>SB_MSG_CrudNotUpdateable</name>
+    </customLabels>
+    <customLabels>
+        <label>Due Date</label>
+        <name>SB_NCLD_Label_ActivityDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Campaign</label>
+        <name>SB_NCLD_Label_Campaign</name>
+    </customLabels>
+    <customLabels>
+        <label>Cancel</label>
+        <name>SB_NCLD_Label_Cancel</name>
+    </customLabels>
+    <customLabels>
+        <label>Comment</label>
+        <name>SB_NCLD_Label_Comment</name>
+    </customLabels>
+    <customLabels>
+        <label>Company Name</label>
+        <name>SB_NCLD_Label_CompanyName</name>
+    </customLabels>
+    <customLabels>
+        <label>Create a New Lead</label>
+        <name>SB_NCLD_Label_CreateNewLead</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;New &amp;*Lead*&amp;&gt;</label>
+        <name>SB_NCLD_Label_CreateNewLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Division</label>
+        <name>SB_NCLD_Label_Division</name>
+    </customLabels>
+    <customLabels>
+        <label>Email</label>
+        <name>SB_NCLD_Label_Email</name>
+    </customLabels>
+    <customLabels>
+        <label>(Ignore Alert)</label>
+        <name>SB_NCLD_Label_IgnoreAlert</name>
+    </customLabels>
+    <customLabels>
+        <label>Last Modified</label>
+        <name>SB_NCLD_Label_LastModiedDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Name</label>
+        <name>SB_NCLD_Label_Name</name>
+    </customLabels>
+    <customLabels>
+        <label>Overwrite Existing Lead</label>
+        <name>SB_NCLD_Label_OverwriteLeadInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Overwrite Existing  &amp;*Lead*&amp;</label>
+        <name>SB_NCLD_Label_OverwriteLeadInfoDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Owner</label>
+        <name>SB_NCLD_Label_Owner</name>
+    </customLabels>
+    <customLabels>
+        <label>Title</label>
+        <name>SB_NCLD_Label_Position</name>
+    </customLabels>
+    <customLabels>
+        <label>Prefecture</label>
+        <name>SB_NCLD_Label_Prefectures</name>
+    </customLabels>
+    <customLabels>
+        <label>Register To</label>
+        <name>SB_NCLD_Label_RegisterDestinationSelection</name>
+    </customLabels>
+    <customLabels>
+        <label>Save</label>
+        <name>SB_NCLD_Label_Save</name>
+    </customLabels>
+    <customLabels>
+        <label>Search Conditions</label>
+        <name>SB_NCLD_Label_SearchCondition</name>
+    </customLabels>
+    <customLabels>
+        <label>Select</label>
+        <name>SB_NCLD_Label_Select</name>
+    </customLabels>
+    <customLabels>
+        <label>Subject</label>
+        <name>SB_NCLD_Label_Subject</name>
+    </customLabels>
+    <customLabels>
+        <label>Add ToDo</label>
+        <name>SB_NCLD_Label_ToDoRegistration</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} is not createable.</label>
+        <name>SB_NCLD_MSG_CrudNotCreateable</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} is not updateable.</label>
+        <name>SB_NCLD_MSG_CrudNotUpdateable</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} Field: {1} ({2}) is not createable.</label>
+        <name>SB_NCLD_MSG_FlsNotCreateable</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} Field: {1} ({2}) is not updateable.</label>
+        <name>SB_NCLD_MSG_FlsNotUpdateable</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;New&gt;</label>
+        <name>SB_NCLD_Menu_NewLead</name>
+    </customLabels>
+    <customLabels>
+        <label>Do not register</label>
+        <name>SB_NCLD_Menu_NotToRegister</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card Not Found.</label>
+        <name>SB_NCLD_Msg_BusinessCardNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Only previously registered leads are shown because too many leads were found</label>
+        <name>SB_NCLD_Msg_DisplayUnderConditions</name>
+    </customLabels>
+    <customLabels>
+        <label>Only previously registered leads are shown because too many &amp;*smallLead*&amp;s were found</label>
+        <name>SB_NCLD_Msg_DisplayUnderConditionsDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Select a Lead</label>
+        <name>SB_NCLD_Msg_SelectLead</name>
+    </customLabels>
+    <customLabels>
+        <label>Select a &amp;*smallLead*&amp;</label>
+        <name>SB_NCLD_Msg_SelectLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Select a destination</label>
+        <name>SB_NCLD_Msg_SelectRegisterDestination</name>
+    </customLabels>
+    <customLabels>
+        <label>Select Owner to create a Lead</label>
+        <name>SB_NCLD_Msg_SpecifyOwnerWhenCreateLead</name>
+    </customLabels>
+    <customLabels>
+        <label>Select Owner to create a Lead &amp;*smallLead*&amp;</label>
+        <name>SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Bulk Register to Lead</label>
+        <name>SB_NCLD_Text_BulkRegisterToLead</name>
+    </customLabels>
+    <customLabels>
+        <label>Bulk Register to &amp;*Lead*&amp;</label>
+        <name>SB_NCLD_Text_BulkRegisterToLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card</label>
+        <name>SB_NCLD_Text_BusinessCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card Exchange</label>
+        <name>SB_NCLD_Text_BusinessCardExchange</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Exchange Date</label>
+        <name>SB_NCLD_Text_BusinessCardExchangeDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card</label>
+        <name>SB_NCLD_Text_BusinessCardInformation</name>
+    </customLabels>
+    <customLabels>
+        <label>Update by Business Card</label>
+        <name>SB_NCLD_Text_BusinessCardList</name>
+    </customLabels>
+    <customLabels>
+        <label>Lead</label>
+        <name>SB_NCLD_Text_Lead</name>
+    </customLabels>
+    <customLabels>
+        <label>A lead is selected for multiple cards</label>
+        <name>SB_NCLD_Text_LeadOverLap</name>
+    </customLabels>
+    <customLabels>
+        <label>A &amp;*smallLead*&amp; is selected for multiple cards</label>
+        <name>SB_NCLD_Text_LeadOverLapDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to Lead</label>
+        <name>SB_NCLD_Text_RegisterToLead</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to &amp;*Lead*&amp;</label>
+        <name>SB_NCLD_Text_RegisterToLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>lead</label>
+        <name>SB_NCLD_Text_SmallLead</name>
+    </customLabels>
+    <customLabels>
+        <label>New Lead Settings</label>
+        <name>SB_NCLD_Text_SpecifiedWhenCreateNew</name>
+    </customLabels>
+    <customLabels>
+        <label>ToDo</label>
+        <name>SB_NCLD_Text_ToDo</name>
+    </customLabels>
+    <customLabels>
+        <label>Update</label>
+        <name>SB_NCLD_Text_Update</name>
+    </customLabels>
+    <customLabels>
+        <label>Update Lead</label>
+        <name>SB_NCLD_Text_UpdateLead</name>
+    </customLabels>
+    <customLabels>
+        <label>Update &amp;*Lead*&amp;</label>
+        <name>SB_NCLD_Text_UpdateLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CRUD/FLS のチェック対象外のオブジェクト --></label>
+        <name>SB_NC_CrudFlsIgnoreObjects</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_Line --></label>
+        <name>SB_NC_Line</name>
+    </customLabels>
+    <customLabels>
+        <label>SearchCriteria</label>
+        <name>SB_NC_SearchCriteria</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 重複API名のテスト --></label>
+        <name>SB_NC_iOSDevice</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 不正な リクエストです。 --></label>
+        <name>SmartViscaf__SB_MSG_IllegalRequest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CRUD/FLS のチェック対象外のオブジェクト --></label>
+        <name>SmartViscaf__SB_NC_CrudFlsIgnoreObjects</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- デモ用の組織 --></label>
+        <name>SmartViscaf__SB_NC_DemoOrgs</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- デモ用の写真 --></label>
+        <name>SmartViscaf__SB_NC_DemoPhotos</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 部署を区切るための正規表現 --></label>
+        <name>SmartViscaf__SB_NC_DivisionRegex</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Google　News のリクエストURL --></label>
+        <name>SmartViscaf__SB_NC_GoogleNewsURL</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- GoolgeMapAPIのjs --></label>
+        <name>SmartViscaf__SB_NC_GoolgeMapAPIJS</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 詳細表示時の日付のフォーマット --></label>
+        <name>SmartViscaf__SB_NC_NGDateFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 個人タグのType --></label>
+        <name>SmartViscaf__SB_NC_ValPersonalTagType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- USER-AGENTからiOS8あるいは追加して8以降を識別するための文字列 --></label>
+        <name>SmartViscaf__SB_NC_iOS8Device</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- USER-AGENTからiOSを識別するための文字列 --></label>
+        <name>SmartViscaf__SB_NC_iOSDevice</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 詳細表示時の日時のフォーマット --></label>
+        <name>SmartViscaf__SB_NC_ngDatetimeFormat</name>
+    </customLabels>
+</Translations>
