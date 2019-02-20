@@ -9,23 +9,25 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-511 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12
+ *  @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
  *
  **/ -->
 <aura:component access="global" >
   <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-  <aura:attribute name="field" type="Map" />
-  <aura:attribute name="value" type="String"/>
-  <aura:attribute name="checked" type="Boolean"/>
-  <aura:attribute name="label" type="String"/>
-  <aura:attribute name="type" type="String" />
-  <aura:attribute name="selectMap" type="Map" />
-  <aura:attribute name="recordId" type="String" />
-  <aura:attribute name="plickList" type="List" />
-  <aura:attribute name="cObjectMap" type="Map" />
-  <aura:attribute name="eventName" type="String" />
-  <aura:attribute name="width" type="String" />
-  <aura:attribute name="showType" type="String" default="Lead"/>
+  <aura:attribute name="field" type="Map" /> <!-- 項目内容 -->
+  <aura:attribute name="value" type="String"/> <!-- 項目の値 -->
+  <aura:attribute name="checked" type="Boolean"/> <!-- チェックブックスの場合これを使う -->
+  <aura:attribute name="label" type="String"/> <!-- 項目表示内容 -->
+  <aura:attribute name="type" type="String" /> <!-- 項目タイプ -->
+  <aura:attribute name="selectMap" type="Map" /> <!-- 名刺一覧のデータを保存されてます -->
+  <aura:attribute name="recordId" type="String" /> <!-- 名刺ID -->
+  <aura:attribute name="plickList" type="List" /> <!-- 選択リストの選択肢を保存されてます -->
+  <aura:attribute name="cObjectMap" type="Map" /> <!-- レコード内容を保存されてます -->
+  <aura:attribute name="eventName" type="String" /> <!-- 実行するイベントのname -->
+  <aura:attribute name="width" type="String" /> <!-- Cellのwidth -->
+  <aura:attribute name="index" type="Integer" /> <!-- 行index -->
+  <aura:attribute name="showType" type="String" default="Lead"/> <!-- 表示タイプ -->
   <aura:registerEvent name="leadBulkRegistEvent" type="c:SB_NCL_BulkRegistComonEvent"/>
   <aura:method name="cleanPlickList" action="{!c.cleanPlickList}" access="PUBLIC"/>
 
@@ -78,11 +80,24 @@
           {!v.value}
         </aura:renderIf>
         <aura:renderIf isTrue="{!v.field.input == true}">
-          <Lightning:Select onchange="{!c.changeValue}">
+          <div class="slds-form-element" data-aura-rendered-by="1588:92;a">
+           <label class="slds-form-element__label" for="{!v.index + v.field.fieldName}" data-aura-rendered-by="1589:92;a">
+            <span class="" data-aura-rendered-by="1591:92;a"></span></label>
+           <div class="slds-form-element__control slds-grow" data-aura-rendered-by="1593:92;a">
+            <div class="slds-select_container" data-aura-rendered-by="1594:92;a">
+             <select id="{!v.index + v.field.fieldName}" class="slds-select" data-aura-rendered-by="1595:92;a" onchange="{!c.changeValue}">
+              <aura:iteration items="{!v.plickList }" var="va">
+              <option label="{!va.label}" value="{!va.value}" selected="{!va.value == v.value}">{!va.label}</option>
+            </aura:iteration>
+             </select>
+            </div>
+           </div>
+          </div>
+          <!-- <Lightning:Select onchange="{!c.changeValue}">
             <aura:iteration items="{!v.plickList }" var="va">
               <option label="{!va.label}" value="{!va.value}" selected="{!va.value == v.value}"/>
             </aura:iteration>
-          </Lightning:Select>
+          </Lightning:Select> -->
         </aura:renderIf>
       </aura:renderIf>
       </div>

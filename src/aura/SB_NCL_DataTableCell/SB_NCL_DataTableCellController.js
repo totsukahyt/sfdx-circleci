@@ -9,10 +9,11 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-511 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12
  *
  **/
 ({
+  // 初期化
 	doInit : function(component, event, helper) {
     var fieldName = component.get('v.field.fieldName');
     var cObjectMap = component.get('v.cObjectMap');
@@ -104,20 +105,12 @@
     }
     var gid = component.getGlobalId();
 		component.set("v.gid", gid);
-    // document.getElementById('stringOut').style.display = 'none';
-    // document.getElementById(gid + 'emailOut').style.display = 'none';
-    // document.getElementById(gid + 'emailIn').style.display = 'none';
-    // document.getElementById(gid + 'urlOut').style.display = 'none';
-    // document.getElementById(gid + 'urllIn').style.display = 'none';
-    // document.getElementById(gid + 'dateOut').style.display = 'none';
-    // document.getElementById(gid + 'datelIn').style.display = 'none';
-    // document.getElementById(gid + 'checkbox').style.display = 'none';
-    // document.getElementById(gid + 'plicklistOut').style.display = 'none';
-    // document.getElementById(gid + 'plicklistlIn').style.display = 'none';
 
 	},
+  // 画面値変更イベント
   changeValue : function(component, event, helper) {
-    var ls = event.getSource().get('v.value');
+    // var ls = event.getSource().get('v.value');
+    var ls = event.target.value;
     var cObjectMap = component.get('v.cObjectMap');
     var fieldName = component.get('v.field.fieldName');
     cObjectMap[fieldName].value = ls;
@@ -132,6 +125,7 @@
       }).fire();
     }
   },
+  // 選択リストを登録しないに設定
   cleanPlickList : function(component, event, helper) {
     var cObjectMap = component.get('v.cObjectMap');
     var fieldName = component.get('v.field.fieldName');
