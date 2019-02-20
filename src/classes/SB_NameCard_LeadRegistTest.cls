@@ -240,7 +240,8 @@
 
         dml.OptAllOrNone = false;
 
-        SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml);
+        Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml)[0];
+        System.assertEquals(0, sr.getErrors().size(), 'NameCard error');
 
 		System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
 	}
@@ -268,15 +269,13 @@
 
         Campaign cc = new Campaign();
         cc.Name = 'test';
-        SB_NameCard_LeadCrudFls.screate(new List<Campaign>{cc},dml);
+        Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<Campaign>{cc},dml)[0];
 
         nc.SmartViscal__campaign__c = cc.Id;
 
-
-
-
-
-        SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml);
+        Database.SaveResult sr1 = SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml)[0];
+        System.assertEquals(0, sr.getErrors().size(), 'saveCampaign error');
+        System.assertEquals(0, sr1.getErrors().size(), 'savenamecard error');
 
 		System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
 	}
@@ -288,28 +287,39 @@
 
         dml.OptAllOrNone = false;
 
-        SB_NameCard_LeadCrudFls.screate(new List<Lead>{lead},dml);
+        Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<Lead>{lead},dml)[0];
+        System.assertEquals(0, sr.getErrors().size(), 'savelead error');
 
 		System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 	}
 
 	private static SmartViscaf__NameCard__c getNameCard(String company)
 	{
-		return [SELECT Id, SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c,
+		System.assertNotEquals(null,company, 'company error');
+		SmartViscaf__NameCard__c card = [SELECT Id, SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c,
 			SmartViscaf__address_bld__c, SmartViscaf__address_eng__c, SmartViscaf__company_name__c, SmartViscaf__web_url1__c,
 			SmartViscaf__tel1__c, SmartViscaf__fax1__c, SmartViscaf__title_name__c, SmartViscaf__person_name_last__c,
 			SmartViscaf__person_name_first__c, SmartViscaf__last_name__c, SmartViscaf__first_name__c, SmartViscaf__email__c,
 			SmartViscaf__mobile__c, SmartViscaf__list_name__c, SmartViscaf__memo__c, SmartViscaf__freehandmemo__c, OwnerId
 			FROM SmartViscaf__NameCard__c WHERE SmartViscaf__company_name__c = :company];
+		System.assertNotEquals(null,card, 'company error');
+		return card;
+
 	}
 
 	private static SmartViscaf__NameCard__c getNameCard(Id ncId)
 	{
-		return [SELECT Id, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c WHERE Id = :ncId];
+		System.assertNotEquals(null,ncId, 'ncId error');
+		SmartViscaf__NameCard__c card = [SELECT Id, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c WHERE Id = :ncId];
+		System.assertNotEquals(null,card, 'company error');
+		return card;
 	}
 
 	private static Lead getLead(Id ncId)
 	{
-		return [SELECT Id FROM Lead WHERE NameCard__c = :ncId];
+		System.assertNotEquals(null,ncId, 'ncId error');
+		Lead lead = [SELECT Id FROM Lead WHERE NameCard__c = :ncId];
+		System.assertNotEquals(null,lead, 'company error');
+		return lead;
 	}
 }
