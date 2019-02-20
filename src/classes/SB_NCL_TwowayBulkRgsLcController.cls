@@ -335,6 +335,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'checkbox',
                                            true);
     f1.checkAll = true;
+    f1.checkAllCheck = !SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistNoToDo__c;
     fieldList.add(f1);
     fieldMap.put('Lead', fieldList);
     fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
@@ -373,6 +374,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'checkbox',
                                            true);
     f2.checkAll = true;
+    f2.checkAllCheck = !SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistNoToDo__c;
     fieldList.add(f2);
     fieldMap.put('Contact', fieldList);
     fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
@@ -417,6 +419,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'checkbox',
                                            true);
     f2.checkAll = true;
+    f2.checkAllCheck = !SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistNoToDo__c;
     fieldList.add(f2);
     fieldMap.put('Both', fieldList);
 

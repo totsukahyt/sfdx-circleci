@@ -160,6 +160,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
     @AuraEnabled public String eventName {get; set;}
     @AuraEnabled public String width {get; set;}
     @AuraEnabled public Boolean checkAll {get; set;}
+    @AuraEnabled public Boolean checkAllCheck {get; set;}
 
     /**
      * @description DataTableColumnFieldBeanコンストラクタメソッド
@@ -177,6 +178,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
       this.eventName = '';
       this.width = '';
       this.checkAll = false;
+      this.checkAllCheck = false;
     }
 
     /**

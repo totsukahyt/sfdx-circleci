@@ -57,7 +57,7 @@
 
                         <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
                             <label class="slds-checkbox" for="{!va.fieldName}" style="{!if(va.checkAll != true, 'display: none', '')}">
-                              <input name="checkboxtop" type="checkbox" id="{!va.fieldName}" onclick="{!c.selectAll}"/>
+                              <input name="checkboxtop" type="checkbox" id="{!va.fieldName}" checked="{!va.checkAllCheck}" onclick="{!c.selectAll}"/>
                               <span  class="slds-checkbox--faux checkboxleft"></span>
                               <span class="slds-assistive-text"></span>
                             </label>
