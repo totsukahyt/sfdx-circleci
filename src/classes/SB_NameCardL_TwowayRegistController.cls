@@ -1104,7 +1104,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
                                                                                               null,
                                                                                               leadId,
                                                                                               registTodo,
-                                                                                              null);
+                                                                                              this.todo.ActivityDate);
       if (String.isNotBlank(nameCard.campaign__c) && String.isBlank(leadId)) {
         tar.setLeadCampaign(nameCard.campaign__c, campStatus);
       }

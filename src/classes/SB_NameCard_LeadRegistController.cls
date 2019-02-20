@@ -277,7 +277,7 @@ public with sharing class SB_NameCard_LeadRegistController {
             }
           } else {
             for (Lead lea : leadList) {
-              if (pageLead.Id == this.nameCard.SmartViscaf__lead__c) {
+              if (lea.Id == this.nameCard.SmartViscaf__lead__c) {
                 this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lea));
               }
               // String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV);
@@ -407,7 +407,7 @@ public with sharing class SB_NameCard_LeadRegistController {
                                                                                                                       null,
                                                                                                                       leadId,
                                                                                                                       registTodo,
-                                                                                                                      null);
+                                                                                                                      this.todo.ActivityDate);
             if (String.isNotBlank(campaign) && String.isBlank(pageLead.Id)) {
               tar.setLeadCampaign(campaign, campStatus);
             }
