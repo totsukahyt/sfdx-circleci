@@ -32,17 +32,8 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     try{
       List<SB_NameCardL_BulkRegistDTO.DataTableColumnField> fieldList;
       SmartViscaf__NameCardBasicSetting__c basicSetting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
-      if (String.isNotBlank(fieldListStr) && fieldListStr != '[]') {
-        fieldList = (List<SB_NameCardL_BulkRegistDTO.DataTableColumnField> )System.JSON.deserializeStrict(fieldListStr, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField> .Class);
-        if (fieldList.isEmpty()) {
-          Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> fieldMap = (Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> )System.JSON.deserializeStrict(getFieldList(), Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> .Class);
-          fieldList = fieldMap.get('Both');
-        }
-      }
-      else {
-        Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> fieldMap = (Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> )System.JSON.deserializeStrict(getFieldList(), Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> .Class);
-        fieldList = fieldMap.get('Both');
-      }
+      Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> fieldMap = (Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> )System.JSON.deserializeStrict(getFieldList(), Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> .Class);
+      fieldList = fieldMap.get('Both');
       List<String> recordIdList = recordIds.split(',');
 
       Set<String> fieldsSet = SB_NameCardL_RegistQueryExecutor.getNameCardFields();
