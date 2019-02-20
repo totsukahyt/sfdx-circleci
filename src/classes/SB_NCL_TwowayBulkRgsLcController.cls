@@ -633,17 +633,6 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       contactQueryOption.setRectypeIds(recordTypeSet);
     }
 
-    accountQueryOption.queryLastName = false;
-    accountQueryOption.queryFirstName = false;
-    accountQueryOption.queryCompany = false;
-    accountQueryOption.queryEMail = false;
-    accountQueryOption.queryDept = false;
-    contactQueryOption.queryLastName = false;
-    contactQueryOption.queryFirstName = false;
-    contactQueryOption.queryCompany = false;
-    contactQueryOption.queryEMail = false;
-    contactQueryOption.queryDept = false;
-
     accountQueryOption.queryCompany = true;
     // contactQueryOption.queryCompany = true;
     accountQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch;
@@ -661,25 +650,25 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     }
     else if (searchContactTypeInt == SEARCHTYPE_ACNAMESITE) {
       accountQueryOption.queryDept = true;
-      contactQueryOption.queryDept = true;
+      // contactQueryOption.queryDept = true;
     }
     else if (searchContactTypeInt == SEARCHTYPE_ACNAMESITESTATE) {
       accountQueryOption.queryDept = true;
       accountQueryOption.queryState = true;
-      contactQueryOption.queryDept = true;
-      contactQueryOption.queryState = true;
+      // contactQueryOption.queryDept = true;
+      // contactQueryOption.queryState = true;
     }
     else if (searchContactTypeInt == SEARCHTYPE_NAMECITY) {
       accountQueryOption.queryDept = true;
       accountQueryOption.queryCity = true;
-      contactQueryOption.queryDept = true;
-      contactQueryOption.queryCity = true;
+      // contactQueryOption.queryDept = true;
+      // contactQueryOption.queryCity = true;
     }
     else if (searchContactTypeInt == SEARCHTYPE_NAMECODE) {
       accountQueryOption.queryDept = true;
       accountQueryOption.queryZip = true;
-      contactQueryOption.queryDept = true;
-      contactQueryOption.queryZip = true;
+      // contactQueryOption.queryDept = true;
+      // contactQueryOption.queryZip = true;
     }
 
     queryOptions.add(queryOption);

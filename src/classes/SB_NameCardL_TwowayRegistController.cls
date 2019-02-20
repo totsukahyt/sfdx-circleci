@@ -1174,7 +1174,6 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       queryOptions.add(this.contactQueryOption);
     }
     if (this.leadQueryOption != null) {
-      this.leadQueryOption.queryCompany = false;
       if (this.searchType == SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL) {
         this.leadQueryOption.queryLastName = false;
         this.leadQueryOption.queryFirstName = false;
