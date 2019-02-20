@@ -110,16 +110,10 @@ public with sharing class SB_NameCard_LeadRegistController {
 
         this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
 
-        // --------------------- changelabel start ---------------------
-        // this.createNewLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_CreateNewLeadDEV);
         this.createNewLeadLabel = String.format(System.Label.SB_NCLD_Label_CreateNewLeadDEV, new String[] {LEADLABEL});
-        // this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadDEV);
         this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLeadDEV, new String[] {LEADLABEL});
-        // this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
         this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LEADLABEL});
-        // this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
         this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LEADLABEL});
-        // --------------------- changelabel end ---------------------
 
         this.leadRecTypeEdit = leadCreateable && leadRecordTypes.size() > 1;
 

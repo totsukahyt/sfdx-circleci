@@ -585,17 +585,13 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
           this.contactRecTypeId = String.isBlank(constr) ? null : constr;
 
-          // --------------------- changelabel start ---------------------
-          // this.createNewLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_CreateNewLeadDEV);
           this.createNewLeadLabel = String.format(System.Label.SB_NCLD_Label_CreateNewLeadDEV, new String[] {LEADLABEL});
-          // this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadDEV);
-          //this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLeadDEV, new String[] {LEADLABEL});
+
           this.registerToLeadLabel = System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact;
-          // this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
+
           this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LEADLABEL});
-          // this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
+
           this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LEADLABEL});
-          // --------------------- changelabel end ---------------------
 
           if (this.svConfig.config.id == null) {
             this.searchField = FIELD_NAMESITE;

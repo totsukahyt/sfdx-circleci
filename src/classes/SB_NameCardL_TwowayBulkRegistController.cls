@@ -275,24 +275,15 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
           this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
           this.accountCreateable = Account.sObjectType.getDescribe().isCreateable();
           this.contactCreateable = Contact.sObjectType.getDescribe().isCreateable();
-
           this.leadOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{LD_LABEL});
           this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{CO_LABEL});
-
           this.accountAndContact = String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {AC_LABEL, CO_LABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()});
-
-          // --------------------- changelabel start ---------------------
-          // this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadsDEV);
-          // this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLeadsDEV, new String[] {LD_LABEL});
           this.registerToLeadLabel = System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact;
-          // this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
           this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LD_LABEL});
-          // this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
           this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL});
           this.specifiedWhenCreateNewAccount = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {AC_LABEL + ' & ' + CO_LABEL});
           this.specifiedWhenCreateNewBoth = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL + ' or ' + AC_LABEL + ' & ' + CO_LABEL});
 
-          // --------------------- changelabel end ---------------------
           // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
           this.showLeadRecType = leadRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
 

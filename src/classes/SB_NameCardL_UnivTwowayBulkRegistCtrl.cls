@@ -294,16 +294,10 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
 
           this.accountAndContact = String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {AC_LABEL, CO_LABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()});
 
-
-          // --------------------- changelabel start ---------------------
-          // this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadsDEV);
-          // this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLeadsDEV, new String[] {LD_LABEL});
-          // this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
           this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LD_LABEL});
-          // this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
+
           this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL});
 
-          // --------------------- changelabel end ---------------------
           // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
           this.showLeadRecType = leadRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
 

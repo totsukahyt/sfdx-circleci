@@ -175,14 +175,10 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
 
         this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
 
-        // --------------------- changelabel start ---------------------
-        // this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadsDEV);
         this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLeadsDEV, new String[] {LEADLABEL});
-        // this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
         this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LEADLABEL});
-        // this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
         this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LEADLABEL});
-        // --------------------- changelabel end ---------------------
+
         this.useNameCardOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[] {LEADLABEL});
 
         // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
