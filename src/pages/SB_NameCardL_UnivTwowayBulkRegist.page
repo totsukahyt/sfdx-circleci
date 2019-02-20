@@ -414,7 +414,7 @@
 
             function endLoading() {
                document.getElementById('loadDiv').style.display = 'none';
-               document.getElementById('allCheckTodo').checked = document.getElementById('{!$Component.basicToDo}').value == 'false';
+               document.getElementById('allCheckTodo').checked = document.getElementById('{!JSENCODE($Component.basicToDo)}').value == 'false';
             }
 
             initset();

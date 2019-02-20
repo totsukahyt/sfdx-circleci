@@ -502,7 +502,7 @@
                 }
             }
 
-            changeRenkeiRadio('{!renkeiType}');
+            changeRenkeiRadio('{!JSENCODE(renkeiType)}');
         </script>
     </apex:form>
 </apex:page>
