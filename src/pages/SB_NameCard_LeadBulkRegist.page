@@ -5,7 +5,7 @@
  * リードに一括登録
  */
 -->
-<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.smartviscal__sb_ncld_text_businesscard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
+<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false" lightningstylesheets="true">
   <apex:pageMessages id="pageMsgs" escape="false"/>
 
   <apex:form id="All">

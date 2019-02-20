@@ -5,7 +5,7 @@
  * リードを更新
  */
 -->
-<apex:page standardController="Lead" extensions="SB_NameCard_LeadNameCardListController" title="{!$Label.smartviscal__sb_ncld_text_businesscard}: {!updateLeadLabel}" tabStyle="Lead" showHeader="true" sidebar="false">
+<apex:page standardController="Lead" extensions="SB_NameCard_LeadNameCardListController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!updateLeadLabel}" tabStyle="Lead" showHeader="true" sidebar="false" lightningstylesheets="true">
   <apex:pageMessages id="pageMsgs"/>
 
   <apex:form >
