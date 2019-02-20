@@ -276,7 +276,7 @@ public with sharing class SB_NameCard_LeadRegistController
             }
 
             // ToDo
-            if (this.registTodo && this.canEditTodo == true) {
+            if (this.registTodo && String.valueOf(ownerId).startsWith('005')) {
                 Database.DMLOptions dml = new Database.DMLOptions();
 
                 dml.OptAllOrNone = false;
@@ -284,8 +284,6 @@ public with sharing class SB_NameCard_LeadRegistController
                 List< Task > todos = new List< Task >();
 
                 todos.add(SB_NameCard_LeadRegist.getTodo(lead.Id, ownerId, this.todo.Subject, this.todo.ActivityDate,this.todo.Description));
-                SB_NameCard_LeadCrudFls.screate(todos,dml);
-
                 SB_NameCard_LeadCrudFls.screate(todos,dml);
             }
             pageRef = (new ApexPages.StandardController(lead)).view();
