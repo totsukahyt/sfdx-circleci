@@ -44,7 +44,7 @@
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
             System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
 
-            insertLead(nc);
+            insertLead(nc, null);
             Lead lead = getLead(nc.Id);
             System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 
@@ -86,7 +86,7 @@
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
             System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
 
-            insertLead(nc);
+            insertLead(nc, null);
             Lead lead = getLead(nc.Id);
             System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 
@@ -155,7 +155,7 @@
             List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
             System.debug('SB_NameCard_LeadRegistTest nc.Id: '+ncList[0].Id);
 
-            insertLead(nc);
+            insertLead(nc, null);
             Lead lead = getLead(nc.Id);
             System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 
@@ -197,7 +197,7 @@
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
             System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
 
-            insertLead(nc);
+            insertLead(nc, null);
             Lead lead = getLead(nc.Id);
             System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 
@@ -774,6 +774,761 @@
         }
     }
 
+    // 詳細
+    // リード新規
+    // キュー リード使える
+    // ToDo あり
+    // 結果:エラー ToDoの所有者はキューに設定する事ができません
+    @isTest static void testQueueCanUseLeadNewTask() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+        System.assertEquals(namecards.size(), 1);
+        namecards[0].ownerId = g1.Id;
+        update namecards;
+        SmartViscaf__NameCard__c nc = namecards[0];
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+        SB_NameCard_LeadRegistController.getSearchTypeList();
+
+        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+        ctrl.registTodo = true;
+        PageReference savePageRef = ctrl.saveLead();
+
+        System.assertEquals(ctrl.testError, System.Label.SB_NCLD_MSG_QUEUES_ERROR);
+
+        System.assertEquals(null, savePageRef, 'Save error');
+
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        ctrl.cancel();
+        Test.stopTest();
+      }
+    }
+
+    // 詳細
+    // リード新規
+    // キュー リード使える
+    // ToDo なし
+    // 結果:問題なく保存
+    @isTest static void testQueueCanUseLeadNewNoTask() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+        System.assertEquals(namecards.size(), 1);
+        namecards[0].ownerId = g1.Id;
+        update namecards;
+        SmartViscaf__NameCard__c nc = namecards[0];
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+        SB_NameCard_LeadRegistController.getSearchTypeList();
+
+        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+        // ctrl.registTodo = true;
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertNotEquals(null, savePageRef, 'Save error');
+
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        ctrl.cancel();
+        Test.stopTest();
+      }
+    }
+
+    // 詳細
+    // リード新規
+    // キュー リード使えない
+    // ToDo なし
+    // 結果:エラー 選択されたキュー(group name)ではリードにサポートされていません
+    @isTest static void testQueueCantUseLeadNewNoTask() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        // qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+        System.assertEquals(namecards.size(), 1);
+        namecards[0].ownerId = g1.Id;
+        update namecards;
+        SmartViscaf__NameCard__c nc = namecards[0];
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+        SB_NameCard_LeadRegistController.getSearchTypeList();
+
+        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+        // ctrl.registTodo = true;
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertEquals(null, savePageRef, 'Save error');
+        // エラー Assert
+        System.assertEquals(ctrl.testError, String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}));
+
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        ctrl.cancel();
+        Test.stopTest();
+      }
+    }
+
+    // 詳細
+    // リード新規
+    // キュー リード使えない
+    // ToDo あり
+    // 結果:エラー 選択されたキュー(group name)ではリードにサポートされていません
+    @isTest static void testQueueCantUseLeadNewTask() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        // qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+        System.assertEquals(namecards.size(), 1);
+        namecards[0].ownerId = g1.Id;
+        update namecards;
+        SmartViscaf__NameCard__c nc = namecards[0];
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+        SB_NameCard_LeadRegistController.getSearchTypeList();
+
+        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+        ctrl.registTodo = true;
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertEquals(null, savePageRef, 'Save error');
+        // エラー Assert
+        System.assertEquals(ctrl.testError, String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}));
+
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        ctrl.cancel();
+        Test.stopTest();
+      }
+    }
+
+    // 詳細
+    // リード更新
+    // リード所有者はキュー
+    // ToDo あり
+    // 結果:エラー ToDoの所有者はキューに設定する事ができません
+    @isTest static void testQueueCanUseLeadUpdateTask() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        nc.ownerId = g1.Id;
+        update nc;
+        insertLead(nc, g1.Id);
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+        SB_NameCard_LeadRegistController.getSearchTypeList();
+        System.assertEquals(ctrl.leadRecordList.size(), 3);
+
+        ctrl.leadRecordListIndex = 0;
+        ctrl.registTodo = true;
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertEquals(null, savePageRef, 'Save error');
+        // エラー Assert
+        System.assertEquals(ctrl.testError, System.Label.SB_NCLD_MSG_QUEUES_ERROR);
+
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        ctrl.cancel();
+        Test.stopTest();
+      }
+    }
+
+    // 詳細
+    // リード更新
+    // リード所有者はキュー
+    // ToDo なし
+    // 結果:問題なく保存
+    @isTest static void testQueueCanUseLeadUpdateNoTask() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        nc.ownerId = g1.Id;
+        update nc;
+        insertLead(nc, g1.Id);
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+        SB_NameCard_LeadRegistController.getSearchTypeList();
+        System.assertEquals(ctrl.leadRecordList.size(), 3);
+
+        ctrl.leadRecordListIndex = 0;
+        // ctrl.registTodo = true;
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertNotEquals(null, savePageRef, 'Save error');
+
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        ctrl.cancel();
+        Test.stopTest();
+      }
+    }
+
+    // 詳細
+    // リード更新
+    // リード所有者は普通ユーザ
+    // ToDo なし
+    // 結果:問題なく保存
+    @isTest static void testQueueCantUseLeadUpdateNoTask() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        // qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        nc.ownerId = g1.Id;
+        update nc;
+        insertLead(nc, u[1].Id);
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+        SB_NameCard_LeadRegistController.getSearchTypeList();
+        System.assertEquals(ctrl.leadRecordList.size(), 3);
+
+        ctrl.leadRecordListIndex = 0;
+        // ctrl.registTodo = true;
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertNotEquals(null, savePageRef, 'Save error');
+
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        ctrl.cancel();
+        Test.stopTest();
+      }
+    }
+
+    // 詳細
+    // リード更新
+    // リード所有者は普通ユーザ
+    // ToDo あり
+    // 結果:問題なく保存
+    @isTest static void testQueueCantUseLeadUpdateTask() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        // qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        nc.ownerId = g1.Id;
+        update nc;
+        insertLead(nc, u[1].Id);
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+        SB_NameCard_LeadRegistController.getSearchTypeList();
+        System.assertEquals(ctrl.leadRecordList.size(), 3);
+
+        ctrl.leadRecordListIndex = 0;
+        ctrl.registTodo = true;
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertNotEquals(null, savePageRef, 'Save error');
+
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        ctrl.cancel();
+        Test.stopTest();
+      }
+    }
+
+
+    // 一括
+    // リード新規
+    // キュー リード使える
+    // ToDo あり
+    // 結果:エラー 1行目:登録エラー:ToDoの所有者はキューに設定する事ができません
+    @isTest static void testQueueCanUseLeadNewTaskBulk() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+        System.assertEquals(namecards.size(), 1);
+        namecards[0].ownerId = g1.Id;
+        update namecards;
+        SmartViscaf__NameCard__c nc = namecards[0];
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+
+        ctrl.nameCardRecordList[0].leadId = 'new';
+        ctrl.nameCardRecordList[0].registTodo = true;
+        ctrl.useNameCardOwner = true;
+        ctrl.saveLead();
+        //System.assertNotEquals(null, savePageRef, 'Save error');
+        String todoE = Task.getSobjectType().getDescribe().getLabel();
+        todoE += System.Label.SB_NCLD_MSG_Regist_Error;
+        String msg = 1 + System.Label.SB_NC_Line + ': ' + todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR ;
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        System.assertEquals(ctrl.testError, msg);
+        Test.stopTest();
+      }
+    }
+
+    // 一括
+    // リード新規
+    // キュー リード使える
+    // ToDo なし
+    // 結果:問題なく保存
+    @isTest static void testQueueCanUseLeadNewNoTaskBulk() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+        System.assertEquals(namecards.size(), 1);
+        namecards[0].ownerId = g1.Id;
+        update namecards;
+        SmartViscaf__NameCard__c nc = namecards[0];
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+
+        ctrl.nameCardRecordList[0].leadId = 'new';
+        ctrl.nameCardRecordList[0].registTodo = false;
+        ctrl.useNameCardOwner = true;
+        ctrl.saveLead();
+        //System.assertNotEquals(null, savePageRef, 'Save error');
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        System.assertEquals(ctrl.testError, null);
+        Test.stopTest();
+      }
+    }
+
+    // 一括
+    // リード新規
+    // キュー リード使えない
+    // ToDo なし
+    // 結果:エラー 1行目:登録エラー:選択されたキュー(group name)ではリードにサポートされていません
+    @isTest static void testQueueCantUseLeadNewNoTaskBulk() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        // qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+        System.assertEquals(namecards.size(), 1);
+        namecards[0].ownerId = g1.Id;
+        update namecards;
+        SmartViscaf__NameCard__c nc = namecards[0];
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+
+        ctrl.nameCardRecordList[0].leadId = 'new';
+        ctrl.nameCardRecordList[0].registTodo = false;
+        ctrl.useNameCardOwner = true;
+        ctrl.saveLead();
+        //System.assertNotEquals(null, savePageRef, 'Save error');
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        String msg = 1 + System.Label.SB_NC_Line + ': ' + Lead.getSobjectType().getDescribe().getLabel()
+                                 + System.Label.SB_NCLD_MSG_Regist_Error + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}) + '<br>';
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        System.assertEquals(ctrl.testError, msg);
+        Test.stopTest();
+      }
+    }
+
+    // 一括
+    // リード新規
+    // キュー リード使えない
+    // ToDo あり
+    // 結果:エラー 1行目:登録エラー:選択されたキュー(group name)ではリードにサポートされていません
+    @isTest static void testQueueCantUseLeadNewTaskBulk() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        // qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+        System.assertEquals(namecards.size(), 1);
+        namecards[0].ownerId = g1.Id;
+        update namecards;
+        SmartViscaf__NameCard__c nc = namecards[0];
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+
+        ctrl.nameCardRecordList[0].leadId = 'new';
+        ctrl.nameCardRecordList[0].registTodo = true;
+        ctrl.useNameCardOwner = true;
+        ctrl.saveLead();
+        //System.assertNotEquals(null, savePageRef, 'Save error');
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        String msg = 1 + System.Label.SB_NC_Line + ': ' + Lead.getSobjectType().getDescribe().getLabel()
+                                 + System.Label.SB_NCLD_MSG_Regist_Error + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}) + '<br>';
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        System.assertEquals(ctrl.testError, msg);
+        Test.stopTest();
+      }
+    }
+
+    // 一括
+    // リード更新
+    // リード所有者はキュー
+    // ToDo あり
+    // 結果:エラー 1行目:登録エラー:ToDoの所有者はキューに設定する事ができません
+    @isTest static void testQueueCanUseLeadUpdateTaskBulk() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        nc.ownerId = g1.Id;
+        update nc;
+        insertLead(nc, g1.Id);
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+
+        List<Lead> lea = [select Id From Lead];
+        System.assertEquals(lea.size(), 1);
+
+        ctrl.nameCardRecordList[0].leadId = lea[0].Id;
+        ctrl.nameCardRecordList[0].registTodo = true;
+        ctrl.useNameCardOwner = true;
+        ctrl.saveLead();
+        //System.assertNotEquals(null, savePageRef, 'Save error');
+        String todoE = Task.getSobjectType().getDescribe().getLabel();
+        todoE += System.Label.SB_NCLD_MSG_Regist_Error;
+        String msg = 1 + System.Label.SB_NC_Line + ': ' + todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR ;
+        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        System.assertEquals(ctrl.testError, msg);
+        Test.stopTest();
+      }
+    }
+
+    // 一括
+    // リード更新
+    // リード所有者はキュー
+    // ToDo なし
+    // 結果:問題なく保存
+    @isTest static void testQueueCanUseLeadUpdateNoTaskBulk() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        nc.ownerId = g1.Id;
+        update nc;
+        insertLead(nc, g1.Id);
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+
+        List<Lead> lea = [select Id From Lead];
+        System.assertEquals(lea.size(), 1);
+
+        ctrl.nameCardRecordList[0].leadId = lea[0].Id;
+        ctrl.nameCardRecordList[0].registTodo = false;
+        ctrl.useNameCardOwner = true;
+        ctrl.saveLead();
+        //System.assertNotEquals(null, savePageRef, 'Save error');
+        System.assertEquals(ctrl.testError, null);
+        Test.stopTest();
+      }
+    }
+
+    // 一括
+    // リード更新
+    // リード所有者は普通ユーザ
+    // ToDo なし
+    // 結果:問題なく保存
+    @isTest static void testQueueCantUseLeadUpdateNoTaskBulk() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        // qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        nc.ownerId = g1.Id;
+        update nc;
+        insertLead(nc, u[1].Id);
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+
+        List<Lead> lea = [select Id From Lead];
+        System.assertEquals(lea.size(), 1);
+
+        ctrl.nameCardRecordList[0].leadId = lea[0].Id;
+        ctrl.nameCardRecordList[0].registTodo = false;
+        ctrl.useNameCardOwner = true;
+        ctrl.saveLead();
+        //System.assertNotEquals(null, savePageRef, 'Save error');
+        System.assertEquals(ctrl.testError, null);
+        Test.stopTest();
+      }
+    }
+
+    // 一括
+    // リード更新
+    // リード所有者は普通ユーザ
+    // ToDo あり
+    // 結果:問題なく保存
+    @isTest static void testQueueCantUseLeadUpdateTaskBulk() {
+      List<User> u = insertUser();
+        System.runAs(u[1]) {
+        Group g1 = new Group(Name='group name', type='Queue');
+        insert g1;
+        List<QueuesObject> qss = new List<QueuesObject>();
+        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+        // qss.add(q1);
+        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+        qss.add(q2);
+        insert qss;
+        insertNameCard(true);
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        nc.ownerId = g1.Id;
+        update nc;
+        insertLead(nc, u[1].Id);
+
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+
+        List<Lead> lea = [select Id From Lead];
+        System.assertEquals(lea.size(), 1);
+
+        ctrl.nameCardRecordList[0].leadId = lea[0].Id;
+        ctrl.nameCardRecordList[0].registTodo = true;
+        ctrl.useNameCardOwner = true;
+        ctrl.saveLead();
+        //System.assertNotEquals(null, savePageRef, 'Save error');
+        System.assertEquals(ctrl.testError, null);
+        Test.stopTest();
+      }
+    }
+
     private static void insertNameCard(Boolean haveMail)
     {
         SmartViscaf__NameCard__c nc = new SmartViscaf__NameCard__c();
@@ -827,14 +1582,15 @@
         return us;
     }
 
-    private static void insertLead(SmartViscaf__NameCard__c nc)
+    private static void insertLead(SmartViscaf__NameCard__c nc, Id owner)
     {
-        Lead lead = SB_NameCard_LeadRegist.getLead(null, nc, null,null);
+        Lead lead = SB_NameCard_LeadRegist.getLead(null, nc, owner,null);
         Database.DMLOptions dml = new Database.DMLOptions();
 
         dml.OptAllOrNone = false;
 
         Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<Lead>{lead},dml)[0];
+        System.debug(sr);
         System.assertEquals(0, sr.getErrors().size(), 'savelead error');
 
         System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);

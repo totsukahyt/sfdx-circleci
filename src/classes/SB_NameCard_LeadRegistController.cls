@@ -11,6 +11,7 @@
  *                        SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
  *                        SV_DEV-542 重複エラーが出たときのラジオボタン選択について
  *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
+ *                        SV_DEV-565 リード登録のリード所有者の修正
  */
 
 public with sharing class SB_NameCard_LeadRegistController
@@ -42,6 +43,10 @@ public with sharing class SB_NameCard_LeadRegistController
             }
         }
     }
+
+    //テスト addMessageキャッチ用
+    @TestVisible
+    private String testError;
 
     public SmartViscaf__NameCard__c nameCard { get; set; }
     public Lead pageLead { get; set; }
@@ -154,6 +159,7 @@ public with sharing class SB_NameCard_LeadRegistController
             this.search();
         } catch (Exception e) {
             ApexPages.addMessages(e);
+            testError = e.getMessage();
         }
     }
 
@@ -231,11 +237,13 @@ public with sharing class SB_NameCard_LeadRegistController
 
                                 //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。'));
                                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING,str));
+                                testError = str;
                         }
                 }
             }
         } catch (Exception e) {
             ApexPages.addMessages(e);
+            testError = e.getMessage();
         }
         this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), true));
        if(Lead.sObjectType.getDescribe().isCreateable())
@@ -268,6 +276,7 @@ public with sharing class SB_NameCard_LeadRegistController
             }
         } catch (Exception e) {
             ApexPages.addMessages(e);
+            testError = e.getMessage();
         }
     }
 
@@ -317,18 +326,39 @@ public with sharing class SB_NameCard_LeadRegistController
                 leadId = leadRec.pageLead.Id;
                 ownerId = leadRec.pageLead.OwnerId;
             }
+            List<Lead>leads = new List<Lead>();
+
+            // SV_DEV-565 リード登録のリード所有者の修正
+            if (!String.valueOf(ownerId).startsWith('005')) {
+                List<QueueSobject> qss = [Select QueueId, Queue.Name, SobjectType
+                        FROM QueueSobject
+                       WHERE QueueId = :ownerId];
+                Boolean canUserLead = false;
+                String qName = qss[0].Queue.Name;
+                for (QueueSobject qs : qss) {
+                    if (qs.SobjectType == 'Lead') {
+                        canUserLead = true;
+                        break;
+                    }
+                }
+                if (canUserLead == false) {
+                    throw new SB_NameCard_LeadRegist.LeadRegistException(String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{qName}));
+                }
+            }
+
             Lead pageLead;
             if (this.leadOverwrite || leadRec.isNew) {
                 pageLead = SB_NameCard_LeadRegist.getLead(leadId, this.nameCard, ownerId,this.leadRecTypeEdit == true ? this.leadRecordTypeId : null);
+                leads.add(pageLead);
             } else {
                 pageLead = new Lead(Id=leadId, NameCard__c = this.namecard.Id);
             }
             sp = Database.setSavepoint();
-            List<Lead>leads = new List<Lead>();
-            leads.add(pageLead);
 
             // リード
-            this.upsertLead(leads, leadRec.isNew);
+            if (!leads.isEmpty()) {
+                this.upsertLead(leads, leadRec.isNew);
+            }
 
             // キャンペーン
             //SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
@@ -409,8 +439,10 @@ public with sharing class SB_NameCard_LeadRegistController
             }
             pageRef = (new ApexPages.StandardController(pageLead)).view();
         } catch (Exception e) {
+            System.debug(e);
             if (sp != null) Database.rollback(sp);
             ApexPages.addMessages(e);
+            testError = e.getMessage();
         }
         return pageRef;
     }

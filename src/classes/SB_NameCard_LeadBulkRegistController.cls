@@ -10,6 +10,7 @@
  *                        SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
  *                        SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
  *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
+ *                        SV_DEV-565 リード登録のリード所有者の修正
  *
  */
 
@@ -18,6 +19,11 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     public class LeadBulkRegistControllerException extends exception {}
     public String retUrl{get;set;}
     public Boolean useNameCardOwner{get;set;}
+
+    //テスト addMessageキャッチよう
+    @TestVisible
+    private String testError;
+
     // 名刺レコード
     public class NameCardRecord{
         public SmartViscaf__NameCard__c nameCard { get; private set; }
@@ -193,6 +199,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             SB_NameCard_LeadRegist.setLastFirstNameSoql(this.soqlMap, this.nameIdList, this.nameSet,this.lastNameSet,this.firstNameSet,ncList);
             this.search();
         } catch (Exception e) {
+            testError = e.getMessage();
             ApexPages.addMessages(e);
         }
     }
@@ -264,9 +271,11 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 }
             }
             if (message != '') {
+                    testError = message;
                     ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
             }
         } catch (Exception e) {
+            testError = e.getMessage();
             ApexPages.addMessages(e);
         }
     }
@@ -346,6 +355,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             this.hasError = true;
             saveOK = false;
             System.debug(e.getMessage());
+            testError = e.getMessage();
             ApexPages.addMessages(e);
         }
         //return pageRef;
@@ -357,9 +367,15 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
         String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
 
+        // SV_DEV-565 リード登録のリード所有者の修正
+        String errMsg = '';
+        Map<Integer, Id> insertOwnerMap = new Map<Integer, Id>();
 
         Schema.DescribeSObjectResult tar = Lead.sObjecttype.getDescribe();
+
+        Integer i = 0;
         for (NameCardRecord ncRec : this.nameCardRecordList) {
+            i ++;
             if (ncRec.leadId != 'new') {
                 continue;
             }
@@ -370,12 +386,48 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             }
 
             if(!leadCreateable) {
-                 throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
+                 throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotCreateable, new String[]{tar.label}));
+            }
+            // SV_DEV-565 リード登録のリード所有者の修正
+            Id oId = !useNameCardOwner ? this.ownerlead.OwnerId : ncRec.nameCardOwnerId;
+            if (!String.valueOf(oId).startsWith('005')) {
+                insertOwnerMap.put(i, oId);
             }
 
-            leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard,!useNameCardOwner ? this.ownerlead.OwnerId : ncRec.nameCardOwnerId,this.leadRecTypeEdit == true  ? this.leadRecordTypeId : null));
+            leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, oId,this.leadRecTypeEdit == true  ? this.leadRecordTypeId : null));
             ncRecList.add(ncRec);
         }
+
+        // SV_DEV-565 リード登録のリード所有者の修正
+        if (!insertOwnerMap.isEmpty()) {
+
+            List<QueueSobject> qss = [Select QueueId, SobjectType, Queue.Name
+                        FROM QueueSobject
+                       WHERE QueueId = :insertOwnerMap.values()];
+            Set<Id> canUserLeadQueues = new Set<Id>();
+            Map<Id, String> qssMap = new Map<Id, String>();
+            for (QueueSobject qs : qss) {
+                qssMap.put(qs.QueueId, qs.Queue.Name);
+                if (qs.SobjectType == 'Lead') {
+                    canUserLeadQueues.add(qs.QueueId);
+                }
+            }
+
+            for (Integer line : insertOwnerMap.keySet()) {
+                Id qId = insertOwnerMap.get(line);
+                if (!canUserLeadQueues.contains(qId)) {
+                    nameCardRecordList[line-1].hasError = true;
+                    String msg = line + System.Label.SB_NC_Line + ': ' + Lead.getSobjectType().getDescribe().getLabel()
+                                 + System.Label.SB_NCLD_MSG_Regist_Error + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{qssMap.get(qId)}) + '<br>';
+                    errMsg += msg;
+                }
+            }
+            if (String.isNotBlank(errMsg)) {
+                throw new SB_NameCard_LeadRegist.LeadRegistException(errMsg);
+            }
+        }
+
+
 
         if (leadList.size() <= 0) return 0;
             Database.DMLOptions dml = new Database.DMLOptions();
@@ -407,10 +459,17 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         Id leadId;
         Set<Id> leadIdSet = new Set<Id>();
         List<Lead> leadList = new List<Lead>();
+        // SV_DEV-565 リード登録のリード所有者の修正
+        String errMsg = '';
+        Map<Integer, Id> updateOwnerMap = new Map<Integer, Id>();
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
         String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_LeadOverLapDEV);
         Schema.DescribeSObjectResult tar = Lead.sObjectType.getDescribe();
+
+        Integer i = 0;
+
         for (NameCardRecord ncRec : this.nameCardRecordList) {
+            i++;
             if (ncRec.leadId == 'none' || ncRec.leadId == 'new') continue;
 
             leadId = Id.valueOf(ncRec.leadId);
@@ -423,7 +482,12 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             leadIdSet.add(leadId);
 
             if (this.leadOverwrite) {
-                leadList.add(SB_NameCard_LeadRegist.getLead(leadId, ncRec.nameCard, this.leadOwnerIdMap.get(leadId),null));
+                Id oId = this.leadOwnerIdMap.get(leadId);
+
+                if (!String.valueOf(oId).startsWith('005')) {
+                    updateOwnerMap.put(i, oId);
+                }
+                leadList.add(SB_NameCard_LeadRegist.getLead(leadId, ncRec.nameCard, oId,null));
             }
             else {
                 leadList.add(new Lead(Id=leadId, NameCard__c=ncRec.nameCard.Id));
@@ -431,6 +495,35 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             ncRecList.add(ncRec);
         }
         if (leadList.size() <= 0) return 0;
+
+        // SV_DEV-565 リード登録のリード所有者の修正
+        if (!updateOwnerMap.isEmpty()) {
+
+            List<QueueSobject> qss = [Select QueueId, SobjectType, Queue.Name
+                        FROM QueueSobject
+                       WHERE QueueId = :updateOwnerMap.values()];
+            Set<Id> canUserLeadQueues = new Set<Id>();
+            Map<Id, String> qssMap = new Map<Id, String>();
+            for (QueueSobject qs : qss) {
+                qssMap.put(qs.QueueId, qs.Queue.Name);
+                if (qs.SobjectType == 'Lead') {
+                    canUserLeadQueues.add(qs.QueueId);
+                }
+            }
+
+            for (Integer line : updateOwnerMap.keySet()) {
+                Id qId = updateOwnerMap.get(line);
+                if (!canUserLeadQueues.contains(qId)) {
+                    nameCardRecordList[line-1].hasError = true;
+                    String msg = line + System.Label.SB_NC_Line + ': ' + Lead.getSobjectType().getDescribe().getLabel()
+                                 + System.Label.SB_NCLD_MSG_Update_Error + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{qssMap.get(qId)}) + '<br>';
+                    errMsg += msg;
+                }
+            }
+            if (String.isNotBlank(errMsg)) {
+                throw new SB_NameCard_LeadRegist.LeadRegistException(errMsg);
+            }
+        }
 
         //SB_NameCard_LeadCrudFls.screateLead(leadList);
 
