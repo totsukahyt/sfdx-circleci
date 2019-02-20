@@ -898,7 +898,7 @@
         PageReference savePageRef = ctrl.saveLead();
         String todoE = Task.getSobjectType().getDescribe().getLabel();
         todoE += System.Label.SB_NCLD_MSG_Regist_Error;
-        System.assertEquals(ctrl.testError, todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR);
+        System.assertEquals(ctrl.testError, todoE + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_ERROR, new List<String> {'group name'}));
 
         System.assertEquals(null, savePageRef, 'Save error');
 
@@ -1097,7 +1097,7 @@
         // エラー Assert
         String todoE = Task.getSobjectType().getDescribe().getLabel();
         todoE += System.Label.SB_NCLD_MSG_Regist_Error;
-        System.assertEquals(ctrl.testError, todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR);
+        System.assertEquals(ctrl.testError, todoE + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_ERROR, new List<String> {'group name'}));
 
         nc = getNameCard(nc.Id);
         System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
@@ -1292,7 +1292,7 @@
         //System.assertNotEquals(null, savePageRef, 'Save error');
         String todoE = Task.getSobjectType().getDescribe().getLabel();
         todoE += System.Label.SB_NCLD_MSG_Regist_Error;
-        String msg = 1 + System.Label.SB_NC_Line + ': ' + todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR ;
+        String msg = 1 + System.Label.SB_NC_Line + ': ' + todoE + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_ERROR, new List<String> {'group name'});
         System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
         System.assertEquals(ctrl.testError, msg);
         Test.stopTest();
@@ -1440,7 +1440,7 @@
         System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
                 String todoE = Task.getSobjectType().getDescribe().getLabel();
         todoE += System.Label.SB_NCLD_MSG_Regist_Error;
-        msg = 1 + System.Label.SB_NC_Line + ': ' + todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR ;
+        msg = 1 + System.Label.SB_NC_Line + ': ' + todoE + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_ERROR, new List<String> {'group name'});
         System.assertEquals(ctrl.testError, msg);
         Test.stopTest();
       }
@@ -1490,7 +1490,7 @@
         //System.assertNotEquals(null, savePageRef, 'Save error');
         String todoE = Task.getSobjectType().getDescribe().getLabel();
         todoE += System.Label.SB_NCLD_MSG_Regist_Error;
-        String msg = 1 + System.Label.SB_NC_Line + ': ' + todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR ;
+        String msg = 1 + System.Label.SB_NC_Line + ': ' + todoE + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_ERROR, new List<String> {'group name'});
         System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
         System.assertEquals(ctrl.testError, msg);
         Test.stopTest();

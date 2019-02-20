@@ -106,7 +106,7 @@ public class SB_NameCardL_UnivTwowayBulkRegistCtrlT {
                                                      SmartViscaf__person_name_last__c
                                                 FROM SmartViscaf__NameCard__c];
       System.assertEquals(1, cards.size());
-      PageReference pageRef = Page.SB_NCL_TwowayBulkRegistLauncher;
+      PageReference pageRef = Page.SB_NameCardL_UnivTwowayBulkRegist;
       Test.setCurrentPage(pageRef);
       
       ApexPages.currentPage().getParameters().put('runTestLex', 'true');

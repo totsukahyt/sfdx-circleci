@@ -318,25 +318,29 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
           //SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
           SB_NameCard_LeadRegist.setLastFirstNameSoql(this.soqlMap, this.nameIdList, this.nameSet,this.lastNameSet,this.firstNameSet,ncList);
 
-            if (ncList != null && ncList.size() > 0) {
-              Map<Id, SmartViscaf__NameCard__c> ncMap = new Map<Id, SmartViscaf__NameCard__c>([SELECT Id, SmartViscaf__company_name__c, SmartViscaf__division__c, SmartViscaf__title_name__c, Name, SmartViscaf__lead__c,
-                SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c, SmartViscaf__address_bld__c, SmartViscaf__address_eng__c, SmartViscaf__mobile__c, SmartViscaf__email__c,
-                SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__person_name_last__c, SmartViscaf__person_name_first__c, SmartViscaf__last_name__c, SmartViscaf__first_name__c, SmartViscaf__tel2__c,
-                SmartViscaf__tel1__c, SmartViscaf__fax1__c, SmartViscaf__web_url1__c, SmartViscaf__list_name__c, SmartViscaf__memo__c, SmartViscaf__freehandmemo__c, SmartViscaf__card_exchange_date__c, OwnerId
-                FROM SmartViscaf__NameCard__c WHERE Id IN :ncList]);
-              this.nameCardIdSet = ncMap.keySet();
-              this.nameCardList = ncMap.values();
-
+          if (this.nameCardList == null) {
+            this.nameCardList = new List<SmartViscaf__NameCard__c>();
+            this.nameCardIdSet = new Set<Id>();
+          }
+          if (ncList != null && ncList.size() > 0) {
+            // Map<Id, SmartViscaf__NameCard__c> ncMap = new Map<Id, SmartViscaf__NameCard__c>([SELECT Id, SmartViscaf__company_name__c, SmartViscaf__division__c, SmartViscaf__title_name__c, Name, SmartViscaf__lead__c,
+            //   SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c, SmartViscaf__address_bld__c, SmartViscaf__address_eng__c, SmartViscaf__mobile__c, SmartViscaf__email__c, SmartViscaf__web_url2__c,
+            //   SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__person_name_last__c, SmartViscaf__person_name_first__c, SmartViscaf__last_name__c, SmartViscaf__first_name__c, SmartViscaf__tel2__c,
+            //   SmartViscaf__tel1__c, SmartViscaf__fax1__c, SmartViscaf__web_url1__c, SmartViscaf__list_name__c, SmartViscaf__memo__c, SmartViscaf__freehandmemo__c, SmartViscaf__card_exchange_date__c, OwnerId
+            //   FROM SmartViscaf__NameCard__c WHERE Id IN :ncList]);
+            Set<String> fields = SB_NameCardL_RegistQueryExecutor.getNameCardFields();
+            String query = String.format('SELECT {0} FROM SmartViscaf__NameCard__c WHERE Id = :ncList', new String[] { String.join(new List<String>(fields), ', ')});
+            List<SmartViscaf__NameCard__c> nameCards = Database.query(query);
+            for (SmartViscaf__NameCard__c nameCard : nameCards) {
+              this.nameCardIdSet.add(nameCard.Id);
+              this.nameCardList.add(nameCard);
             }
-
-            if (this.nameCardList == null) {
-              this.nameCardList = new List<SmartViscaf__NameCard__c>();
-              this.nameCardIdSet = new Set<Id>();
-            }
-            System.debug('nameCardList.size: ' + this.nameCardList.size());
+          }
+          System.debug('nameCardList.size: ' + this.nameCardList.size());
 
           this.search();
       } catch (Exception e) {
+        System.debug(e.getMessage() + e.getStackTraceString());
           testError = e.getMessage();
           ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
           // ApexPages.addMessage(e.getStackTraceString());
@@ -499,13 +503,14 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
         if (this.nameCardIdSet.size() == 0) {
           return;
         }
-
+        System.debug('aaaaaaaaa');
         Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(this.nameCardIdSet);
+        System.debug('bbbbbbb');
         Boolean cor = Schema.SObjectType.Contact.isCreateable();
         Boolean acc = Schema.SObjectType.Account.isCreateable();
 
         inputPlickListVMap = new Map<Id, Map<String, List<SelectOption>>>();
-
+        System.debug(this.nameCardRecordListDTO.size());
         for (Integer i = 0; i < this.nameCardRecordListDTO.size(); i ++) {
             Boolean leadSelect = true;
             SB_NameCardL_BulkRegistDTO.CustomObject ncRec = this.nameCardRecordListDTO[i];
@@ -610,6 +615,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
               opsMap.put('Account', opts);
               opsMap.put('Lead', new List<SelectOption> {new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead)});
             }
+            System.debug(ncRec.leadId );
             inputPlickListVMap.put(ncRec.nameCard.Id, opsMap);
         }
 
