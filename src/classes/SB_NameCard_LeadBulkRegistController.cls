@@ -7,6 +7,7 @@
  *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
  *                        SV_DEV-755 無効なユーザでTODO登録したときのエラー
  *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
+ *                        SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
  *
  *
  */
@@ -440,7 +441,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         this.setResult(SB_NameCard_LeadCrudFls.supdate(leadList, dml), ncRecList, Lead.getSObjectType(), false);
 
         // キャンペーンメンバー
-        insertCampaignMember(this.insertOption.campaign__c, leadList, ncRecList, campStatus);
+        // SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
+        // insertCampaignMember(this.insertOption.campaign__c, leadList, ncRecList, campStatus);
 
         // 名刺
         updateNameCard(leadList, ncRecList, this.insertOption.campaign__c);

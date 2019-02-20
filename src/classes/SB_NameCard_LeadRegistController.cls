@@ -7,6 +7,7 @@
  *                        SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
  *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
  *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
+ *                        SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
  */
 
 public with sharing class SB_NameCard_LeadRegistController
@@ -323,7 +324,8 @@ public with sharing class SB_NameCard_LeadRegistController
             this.upsertLead(leads, leadRec.isNew);
 
             // キャンペーン
-            if (this.nameCard.campaign__c != null && (leadRec.isNew || this.campaign != this.nameCard.campaign__c)) { //try
+            //SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
+            if (this.nameCard.campaign__c != null && leadRec.isNew) { //try
                 //名刺キャンペーン参照権限がない場合エラー情報を出します
                 if (!Schema.sObjectType.SmartViscaf__NameCard__c.Fields.campaign__c.isAccessible()) {
                     String er = String.format(System.Label.SB_NCLD_MSG_FlsNotAccessible,new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel(), 
