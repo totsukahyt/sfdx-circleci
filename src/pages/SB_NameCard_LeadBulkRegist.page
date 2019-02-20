@@ -233,6 +233,7 @@
             }
             document.getElementById('allCheckTodo').checked = {!registTodoAll};
             initset();
+            changeUserNameCardOwner({!useNameCardOwner});
           </script>
   </apex:form>
 </apex:page>

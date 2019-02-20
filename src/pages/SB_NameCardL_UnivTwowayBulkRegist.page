@@ -391,9 +391,7 @@
 
             initset();
             document.getElementById('allCheckTodo').checked = {!baseSetting.SmartViscaf__RegistNoToDo__c} == false;
-            window.onload = function() {
-              resetOwnerDisable();
-            }
+            resetOwnerDisable();
 
           </script>
   </apex:form>

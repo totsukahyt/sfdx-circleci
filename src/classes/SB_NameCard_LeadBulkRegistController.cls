@@ -175,7 +175,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
       this.retUrl = '/home/home.jsp';
     }
     try {
-        this.useNameCardOwner = false;
+        this.useNameCardOwner = true;
 
         this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
 
