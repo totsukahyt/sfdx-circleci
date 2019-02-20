@@ -85,6 +85,13 @@
         <value>キャンペーンメンバーの状況</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_Campaign_ForLead</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Campaign_ForLead</shortDescription>
+        <value>（リードのみ指定可能）</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_Cancel</fullName>
         <language>ja</language>
         <protected>true</protected>
