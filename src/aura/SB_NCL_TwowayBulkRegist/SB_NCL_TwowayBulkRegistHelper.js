@@ -16,13 +16,27 @@
   // 初期化
    searchAllData : function(cmp, event, helper, targetIds, isInit) {
     var action = cmp.get('c.getAllData');
+    var searchConditionRecordType = JSON.stringify(cmp.get('v.inputV.searchRecordTypesMap'));
+    if (isInit == false) {
+      var searchCondition = JSON.stringify(cmp.get('v.inputV.searchConditionValue'));
+      var searchConditionContact = JSON.stringify(cmp.get('v.inputV.searchConditionValueContact'));
+      var searchConditionB = JSON.stringify(cmp.get('v.inputVBack.searchConditionValue'));
+      var searchConditionContactB = JSON.stringify(cmp.get('v.inputVBack.searchConditionValueContact'));
+      var searchConditionRecordTypeB = JSON.stringify(cmp.get('v.inputVBack.searchRecordTypesMap'));
+      if (searchCondition == searchConditionB
+        && searchConditionContact == searchConditionContactB
+        && searchConditionRecordType == searchConditionRecordTypeB) {
+        return;
+      }
+    }
+    cmp.set('v.working', true);
     action.setParams(
     {
       "recordIds": targetIds,
       "fieldListStr" : JSON.stringify(cmp.get("v.fieldList")),
       "searchType" : cmp.get('v.inputV.searchConditionValue'),
       "searchContactType" : cmp.get('v.inputV.searchConditionValueContact'),
-      "recordTypesMapstr" : JSON.stringify(cmp.get('v.inputV.searchRecordTypesMap'))
+      "recordTypesMapstr" : searchConditionRecordType
     });
     action.setCallback(this,function(response) {
       var state = response.getState();
@@ -109,12 +123,23 @@
             cmp.set("v.inputV", inputV);    // 対象の名刺一覧
             cmp.set("v.fieldList", r[result.otherMessage.showType]);    // 対象の名刺一覧
           }
+          cmp.set("v.inputVBack", JSON.parse(JSON.stringify(cmp.get('v.inputV'))));
         }
         else {
           // エラーがあった場合、画面に表示
           cmp.set("v.errorMsg", result.message);
           cmp.set("v.showErrorMsg", true);
           cmp.set("v.working", false);    //
+          // 初期の検索エラー
+          if (isInit == true) {
+            cmp.set("v.searchError", true);
+          }
+          var inputV = cmp.get("v.inputV");
+          var inputVBack = cmp.get("v.inputVBack");
+          inputV.searchRecordTypesMap = inputVBack.searchRecordTypesMap;
+          inputV.searchConditionValue = inputVBack.searchConditionValue;
+          inputV.searchConditionValueContact = inputVBack.searchConditionValueContact;
+          cmp.set("v.inputV", inputV);
         }
       }else {
         alert(response.getError()[0].message);

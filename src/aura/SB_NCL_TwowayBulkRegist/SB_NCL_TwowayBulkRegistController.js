@@ -30,7 +30,7 @@
     // 検索条件変更JS
     changeSearchCondition : function (cmp, event, helper) {
       // helper.changeSearchCondition(cmp, event, helper);
-      cmp.set('v.working', true);
+      cmp.set('v.working', false);
       var targetIds = cmp.get('v.recordId');
       helper.searchAllData(cmp, event, helper, targetIds, false);
     },
@@ -126,7 +126,16 @@
         }
         inputV.searchConditions = arr;
         cmp.set("v.inputV", inputV);
-        cmp.set("v.fieldList", fieldMap[value]);
+        var fieldList = cmp.get("v.fieldList");
+        var fieldList2 = fieldMap[value];
+        for (var i = 0; i < fieldList.length; i ++) {
+          for (var j = 0; j < fieldList2.length; j ++) {
+            if (fieldList[i].fieldName == fieldList2[j].fieldName) {
+                fieldList2[i].checkAllCheck = fieldList[i].checkAllCheck;
+            }
+          }
+        }
+        cmp.set("v.fieldList", fieldList2);
         // $A.get('e.force:refreshView').fire();
       }
     }

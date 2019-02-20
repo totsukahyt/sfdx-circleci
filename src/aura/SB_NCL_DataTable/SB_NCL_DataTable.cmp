@@ -27,7 +27,7 @@
     <aura:attribute name="haveError" type="Boolean" default="false"/> <!-- エラーマック列表示するフラグ -->
     <aura:attribute name="showType" type="String" default="Lead"/> <!-- 登録タイプ リード 取引先責任者 両方 -->
     <aura:attribute name="labelMap" type="Map" /> <!-- 入力所の内容と表示保存されてます -->
-     <aura:handler name="change" value="{!v.fieldList}" action="{!c.changeFieldList}"/>
+    <aura:handler name="change" value="{!v.fieldList}" action="{!c.changeFieldList}"/>
     <aura:handler event="aura:doneRendering" action="{!c.reSetThead }"/>
     <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistCommonEvent" action="{!c.doSomething}"/>
     <aura:handler name="render" value="{!this}" action="{!c.reSetThead}"/>
@@ -282,59 +282,59 @@
                     </aura:renderIf>
 
                     <td style="{!if(v.showType != 'Contact', 'min-width: 100px;', 'display: none;')}" role="gridcell">
-                      <div style="{!if(v.fieldMap.Name.width != '', 'width:' + v.fieldMap.Name.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.Name != null, if(v.fieldMap.Name.width != '', 'width:' + v.fieldMap.Name.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                             <lightning:formattedUrl label="{!obj.cObjectMap.Name.label}" value="{!obj.cObjectMap.Name.link}"/>
                         </div>
                     </td>
 
                     <td style="{!if(v.showType != 'Contact' , 'min-width: 100px;', 'display: none;')}" role="gridcell">
-                      <div style="{!if(v.fieldMap.SmartViscaf__email__c.width != '', 'width:' + v.fieldMap.SmartViscaf__email__c.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.SmartViscaf__email__c != null, if(v.fieldMap.SmartViscaf__email__c.width != '', 'width:' + v.fieldMap.SmartViscaf__email__c.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                           {!obj.cObjectMap.SmartViscaf__email__c.label}
                       </div>
                     </td>
 
                     <td style="min-width: 100px;" role="gridcell">
-                      <div style="{!if(v.fieldMap.SmartViscaf__company_name__c.width != '', 'width:' + v.fieldMap.SmartViscaf__company_name__c.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.SmartViscaf__company_name__c != null, if(v.fieldMap.SmartViscaf__company_name__c.width != '', 'width:' + v.fieldMap.SmartViscaf__company_name__c.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                           {!obj.cObjectMap.SmartViscaf__company_name__c.label}
                       </div>
                     </td>
 
                     <td style="{!if(v.showType != 'Contact' , 'min-width: 100px;', 'display: none;')}" role="gridcell">
-                      <div style="{!if(v.fieldMap.SmartViscaf__address_pref__c.width != '', 'width:' + v.fieldMap.SmartViscaf__address_pref__c.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.SmartViscaf__address_pref__c != null, if(v.fieldMap.SmartViscaf__address_pref__c.width != '', 'width:' + v.fieldMap.SmartViscaf__address_pref__c.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                           {!obj.cObjectMap.SmartViscaf__address_pref__c.label}
                       </div>
                     </td>
 
                     <td style="{!'min-width: 100px;'}" role="gridcell">
-                      <div style="{!if(v.fieldMap.SmartViscaf__division__c.width != '', 'width:' + v.fieldMap.SmartViscaf__division__c.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.SmartViscaf__division__c != null, if(v.fieldMap.SmartViscaf__division__c.width != '', 'width:' + v.fieldMap.SmartViscaf__division__c.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                           {!obj.cObjectMap.SmartViscaf__division__c.label}
                       </div>
                     </td>
                     <td style="{!'min-width: 100px;'}" role="gridcell">
-                      <div style="{!if(v.fieldMap.SmartViscaf__title_name__c.width != '', 'width:' + v.fieldMap.SmartViscaf__title_name__c.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.SmartViscaf__title_name__c != null, if(v.fieldMap.SmartViscaf__title_name__c.width != '', 'width:' + v.fieldMap.SmartViscaf__title_name__c.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                           {!obj.cObjectMap.SmartViscaf__title_name__c.label}
                       </div>
                     </td>
 
                     <td style="{!if(v.showType == 'Contact', 'min-width: 100px;', 'display: none;')}" role="gridcell">
-                      <div style="{!if(v.fieldMap.Name.width != '', 'width:' + v.fieldMap.Name.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.Name != null, if(v.fieldMap.Name.width != '', 'width:' + v.fieldMap.Name.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                             <lightning:formattedUrl label="{!obj.cObjectMap.Name.label}" value="{!obj.cObjectMap.Name.link}"/>
                         </div>
                     </td>
 
                     <td style="{!if(v.showType != 'Lead', 'min-width: 100px;', 'display: none;')}" role="gridcell">
-                      <div style="{!if(v.fieldMap.Address.width != '', 'width:' + v.fieldMap.Address.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.Address != null, if(v.fieldMap.Address.width != '', 'width:' + v.fieldMap.Address.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                           {!obj.cObjectMap.Address.label}
                       </div>
                     </td>
                     <td style="{!if(v.showType != 'Lead', 'min-width: 100px;', 'display: none;')}" role="gridcell">
-                      <div style="{!if(v.fieldMap.SmartViscaf__mobile__c.width != '', 'width:' + v.fieldMap.SmartViscaf__mobile__c.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.SmartViscaf__mobile__c != null, if(v.fieldMap.SmartViscaf__mobile__c.width != '', 'width:' + v.fieldMap.SmartViscaf__mobile__c.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                           {!obj.cObjectMap.SmartViscaf__mobile__c.label}
                       </div>
                     </td>
 
                     <td style="{!if(v.showType == 'Contact' , 'min-width: 100px;', 'display: none;')}" role="gridcell">
-                      <div style="{!if(v.fieldMap.SmartViscaf__email__c.width != '', 'width:' + v.fieldMap.SmartViscaf__email__c.width + 'px', '')}" class="slds-truncate">
+                      <div style="{!if(obj.cObjectMap.SmartViscaf__email__c != null, if(v.fieldMap.SmartViscaf__email__c.width != '', 'width:' + v.fieldMap.SmartViscaf__email__c.width + 'px', ''), 'display: none;')}" class="slds-truncate">
                           {!obj.cObjectMap.SmartViscaf__email__c.label}
                       </div>
                     </td>

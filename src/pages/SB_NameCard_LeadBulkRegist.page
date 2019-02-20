@@ -19,12 +19,12 @@
     <apex:inputHidden value="{!registTodoAll}" id="allToDo"/>
     <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
       <apex:pageBlockButtons >
-        <apex:commandButton onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.SB_NCLD_Label_Save}" id="savebtn"/>
+        <apex:commandButton disabled="{!searchError}" onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.SB_NCLD_Label_Save}" id="savebtn"/>
         <apex:commandButton id="cancelbtn" oncomplete="cancelClick();" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
       </apex:pageBlockButtons>
       <apex:pageBlockSection columns="2">
 
-        <apex:selectRadio label="{!$Label.SB_NC_SearchCriteria}" value="{!searchType}">
+        <apex:selectRadio disabled="{!searchError}" label="{!$Label.SB_NC_SearchCriteria}" value="{!searchType}">
           <apex:selectOptions value="{!searchTypeList}"/>
           <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList" oncomplete="resetTodoCheck();"/>
         </apex:selectRadio>

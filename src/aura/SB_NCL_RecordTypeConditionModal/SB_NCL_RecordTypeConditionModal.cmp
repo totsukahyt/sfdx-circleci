@@ -19,9 +19,12 @@
   <aura:attribute name="inputV" type="Sobject" /> <!-- 入力内容 -->
   <aura:attribute name="showType" type="String" /> <!-- 入力内容 -->
   <aura:attribute name="show" type="Boolean" /> <!-- 表示フラグ -->
+  <aura:attribute name="showOKButton" type="Boolean" default="true"/> <!-- showOKButton表示フラグ -->
   <aura:attribute name="searchRecordTypesMap" type="Map" /> <!-- 選択されてレコードタイプMap -->
   <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistCommonEvent" action="{!c.modalSearchRecordTypeChanged}"/>
   <aura:registerEvent name="changeSearchCondition" type="c:SB_NCL_ChangeSearchConditionEvent"/>
+
+  <aura:handler name="change" value="{!v.show}" action="{!c.changeShowOKButton}"/>
 
   <aura:renderIf isTrue="{!v.show}">
   	<div class="demo-only" style="height: 640px;z-index: 9999;">
@@ -75,7 +78,7 @@
         </div>
         <footer class="slds-modal__footer">
           <button class="slds-button slds-button_neutral" style="float: left;" onclick="{!c.close}">Cancel</button>
-          <button class="slds-button slds-button_brand" onclick="{!c.save}">OK</button>
+          <button style="{!if(v.showOKButton != true, 'display: none;', '')}" class="slds-button slds-button_brand" onclick="{!c.save}">OK</button>
         </footer>
       </div>
     </section>

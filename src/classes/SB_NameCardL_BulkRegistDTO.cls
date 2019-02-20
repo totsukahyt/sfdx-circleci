@@ -155,7 +155,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
       System.debug(obj);
       if (type == 'string') {
         this.label = (String)obj.get(api);
-        if (isinput) {
+        if (isinput || api == 'Id' || api == 'OwnerId') {
           this.value = (String)obj.get(api);
         }
       }

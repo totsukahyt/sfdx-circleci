@@ -34,6 +34,7 @@
   <aura:attribute name="errorMsg" type="String" /> <!-- エラーメッセージ -->
   <aura:attribute name="showErrorMsg" type="String" /> <!-- エラーメッセージ表示 -->
   <aura:attribute name="dataHasError" type="Boolean" default="false"/> <!-- 保存に関するエラー -->
+  <aura:attribute name="searchError" type="Boolean" default="false"/> <!-- 検索によるエラー -->
   <aura:attribute name="openNewSection" type="Boolean" default="true"/> <!-- 新規作成時の指定セクションを表示フラグ -->
   <aura:attribute name="openOverWriteSection" type="Boolean" default="true"/> <!-- 上書きセクション表示フラグ -->
   <!-- DataTable thead width reset  -->
@@ -347,7 +348,7 @@
         <ui:outputRichText class="slds-text-longform" value="{!v.errorMsg}"/>
        </div>
        <div class="slds-modal__footer">
-        <button class="slds-button slds-button--neutral slds-container--center slds-button" type="button" onclick="{!c.hiddenError}">
+        <button class="slds-button slds-button--neutral slds-container--center slds-button" type="button" onclick="{!if(v.searchError == false, c.hiddenError, c.close)}">
          <!-- react-text: 528 -->OK
          <!-- /react-text --></button>
        </div>

@@ -14,8 +14,18 @@
  *
  **/
 ({
-	myAction : function(component, event, helper) {
-		
+	changeShowOKButton : function(component, event, helper) {
+    var searchGroups = component.get('v.inputV.searchConditionRct.searchConditionRecordTypeOptionGroups');
+    var showType = component.get('v.showType');
+    var showOkBotton = false;
+    for (var i = 0; i < searchGroups.length; i ++) {
+      var searchGroup = searchGroups[i];
+      var ops = searchGroup.searchConditionplickListOptions;
+      if (((searchGroup.titleId != 'Lead' && showType != 'Lead') || searchGroup.titleId == showType || showType == 'Both') && ops.length > 0) {
+        showOkBotton = true;
+      }
+    }
+		component.set('v.showOKButton', showOkBotton);
 	},
   // 閉じる
   close : function(component, event, helper) {

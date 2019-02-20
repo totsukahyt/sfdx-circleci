@@ -24,6 +24,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
   public String retUrl{get;set;}
   public Boolean useNameCardOwner{get;set;}
   public String winbdowTitle{get;set;}
+  public Boolean searchError{get;set;}
 
   //テスト addMessageキャッチよう
   @TestVisible
@@ -224,6 +225,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
         SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
         //SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
         SB_NameCard_LeadRegist.setLastFirstNameSoql(this.soqlMap, this.nameIdList, this.nameSet,this.lastNameSet,this.firstNameSet,ncList);
+        searchError = false;
         this.search();
     } catch (Exception e) {
       testError = e.getMessage();
@@ -306,13 +308,21 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
         if (ncRec.message != '') {
           message = ncRec.message;
         }
+        if (Limits.getHeapSize() > Limits.getLimitHeapSize()) {
+          this.nameCardRecordList = new List<NameCardRecord>();
+          throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_ChooseLessBusinessCards);
+        }
       }
       if (message != '') {
         testError = message;
+        if (message != String.format(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV, new String[] {LEADLABEL})) {
+          this.searchError = true;
+        }
         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
       }
     } catch (Exception e) {
       testError = e.getMessage();
+      this.searchError = true;
       ApexPages.addMessages(e);
     }
   }

@@ -14,6 +14,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   public String retUrl{get;set;}
   public Boolean useNameCardOwner{get;set;}
   public Boolean useNameCardContactOwner{get;set;}
+  public Boolean searchError {get;set;}
 
   private static final String LD_LABEL = Lead.sObjectType.getDescribe().getLabel();
   //取引先オブジェクト表示ラベル
@@ -360,7 +361,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
         this.nameCardIdSet = new Set<Id>();
       }
       System.debug('nameCardList.size: ' + this.nameCardList.size());
-
+      this.searchError = false;
       this.search();
     }
     catch (Exception e) {
@@ -724,12 +725,14 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
       }
       if (message != '') {
         testError = message;
+        this.searchError = true;
         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
       }
       firstSearch = false;
     } catch (Exception e) {
       System.debug(e.getStackTraceString());
-      testError = e.getMessage();
+      this.testError = e.getMessage();
+      this.searchError = true;
       // ApexPages.addMessages(e);
       ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
     }

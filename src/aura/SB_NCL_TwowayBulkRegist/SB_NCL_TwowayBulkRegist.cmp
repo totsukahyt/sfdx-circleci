@@ -22,6 +22,7 @@
   <aura:attribute name="fieldList" type="List" /> <!-- 項目リスト -->
   <aura:attribute name="fieldMap" type="Sobject" /> <!-- 画面表示項目Map -->
   <aura:attribute name="inputV" type="Sobject" /> <!-- 画面入力内容 -->
+  <aura:attribute name="inputVBack" type="Sobject" /> <!-- 画面入力内容 -->
   <aura:attribute name="titleV" type="Sobject" /> <!-- タイトル関する内容 -->
   <aura:attribute name="dataList" type="Sobject" /> <!-- 名刺一覧内容 -->
   <aura:attribute name="cardList" type="List" />
@@ -34,6 +35,7 @@
   <aura:attribute name="allSearchConditions" type="List"/> <!-- 全ての検索条件 -->
   <aura:attribute name="errorMsg" type="String" /> <!-- エラーメッセージ -->
   <aura:attribute name="showErrorMsg" type="String" /> <!-- エラー表示フラグ -->
+  <aura:attribute name="searchError" type="Boolean" default="false"/> <!-- 検索によるエラー -->
   <aura:attribute name="dataHasError" type="Boolean" default="false"/> <!-- 登録に関するエラー -->
 
   <aura:attribute name="sobj" type="Sobject" />
@@ -72,6 +74,7 @@
                                         errorMsg="{!v.errorMsg}"
                                         showErrorMsg="{!v.showErrorMsg}"
                                         dataHasError="{!v.dataHasError}"
-                                        showType="{!v.showPlickListType}"/>
+                                        showType="{!v.showPlickListType}"
+                                        searchError="{!v.searchError}"/>
   </div>
 </aura:component>
