@@ -158,7 +158,7 @@
 
                         <apex:column rendered="{!svConfig.disp['LastModifiedDate']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_LastModiedDate}</apex:facet>
-                             <apex:outputText value="{0, date, yyyy/MM/dd}">
+                             <apex:outputText value="{0, date, yyyy/MM/dd HH:mm}">
                                   <apex:param value="{!leadRecord.LastModifiedDate+0.375}"/>
                               </apex:outputText>
                             <!-- <apex:outputText id="time" value="{!leadRecord.LastModifiedDate}"/> -->
@@ -307,7 +307,7 @@
           <!-- 最終更新日 -->
           <apex:column rendered="{!IF(screenData.dispLastModifiedDate, true, false)}">
               <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.lastModifiedDate.Label}</apex:facet>
-              <apex:outputText value="{0, date, yyyy/MM/dd}">
+              <apex:outputText value="{0, date, yyyy/MM/dd HH:mm}">
                   <apex:param value="{!val.lastModifiedDate+0.375}"/>
               </apex:outputText>
           </apex:column>
