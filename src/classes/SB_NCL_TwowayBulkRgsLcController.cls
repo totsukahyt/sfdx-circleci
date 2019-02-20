@@ -189,9 +189,12 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
         List<SB_NameCardL_BulkRegistDTO.CustomObject> dataList = new List<SB_NameCardL_BulkRegistDTO.CustomObject>();
         Boolean haveLead = false;
         Boolean haveAccount = false;
+        Integer i = 0;
         for (SmartViscaf__NameCard__c nc : nameCards) {
             Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue> inputPlickListMap = new  Map<String, SB_NameCardL_BulkRegistDTO.InputPlickListValue>();
             SB_NameCardL_BulkRegistDTO.InputPlickListValue inputPlickListV = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
+            String leadId = 'none';
+            String accountId = 'none';
             if (String.isBlank(nc.SmartViscaf__company_name__c) || String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(nc).get('last_name'))) {
                 inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(System.Label.SB_NCLD_DontRegister_CompanyNameRequired, 'none'));
                 if (!SmartViscaf.SB_NameCard_Util.isEnablePersonAccount()) {
@@ -226,6 +229,9 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                   inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(label, lead.Id));
                   inputPlickListV.plickListValueMap.put(lead.Id, label);
                   haveLead = true;
+                  if (leadId == 'none') {
+                    leadId = lead.Id;
+                  }
                 }
               }
 
@@ -233,6 +239,9 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                 String label = System.Label.SB_NCLD_Menu_NewLead;
                 inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(label, 'new'));
                 inputPlickListV.plickListValueMap.put('new', label);
+                if (leadId == 'none') {
+                  leadId = 'new';
+                }
               }
               inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(System.Label.SB_NCLD_Menu_NotToRegister, 'none'));
               inputPlickListV.plickListValueMap.put('none', System.Label.SB_NCLD_Menu_NotToRegister);
@@ -258,6 +267,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                   inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(label, ids));
                   inputPlickListV.plickListValueMap.put(con.AccountId + ':' + con.Id, label);
                   haveAccount = true;
+                  if (accountId == 'none') {
+                    accountId = ids;
+                    leadId = 'none';
+                  }
                 }
               }
               if (sObjectMap.containsKey(Account.sObjecttype) && Contact.sObjectType.getDescribe().isCreateable()) {
@@ -268,6 +281,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                   inputPlickListV.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(label, a.Id + ':'));
                   inputPlickListV.plickListValueMap.put(a.Id + ':', label);
                   haveAccount = true;
+                  if (accountId == 'none') {
+                    accountId = a.Id + ':';
+                    leadId = 'none';
+                  }
                 }
               }
               // String.valueOf(index), c.Account.Name + '(' + SB_NameCard_Util.getStr(c.Account.Site) + ')' + '/' + c.Name + '(' + SB_NameCard_Util.getStr(c.Department) + '/' + SB_NameCard_Util.getStr(c.Email) + ')')
@@ -280,8 +297,13 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
 
               inputPlickListMap.put('Contact',inputPlickListV);
             }
+
+
             nameCardObjMap.get(nc.Id).combobox = inputPlickListMap;
+            nameCardObjMap.get(nc.Id).cObjectMap.get('Lead').value = leadId;
+            nameCardObjMap.get(nc.Id).cObjectMap.get('Contact').value = accountId;
             // inputPlickListVMap.put(nc.Id, inputPlickListMap);
+            i ++;
         }
         if (message != '') {
                 // testError = message;

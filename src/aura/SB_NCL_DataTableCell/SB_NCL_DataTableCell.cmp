@@ -28,48 +28,13 @@
   <aura:attribute name="width" type="String" /> <!-- Cellのwidth -->
   <aura:attribute name="index" type="Integer" /> <!-- 行index -->
   <aura:attribute name="showType" type="String" default="Lead"/> <!-- 表示タイプ -->
-  <aura:registerEvent name="leadBulkRegistEvent" type="c:SB_NCL_BulkRegistComonEvent"/>
+  <aura:registerEvent name="leadBulkRegistEvent" type="c:SB_NCL_BulkRegistCommonEvent"/>
   <aura:method name="cleanPlickList" action="{!c.cleanPlickList}" access="PUBLIC"/>
 
   <!-- コンポネードgid -->
   <aura:attribute name="gid" type="String"/>
   <td style="{!if(v.field.fieldName=='ToDo', 'min-width: 120px;text-align: center;', 'min-width: 100px;')}" role="gridcell">
     <div class="slds-truncate" style="{!if(v.width != '', 'width:' + v.width + 'px', '')}">
-      <aura:renderIf isTrue="{!v.field.type == 'string'}">
-        {!v.value}
-      </aura:renderIf>
-      <aura:renderIf isTrue="{!v.field.type == 'email'}">
-        <aura:renderIf isTrue="{!v.field.input == false}">
-          <lightning:formattedEmail value="{!v.value}"/>
-        </aura:renderIf>
-        <aura:renderIf isTrue="{!v.field.input == true}">
-          <ui:inputEmail value="{!v.value}" blur="{!c.changeValue}"/>
-        </aura:renderIf>
-      </aura:renderIf>
-      <aura:renderIf isTrue="{!v.field.type == 'url'}">
-        <aura:renderIf isTrue="{!v.field.input == false}">
-          <lightning:formattedUrl label="{!v.label}" value="{!v.value}"/>
-        </aura:renderIf>
-        <aura:renderIf isTrue="{!v.field.input == true}">
-          <ui:inputURL value="{!v.value}" label="{!v.label}" blur="{!c.changeValue}"/>
-        </aura:renderIf>
-      </aura:renderIf>
-      <aura:renderIf isTrue="{!v.field.type == 'date'}">
-        <aura:renderIf isTrue="{!v.field.input == false}">
-          <lightning:formattedDateTime value="{!v.value}"/>
-        </aura:renderIf>
-        <aura:renderIf isTrue="{!v.field.input == true}">
-          <ui:inputDate value="{!v.value}" blur="{!c.changeValue}"/>
-        </aura:renderIf>
-      </aura:renderIf>
-      <aura:renderIf isTrue="{!v.field.type == 'number'}">
-        <aura:renderIf isTrue="{!v.field.input == false}">
-          <!--<lightning:formattedNumber value="{!v.value}"/>-->
-        </aura:renderIf>
-        <aura:renderIf isTrue="{!v.field.input == true}">
-          <!-- <ui:inputNumber value="{!v.value}" blur="{!c.changeValue}"/>-->
-        </aura:renderIf>
-      </aura:renderIf>
 
       <aura:renderIf isTrue="{!v.field.type == 'checkbox'}">
           <c:SB_NCL_Checkbox boxid="{!v.index + v.field.fieldName}" fieldName="{!v.field.fieldName}" cObjectMap="{!v.cObjectMap}" checked="{!v.checked}" dis="{!v.field.input == false}" boxlabel=""/>
