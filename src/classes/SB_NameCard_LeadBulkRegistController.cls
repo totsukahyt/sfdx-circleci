@@ -416,7 +416,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             dml.OptAllOrNone = true;
     
-            SB_NameCard_LeadCrudFls.supdate(leadList, dml);
+            SB_NameCard_LeadCrudFls.supdate(ncList, dml);
 
         }
     }
