@@ -6,7 +6,7 @@
     <label>名刺 - リードに登録</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>14</minorNumber>
+        <minorNumber>4</minorNumber>
         <namespace>SmartViscaf</namespace>
     </packageVersions>
 </ApexPage>
