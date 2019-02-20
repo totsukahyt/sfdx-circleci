@@ -4,7 +4,8 @@
  * 統合版一括登録Lex&Classic コントローラ
  * classicのページを表示、Lex環境の方はlexのページを表示　方針にして、一つボタンに統一すること
  * @author mao
- * @Version 1 2018/08/XX  SV_DEV-1109 リード拡張パッケージ[統合版]Classic環境でLexのボタンタップすると、エラー発生するため、 LexとClassicを一つボタンから表示させる
+ * @Version 1.21 2018/08/XX  SV_DEV-1109 リード拡張パッケージ[統合版]Classic環境でLexのボタンタップすると、エラー発生するため、 LexとClassicを一つボタンから表示させる
+ * @Version 1.21 2018/09/XX  SV_DEV-1156 LEXかクラシックかの判定がオフィシャルな方法に変更
  *
  */
 
@@ -188,6 +189,9 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
       initClassic(controller);
       isLex = false;
     }
+    String uiThemeDisplayed = UserInfo.getUiThemeDisplayed();
+    // SV_DEV-1156 LEXかクラシックかの判定がオフィシャルな方法に変更
+    this.isLex = uiThemeDisplayed == 'Theme4u' || uiThemeDisplayed == 'Theme4d';
   }
 
 
@@ -269,7 +273,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
             if (baseSetting == null) {
               this.leadOverwrite = true;
             } else {
-              this.leadOverwrite = baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
+              this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
             }
           }
 
