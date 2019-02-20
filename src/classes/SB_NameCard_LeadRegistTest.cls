@@ -181,6 +181,45 @@
 		Test.stopTest();
 	}
 
+		@isTest private static void test6()
+	{
+		insertNameCardnomail();
+		SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+		System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
+
+		insertLead(nc);
+		Lead lead = getLead(nc.Id);
+		System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
+
+		Test.startTest();
+
+		PageReference pageRef = Page.SB_NameCard_LeadRegist;
+		Test.setCurrentPage(pageRef);
+		ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+		SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+		ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
+		ctrl.search();
+		ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
+		ctrl.search();
+
+		ctrl.lookUpIndex = ctrl.leadRecordList.size()-2;
+		SB_NameCard_LeadRegistController.LeadRecord leadRec = ctrl.leadRecordList.get(ctrl.lookUpIndex);
+		leadRec.lookUpNameCard.SmartViscaf__lead__c = lead.Id;
+		ctrl.setLookUp();
+       	//ctrl.leadRecordList.get(0).isNew = true;
+		ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+
+		PageReference savePageRef = ctrl.save();
+		System.assertNotEquals(null, savePageRef, 'Save error');
+
+		nc = getNameCard(nc.Id);
+		System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+		System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+
+		Test.stopTest();
+	}
+
 	private static void insertNameCard()
 	{
 		SmartViscaf__NameCard__c nc = new SmartViscaf__NameCard__c();
@@ -200,6 +239,42 @@
         Database.DMLOptions dml = new Database.DMLOptions();
 
         dml.OptAllOrNone = false;
+
+        SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml);
+
+		System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
+	}
+
+	private static void insertNameCardnomail()
+	{
+		SmartViscaf__NameCard__c nc = new SmartViscaf__NameCard__c();
+		nc.SmartViscaf__zip_code__c = '150-0022';
+		nc.SmartViscaf__address_pref__c = '東京都';
+		nc.SmartViscaf__address__c = '渋谷区恵比寿南';
+		nc.SmartViscaf__company_name__c = 'TestCompany';
+		nc.SmartViscaf__tel1__c = '03-1111-1111';
+		nc.SmartViscaf__fax1__c = '03-1111-1112';
+		nc.SmartViscaf__title_name__c = 'TestTitle';
+		nc.SmartViscaf__person_name_last__c = 'TestLast';
+		nc.SmartViscaf__person_name_first__c = 'TestFirst';
+
+		//nc.SmartViscaf__email__c = 'test@sbnc.example.com';
+		nc.SmartViscaf__mobile__c = '090-1111-1111';
+		nc.SmartViscaf__card_exchange_date__c = Date.today();
+
+        Database.DMLOptions dml = new Database.DMLOptions();
+
+        dml.OptAllOrNone = false;
+
+        Campaign cc = new Campaign();
+        cc.Name = 'test';
+        SB_NameCard_LeadCrudFls.screate(new List<Campaign>{cc},dml);
+
+        nc.SmartViscal__campaign__c = cc.Id;
+
+
+
+
 
         SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml);
 

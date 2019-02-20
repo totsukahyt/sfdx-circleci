@@ -227,7 +227,7 @@ public with sharing class SB_NameCard_LeadRegistController
             leads.add(lead);
 
             // リード
-            this.upsertLead(lead, leadRec.isNew);
+            this.upsertLead(leads, leadRec.isNew);
 
             // キャンペーン
             if (this.nameCard.campaign__c != null && (leadRec.isNew || this.campaign != this.nameCard.campaign__c)) { //try
@@ -283,13 +283,13 @@ public with sharing class SB_NameCard_LeadRegistController
     }
 
     // リード
-    private void upsertLead(Lead lead, Boolean isInsert)
+    private void upsertLead(List<Lead> lead, Boolean isInsert)
     {
         Database.DMLOptions dmlOpts = new Database.DMLOptions();
         dmlOpts.DuplicateRuleHeader.allowSave = this.isAllowDuplicateSave; // 重複レコードを保存するか
-        List<SObject> objets = new List<SObject>();
-        objets.add(lead);
-        Database.SaveResult sr = isInsert ? SB_NameCard_LeadCrudFls.screate(objets, dmlOpts)[0] : SB_NameCard_LeadCrudFls.supdate(objets, dmlOpts)[0];
+        //List<Lead> objets = new List<Lead>();
+        //objets.add(lead);
+        Database.SaveResult sr = isInsert ? SB_NameCard_LeadCrudFls.screate(lead, dmlOpts)[0] : SB_NameCard_LeadCrudFls.supdate(lead, dmlOpts)[0];
         if (sr.isSuccess()) return;
 
         for (Database.Error err : sr.getErrors()) {

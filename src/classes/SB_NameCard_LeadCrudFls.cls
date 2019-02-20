@@ -39,7 +39,7 @@
           && descField.isCreateable() == false      // 作成可能?
           && descField.isAutoNumber() == false      // 自動採番?
           && descField.isCalculated() == false) {   // 数式?
-        throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotCreateable,
+          throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotCreateable,
           new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
       }
 
@@ -63,7 +63,7 @@
           && descField.isUpdateable() == false      // 作成可能?
           && descField.isAutoNumber() == false      // 自動採番?
           && descField.isCalculated() == false) {   // 数式?
-         throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotUpdateable,
+          throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_FlsNotUpdateable,
           new String[] {sobjResult.label, descField.getLabel(), descField.getName()}));
        }
      }

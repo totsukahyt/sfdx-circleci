@@ -10,48 +10,49 @@
 {
     @isTest private static void test1()
     {
-        insertNameCard();
-        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-        System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
-
-        Test.startTest();
-        Account acc = new Account();
-        List<SObject> objets = new List<SObject>();
-        objets.add(acc);
+         insertNameCard();
+         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+         System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
+         Test.startTest();
+         Account acc = new Account();
+         List<SObject> objets = new List<SObject>();
+         objets.add(acc);
          Database.DMLOptions dml = new Database.DMLOptions();
 
          dml.OptAllOrNone = false;
 
-        SB_NameCard_LeadCrudFls.screate(objets,dml);
-        Test.stopTest();
+         Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(objets,dml)[0];
+         
+         System.assertNotEquals(null, sr.getErrors(), 'NameCard error');
+         
+         Test.stopTest();
     }
 
     @isTest private static void test2()
     {
   
-        Test.startTest();
+         Test.startTest();
         
-        Database.DMLOptions dml = new Database.DMLOptions();
+         Database.DMLOptions dml = new Database.DMLOptions();
 
-        dml.OptAllOrNone = false;
+         dml.OptAllOrNone = false;
         
-        SB_NameCard_LeadCrudFls.supdate(new List<SObject>{new Account()},dml);
+         Database.SaveResult sr =  SB_NameCard_LeadCrudFls.supdate(new List<SObject>{new Account()},dml)[0];
 
-        Test.stopTest();
+         Test.stopTest();
     }
 
-    
-          private static testMethod void test6()
+    private static testMethod void test6()
     {
      Profile prof;
-        try{
-       prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only'];
-        }catch(Exception e){
-         prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = '参照のみ'];
-     }
-   User u = new User(); 
-   // u.Name = 'mydtest@mydexample.com';
-  User u2 = new User(Alias = 'test', Email='newusertest@testorgtest.com',
+     try{
+           prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only'];
+         }catch(Exception e){
+           prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = '参照のみ'];
+         }
+         User u = new User(); 
+         // u.Name = 'mydtest@mydexample.com';
+         User u2 = new User(Alias = 'test', Email='newusertest@testorgtest.com',
 
          EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
 
@@ -59,50 +60,66 @@
 
          TimeZoneSidKey='America/Los_Angeles', UserName='newusertesttest@testorgtest.com');
         	insertNameCard();
-		SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-    System.runAs(u2) {
-        try{
-            Database.DMLOptions dml = new Database.DMLOptions();
+		 SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        
+         System.runAs(u2) {
+             try{
+                   Database.DMLOptions dml = new Database.DMLOptions();
 
-            dml.OptAllOrNone = false;
+                   dml.OptAllOrNone = false;
          
-            SB_NameCard_LeadCrudFls.screate(new List<SObject>{nc},dml);
-        }catch(Exception e)
-        {}
+                    Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<SObject>{nc},dml)[0];
+                   
+                    System.assertNotEquals(null, sr.getErrors(), 'NameCard error');
+                 }catch(Exception e)
+                 {  }
          }
         
     }
 
 
-      private static testMethod void test4()
+    private static testMethod void test4()
     {
-     Profile prof;
-        try{
-       prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only'];
-        }catch(Exception e){
-         prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = '参照のみ'];
-     }
-   User u = new User(); 
-   // u.Name = 'mydtest@mydexample.com';
-  User u2 = new User(Alias = 'test', Email='newusertest@testorgtest.com',
+      Profile prof;
+      try{
+           
+             prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only'];
+          
+          }catch(Exception e){
+          
+             prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = '参照のみ'];
+          
+                              }
+      
+      User u = new User(); 
+      // u.Name = 'mydtest@mydexample.com';
+      User u2 = new User(Alias = 'test', Email='newusertest@testorgtest.com',
 
-         EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
+      EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
 
-         LocaleSidKey='en_US', ProfileId = prof.Id,
+      LocaleSidKey='en_US', ProfileId = prof.Id,
 
-         TimeZoneSidKey='America/Los_Angeles', UserName='newusertest@testorgtest.com');
-        	insertNameCard();
-		SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-    System.runAs(u2) {
-        try{ 
+      
+      TimeZoneSidKey='America/Los_Angeles', UserName='newusertest@testorgtest.com');
+      
+      insertNameCard();
+      
+      SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+      
+      System.runAs(u2) {
+      
+      try{ 
              Database.DMLOptions dml = new Database.DMLOptions();
 
              dml.OptAllOrNone = false;
              
-             SB_NameCard_LeadCrudFls.supdate(new List<SObject>{nc},dml);
-        }catch(Exception e)
-        {}
-         }
+             Database.SaveResult sr = SB_NameCard_LeadCrudFls.supdate(new List<SObject>{nc},dml)[0];
+             
+             System.assertNotEquals(null, sr.getErrors(), 'NameCard error');
+            }
+            catch(Exception e)
+           {  }
+                      }
         
     }
 
