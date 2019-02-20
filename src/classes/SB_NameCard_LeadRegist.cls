@@ -299,7 +299,7 @@ global with sharing class SB_NameCard_LeadRegist
 
     }
 
-    // リード
+    // リード recordtype設定追加
     global static Lead getLead(Id leadId, SmartViscaf__NameCard__c nc, Id ownerId, Id recordtype)
     {
         Lead lead1;
@@ -339,6 +339,41 @@ global with sharing class SB_NameCard_LeadRegist
         if (ownerId != null) lead1.OwnerId = ownerId;
 
         return lead1;
+    }
+
+    // SV_DEV-568 リード拡張パッケージ v1.11 追加、更新 package.xml
+    //GlobalクラスのGlobalメソッドが削除されていたため、古いglobalメッソドを残します
+    global static Lead getLead(Id leadId, SmartViscaf__NameCard__c nc, Id ownerId)
+    {
+        Lead lead = new Lead(Id=leadId);
+
+        lead.PostalCode = nc.SmartViscaf__zip_code__c;
+        lead.State = nc.SmartViscaf__address_pref__c;
+
+        Map<String, String> adMap = SmartViscaf.SB_NameCard_Util.getAddress(nc);
+        lead.City = adMap.get('city');
+        lead.Street = adMap.get('street');
+
+        lead.Company = nc.SmartViscaf__company_name__c;
+        lead.Website = nc.SmartViscaf__web_url1__c;
+        lead.Phone = nc.SmartViscaf__tel1__c;
+        lead.Fax = nc.SmartViscaf__fax1__c;
+        lead.Title = nc.SmartViscaf__title_name__c;
+
+        Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(nc);
+        lead.LastName = pnMap.get('last_name');
+        lead.FirstName = pnMap.get('first_name');
+
+        lead.Email = nc.SmartViscaf__email__c;
+        lead.MobilePhone = nc.SmartViscaf__mobile__c;
+
+        lead.NameCard__c = nc.Id;
+        lead.NameCardListName__c = nc.SmartViscaf__list_name__c;
+        lead.NameCardMemo__c = nc.SmartViscaf__memo__c;
+        lead.NameCardFreehandmemo__c = nc.SmartViscaf__freehandmemo__c;
+        if (ownerId != null) lead.OwnerId = ownerId;
+
+        return lead;
     }
 
     // ToDo

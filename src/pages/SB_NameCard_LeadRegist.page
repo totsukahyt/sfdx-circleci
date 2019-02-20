@@ -134,7 +134,7 @@
                         <apex:outputPanel >
                             <apex:outputText value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/>
                             <br/><br/>
-                            <apex:outputLabel  value="{!leadRecType}"/>
+                            <apex:outputLabel value="{!leadRecType}"/>
                             <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!leadRecordTypeId}" multiselect="false" size="1" disabled="{!Not(leadRecTypeEdit)}">
                                 <apex:selectOptions value="{!leadRecordTypeOptions}"/>
                             </apex:selectList>
