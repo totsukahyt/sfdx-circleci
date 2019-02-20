@@ -5,6 +5,7 @@
  * 共通クラス
  *
  *  2016.11.09  コードスキャンで global なメソッドは with sharing が必要とのことなので、 with sharing  を付けた。
+ *  @Version 1 2017/11/XX  SV_DEV-681 Lead一括登録での候補検索時の姓、名の文字列のエスケープは完全一致なので、不要では。
  */
 
 global with sharing class SB_NameCard_LeadRegist
@@ -206,25 +207,26 @@ global with sharing class SB_NameCard_LeadRegist
             if (nc.SmartViscaf__lead__c != null) {
                 nameIdList.add(nc.SmartViscaf__lead__c);
             }
-
+            //SV_DEV-681
+            //Lead一括登録での候補検索時の姓、名の文字列のエスケープは完全一致なので、不要では。
             if ((lastName = getPersonLastName(nc)) != null) {
-                String str = EncodingUtil.urlEncode(lastName,'UTF-8');
-                Blob b = Blob.valueOf(str);
-                String b64 = EncodingUtil.base64Encode(b);
-                lastName = lastName.replaceAll('\'', b64);
-                lastName = String.escapeSingleQuotes(lastName.replaceAll('＼','_'));
-                lastName = lastName.replaceAll(b64, '\'');
+                // String str = EncodingUtil.urlEncode(lastName,'UTF-8');
+                // Blob b = Blob.valueOf(str);
+                // String b64 = EncodingUtil.base64Encode(b);
+                // lastName = lastName.replaceAll('\'', b64);
+                // lastName = String.escapeSingleQuotes(lastName.replaceAll('＼','_'));
+                // lastName = lastName.replaceAll(b64, '\'');
                 lastnameSet.add(lastName);
                 //if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
                 //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
             }
             if ((firstName = getPersonFirstName(nc)) != null) {
-                String str = EncodingUtil.urlEncode(firstName,'UTF-8');
-                Blob b = Blob.valueOf(str);
-                String b64 = EncodingUtil.base64Encode(b);
-                firstName = firstName.replaceAll('\'', b64);
-                firstName = String.escapeSingleQuotes(firstName.replaceAll('＼','_'));
-                firstName = firstName.replaceAll(b64, '\'');
+                // String str = EncodingUtil.urlEncode(firstName,'UTF-8');
+                // Blob b = Blob.valueOf(str);
+                // String b64 = EncodingUtil.base64Encode(b);
+                // firstName = firstName.replaceAll('\'', b64);
+                // firstName = String.escapeSingleQuotes(firstName.replaceAll('＼','_'));
+                // firstName = firstName.replaceAll(b64, '\'');
                 firstnameSet.add(firstName);
                 //if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
                 //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
