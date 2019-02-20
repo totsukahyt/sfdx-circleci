@@ -146,6 +146,27 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
       this.plicklist = new List<LabelValue>();
       this.input = false;
     }
+
+    public CustomField(sObject obj, String api, String type, Boolean isinput, String url) {
+      this.input = isinput;
+      System.debug(type);
+      System.debug((String)obj.get(api));
+      System.debug(api);
+      System.debug(obj);
+      if (type == 'string') {
+        this.label = (String)obj.get(api);
+        if (isinput) {
+          this.value = (String)obj.get(api);
+        }
+      }
+      else if (type == 'url') {
+        this.label = (String)obj.get(api);
+        this.link = url;
+      }
+      this.checked = false;
+      this.selectValue = '';
+      this.plicklist = new List<LabelValue>();
+    }
   }
 
   /**

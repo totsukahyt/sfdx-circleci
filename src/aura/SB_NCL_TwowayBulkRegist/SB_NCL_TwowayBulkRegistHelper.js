@@ -113,6 +113,7 @@
         else {
           // エラーがあった場合、画面に表示
           cmp.set("v.errorMsg", result.message);
+          cmp.set("v.showErrorMsg", true);
           cmp.set("v.working", false);    //
         }
       }else {

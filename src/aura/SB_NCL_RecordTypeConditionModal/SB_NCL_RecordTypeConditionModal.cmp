@@ -74,8 +74,8 @@
 
         </div>
         <footer class="slds-modal__footer">
-          <button class="slds-button slds-button_neutral" onclick="{!c.close}">Cancel</button>
-          <button class="slds-button slds-button_brand" onclick="{!c.save}">Save</button>
+          <button class="slds-button slds-button_neutral" style="float: left;" onclick="{!c.close}">Cancel</button>
+          <button class="slds-button slds-button_brand" onclick="{!c.save}">OK</button>
         </footer>
       </div>
     </section>

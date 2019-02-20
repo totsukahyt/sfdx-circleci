@@ -17,6 +17,11 @@
   doInit : function(component, event, helper) {
     var fieldName = component.get('v.field.fieldName');
     var cObjectMap = component.get('v.cObjectMap');
+    var field = cObjectMap[fieldName];
+    // 項目には値がないと何も表示しません
+    if (field == null) {
+      return;
+    }
     component.set('v.value', cObjectMap[fieldName].value);
     component.set('v.label', cObjectMap[fieldName].label);
     component.set('v.checked', cObjectMap[fieldName].checked);

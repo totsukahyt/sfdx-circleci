@@ -666,6 +666,13 @@
         <value>{0}が重複しています</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Text_Loading</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Text_Loading</shortDescription>
+        <value>ローディング中...</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Text_RegisterToLead</fullName>
         <language>ja</language>
         <protected>true</protected>

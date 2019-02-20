@@ -11,7 +11,7 @@
 
 @isTest
 public class SB_NameCardL_UnivTwowayBulkRegistCtrlT {
-    private static List<User> insertUser() {
+  private static List<User> insertUser() {
     List<User> us = new List<User>();
     Profile prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'System Administrator' OR Name = 'システム管理者'];
     User u = new User(Alias = 'test', Email='newusertest@testorgtest.com',

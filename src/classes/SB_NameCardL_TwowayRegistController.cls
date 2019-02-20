@@ -566,212 +566,213 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
   public SB_NameCardL_TwowayRegistController(ApexPages.StandardController sc) {
     try {
-          this.accountContact = String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL});
-          this.windowTitle = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle, new String[] {SmartViscaf__NameCard__c.sObjecttype.getDescribe().getLabel(), LEADLABEL, AC_LABEL, CO_LABEL});
-          this.candidateTable = new List<CandidateRecord>();
-          this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
-          this.screenData = new ScreenData();
-          this.registObjs = RegistType.AccountContactLead;
-          this.accountQueryOption = getQueryOption(Account.sObjecttype);
-          this.accountQueryOption.queryCompany = true; // 会社名は常に 照合
+      this.accountContact = String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL});
+      this.windowTitle = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle, new String[] {SmartViscaf__NameCard__c.sObjecttype.getDescribe().getLabel(), LEADLABEL, AC_LABEL, CO_LABEL});
+      this.candidateTable = new List<CandidateRecord>();
+      this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
+      this.screenData = new ScreenData();
+      this.registObjs = RegistType.AccountContactLead;
+      this.accountQueryOption = getQueryOption(Account.sObjecttype);
+      this.accountQueryOption.queryCompany = true; // 会社名は常に 照合
 
-          this.contactQueryOption =  getQueryOption(Contact.sObjecttype);
-          // this.contactQueryOption.queryLastName = true; // 姓は常に 照合
-          // this.contactQueryOption.queryFirstName = true; // 名は常に 照合
-          // this.contactQueryOption.queryEMail = true; // メールは常に 照合
-          this.contactQueryOption.queryCompany = true; // 会社名は常に 照合
+      this.contactQueryOption =  getQueryOption(Contact.sObjecttype);
+      // this.contactQueryOption.queryLastName = true; // 姓は常に 照合
+      // this.contactQueryOption.queryFirstName = true; // 名は常に 照合
+      // this.contactQueryOption.queryEMail = true; // メールは常に 照合
+      this.contactQueryOption.queryCompany = true; // 会社名は常に 照合
 
-          if (this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.Lead) {
-            this.leadQueryOption =  getQueryOption(Lead.sObjecttype);
+      if (this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.Lead) {
+        this.leadQueryOption =  getQueryOption(Lead.sObjecttype);
+      }
+
+      String accstr = SB_NameCardL_Util.getDefaultRecordType(Account.sObjectType);
+
+      String constr = SB_NameCardL_Util.getDefaultRecordType(Contact.sObjectType);
+
+      this.accountRecTypeEdit = Account.sObjectType.getDescribe().isCreateable() && (ACNT_RECORDTYPES.size() > 1);
+
+      this.contactRecTypeEdit = Contact.sObjectType.getDescribe().isCreateable() && (CONT_RECORDTYPES.size() > 1);
+
+      this.accountRecTypeId = String.isBlank(accstr) ? null : accstr;
+
+      this.contactRecTypeId = String.isBlank(constr) ? null : constr;
+
+      this.createNewLeadLabel = String.format(System.Label.SB_NCLD_Label_CreateNewLeadDEV, new String[] {LEADLABEL});
+
+      this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact, new String[] {LEADLABEL, AC_LABEL, CO_LABEL});
+
+      this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LEADLABEL});
+
+      this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LEADLABEL});
+      this.specifiedWhenCreateNewAccount = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})});
+
+      if (this.svConfig.config.id == null) {
+        this.searchField = FIELD_NAMESITE;
+      } else if (this.svConfig.config.SmartViscaf__AccountSearchType__c == null) {
+        this.searchField = FIELD_NAMESITE;
+      } else {
+        this.searchField = this.svConfig.config.SmartViscaf__AccountSearchType__c ? QUERY_PERFECT : FIELD_NAMESITE;
+      }
+      Boolean ab = ACNT_RECORDTYPES.size() > 1;
+
+      Boolean cb = CONT_RECORDTYPES.size() > 1;
+
+      if (basesetting == null) {
+        this.showAccountRecType = ab;
+        this.showContactRecType = cb;
+      } else {
+        this.showAccountRecType = basesetting.SmartViscaf__RegistDispAccountRectype__c && ab;
+        this.showContactRecType = basesetting.SmartViscaf__RegistDispContactRectype__c && cb;
+      }
+
+      //  取引先レコードタイプ Classic画面で名刺登録を「言語：英語」（英語表示）の状態で登録した場合にレコードタイプ設定のラベル名変更が反映されない
+      this.accountRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType,new String[]{SB_NameCardL_TwowayRegistController.AC_LABEL});
+      //  取引先責任者レコードタイプ
+      this.contactRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType,new String[]{SB_NameCardL_TwowayRegistController.CO_LABEL});
+
+      this.showRecTypeSectionItem = this.showAccountRecType || this.showContactRecType;
+      //既存の取引先を名刺情報で上書きする」を表示する
+      this.showUpdateAccount = basesetting.SmartViscaf__RegistDispAccountOverWriteCheckbox__c;
+      //既存の取引先責任者を名刺情報で上書きする」を表示する
+      this.showUpdateContact = basesetting.SmartViscaf__RegistDispContactOverWriteCheckbox__c;
+      //既存のリードを名刺情報で上書きする」を表示する
+      this.showUpdateLead = basesetting.SmartViscaf__RegistDispLeadOverWriteCheckbox__c;
+
+      this.showUpdate = this.showUpdateAccount || this.showUpdateContact;
+
+      //  新規作成の場合、レコードタイプを選択します。 
+      this.recordTypeExplain = String.format(System.Label.SB_NCLD_Label_RecordTypeExplain, new String[]{SB_NameCardL_TwowayRegistController.AC_LABEL, SB_NameCardL_TwowayRegistController.CO_LABEL});
+
+      //ラベル:既存の取引先の情報を名刺情報で上書きする
+      this.updateForAccount = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_TwowayRegistController.AC_LABEL});
+      //ラベル:既存の取引先責任者の情報を名刺情報で上書きする
+      this.updateForContact = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_TwowayRegistController.CO_LABEL});
+
+      this.accountOverWrite = !baseSetting.SmartViscaf__RegistAccountNotOverWrite__c && Account.sObjectType.getDescribe().isUpdateable();
+      this.contactOverWrite = !baseSetting.SmartViscaf__RegistContactNotOverWrite__c && Contact.sObjectType.getDescribe().isUpdateable();
+
+      this.cannotUpdataAccount = !Account.sObjectType.getDescribe().isUpdateable();
+      this.cannotUpdataContact = !Contact.sObjectType.getDescribe().isUpdateable();
+      this.cannotUpdataLead = !Lead.sObjectType.getDescribe().isUpdateable();
+
+      if (!cannotUpdataAccount) {
+        // デフォルトチェックはカスタム設定から取得
+        if (basesetting == null){
+          this.accountOverwrite = true;
+        }
+        else {
+          this.accountOverwrite = !basesetting.SmartViscaf__RegistAccountNotOverWrite__c;
+        }
+      }
+
+      if (!cannotUpdataContact) {
+        if (basesetting == null) {
+          this.contactOverwrite = true;
+        } else {
+          this.contactOverwrite = !basesetting.SmartViscaf__RegistContactNotOverWrite__c;
+        }
+      }
+
+      if (!canNotUpdataLead) {
+        if (baseSetting == null) {
+          this.leadOverwrite = true;
+        } else {
+          this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
+        }
+      }
+
+
+      this.leadRecTypeEdit = leadCreateable && LEADRECORDTYPES.size() > 1;
+
+      this.canEditTodo = true;
+
+      this.campLookUpDisabled = !SmartViscaf__NameCard__c.campaign__c.getDescribe().isAccessible();
+
+      this.campDisabled = !CampaignMember.sObjectType.getDescribe().isCreateable() || campLookUpDisabled;
+
+      this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
+      this.leadRecordListIndex = -1;
+      this.accountTableIndex = -1;
+      this.lookUpIndex = -1;
+      this.leadRecordList = new List<CandidateRecord>();
+      this.todo = new Task();
+      this.isAllowDuplicateSave = false;
+      this.todo.Subject  = baseSetting.SmartViscaf__RegistToDoSubject__c;
+      if (String.isBlank(this.todo.Subject)) {
+        this.todo.Subject = System.Label.SB_NCLD_Text_BusinessCardExchange;
+      }
+      this.registTodo    = !baseSetting.SmartViscaf__RegistNoToDo__c;
+      // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+      this.showLeadRecType = LEADRECORDTYPES.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
+
+      // SV_DEV-753 リードに登録（個別画面）でキャンペーン選択後の「キャンペーンメンバー状況」の値がデフォルト値にならない。
+      if (String.isNotBlank(this.namecard.campaign__c)) {
+        campStatus = this.namecard.campaign__r.Status;
+      }
+
+      //レコードタイプに関する設定
+      setRecord();
+      String ncId = sc.getId();
+      Set<String> fields = SB_NameCardL_RegistQueryExecutor.getNameCardFields();
+      if (!fields.contains('Owner.IsAvtive')) {
+        fields.add('Owner.IsActive');
+      }
+      String query = String.format('SELECT {0} FROM SmartViscaf__NameCard__c WHERE Id = :ncId', new String[] { String.join(new List<String>(fields), ', ')});
+      List<SmartViscaf__NameCard__c> cards = Database.query(query);
+      if (cards.isEmpty()) {
+        throw new LeadRegistControllerException('');
+      }
+      this.nameCard = cards[0];
+      this.campaignStatus = getCampaign();
+      this.pageLead = new Lead();
+      if (this.nameCard.Owner.IsActive) {
+        if (this.nameCard.OwnerId.getSObjectType() == User.getSobjectType()) {
+           this.pageLead = new Lead(OwnerId=this.nameCard.OwnerId);
+        }
+        else {
+          List<QueueSobject> qss = [Select QueueId, SobjectType, Queue.Name
+                                  FROM QueueSobject
+                                 WHERE QueueId = :this.nameCard.OwnerId
+                                   AND SobjectType = 'Lead'];
+          if (qss.size() > 0) {
+              this.pageLead = new Lead(OwnerId = this.nameCard.OwnerId);
           }
+        }
+      }
+      this.pageAccount = new Account();
+      if (String.valueOf(this.nameCard.OwnerId).startsWith('005') && this.nameCard.Owner.IsActive) {
+        this.pageAccount.OwnerId = this.nameCard.OwnerId;
+      }
+      //if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
+      if (this.nameCard == null) {
+        throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_BusinessCardNotFound);
+      }
 
-          String accstr = SB_NameCardL_Util.getDefaultRecordType(Account.sObjectType);
+      if (String.isBlank(this.nameCard.SmartViscaf__email__c) && (String.isNotBlank(this.nameCard.SmartViscaf__person_name_last__c) || String.isNotBlank(this.nameCard.SmartViscaf__person_name_first__c))) {
+        this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
+      }
+      this.todo.ActivityDate = this.nameCard.SmartViscaf__card_exchange_date__c;
+      this.campaign = this.nameCard.Campaign__c;
 
-          String constr = SB_NameCardL_Util.getDefaultRecordType(Contact.sObjectType);
-
-          this.accountRecTypeEdit = Account.sObjectType.getDescribe().isCreateable() && (ACNT_RECORDTYPES.size() > 1);
-
-          this.contactRecTypeEdit = Contact.sObjectType.getDescribe().isCreateable() && (CONT_RECORDTYPES.size() > 1);
-
-          this.accountRecTypeId = String.isBlank(accstr) ? null : accstr;
-
-          this.contactRecTypeId = String.isBlank(constr) ? null : constr;
-
-          this.createNewLeadLabel = String.format(System.Label.SB_NCLD_Label_CreateNewLeadDEV, new String[] {LEADLABEL});
-
-          this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact, new String[] {LEADLABEL, AC_LABEL, CO_LABEL});
-
-          this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LEADLABEL});
-
-          this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LEADLABEL});
-          this.specifiedWhenCreateNewAccount = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})});
-
-          if (this.svConfig.config.id == null) {
-            this.searchField = FIELD_NAMESITE;
-          } else if (this.svConfig.config.SmartViscaf__AccountSearchType__c == null) {
-            this.searchField = FIELD_NAMESITE;
-          } else {
-            this.searchField = this.svConfig.config.SmartViscaf__AccountSearchType__c ? QUERY_PERFECT : FIELD_NAMESITE;
+      List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { this.nameCard };
+      SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
+      //SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
+      SB_NameCard_LeadRegist.setLastFirstNameSoql(this.soqlMap, this.nameIdList, this.nameSet,this.lastNameSet,this.firstNameSet, ncList);
+      this.search();
+      if (nameCard.SmartViscaf__company_name__c == null || String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(nameCard).get('last_name'))) {
+        if (!SmartViscaf.SB_NameCard_Util.isEnablePersonAccount()) {
+          throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_MSG_CompanyNameMissing);
+        }
+        else {
+          String str = String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL}) + ' : ' + System.Label.SB_NCLD_MSG_CompanyNameMissing;
+          if (String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(nameCard).get('last_name'))) {
+            str += '<br/>' + Lead.sObjectType.getDescribe().getLabel() + ' : ' + System.Label.SB_NCLD_MSG_NameMissing;
           }
-          Boolean ab = ACNT_RECORDTYPES.size() > 1;
-
-          Boolean cb = CONT_RECORDTYPES.size() > 1;
-
-          if (basesetting == null) {
-            this.showAccountRecType = ab;
-            this.showContactRecType = cb;
-          } else {
-            this.showAccountRecType = basesetting.SmartViscaf__RegistDispAccountRectype__c && ab;
-            this.showContactRecType = basesetting.SmartViscaf__RegistDispContactRectype__c && cb;
-          }
-
-          //  取引先レコードタイプ Classic画面で名刺登録を「言語：英語」（英語表示）の状態で登録した場合にレコードタイプ設定のラベル名変更が反映されない
-          this.accountRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType,new String[]{SB_NameCardL_TwowayRegistController.AC_LABEL});
-          //  取引先責任者レコードタイプ
-          this.contactRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType,new String[]{SB_NameCardL_TwowayRegistController.CO_LABEL});
-
-          this.showRecTypeSectionItem = this.showAccountRecType || this.showContactRecType;
-          //既存の取引先を名刺情報で上書きする」を表示する
-          this.showUpdateAccount = basesetting.SmartViscaf__RegistDispAccountOverWriteCheckbox__c;
-          //既存の取引先責任者を名刺情報で上書きする」を表示する
-          this.showUpdateContact = basesetting.SmartViscaf__RegistDispContactOverWriteCheckbox__c;
-          //既存のリードを名刺情報で上書きする」を表示する
-          this.showUpdateLead = basesetting.SmartViscaf__RegistDispLeadOverWriteCheckbox__c;
-
-          this.showUpdate = this.showUpdateAccount || this.showUpdateContact;
-
-          //  新規作成の場合、レコードタイプを選択します。 
-          this.recordTypeExplain = String.format(System.Label.SB_NCLD_Label_RecordTypeExplain, new String[]{SB_NameCardL_TwowayRegistController.AC_LABEL, SB_NameCardL_TwowayRegistController.CO_LABEL});
-
-          //ラベル:既存の取引先の情報を名刺情報で上書きする
-          this.updateForAccount = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_TwowayRegistController.AC_LABEL});
-          //ラベル:既存の取引先責任者の情報を名刺情報で上書きする
-          this.updateForContact = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_TwowayRegistController.CO_LABEL});
-
-          this.accountOverWrite = !baseSetting.SmartViscaf__RegistAccountNotOverWrite__c && Account.sObjectType.getDescribe().isUpdateable();
-          this.contactOverWrite = !baseSetting.SmartViscaf__RegistContactNotOverWrite__c && Contact.sObjectType.getDescribe().isUpdateable();
-
-          this.cannotUpdataAccount = !Account.sObjectType.getDescribe().isUpdateable();
-          this.cannotUpdataContact = !Contact.sObjectType.getDescribe().isUpdateable();
-          this.cannotUpdataLead = !Lead.sObjectType.getDescribe().isUpdateable();
-
-          if (!cannotUpdataAccount) {
-            // デフォルトチェックはカスタム設定から取得
-            if (basesetting == null){
-              this.accountOverwrite = true;
-            }
-            else {
-              this.accountOverwrite = !basesetting.SmartViscaf__RegistAccountNotOverWrite__c;
-            }
-          }
-
-          if (!cannotUpdataContact) {
-            if (basesetting == null) {
-              this.contactOverwrite = true;
-            } else {
-              this.contactOverwrite = !basesetting.SmartViscaf__RegistContactNotOverWrite__c;
-            }
-          }
-
-          if (!canNotUpdataLead) {
-            if (baseSetting == null) {
-              this.leadOverwrite = true;
-            } else {
-              this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
-            }
-          }
-
-
-          this.leadRecTypeEdit = leadCreateable && LEADRECORDTYPES.size() > 1;
-
-          this.canEditTodo = true;
-
-          this.campLookUpDisabled = !SmartViscaf__NameCard__c.campaign__c.getDescribe().isAccessible();
-
-          this.campDisabled = !CampaignMember.sObjectType.getDescribe().isCreateable() || campLookUpDisabled;
-
-          this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
-          this.leadRecordListIndex = -1;
-          this.accountTableIndex = -1;
-          this.lookUpIndex = -1;
-          this.leadRecordList = new List<CandidateRecord>();
-          this.todo = new Task();
-          this.isAllowDuplicateSave = false;
-          this.todo.Subject  = baseSetting.SmartViscaf__RegistToDoSubject__c;
-          if (String.isBlank(this.todo.Subject)) {
-            this.todo.Subject = System.Label.SB_NCLD_Text_BusinessCardExchange;
-          }
-          this.registTodo    = !baseSetting.SmartViscaf__RegistNoToDo__c;
-          // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
-          this.showLeadRecType = LEADRECORDTYPES.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
-
-          // SV_DEV-753 リードに登録（個別画面）でキャンペーン選択後の「キャンペーンメンバー状況」の値がデフォルト値にならない。
-          if (String.isNotBlank(this.namecard.campaign__c)) {
-            campStatus = this.namecard.campaign__r.Status;
-          }
-
-          //レコードタイプに関する設定
-          setRecord();
-          String ncId = sc.getId();
-          Set<String> fields = SB_NameCardL_RegistQueryExecutor.getNameCardFields();
-          if (!fields.contains('Owner.IsAvtive')) {
-            fields.add('Owner.IsActive');
-          }
-          String query = String.format('SELECT {0} FROM SmartViscaf__NameCard__c WHERE Id = :ncId', new String[] { String.join(new List<String>(fields), ', ')});
-          List<SmartViscaf__NameCard__c> cards = Database.query(query);
-          if (cards.isEmpty()) {
-            throw new LeadRegistControllerException('');
-          }
-          this.nameCard = cards[0];
-          this.campaignStatus = getCampaign();
-          this.pageLead = new Lead();
-          if (this.nameCard.Owner.IsActive) {
-            if (this.nameCard.OwnerId.getSObjectType() == User.getSobjectType()) {
-               this.pageLead = new Lead(OwnerId=this.nameCard.OwnerId);
-            }
-            else {
-              List<QueueSobject> qss = [Select QueueId, SobjectType, Queue.Name
-                                      FROM QueueSobject
-                                     WHERE QueueId = :this.nameCard.OwnerId
-                                       AND SobjectType = 'Lead'];
-              if (qss.size() > 0) {
-                  this.pageLead = new Lead(OwnerId = this.nameCard.OwnerId);
-              }
-            }
-          }
-          this.pageAccount = new Account();
-          if (String.valueOf(this.nameCard.OwnerId).startsWith('005') && this.nameCard.Owner.IsActive) {
-            this.pageAccount.OwnerId = this.nameCard.OwnerId;
-          }
-          //if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
-          if (this.nameCard == null) {
-            throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_BusinessCardNotFound);
-          }
-
-          if (String.isBlank(this.nameCard.SmartViscaf__email__c) && (String.isNotBlank(this.nameCard.SmartViscaf__person_name_last__c) || String.isNotBlank(this.nameCard.SmartViscaf__person_name_first__c))) {
-            this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
-          }
-          this.todo.ActivityDate = this.nameCard.SmartViscaf__card_exchange_date__c;
-          this.campaign = this.nameCard.Campaign__c;
-
-          List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { this.nameCard };
-          SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
-          //SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
-          SB_NameCard_LeadRegist.setLastFirstNameSoql(this.soqlMap, this.nameIdList, this.nameSet,this.lastNameSet,this.firstNameSet, ncList);
-          this.search();
-          if (nameCard.SmartViscaf__company_name__c == null || String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(nameCard).get('last_name'))) {
-            if (!SmartViscaf.SB_NameCard_Util.isEnablePersonAccount()) {
-              throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_MSG_CompanyNameMissing);
-            }
-            else {
-              String str = String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL}) + ' : ' + System.Label.SB_NCLD_MSG_CompanyNameMissing;
-              if (String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(nameCard).get('last_name'))) {
-                str += '<br/>' + Lead.sObjectType.getDescribe().getLabel() + ' : ' + System.Label.SB_NCLD_MSG_NameMissing;
-              }
-              throw new SB_NameCard_LeadRegist.LeadRegistException(str);
-            }
-          }
-    } catch (Exception e) {
+          throw new SB_NameCard_LeadRegist.LeadRegistException(str);
+        }
+      }
+    }
+    catch (Exception e) {
       ApexPages.addMessages(e);
       testError = e.getMessage();
     }
@@ -779,57 +780,57 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
   //レコードタイプをに関する初期設定
   public void setRecord() {
-      leadRecordTypeId = SB_NameCardL_Util.getDefaultRecordType(Lead.sObjectType);
-      leadRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {LEADLABEL});
+    leadRecordTypeId = SB_NameCardL_Util.getDefaultRecordType(Lead.sObjectType);
+    leadRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {LEADLABEL});
   }
 
   public void checkRadio() {
-      if (this.leadRecordListIndex > -1) {
-         CandidateRecord lea = this.leadRecordList[this.leadRecordListIndex];
+    if (this.leadRecordListIndex > -1) {
+       CandidateRecord lea = this.leadRecordList[this.leadRecordListIndex];
 
-        if (Lead.sObjectType.getDescribe().isCreateable()) {
-          if (lea instanceof LeadLookupCandidate) {
-            this.leadRecTypeEdit = false;
-          }
-          else {
-            this.leadRecTypeEdit = lea.getLeadId() == null && LEADRECORDTYPES.size() > 1;
-          }
+      if (Lead.sObjectType.getDescribe().isCreateable()) {
+        if (lea instanceof LeadLookupCandidate) {
+          this.leadRecTypeEdit = false;
+        }
+        else {
+          this.leadRecTypeEdit = lea.getLeadId() == null && LEADRECORDTYPES.size() > 1;
         }
       }
+    }
 
-      if (this.accountTableIndex > -1) {
-        CandidateRecord accRec = this.candidateTable[this.accountTableIndex];
+    if (this.accountTableIndex > -1) {
+      CandidateRecord accRec = this.candidateTable[this.accountTableIndex];
 
-        if (Account.sObjectType.getDescribe().isCreateable()) {
-           if (accRec instanceof AccountLookupCandidate || accRec instanceof ContactLookupCandidate) {
-              this.accountRecTypeEdit = false;
-           }
-           else {
-              this.accountRecTypeEdit = String.isBlank(accRec.getAccountId()) && (ACNT_RECORDTYPES.size() > 1);
-           }
+      if (Account.sObjectType.getDescribe().isCreateable()) {
+         if (accRec instanceof AccountLookupCandidate || accRec instanceof ContactLookupCandidate) {
+            this.accountRecTypeEdit = false;
+         }
+         else {
+            this.accountRecTypeEdit = String.isBlank(accRec.getAccountId()) && (ACNT_RECORDTYPES.size() > 1);
+         }
+      }
+      if (Contact.sObjectType.getDescribe().isCreateable()) {
+        if (accRec instanceof ContactLookupCandidate) {
+          this.contactRecTypeEdit = false;
         }
-        if (Contact.sObjectType.getDescribe().isCreateable()) {
-          if (accRec instanceof ContactLookupCandidate) {
-            this.contactRecTypeEdit = false;
-          }
-          else {
-            this.contactRecTypeEdit = String.isBlank(accRec.getContactId()) && (CONT_RECORDTYPES.size() > 1);
-          }
+        else {
+          this.contactRecTypeEdit = String.isBlank(accRec.getContactId()) && (CONT_RECORDTYPES.size() > 1);
         }
       }
+    }
   }
 
   //リードレコードタイプ選択リストoptopn
   public List<SelectOption> getleadRecordTypeOptions() {
-      List<SelectOption> options = new List<SelectOption>();
-      for (RecordTypeInfo r : LEADRECORDTYPES) {
-          options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
-      }
-      return options;
+    List<SelectOption> options = new List<SelectOption>();
+    for (RecordTypeInfo r : LEADRECORDTYPES) {
+        options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
+    }
+    return options;
   }
 
   public void changeCampaign() {
-      this.campaignStatus = getCampaign();
+    this.campaignStatus = getCampaign();
   }
 
   //SV_DEV-175 リード登録時にキャンペーン内での状況を選択
@@ -931,7 +932,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
   public PageReference saveContact() {
     try {
-            System.debug(this.accountRecTypeId);
+      System.debug(this.accountRecTypeId);
       CandidateRecord accRec;
       //System.debug('save: accountTable: size: ' + this.accountTable.size() + ' index: ' + this.accountTableIndex);
       System.debug('accountTableIndex is ' + this.accountTableIndex);
@@ -1202,7 +1203,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       this.contactQueryOption.queryDept = (this.searchField == FIELD_NAMESITE);
       queryOptions.add(this.contactQueryOption);
     }
-    
+
     if (this.leadQueryOption != null) {
       if (this.searchType == SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL) {
         this.leadQueryOption.queryLastName = false;
@@ -1333,8 +1334,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
     }
   }
 
-  public void changeOwner()
-  {
+  public void changeOwner() {
     if (this.canEditTodo == false) {
       this.registTodo = false;
     }

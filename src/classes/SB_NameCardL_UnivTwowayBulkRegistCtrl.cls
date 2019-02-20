@@ -199,177 +199,175 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   }
 
 
-  public void initClassic(ApexPages.StandardSetController controller)
-  {
-      PageReference page = ApexPages.currentPage();
-      Map<String, String> paras = page.getParameters();
-      Boolean bLex = false;
-      if (paras.containsKey('vfRetURLInSFX')) {
-        bLex = true;
-        this.retUrl = paras.get('vfRetURLInSFX');
-        //this.viewId = getViewidFromUrl(this.retUrl, bLex);
-        //this.urlRoot = getUrlRoot(this.retUrl);     // LEX のときだけでいい
+  public void initClassic(ApexPages.StandardSetController controller) {
+    PageReference page = ApexPages.currentPage();
+    Map<String, String> paras = page.getParameters();
+    Boolean bLex = false;
+    if (paras.containsKey('vfRetURLInSFX')) {
+      bLex = true;
+      this.retUrl = paras.get('vfRetURLInSFX');
+      //this.viewId = getViewidFromUrl(this.retUrl, bLex);
+      //this.urlRoot = getUrlRoot(this.retUrl);     // LEX のときだけでいい
+    }
+    else if (paras.containsKey('retUrl')) {
+      bLex = false;
+      this.retUrl = paras.get('retUrl');
+      //this.viewId = getViewidFromUrl(this.retUrl, bLex);
+    }
+    else {
+        this.retUrl = '/home/home.jsp';
+    }
+    try {
+      this.registObjs = RegistType.AccountContactLead;
+      this.searchCriteriaLead = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {LD_LABEL});
+      this.searchCriteriaAccount = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})});
+      this.accountQueryOption = getQueryOption(Account.sObjecttype);
+      this.contactQueryOption =  getQueryOption(Contact.sObjecttype);
+      this.contactQueryOption.queryCompany = true; // 会社名は常に 照合
+      // if (this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.Lead) {
+        this.leadQueryOption =  getQueryOption(Lead.sObjecttype);
+      // }
+
+      if (SB_NameCard_LeadRegist.svConfig.defaultDisplayExistingLead()) {
+        renkeiType = 'Lead';
+      } else {
+        renkeiType = 'Contact';
       }
-      else if (paras.containsKey('retUrl')) {
-        bLex = false;
-        this.retUrl = paras.get('retUrl');
-        //this.viewId = getViewidFromUrl(this.retUrl, bLex);
+      this.firstSearch = true;
+
+      if (SB_NameCard_LeadRegist.svConfig.config.id == null) {
+        this.searchTypeContact = SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE;
+      } else if (SB_NameCard_LeadRegist.svConfig.config.SmartViscaf__AccountSearchType__c == null) {
+        this.searchTypeContact = SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE;
+      } else {
+        this.searchTypeContact = SB_NameCard_LeadRegist.svConfig.config.SmartViscaf__AccountSearchType__c ? SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME : SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE;
       }
-      else {
-          this.retUrl = '/home/home.jsp';
+      //既存の取引先を名刺情報で上書きする」を表示する
+      this.showUpdateAccount = baseSetting.SmartViscaf__RegistDispAccountOverWriteCheckbox__c;
+      //既存の取引先責任者を名刺情報で上書きする」を表示する
+      this.showUpdateContact = baseSetting.SmartViscaf__RegistDispContactOverWriteCheckbox__c;
+      //既存のリードを名刺情報で上書きする」を表示する
+      this.showUpdateLead = baseSetting.SmartViscaf__RegistDispLeadOverWriteCheckbox__c;
+
+      this.showUpdate = this.showUpdateAccount || this.showUpdateContact;
+
+      this.canNotUpdataAccount = !Account.sObjectType.getDescribe().isUpdateable();
+      this.canNotUpdataContact = !Contact.sObjectType.getDescribe().isUpdateable();
+      this.canNotUpdataLead = !Lead.sObjectType.getDescribe().isUpdateable();
+
+      this.accountOverWrite = false;
+      this.contactOverWrite = false;
+      this.leadOverwrite = false;
+      if (!canNotUpdataAccount) {
+        if (baseSetting == null) {
+          this.accountOverWrite = true;
+        } else {
+          this.accountOverWrite = !baseSetting.SmartViscaf__RegistAccountNotOverWrite__c;
+        }
       }
-      try {
 
-          this.registObjs = RegistType.AccountContactLead;
-          this.searchCriteriaLead = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {LD_LABEL});
-          this.searchCriteriaAccount = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})});
-          this.accountQueryOption = getQueryOption(Account.sObjecttype);
-          this.contactQueryOption =  getQueryOption(Contact.sObjecttype);
-          this.contactQueryOption.queryCompany = true; // 会社名は常に 照合
-          // if (this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.Lead) {
-            this.leadQueryOption =  getQueryOption(Lead.sObjecttype);
-          // }
-
-          if (SB_NameCard_LeadRegist.svConfig.defaultDisplayExistingLead()) {
-            renkeiType = 'Lead';
-          } else {
-            renkeiType = 'Contact';
-          }
-          this.firstSearch = true;
-
-          if (SB_NameCard_LeadRegist.svConfig.config.id == null) {
-            this.searchTypeContact = SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE;
-          } else if (SB_NameCard_LeadRegist.svConfig.config.SmartViscaf__AccountSearchType__c == null) {
-            this.searchTypeContact = SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE;
-          } else {
-            this.searchTypeContact = SB_NameCard_LeadRegist.svConfig.config.SmartViscaf__AccountSearchType__c ? SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME : SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE;
-          }
-          //既存の取引先を名刺情報で上書きする」を表示する
-          this.showUpdateAccount = baseSetting.SmartViscaf__RegistDispAccountOverWriteCheckbox__c;
-          //既存の取引先責任者を名刺情報で上書きする」を表示する
-          this.showUpdateContact = baseSetting.SmartViscaf__RegistDispContactOverWriteCheckbox__c;
-          //既存のリードを名刺情報で上書きする」を表示する
-          this.showUpdateLead = baseSetting.SmartViscaf__RegistDispLeadOverWriteCheckbox__c;
-
-          this.showUpdate = this.showUpdateAccount || this.showUpdateContact;
-
-          this.canNotUpdataAccount = !Account.sObjectType.getDescribe().isUpdateable();
-          this.canNotUpdataContact = !Contact.sObjectType.getDescribe().isUpdateable();
-          this.canNotUpdataLead = !Lead.sObjectType.getDescribe().isUpdateable();
-
-          this.accountOverWrite = false;
-          this.contactOverWrite = false;
-          this.leadOverwrite = false;
-          if (!canNotUpdataAccount) {
-            if (baseSetting == null) {
-              this.accountOverWrite = true;
-            } else {
-              this.accountOverWrite = !baseSetting.SmartViscaf__RegistAccountNotOverWrite__c;
-            }
-          }
-
-          if (!canNotUpdataContact) {
-            if (baseSetting == null) {
-              this.contactOverWrite = true;
-            } else {
-              this.contactOverWrite = !baseSetting.SmartViscaf__RegistContactNotOverWrite__c;
-            }
-          }
-
-          if (!canNotUpdataLead) {
-            if (baseSetting == null) {
-              this.leadOverwrite = true;
-            } else {
-              this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
-            }
-          }
-
-
-          //ラベル:既存の取引先の情報を名刺情報で上書きする
-          this.updateForAccount = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_UnivTwowayBulkRegistCtrl.AC_LABEL});
-          //ラベル:既存の取引先責任者の情報を名刺情報で上書きする
-          this.updateForContact =  String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_UnivTwowayBulkRegistCtrl.CO_LABEL});
-
-          this.useNameCardOwner = true;
-          this.useNameCardContactOwner = true;
-
-          this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
-          this.accountCreateable = Account.sObjectType.getDescribe().isCreateable();
-          this.contactCreateable = Contact.sObjectType.getDescribe().isCreateable();
-
-          this.leadOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{LD_LABEL});
-          this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{AC_LABEL});
-
-          this.accountAndContact = String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {AC_LABEL, CO_LABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()});
-
-          this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LD_LABEL});
-
-          this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL});
-          this.specifiedWhenCreateNewAccount = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {AC_LABEL + ' & ' + CO_LABEL});
-          this.specifiedWhenCreateNewBoth = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {'Record'});
-
-          // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
-          this.showLeadRecType = leadRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
-
-          this.showAccountRecType = accountRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispAccountRectype__c;
-          this.showContactRecType = contactRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispContactRectype__c;
-
-          this.leadRecTypeEdit = leadCreateable && leadRecordTypes.size() > 1;
-          this.accountRecTypeEdit = accountCreateable && accountRecordTypes.size() > 1;
-          this.contactRecTypeEdit = contactCreateable && contactRecordTypes.size() > 1;
-
-          this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
-
-          List<SmartViscaf__NameCard__c> ncList = SB_NameCard_LeadRegist.getNameCardList(controller.getSelected());
-          // this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodo());
-
-          this.nameCardRecordListDTO = getNameCardRecordListDTO(ncList, !baseSetting.SmartViscaf__RegistNoToDo__c);
-
-          this.campaignOption = new SmartViscaf__NameCard__c(OwnerId=UserInfo.getUserId());
-          this.ownerlead = new Lead();
-          this.ownerAccount = new Account();
-          this.hasError = false;
-
-          this.campLookUpDisabled = !SmartViscaf__NameCard__c.campaign__c.getDescribe().isAccessible();
-
-          this.campDisabled = true;
-
-          //リードに関する設定
-          setRecord();
-          this.CampaignStatus = getCampaignS();
-
-          SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
-          //SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
-          SB_NameCard_LeadRegist.setLastFirstNameSoql(this.soqlMap, this.nameIdList, this.nameSet,this.lastNameSet,this.firstNameSet,ncList);
-
-          if (this.nameCardList == null) {
-            this.nameCardList = new List<SmartViscaf__NameCard__c>();
-            this.nameCardIdSet = new Set<Id>();
-          }
-          if (ncList != null && ncList.size() > 0) {
-            Set<String> fields = SB_NameCardL_RegistQueryExecutor.getNameCardFields();
-            String query = String.format('SELECT {0} FROM SmartViscaf__NameCard__c WHERE Id = :ncList', new String[] { String.join(new List<String>(fields), ', ')});
-            List<SmartViscaf__NameCard__c> nameCards = Database.query(query);
-            for (SmartViscaf__NameCard__c nameCard : nameCards) {
-              this.nameCardIdSet.add(nameCard.Id);
-              this.nameCardList.add(nameCard);
-            }
-
-          }
-
-          if (this.nameCardList == null) {
-            this.nameCardList = new List<SmartViscaf__NameCard__c>();
-            this.nameCardIdSet = new Set<Id>();
-          }
-          System.debug('nameCardList.size: ' + this.nameCardList.size());
-
-        this.search();
+      if (!canNotUpdataContact) {
+        if (baseSetting == null) {
+          this.contactOverWrite = true;
+        } else {
+          this.contactOverWrite = !baseSetting.SmartViscaf__RegistContactNotOverWrite__c;
+        }
       }
-      catch (Exception e) {
-        testError = e.getMessage();
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
-        // ApexPages.addMessage(e.getStackTraceString());
+
+      if (!canNotUpdataLead) {
+        if (baseSetting == null) {
+          this.leadOverwrite = true;
+        } else {
+          this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
+        }
       }
+
+
+      //ラベル:既存の取引先の情報を名刺情報で上書きする
+      this.updateForAccount = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_UnivTwowayBulkRegistCtrl.AC_LABEL});
+      //ラベル:既存の取引先責任者の情報を名刺情報で上書きする
+      this.updateForContact =  String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_UnivTwowayBulkRegistCtrl.CO_LABEL});
+
+      this.useNameCardOwner = true;
+      this.useNameCardContactOwner = true;
+
+      this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
+      this.accountCreateable = Account.sObjectType.getDescribe().isCreateable();
+      this.contactCreateable = Contact.sObjectType.getDescribe().isCreateable();
+
+      this.leadOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{LD_LABEL});
+      this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{AC_LABEL});
+
+      this.accountAndContact = String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {AC_LABEL, CO_LABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()});
+
+      this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LD_LABEL});
+
+      this.specifiedWhenCreateNew = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LD_LABEL});
+      this.specifiedWhenCreateNewAccount = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {AC_LABEL + ' & ' + CO_LABEL});
+      this.specifiedWhenCreateNewBoth = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {'Record'});
+
+      // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+      this.showLeadRecType = leadRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
+
+      this.showAccountRecType = accountRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispAccountRectype__c;
+      this.showContactRecType = contactRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispContactRectype__c;
+
+      this.leadRecTypeEdit = leadCreateable && leadRecordTypes.size() > 1;
+      this.accountRecTypeEdit = accountCreateable && accountRecordTypes.size() > 1;
+      this.contactRecTypeEdit = contactCreateable && contactRecordTypes.size() > 1;
+
+      this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
+
+      List<SmartViscaf__NameCard__c> ncList = SB_NameCard_LeadRegist.getNameCardList(controller.getSelected());
+      // this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodo());
+
+      this.nameCardRecordListDTO = getNameCardRecordListDTO(ncList, !baseSetting.SmartViscaf__RegistNoToDo__c);
+
+      this.campaignOption = new SmartViscaf__NameCard__c(OwnerId=UserInfo.getUserId());
+      this.ownerlead = new Lead();
+      this.ownerAccount = new Account();
+      this.hasError = false;
+
+      this.campLookUpDisabled = !SmartViscaf__NameCard__c.campaign__c.getDescribe().isAccessible();
+
+      this.campDisabled = true;
+
+      //リードに関する設定
+      setRecord();
+      this.CampaignStatus = getCampaignS();
+
+      SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
+      //SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
+      SB_NameCard_LeadRegist.setLastFirstNameSoql(this.soqlMap, this.nameIdList, this.nameSet,this.lastNameSet,this.firstNameSet,ncList);
+
+      if (this.nameCardList == null) {
+        this.nameCardList = new List<SmartViscaf__NameCard__c>();
+        this.nameCardIdSet = new Set<Id>();
+      }
+      if (ncList != null && ncList.size() > 0) {
+        Set<String> fields = SB_NameCardL_RegistQueryExecutor.getNameCardFields();
+        String query = String.format('SELECT {0} FROM SmartViscaf__NameCard__c WHERE Id = :ncList', new String[] { String.join(new List<String>(fields), ', ')});
+        List<SmartViscaf__NameCard__c> nameCards = Database.query(query);
+        for (SmartViscaf__NameCard__c nameCard : nameCards) {
+          this.nameCardIdSet.add(nameCard.Id);
+          this.nameCardList.add(nameCard);
+        }
+
+      }
+
+      if (this.nameCardList == null) {
+        this.nameCardList = new List<SmartViscaf__NameCard__c>();
+        this.nameCardIdSet = new Set<Id>();
+      }
+      System.debug('nameCardList.size: ' + this.nameCardList.size());
+
+      this.search();
+    }
+    catch (Exception e) {
+      testError = e.getMessage();
+      ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
+      // ApexPages.addMessage(e.getStackTraceString());
+    }
   }
 
 
@@ -383,65 +381,65 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   }
 
   public void changeCampaign() {
-      this.CampaignStatus = getCampaignS();
+    this.CampaignStatus = getCampaignS();
   }
 
   //SV_DEV-175 リード登録時にキャンペーン内での状況を選択
   public  List<SelectOption> getCampaignS(){
-      List<SelectOption> options = new List<SelectOption>();
-      List<CampaignMemberStatus> cpms = [SELECT id, CampaignID, HasResponded, IsDefault, Label, SortOrder
-                                      FROM CampaignMemberStatus Where CampaignId = :campaignOption.campaign__c];
-      for (CampaignMemberStatus f: cpms) {
-          if (f.IsDefault == true) {
-              campStatus = f.Label;
-          }
-          options.add(new SelectOption(f.Label, f.Label));
+    List<SelectOption> options = new List<SelectOption>();
+    List<CampaignMemberStatus> cpms = [SELECT id, CampaignID, HasResponded, IsDefault, Label, SortOrder
+                                    FROM CampaignMemberStatus Where CampaignId = :campaignOption.campaign__c];
+    for (CampaignMemberStatus f: cpms) {
+      if (f.IsDefault == true) {
+        campStatus = f.Label;
       }
-      this.campDisabled = options.size() <= 0 || campLookUpDisabled;
-      System.debug(campDisabled);
-      return options;
+      options.add(new SelectOption(f.Label, f.Label));
+    }
+    this.campDisabled = options.size() <= 0 || campLookUpDisabled;
+    System.debug(campDisabled);
+    return options;
   }
 
   //レコードタイプをに関する初期設定
   public void setRecord() {
-      leadRecordTypeId = SB_NameCardL_Util.getDefaultRecordType(Lead.sObjectType);
-      accountRecTypeId = SB_NameCardL_Util.getDefaultRecordType(Account.sObjectType);
-      contactRecTypeId = SB_NameCardL_Util.getDefaultRecordType(Contact.sObjectType);
-      leadRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {LD_LABEL});
-      accountRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {AC_LABEL});
-      contactRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {CO_LABEL});
+    leadRecordTypeId = SB_NameCardL_Util.getDefaultRecordType(Lead.sObjectType);
+    accountRecTypeId = SB_NameCardL_Util.getDefaultRecordType(Account.sObjectType);
+    contactRecTypeId = SB_NameCardL_Util.getDefaultRecordType(Contact.sObjectType);
+    leadRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {LD_LABEL});
+    accountRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {AC_LABEL});
+    contactRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {CO_LABEL});
   }
 
   //リードレコードタイプ選択リストoptopn
   public List<SelectOption> getleadrecordtypeOptions() {
-      List<SelectOption> options = new List<SelectOption>();
-      for (RecordTypeInfo r : leadRecordTypes) {
-          options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
-      }
-      return options;
+    List<SelectOption> options = new List<SelectOption>();
+    for (RecordTypeInfo r : leadRecordTypes) {
+      options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
+    }
+    return options;
   }
 
   //取引先レコードタイプ選択リストoptopn
   public List<SelectOption> getAccountRecordtypeOptions() {
-      List<SelectOption> options = new List<SelectOption>();
-      for (RecordTypeInfo r : accountRecordTypes) {
-          options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
-      }
-      return options;
+    List<SelectOption> options = new List<SelectOption>();
+    for (RecordTypeInfo r : accountRecordTypes) {
+      options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
+    }
+    return options;
   }
 
   //取引先責任者レコードタイプ選択リストoptopn
   public List<SelectOption> getContactRecordtypeOptions() {
-      List<SelectOption> options = new List<SelectOption>();
-      for (RecordTypeInfo r : contactRecordTypes) {
-          options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
-      }
-      return options;
+    List<SelectOption> options = new List<SelectOption>();
+    for (RecordTypeInfo r : contactRecordTypes) {
+      options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
+    }
+    return options;
   }
 
   // 検索条件
   public static List<SelectOption> getSearchTypeList() {
-      return SB_NameCard_LeadRegist.getSearchTypeList();
+    return SB_NameCard_LeadRegist.getSearchTypeList();
   }
 
   // selectOptions 取引先検索条件
@@ -461,12 +459,12 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
 
   // 名刺レコードリスト
   private static List<SB_NameCardL_BulkRegistDTO.CustomObject> getNameCardRecordListDTO(List<SmartViscaf__NameCard__c> ncList, Boolean registTodo) {
-      List<SB_NameCardL_BulkRegistDTO.CustomObject> ncRecListDTO = new List<SB_NameCardL_BulkRegistDTO.CustomObject>();
+    List<SB_NameCardL_BulkRegistDTO.CustomObject> ncRecListDTO = new List<SB_NameCardL_BulkRegistDTO.CustomObject>();
 
-      for (SmartViscaf__NameCard__c nc : ncList) {
-          ncRecListDTO.add(new SB_NameCardL_BulkRegistDTO.CustomObject(nc, registTodo));
-      }
-      return ncRecListDTO;
+    for (SmartViscaf__NameCard__c nc : ncList) {
+      ncRecListDTO.add(new SB_NameCardL_BulkRegistDTO.CustomObject(nc, registTodo));
+    }
+    return ncRecListDTO;
   }
 
 
@@ -494,14 +492,14 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
     if (this.leadQueryOption != null) {
       this.leadQueryOption.queryCompany = false;
       if (searchType == SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL) {
-          this.leadQueryOption.queryEMail = true;
-          this.leadQueryOption.queryLastName = false;
-          this.leadQueryOption.queryFirstName = false;
+        this.leadQueryOption.queryEMail = true;
+        this.leadQueryOption.queryLastName = false;
+        this.leadQueryOption.queryFirstName = false;
       }
       else {
-          this.leadQueryOption.queryLastName = true;
-          this.leadQueryOption.queryFirstName = true;
-          this.leadQueryOption.queryEMail = false;
+        this.leadQueryOption.queryLastName = true;
+        this.leadQueryOption.queryFirstName = true;
+        this.leadQueryOption.queryEMail = false;
       }
       queryOptions.add(this.leadQueryOption);
     }
@@ -523,209 +521,217 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   public void search() {
     String message = '';
     try {
-        this.hasError = false;
-        Map<Id, Lead> idMap = new Map<Id, Lead>();
-        Map<String, List<Lead>> emailListMap = new Map<String, List<Lead>>();
-        Map<String, List<Lead>> nameListMap = new Map<String, List<Lead>>();
+      this.hasError = false;
+      Map<Id, Lead> idMap = new Map<Id, Lead>();
+      Map<String, List<Lead>> emailListMap = new Map<String, List<Lead>>();
+      Map<String, List<Lead>> nameListMap = new Map<String, List<Lead>>();
 
-        if (this.nameCardIdSet.size() == 0) {
-          return;
-        }
-        Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(this.nameCardIdSet);
-        Boolean cor = Schema.SObjectType.Contact.isCreateable();
-        Boolean acc = Schema.SObjectType.Account.isCreateable();
-        Map<Id, Map<String, List<SelectOption>>> inputPlickListVMapClone;
-        if (inputPlickListVMap != null) {
-         inputPlickListVMapClone = inputPlickListVMap.clone();
-        }
-        inputPlickListVMap = new Map<Id, Map<String, List<SelectOption>>>();
-        System.debug(this.nameCardRecordListDTO.size());
-        Boolean haveAccount = false;
-        Boolean haveLead = false;
-        for (Integer i = 0; i < this.nameCardRecordListDTO.size(); i ++) {
-            String leadKey = null;
-            String accountKey = null;
-            Boolean setAccount = false;
-            Boolean setLead = false;
-            Boolean leadSelect = true;
-            SB_NameCardL_BulkRegistDTO.CustomObject ncRec = this.nameCardRecordListDTO[i];
-            if (inputPlickListVMapClone != null) {
-              Map<String, List<SelectOption>> sopsMap = inputPlickListVMapClone.get(ncRec.nameCard.Id);
-              if (ncRec.accAndCon != 0) {
-                SB_NameCardL_BulkRegistDTO.AccAndCon accAndCon2 = ncRec.accAndConList[ncRec.accAndCon - 1];
-                accountKey = String.valueOf(accAndCon2.accountId) + String.valueOf(accAndCon2.contactId);
-                System.debug(accountKey);
-              }
+      if (this.nameCardIdSet.size() == 0) {
+        return;
+      }
+      Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(this.nameCardIdSet);
+      Boolean cor = Schema.SObjectType.Contact.isCreateable();
+      Boolean acc = Schema.SObjectType.Account.isCreateable();
+      Map<Id, Map<String, List<SelectOption>>> inputPlickListVMapClone;
+      if (inputPlickListVMap != null) {
+       inputPlickListVMapClone = inputPlickListVMap.clone();
+      }
+      inputPlickListVMap = new Map<Id, Map<String, List<SelectOption>>>();
+      System.debug(this.nameCardRecordListDTO.size());
+      Boolean haveAccount = false;
+      Boolean haveLead = false;
+      for (Integer i = 0; i < this.nameCardRecordListDTO.size(); i ++) {
+        SB_NameCardL_BulkRegistDTO.CustomObject ncRec = this.nameCardRecordListDTO[i];
+        inputPlickListVMap.put(ncRec.nameCard.Id, new Map<String, List<SelectOption>>());
+      }
+      for (Integer i = 0; i < this.nameCardRecordListDTO.size(); i ++) {
+        String leadKey = null;
+        String accountKey = null;
+        Boolean setAccount = false;
+        Boolean setLead = false;
+        Boolean leadSelect = true;
+        SB_NameCardL_BulkRegistDTO.CustomObject ncRec = this.nameCardRecordListDTO[i];
+        if (inputPlickListVMapClone != null) {
+          Map<String, List<SelectOption>> sopsMap = inputPlickListVMapClone.get(ncRec.nameCard.Id);
+          if (ncRec.accAndCon != 0) {
+            SB_NameCardL_BulkRegistDTO.AccAndCon accAndCon2 = ncRec.accAndConList[ncRec.accAndCon - 1];
+            accountKey = String.valueOf(accAndCon2.accountId) + String.valueOf(accAndCon2.contactId);
+            System.debug(accountKey);
+          }
 
-              if (ncRec.leadId != 'none' && String.isNotBlank(ncRec.leadId)) {
-                leadKey = ncRec.leadId;
-              }
-            }
-            ncRec.index = i;
-            ncRec.leadId = 'none';
-            Map<String, List<SelectOption>> opsMap = new Map<String, List<SelectOption>>();
-            if (String.isBlank(ncRec.nameCard.SmartViscaf__company_name__c) || String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(ncRec.nameCard).get('last_name'))) {
-                if (!SmartViscaf.SB_NameCard_Util.isEnablePersonAccount()) {
-                  opsMap.put('Lead', new List<SelectOption> {new SelectOption('none', System.Label.SB_NCLD_DontRegister_CompanyNameRequired)});
+          if (ncRec.leadId != 'none' && String.isNotBlank(ncRec.leadId)) {
+            leadKey = ncRec.leadId;
+          }
+        }
+        ncRec.index = i;
+        ncRec.leadId = 'none';
+        Map<String, List<SelectOption>> opsMap = new Map<String, List<SelectOption>>();
+        if (String.isBlank(ncRec.nameCard.SmartViscaf__company_name__c) || String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(ncRec.nameCard).get('last_name'))) {
+          if (!SmartViscaf.SB_NameCard_Util.isEnablePersonAccount()) {
+            opsMap.put('Lead', new List<SelectOption> {new SelectOption('none', System.Label.SB_NCLD_DontRegister_CompanyNameRequired)});
+          }
+          else if (SmartViscaf.SB_NameCard_Util.isEnablePersonAccount()
+            && String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(ncRec.nameCard).get('last_name'))) {
+            opsMap.put('Lead', new List<SelectOption> {new SelectOption('none', System.Label.SB_NCLD_DontRegister_NameRequired)});
+          }
+          opsMap.put('Account', new List<SelectOption> {new SelectOption('-1', System.Label.SB_NCLD_DontRegister_CompanyNameRequired)});
+          // opsMap.put('Account', setNameCardRecord(ncRec.nameCard, this.searchTypeContact, cIdMap, cEmailMap, cNameMap, cLastNameMap, aIdMap, aNameList, ncRec, null));
+          ncRec.accAndCon = 0;
+          ncRec.leadId = 'none';
+        }
+        // String leadId = '';
+        // opsMap.put('Lead', setLeadRecord(idMap, emailListMap, nameListMap, ncRec, leadId));
+        // opsMap.put('Account', setNameCardRecord(ncRec.nameCard, this.searchTypeContact, cIdMap, cEmailMap, cNameMap, cLastNameMap, aIdMap, aNameList, ncRec, leadId));
+        List<SelectOption> opts = new List<SelectOption>();
+        Integer index = 0;
+        Map<Schema.SObjectType,List<SObject>> objMap;
+        if (!opsMap.containsKey('Account')
+            || !opsMap.containsKey('Lead')) {
+          objMap = sObjectList.get(ncRec.nameCard.Id);
+        }
+        opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NotToRegister));
+        index ++;
+        if (sObjectList.containsKey(ncRec.nameCard.Id)) {
+          if (!opsMap.containsKey('Account')) {
+            ncRec.accAndConList = new List<SB_NameCardL_BulkRegistDTO.AccAndCon>();
+            List<SB_NameCardL_BulkRegistDTO.AccAndCon> accAndConList = ncRec.accAndConList;
+            if (objMap.containsKey(Contact.sObjectType)) {
+              for (sObject sobj : objMap.get(Contact.sObjectType)) {
+                Contact c = (Contact) sobj;
+                if (accountKey == String.valueOf(c.AccountId) + String.valueOf(c.Id)) {
+                  ncRec.accAndCon = index;
+                  setAccount = true;
                 }
-                else if (SmartViscaf.SB_NameCard_Util.isEnablePersonAccount()
-                  && String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(ncRec.nameCard).get('last_name'))) {
-                  opsMap.put('Lead', new List<SelectOption> {new SelectOption('none', System.Label.SB_NCLD_DontRegister_NameRequired)});
-                }
-                opsMap.put('Account', new List<SelectOption> {new SelectOption('-1', System.Label.SB_NCLD_DontRegister_CompanyNameRequired)});
-                // opsMap.put('Account', setNameCardRecord(ncRec.nameCard, this.searchTypeContact, cIdMap, cEmailMap, cNameMap, cLastNameMap, aIdMap, aNameList, ncRec, null));
-                ncRec.accAndCon = 0;
-                ncRec.leadId = 'none';
-            }
-            // String leadId = '';
-            // opsMap.put('Lead', setLeadRecord(idMap, emailListMap, nameListMap, ncRec, leadId));
-            // opsMap.put('Account', setNameCardRecord(ncRec.nameCard, this.searchTypeContact, cIdMap, cEmailMap, cNameMap, cLastNameMap, aIdMap, aNameList, ncRec, leadId));
-            List<SelectOption> opts = new List<SelectOption>();
-            Integer index = 0;
-            Map<Schema.SObjectType,List<SObject>> objMap;
-            if (!opsMap.containsKey('Account')
-                || !opsMap.containsKey('Lead')) {
-              objMap = sObjectList.get(ncRec.nameCard.Id);
-            }
-                opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NotToRegister));
+                accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));
+                opts.add(new SelectOption(String.valueOf(index), c.Account.Name + '(' + getStr(c.Account.Site) + ')' + '/' + c.Name + '(' + getStr(c.Department) + '/' + getStr(c.Email) + ')'));
                 index ++;
-              if (sObjectList.containsKey(ncRec.nameCard.Id)) {
-                  if (!opsMap.containsKey('Account')) {
-                  ncRec.accAndConList = new List<SB_NameCardL_BulkRegistDTO.AccAndCon>();
-                  List<SB_NameCardL_BulkRegistDTO.AccAndCon> accAndConList = ncRec.accAndConList;
-                  if (objMap.containsKey(Contact.sObjectType)) {
-                    for (sObject sobj : objMap.get(Contact.sObjectType)) {
-                      Contact c = (Contact) sobj;
-                      if (accountKey == String.valueOf(c.AccountId) + String.valueOf(c.Id)) {
-                        ncRec.accAndCon = index;
-                        setAccount = true;
-                      }
-                      accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));
-                      opts.add(new SelectOption(String.valueOf(index), c.Account.Name + '(' + getStr(c.Account.Site) + ')' + '/' + c.Name + '(' + getStr(c.Department) + '/' + getStr(c.Email) + ')'));
-                      index ++;
-                    }
-                  }
-
-                  if (objMap.containsKey(Account.sObjectType)) {
-                    for (sObject sobj : objMap.get(Account.sObjectType)) {
-                      Account a = (Account) sobj;
-                      if (setAccount == false && accountKey == (String.valueOf(a.Id) + 'null')) {
-                        ncRec.accAndCon = index;
-                        setAccount = true;
-                      }
-                      accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(a.Id, null));
-                      opts.add(new SelectOption(String.valueOf(index), a.Name + '(' + getStr(a.Site) + ')' + '/' + System.Label.SB_NCLD_Menu_NewLead));
-                      index++;
-                    }
-                  }
-                  if (opts.size() > 1) {
-                    leadSelect = false;
-                    if (firstSearch) {
-                      renkeiType = 'Contact';
-                      haveAccount = true;
-                    }
-                  }
-                  if (accountCreateable && contactCreateable) {
-                    if (accountKey == 'nullnull') {
-                      ncRec.accAndCon = index;
-                      setAccount = true;
-                    }
-                    opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NewLead + '/' + System.Label.SB_NCLD_Menu_NewLead));
-                    accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon());
-                  }
-                  if (opts.size() > 1 && setAccount == false) {
-                    ncRec.accAndCon = 1;
-                  }
-                  opsMap.put('Account', opts);
-              }
-
-              if (!opsMap.containsKey('Lead')) {
-                  String backUpLeadId;
-                  opts = new List<SelectOption>();
-                  opts.add(new SelectOption('none', System.Label.SB_NCLD_Menu_NotToRegister));
-                  if (objMap.containsKey(Lead.sObjectType)) {
-                    for (sObject sobj : objMap.get(Lead.sObjectType)) {
-                      Lead lead = (Lead) sobj;
-                      if (String.isBlank(backUpLeadId)) {
-                        backUpLeadId = lead.Id;
-                      }
-                      haveLead = true;
-                      System.debug(leadKey);
-                      System.debug(lead.Id);
-                      if (leadKey == String.valueOf(lead.Id)) {
-                        ncRec.leadId = lead.Id;
-                        setLead = true;
-                        ncRec.accAndCon = 0;
-                      }
-                      if ((String.isBlank(ncRec.leadId)
-                        || ncRec.leadId == 'none')
-                        && leadSelect
-                        && setLead == false) {
-                        ncRec.leadId = lead.Id;
-                        ncRec.accAndCon = 0;
-                          if (firstSearch) {
-                            renkeiType = 'Lead';
-                          }
-                      }
-                      // accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));
-                      opts.add(new SelectOption(lead.Id, getLabel(lead.Name, lead.Email)));
-                      index ++;
-                    }
-                  }
-                  if (setLead == false && String.isNotBlank(leadKey)) {
-                    ncRec.leadId = backUpLeadId;
-                    ncRec.accAndCon = 0;
-                  }
-                  if (leadCreateable) {
-                    opts.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
-                    if (String.isBlank(ncRec.leadId)
-                        || leadKey == 'new'
-                        || (leadSelect && ncRec.leadId == 'none' && renkeiType == 'Lead')) {
-                      ncRec.leadId = 'new';
-                      ncRec.accAndCon = 0;
-                    }
-                  }
-                  opsMap.put('Lead', opts);
               }
             }
-            else {
+
+            if (objMap.containsKey(Account.sObjectType)) {
+              for (sObject sobj : objMap.get(Account.sObjectType)) {
+                Account a = (Account) sobj;
+                if (setAccount == false && accountKey == (String.valueOf(a.Id) + 'null')) {
+                  ncRec.accAndCon = index;
+                  setAccount = true;
+                }
+                accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(a.Id, null));
+                opts.add(new SelectOption(String.valueOf(index), a.Name + '(' + getStr(a.Site) + ')' + '/' + System.Label.SB_NCLD_Menu_NewLead));
+                index++;
+              }
+            }
+            if (opts.size() > 1) {
+              leadSelect = false;
+              if (firstSearch) {
+                renkeiType = 'Contact';
+                haveAccount = true;
+              }
+            }
+            if (accountCreateable && contactCreateable) {
+              if (accountKey == 'nullnull') {
+                ncRec.accAndCon = index;
+                setAccount = true;
+              }
               opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NewLead + '/' + System.Label.SB_NCLD_Menu_NewLead));
-              opsMap.put('Account', opts);
-              opsMap.put('Lead', new List<SelectOption> {new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead)});
+              accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon());
             }
-            System.debug(ncRec.leadId );
-            inputPlickListVMap.put(ncRec.nameCard.Id, opsMap);
-        }
+            if (opts.size() > 1 && setAccount == false) {
+              ncRec.accAndCon = 1;
+            }
+            opsMap.put('Account', opts);
+          }
 
-        if (firstSearch) {
-          if (haveAccount) {
-            if (haveLead) {
-              renkeiType = 'Both';
+          if (!opsMap.containsKey('Lead')) {
+            String backUpLeadId;
+            opts = new List<SelectOption>();
+            opts.add(new SelectOption('none', System.Label.SB_NCLD_Menu_NotToRegister));
+            if (objMap.containsKey(Lead.sObjectType)) {
+              for (sObject sobj : objMap.get(Lead.sObjectType)) {
+                Lead lead = (Lead) sobj;
+                if (String.isBlank(backUpLeadId)) {
+                  backUpLeadId = lead.Id;
+                }
+                haveLead = true;
+                System.debug(leadKey);
+                System.debug(lead.Id);
+                if (leadKey == String.valueOf(lead.Id)) {
+                  ncRec.leadId = lead.Id;
+                  setLead = true;
+                  ncRec.accAndCon = 0;
+                }
+                if ((String.isBlank(ncRec.leadId)
+                  || ncRec.leadId == 'none')
+                  && leadSelect
+                  && setLead == false) {
+                  ncRec.leadId = lead.Id;
+                  ncRec.accAndCon = 0;
+                    if (firstSearch) {
+                      renkeiType = 'Lead';
+                    }
+                }
+                // accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));
+                opts.add(new SelectOption(lead.Id, getLabel(lead.Name, lead.Email)));
+                index ++;
+              }
             }
-            else {
-              renkeiType = 'Contact';
+            if (setLead == false && String.isNotBlank(leadKey)) {
+              ncRec.leadId = backUpLeadId;
+              ncRec.accAndCon = 0;
             }
+            if (leadCreateable) {
+              opts.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
+              if (String.isBlank(ncRec.leadId)
+                  || leadKey == 'new'
+                  || (leadSelect && ncRec.leadId == 'none' && renkeiType == 'Lead')) {
+                ncRec.leadId = 'new';
+                ncRec.accAndCon = 0;
+              }
+            }
+            opsMap.put('Lead', opts);
+          }
+        }
+        else {
+          opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NewLead + '/' + System.Label.SB_NCLD_Menu_NewLead));
+          opsMap.put('Account', opts);
+          opsMap.put('Lead', new List<SelectOption> {new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead)});
+        }
+        System.debug(ncRec.leadId );
+        inputPlickListVMap.put(ncRec.nameCard.Id, opsMap);
+        if (Limits.getHeapSize() > Limits.getLimitHeapSize()) {
+          this.nameCardRecordListDTO = new List<SB_NameCardL_BulkRegistDTO.CustomObject>();
+          throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_ChooseLessBusinessCards);
+        }
+      }
+
+      if (firstSearch) {
+        if (haveAccount) {
+          if (haveLead) {
+            renkeiType = 'Both';
           }
           else {
-            if (haveLead == false) {
-              renkeiType = 'Both';
-            }
-            else {
-              renkeiType = 'Lead';
-            }
-            // renkeiType = 'Lead';
+            renkeiType = 'Contact';
           }
         }
-        if (message != '') {
-                testError = message;
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
+        else {
+          if (haveLead == false) {
+            renkeiType = 'Both';
+          }
+          else {
+            renkeiType = 'Lead';
+          }
+          // renkeiType = 'Lead';
         }
-        firstSearch = false;
+      }
+      if (message != '') {
+        testError = message;
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
+      }
+      firstSearch = false;
     } catch (Exception e) {
-        System.debug(e.getStackTraceString());
-        testError = e.getMessage();
-        // ApexPages.addMessages(e);
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
+      System.debug(e.getStackTraceString());
+      testError = e.getMessage();
+      // ApexPages.addMessages(e);
+      ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getMessage()));
     }
   }
 
@@ -735,9 +741,9 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
 
   @TestVisible
   private String getLabel(String name, String email) {
-      String label = String.isBlank(name) ? '' : name;
-      label += String.isBlank(email) ? ' <>' : ' <'+email+'>';
-      return label;
+    String label = String.isBlank(name) ? '' : name;
+    label += String.isBlank(email) ? ' <>' : ' <'+email+'>';
+    return label;
   }
 
   // 保存
@@ -747,188 +753,188 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
     Savepoint sp;
 
     try {
-        this.hasError = false;
-        for (SB_NameCardL_BulkRegistDTO.CustomObject ncRec : this.nameCardRecordListDTO) ncRec.hasError = false;
-        sp = Database.setSavepoint();
-        String str = '';
+      this.hasError = false;
+      for (SB_NameCardL_BulkRegistDTO.CustomObject ncRec : this.nameCardRecordListDTO) ncRec.hasError = false;
+      sp = Database.setSavepoint();
+      String str = '';
 
-        List<SB_NameCardL_RegistHelper.RegistTarget> tars = new List<SB_NameCardL_RegistHelper.RegistTarget>();
-        Boolean haveNew = false;
-        Boolean haveNewAccount = false;
-        Integer j = 0;
-        String todoError = '';
-        String todoLabel = Task.getSobjectType().getDescribe().getLabel();
-        Map<Integer, Id> newOwnerMap = new Map<Integer, Id>();
-        Map<Integer, Id> todoIndexMap = new Map<Integer, Id>();
-        List<Integer> todoList = new List<Integer>();
+      List<SB_NameCardL_RegistHelper.RegistTarget> tars = new List<SB_NameCardL_RegistHelper.RegistTarget>();
+      Boolean haveNew = false;
+      Boolean haveNewAccount = false;
+      Integer j = 0;
+      String todoError = '';
+      String todoLabel = Task.getSobjectType().getDescribe().getLabel();
+      Map<Integer, Id> newOwnerMap = new Map<Integer, Id>();
+      Map<Integer, Id> todoIndexMap = new Map<Integer, Id>();
+      List<Integer> todoList = new List<Integer>();
 
-        //画面上の所有者を取得
-        Id oId;
-        if (!useNameCardOwner && String.isNotBlank(this.ownerlead.OwnerId)) {
-          oId = this.ownerlead.OwnerId;
-        }
+      //画面上の所有者を取得
+      Id oId;
+      if (!useNameCardOwner && String.isNotBlank(this.ownerlead.OwnerId)) {
+        oId = this.ownerlead.OwnerId;
+      }
 
-        Id oIdA;
-        if (!useNameCardContactOwner && String.isNotBlank(this.ownerAccount.OwnerId)) {
-          oIdA = this.ownerAccount.OwnerId;
-        }
+      Id oIdA;
+      if (!useNameCardContactOwner && String.isNotBlank(this.ownerAccount.OwnerId)) {
+        oIdA = this.ownerAccount.OwnerId;
+      }
 
-        for (Integer i = 0; i < this.nameCardRecordListDTO.size(); i ++) {
-          SB_NameCardL_BulkRegistDTO.CustomObject ncr = this.nameCardRecordListDTO[i];
-          if (ncr.leadId != 'none' && renkeiType != 'Contact') {
-            if (ncr.leadId == 'new') {
-              //画面上の所有者を
-              if (!haveNew) {
-                haveNew = true;
-                if (!useNameCardOwner && String.isBlank(this.ownerlead.OwnerId)) {
-                  //(関連)リードを新規作成する場合は「所有者」を指定してください
-                  String noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {LD_LABEL});
-                  throw new SB_NameCard_LeadRegist.LeadRegistException(noOwnerIdErrorMessage);
-                }
-              }
-              Id leadOwnerId = String.isBlank(oId) ? ncr.nameCard.OwnerId : oId;
-              newOwnerMap.put(i + 1, leadOwnerId);
-            }
-            if (ncr.registTodo == true) {
-
-              todoIndexMap.put(i + 1, ncr.leadId == 'new' ? null : ncr.leadId);
-              todoList.add(i + 1);
-            }
-
-            SB_NameCardL_RegistHelper.RegistTarget tar = new SB_NameCardL_RegistHelper.RegistTarget(SB_NameCardL_RegistHelper.ProcType.LEAD,
-                                                                                                    ncr.nameCard.Id,
-                                                                                                    null,
-                                                                                                    null,
-                                                                                                    ncr.leadId == 'new' ? null : ncr.leadId,
-                                                                                                    ncr.registTodo,
-                                                                                                    null);
-            if (String.isNotBlank(campaignOption.campaign__c) && ncr.leadId == 'new') {
-              tar.setLeadCampaign(campaignOption.campaign__c, campStatus);
-            }
-            tars.add(tar);
-          }
-          System.debug(ncr.accAndConList);
-          // System.debug(ncr.accAndCon);
-          if (ncr.accAndCon > 0 && renkeiType != 'Lead') {
-            SB_NameCardL_BulkRegistDTO.AccAndCon aacTmp1 = ncr.accAndConList[ncr.accAndCon - 1];
-            if (!haveNewAccount) {
-              haveNewAccount = String.isBlank(aacTmp1.accountId) || String.isBlank(aacTmp1.contactId);
-              if (haveNewAccount) {
-                if (!useNameCardContactOwner && String.isBlank(this.ownerAccount.OwnerId)) {
-                  //(関連)リードを新規作成する場合は「所有者」を指定してください
-                  String noOwnerIdErrorMessage;
-                  if (String.isBlank(aacTmp1.accountId)) {
-                    noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {AC_LABEL});
-                  }
-                  else {
-                    noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {CO_LABEL});
-                  }
-                  throw new SB_NameCard_LeadRegist.LeadRegistException(noOwnerIdErrorMessage);
-                }
+      for (Integer i = 0; i < this.nameCardRecordListDTO.size(); i ++) {
+        SB_NameCardL_BulkRegistDTO.CustomObject ncr = this.nameCardRecordListDTO[i];
+        if (ncr.leadId != 'none' && renkeiType != 'Contact') {
+          if (ncr.leadId == 'new') {
+            //画面上の所有者を
+            if (!haveNew) {
+              haveNew = true;
+              if (!useNameCardOwner && String.isBlank(this.ownerlead.OwnerId)) {
+                //(関連)リードを新規作成する場合は「所有者」を指定してください
+                String noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {LD_LABEL});
+                throw new SB_NameCard_LeadRegist.LeadRegistException(noOwnerIdErrorMessage);
               }
             }
-            SB_NameCardL_RegistHelper.RegistTarget tar = new SB_NameCardL_RegistHelper.RegistTarget(SB_NameCardL_RegistHelper.ProcType.ACCOUNT,
-                                                                                                    ncr.nameCard.Id,
-                                                                                                    aacTmp1.accountId,
-                                                                                                    aacTmp1.contactId,
-                                                                                                    null,
-                                                                                                    ncr.registTodo,
-                                                                                                    null);
-            tars.add(tar);
+            Id leadOwnerId = String.isBlank(oId) ? ncr.nameCard.OwnerId : oId;
+            newOwnerMap.put(i + 1, leadOwnerId);
           }
-          j ++;
-        }
+          if (ncr.registTodo == true) {
 
-        if (!todoIndexMap.isEmpty()) {
-          Map<Id, Id> todoLeadIdOwnerId = new Map<Id, Id>();
-          Set<Integer> todoIndexMapKey = todoIndexMap.keySet();
-          Set<Integer> needSearchIndex = new Set<Integer>();
-          for (Integer key : todoIndexMapKey) {
-            if (!newOwnerMap.containsKey(key)) {
-              todoLeadIdOwnerId.put(todoIndexMap.get(key), null);
-              needSearchIndex.add(key);
-            } else {
-              todoIndexMap.put(key, newOwnerMap.get(key));
-            }
+            todoIndexMap.put(i + 1, ncr.leadId == 'new' ? null : ncr.leadId);
+            todoList.add(i + 1);
           }
 
-          if (!todoLeadIdOwnerId.isEmpty()) {
-            List<Lead> ls = [Select Id, OwnerId
-                        FROM Lead
-                       WHERE Id = :todoLeadIdOwnerId.keySet()];
-            for (Lead l : ls) {
-              todoLeadIdOwnerId.put(l.Id, l.OwnerId);
+          SB_NameCardL_RegistHelper.RegistTarget tar = new SB_NameCardL_RegistHelper.RegistTarget(SB_NameCardL_RegistHelper.ProcType.LEAD,
+                                                                                                  ncr.nameCard.Id,
+                                                                                                  null,
+                                                                                                  null,
+                                                                                                  ncr.leadId == 'new' ? null : ncr.leadId,
+                                                                                                  ncr.registTodo,
+                                                                                                  null);
+          if (String.isNotBlank(campaignOption.campaign__c) && ncr.leadId == 'new') {
+            tar.setLeadCampaign(campaignOption.campaign__c, campStatus);
+          }
+          tars.add(tar);
+        }
+        System.debug(ncr.accAndConList);
+        // System.debug(ncr.accAndCon);
+        if (ncr.accAndCon > 0 && renkeiType != 'Lead') {
+          SB_NameCardL_BulkRegistDTO.AccAndCon aacTmp1 = ncr.accAndConList[ncr.accAndCon - 1];
+          if (!haveNewAccount) {
+            haveNewAccount = String.isBlank(aacTmp1.accountId) || String.isBlank(aacTmp1.contactId);
+            if (haveNewAccount) {
+              if (!useNameCardContactOwner && String.isBlank(this.ownerAccount.OwnerId)) {
+                //(関連)リードを新規作成する場合は「所有者」を指定してください
+                String noOwnerIdErrorMessage;
+                if (String.isBlank(aacTmp1.accountId)) {
+                  noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {AC_LABEL});
+                }
+                else {
+                  noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {CO_LABEL});
+                }
+                throw new SB_NameCard_LeadRegist.LeadRegistException(noOwnerIdErrorMessage);
+              }
             }
-            for (Integer index : needSearchIndex) {
-              todoIndexMap.put(index, todoLeadIdOwnerId.get(todoIndexMap.get(index)));
-            }
+          }
+          SB_NameCardL_RegistHelper.RegistTarget tar = new SB_NameCardL_RegistHelper.RegistTarget(SB_NameCardL_RegistHelper.ProcType.ACCOUNT,
+                                                                                                  ncr.nameCard.Id,
+                                                                                                  aacTmp1.accountId,
+                                                                                                  aacTmp1.contactId,
+                                                                                                  null,
+                                                                                                  ncr.registTodo,
+                                                                                                  null);
+          tars.add(tar);
+        }
+        j ++;
+      }
+
+      if (!todoIndexMap.isEmpty()) {
+        Map<Id, Id> todoLeadIdOwnerId = new Map<Id, Id>();
+        Set<Integer> todoIndexMapKey = todoIndexMap.keySet();
+        Set<Integer> needSearchIndex = new Set<Integer>();
+        for (Integer key : todoIndexMapKey) {
+          if (!newOwnerMap.containsKey(key)) {
+            todoLeadIdOwnerId.put(todoIndexMap.get(key), null);
+            needSearchIndex.add(key);
+          } else {
+            todoIndexMap.put(key, newOwnerMap.get(key));
           }
         }
 
-        SB_NameCardL_RegistHelper.RegistParam leadRP;
-        SB_NameCardL_RegistHelper.RegistParam acre;
-        SB_NameCardL_RegistHelper.RegistParam conre;
-        if (renkeiType != 'Contact') {
-          leadRP = new SB_NameCardL_RegistHelper.RegistParam('Lead',this.leadOverwrite,this.leadRecordTypeId,oId,false);
+        if (!todoLeadIdOwnerId.isEmpty()) {
+          List<Lead> ls = [Select Id, OwnerId
+                      FROM Lead
+                     WHERE Id = :todoLeadIdOwnerId.keySet()];
+          for (Lead l : ls) {
+            todoLeadIdOwnerId.put(l.Id, l.OwnerId);
+          }
+          for (Integer index : needSearchIndex) {
+            todoIndexMap.put(index, todoLeadIdOwnerId.get(todoIndexMap.get(index)));
+          }
         }
-        if (renkeiType != 'Lead') {
-          acre = new SB_NameCardL_RegistHelper.RegistParam('Account',this.accountOverWrite,this.accountRecTypeId,oIdA,false);
-          conre = new SB_NameCardL_RegistHelper.RegistParam('Contact',this.contactOverWrite,this.contactRecTypeId,oIdA,false);
+      }
+
+      SB_NameCardL_RegistHelper.RegistParam leadRP;
+      SB_NameCardL_RegistHelper.RegistParam acre;
+      SB_NameCardL_RegistHelper.RegistParam conre;
+      if (renkeiType != 'Contact') {
+        leadRP = new SB_NameCardL_RegistHelper.RegistParam('Lead',this.leadOverwrite,this.leadRecordTypeId,oId,false);
+      }
+      if (renkeiType != 'Lead') {
+        acre = new SB_NameCardL_RegistHelper.RegistParam('Account',this.accountOverWrite,this.accountRecTypeId,oIdA,false);
+        conre = new SB_NameCardL_RegistHelper.RegistParam('Contact',this.contactOverWrite,this.contactRecTypeId,oIdA,false);
+      }
+      System.debug(leadRP);
+      System.debug(acre);
+      System.debug(conre);
+      System.debug(renkeiType);
+
+      SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(baseSetting.SmartViscaf__RegistToDoSubject__c,null,null,null);
+
+      SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(tars, acre, conre, leadRP, todoRP);
+      Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
+      System.debug(ownerErrorMap);
+      if (!ownerErrorMap.isEmpty()) {
+        for (Integer i = 0; i<nameCardRecordListDTO.size(); i++) {
+          if (ownerErrorMap.containsKey(nameCardRecordListDTO[i].nameCard.id)) {
+            nameCardRecordListDTO[i].hasError = true;
+            // ToDo
+            str += String.format('{0}' + System.Label.SB_NC_Line + ': {1}', new String[]{ ''+(i+1),ownerErrorMap.get(nameCardRecordListDTO[i].nameCard.id) + '<br/>'});
+          } else{
+            nameCardRecordListDTO[i].hasError = false;
+          }
         }
-        System.debug(leadRP);
-        System.debug(acre);
-        System.debug(conre);
-        System.debug(renkeiType);
+        str = str.removeEnd('<br/>');
+        throw new SB_NameCard_LeadRegist.LeadRegistException(str);
+      }
+      //doRegist内既にrollbackしていますので、ここは二度目はしません
+      SB_NameCardL_RegistHelper.RegistResponse result = SB_NameCardL_RegistHelper.doRegist(re);
 
-        SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(baseSetting.SmartViscaf__RegistToDoSubject__c,null,null,null);
-
-        SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(tars, acre, conre, leadRP, todoRP);
-        Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
-        System.debug(ownerErrorMap);
-        if (!ownerErrorMap.isEmpty()) {
-          for (Integer i = 0; i<nameCardRecordListDTO.size(); i++) {
-            if (ownerErrorMap.containsKey(nameCardRecordListDTO[i].nameCard.id)) {
-              nameCardRecordListDTO[i].hasError = true;
+      if (result.success == false) {
+        this.hasError = true;
+        if (result.dbErrors!=null) {
+          for (Integer i = 0; i<this.nameCardRecordListDTO.size(); i++) {
+            if (result.dbErrors.containsKey(this.nameCardRecordListDTO[i].nameCard.Id)) {
+              this.nameCardRecordListDTO[i].hasError = true;
               // ToDo
-              str += String.format('{0}' + System.Label.SB_NC_Line + ': {1}', new String[]{ ''+(i+1),ownerErrorMap.get(nameCardRecordListDTO[i].nameCard.id) + '<br/>'});
+              str += String.format('{0}' + System.Label.SB_NC_Line + ': {1}', new String[]{ ''+(i+1),result.dbErrors.get(this.nameCardRecordListDTO[i].nameCard.Id).msg + '<br/>'});
             } else{
-              nameCardRecordListDTO[i].hasError = false;
+              this.nameCardRecordListDTO[i].hasError =false;
             }
           }
-          str = str.removeEnd('<br/>');
-          throw new SB_NameCard_LeadRegist.LeadRegistException(str);
         }
-        //doRegist内既にrollbackしていますので、ここは二度目はしません
-        SB_NameCardL_RegistHelper.RegistResponse result = SB_NameCardL_RegistHelper.doRegist(re);
-
-        if (result.success == false) {
-          this.hasError = true;
-          if (result.dbErrors!=null) {
-            for (Integer i = 0; i<this.nameCardRecordListDTO.size(); i++) {
-              if (result.dbErrors.containsKey(this.nameCardRecordListDTO[i].nameCard.Id)) {
-                this.nameCardRecordListDTO[i].hasError = true;
-                // ToDo
-                str += String.format('{0}' + System.Label.SB_NC_Line + ': {1}', new String[]{ ''+(i+1),result.dbErrors.get(this.nameCardRecordListDTO[i].nameCard.Id).msg + '<br/>'});
-              } else{
-                this.nameCardRecordListDTO[i].hasError =false;
-              }
-            }
-          }
-          str = str.removeEnd('<br/>');
-          throw new SB_NameCard_LeadRegist.LeadRegistException(result.title + str);
-        } else {
-          this.hasError = false;
-        }
+        str = str.removeEnd('<br/>');
+        throw new SB_NameCard_LeadRegist.LeadRegistException(result.title + str);
+      } else {
+        this.hasError = false;
+      }
     }
     catch (Exception e) {
-        if (sp != null) Database.rollback(sp);
-        this.hasError = true;
-        saveOK = false;
-        System.debug(e.getMessage());
-        testError = e.getMessage();
-        testError += e.getStackTraceString();
-        ApexPages.addMessages(e);
-        // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getStackTraceString()));
+      if (sp != null) Database.rollback(sp);
+      this.hasError = true;
+      saveOK = false;
+      System.debug(e.getMessage());
+      testError = e.getMessage();
+      testError += e.getStackTraceString();
+      ApexPages.addMessages(e);
+      // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, e.getStackTraceString()));
     }
     //return pageRef;
   }
@@ -968,7 +974,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
 
   public class SB_NameCardL_UnivTwowayBulkRegistCtrlException extends Exception {}
 
- public String targetIds { get; private set; }          // 対象のレコードID 名刺とか 取引先とか、取引先責任者とか、ロードとか
+  public String targetIds { get; private set; }          // 対象のレコードID 名刺とか 取引先とか、取引先責任者とか、ロードとか
   public List<SObject> targets { get; private set; }
   public String component { get; private set; }     // Lightning Componet 名
   // 管理パッケージの名前空間名を
