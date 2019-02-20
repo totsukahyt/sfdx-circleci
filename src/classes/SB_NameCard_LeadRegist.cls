@@ -6,6 +6,7 @@
  *
  *  2016.11.09  コードスキャンで global なメソッドは with sharing が必要とのことなので、 with sharing  を付けた。
  *  @Version 1 2017/11/XX  SV_DEV-681 Lead一括登録での候補検索時の姓、名の文字列のエスケープは完全一致なので、不要では。
+ *                         SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
  */
 
 global with sharing class SB_NameCard_LeadRegist
@@ -30,7 +31,8 @@ global with sharing class SB_NameCard_LeadRegist
             if (conf.Id == null) conf = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId());
             if (conf.Id == null) conf = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
 
-            List<String> keyList = new List<String> {'Company', 'State', 'Title', 'Email', 'LastModifiedDate', 'Owner'};
+            // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+            List<String> keyList = new List<String> {'Company', 'State', 'Title', 'Email', 'LastModifiedDate', 'Owner', 'LeadRectype'};
             this.disp = new Map<String, Boolean>();
             this.setBoolMap(keyList, this.disp, conf, 'Disp');
 
@@ -57,6 +59,13 @@ global with sharing class SB_NameCard_LeadRegist
                     bMap.put(key, b);
                 }
             }
+        }
+
+        // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+        global Boolean leadRectype()
+        {
+            System.debug(this.confMap);
+            return this.disp.get('LeadRectype');
         }
 
         global Boolean overwrite()

@@ -2,6 +2,9 @@
  * (c) 2016 Sunbridge Inc.
  *
  * リードに一括登録
+ * @Version 1 2017/11/XX  SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+ *
+ *
  */
 
 public with sharing class SB_NameCard_LeadBulkRegistController
@@ -52,7 +55,6 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             }
             if (nameListMap != null) {
                 String name = SB_NameCard_LeadRegist.getPersonName(this.nameCard);
-
                 if (nameListMap.containsKey(name)) {
                     for (Lead lead : nameListMap.get(name)) {
                         if (idSet.contains(lead.Id)) continue;
@@ -121,31 +123,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     public Boolean campDisabled{get;set;} //キャンペーンStatus Disabled フラグ
     public Boolean campLookUpDisabled{get;set;} //キャンペーン Disabled フラグ
     public  List<SelectOption> campaignStatus {get; set;}
-    public static SmartViscaf__SmartViscaConfig__c smartViscaConfig {
-        get{
-            if (smartViscaConfig == null){
-                smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId()); // 個人の設定
-                if (smartViscaConfig.Id ==null) {
-                     smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId()); //プロファイルの設定
-                }
-                if (smartViscaConfig.id == null) {
-                    smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults(); // 組織の設定
-                }
-                if (smartViscaConfig.id == null) {
-                    smartViscaConfig.LeadRegist_DispEmail__c = true;
-                    smartViscaConfig.LeadRegist_DispLastModifiedDate__c = true;
-                    smartViscaConfig.LeadRegist_DispOwner__c = true;
-                    smartViscaConfig.LeadRegist_DispState__c = true;
-                    smartViscaConfig.LeadRegist_Overwrite__c = true;
-                    smartViscaConfig.LeadRegist_DispTitle__c = true;
-                    smartViscaConfig.LeadRegist_DispLeadRectype__c = true;
-                }
-                smartViscaConfig.LeadRegist_TodoSubject__c = String.isBlank(smartViscaConfig.LeadRegist_TodoSubject__c) ? System.Label.SB_NCLD_Text_BusinessCardExchange : smartViscaConfig.LeadRegist_TodoSubject__c;
-            }
-            return smartViscaConfig;
-        }
-        set;
-    }
+    
 
     //すべてのレコードタイプを取得
     private static final List<RecordTypeInfo> LEADRECORDTYPES = SB_NameCard_LeadRegistController.getRecordType('Lead');
@@ -181,7 +159,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
 
-            this.showLeadRecType = LEADRECORDTYPES.size() > 1 && smartViscaConfig.LeadRegist_DispLeadRectype__c;
+            // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+            this.showLeadRecType = LEADRECORDTYPES.size() > 1 && SB_NameCard_LeadRegist.svConfig.LeadRectype();
 
             this.leadRecTypeEdit = leadCreateable && LEADRECORDTYPES.size() > 1;
 

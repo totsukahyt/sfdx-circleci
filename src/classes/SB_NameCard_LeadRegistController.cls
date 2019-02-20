@@ -2,6 +2,9 @@
  * (c) 2016 Sunbridge Inc.
  *
  * リードに登録this.isAllowDuplicateSave;
+ *
+ * @Version 1 2018/01/XX  SV_DEV-753 リードに登録（個別画面）でキャンペーン選択後の「キャンペーンメンバー状況」の値がデフォルト値にならない。
+ *                        SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
  */
 
 public with sharing class SB_NameCard_LeadRegistController
@@ -74,32 +77,6 @@ public with sharing class SB_NameCard_LeadRegistController
     public Boolean campLookUpDisabled{get;set;} //キャンペーン Disabled フラグ
     public  List<SelectOption> campaignStatus {get; set;}
 
-    public static SmartViscaf__SmartViscaConfig__c smartViscaConfig {
-        get{
-            if (smartViscaConfig == null){
-                smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId()); // 個人の設定
-                if (smartViscaConfig.Id ==null) {
-                     smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId()); //プロファイルの設定
-                }
-                if (smartViscaConfig.id == null) {
-                    smartViscaConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults(); // 組織の設定
-                }
-                if (smartViscaConfig.id == null) {
-                    smartViscaConfig.LeadRegist_DispEmail__c = true;
-                    smartViscaConfig.LeadRegist_DispLastModifiedDate__c = true;
-                    smartViscaConfig.LeadRegist_DispOwner__c = true;
-                    smartViscaConfig.LeadRegist_DispState__c = true;
-                    smartViscaConfig.LeadRegist_Overwrite__c = true;
-                    smartViscaConfig.LeadRegist_DispTitle__c = true;
-                    smartViscaConfig.LeadRegist_DispLeadRectype__c = true;
-                }
-                smartViscaConfig.LeadRegist_TodoSubject__c = String.isBlank(smartViscaConfig.LeadRegist_TodoSubject__c) ? System.Label.SB_NCLD_Text_BusinessCardExchange : smartViscaConfig.LeadRegist_TodoSubject__c;
-            }
-            return smartViscaConfig;
-        }
-        set;
-    }
-
 
     public Boolean isAllowDuplicateSave { get; private set; }
 
@@ -120,8 +97,6 @@ public with sharing class SB_NameCard_LeadRegistController
 
             this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
 
-            this.showLeadRecType = LEADRECORDTYPES.size() > 1 && smartViscaConfig.LeadRegist_DispLeadRectype__c;
-
             this.leadRecTypeEdit = leadCreateable && LEADRECORDTYPES.size() > 1;
 
             this.canEditTodo = true;
@@ -140,6 +115,9 @@ public with sharing class SB_NameCard_LeadRegistController
             this.leadOverwrite = this.svConfig.overwrite();
             this.todo.Subject  = this.svConfig.todoSubject();
             this.registTodo    = this.svConfig.registTodo();
+            // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+            this.showLeadRecType = LEADRECORDTYPES.size() > 1 && this.svConfig.leadRectype();
+
 
             //レコードタイプに関する設定
             setRecord();
