@@ -6,6 +6,7 @@
  *                        SV_DEV-746 リードに登録（一括登録）で、検索条件が「氏名」の場合でメールアドレスが一致した候補が表示される場合がある。
  *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
  *                        SV_DEV-755 無効なユーザでTODO登録したときのエラー
+ *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
  *
  *
  */
@@ -505,7 +506,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         List<CampaignMember> cmList = new List<CampaignMember>();
 
         for (Integer i = 0, len = leadList.size(); i < len; i++) {
-            cmList.add(new CampaignMember(CampaignId=campId, LeadId=leadList[i].Id, ContactId=ncRecList[i].nameCard.SmartViscaf__contact__c, Status = campStatus));
+            //SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
+            cmList.add(new CampaignMember(CampaignId=campId, LeadId=leadList[i].Id, Status = campStatus));
         }
         if (cmList.size() > 0) {
             Database.DMLOptions dml = new Database.DMLOptions();

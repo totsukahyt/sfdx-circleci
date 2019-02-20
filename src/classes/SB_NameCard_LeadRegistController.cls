@@ -6,6 +6,7 @@
  * @Version 1 2018/01/XX  SV_DEV-753 リードに登録（個別画面）でキャンペーン選択後の「キャンペーンメンバー状況」の値がデフォルト値にならない。
  *                        SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
  *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
+ *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
  */
 
 public with sharing class SB_NameCard_LeadRegistController
@@ -338,7 +339,8 @@ public with sharing class SB_NameCard_LeadRegistController
                 System.debug('this.campStatus' + this.campStatus);
                 //キャンペーンメンバーを新規作成
                 //SV_DEV-175 リード登録時にキャンペーン内での状況を選択
-                cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, ContactId=this.nameCard.SmartViscaf__contact__c, Status = this.campStatus));
+                //SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
+                cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, Status = this.campStatus));
 
                 SB_NameCard_LeadCrudFls.screate(cas,dml);
             }
