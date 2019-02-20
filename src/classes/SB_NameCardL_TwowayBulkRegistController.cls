@@ -294,6 +294,8 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
           this.showContactRecType = contactRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispContactRectype__c;
 
           this.leadRecTypeEdit = leadCreateable && leadRecordTypes.size() > 1;
+          this.accountRecTypeEdit = accountCreateable && accountRecordTypes.size() > 1;
+          this.contactRecTypeEdit = contactCreateable && contactRecordTypes.size() > 1;
 
           this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
 

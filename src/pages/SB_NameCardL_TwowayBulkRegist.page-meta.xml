@@ -5,11 +5,6 @@
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>SB_NameCardL_TwowayBulkRegist</label>
     <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>2</minorNumber>
-        <namespace>MYD2</namespace>
-    </packageVersions>
-    <packageVersions>
         <majorNumber>2</majorNumber>
         <minorNumber>0</minorNumber>
         <namespace>SmartViscaf</namespace>
