@@ -30,11 +30,11 @@
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" id="radio">
-        <apex:selectRadio label="{!$Label.SB_NC_SearchCriteria}" value="{!searchType}" rendered="{!renkeiType != 'Contact'}">
+        <apex:selectRadio label="{!$ObjectType.Lead.Label + $Label.SB_NC_SearchCriteria}" value="{!searchType}" rendered="{!renkeiType != 'Contact'}">
           <apex:selectOptions value="{!searchTypeList}"/>
           <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList"/>
         </apex:selectRadio>
-        <apex:selectRadio label="{!$ObjectType.Contact.Label + $Label.SB_NC_SearchCriteria}" value="{!searchTypeContact}" rendered="{!renkeiType != 'Lead'}">
+        <apex:selectRadio label="{!$ObjectType.Account.Label + '・' + $ObjectType.Contact.Label + $Label.SB_NC_SearchCriteria}" value="{!searchTypeContact}" rendered="{!renkeiType != 'Lead'}">
           <apex:selectOptions value="{!searchTypeSelectOpts}"/>
           <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList"/>
         </apex:selectRadio>
