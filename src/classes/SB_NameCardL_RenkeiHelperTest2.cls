@@ -220,7 +220,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createAccount();
     db.createNameCard('1');
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -291,7 +291,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -352,7 +352,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -413,7 +413,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -476,7 +476,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -545,7 +545,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     //List<Database.SaveResult> srs = Database.insert(newLeads, dml);
     System.assertEquals(4, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead].size());
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -622,7 +622,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     //List<Database.SaveResult> srs = Database.insert(newLeads, dml);
     System.assertEquals(4, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead].size());
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -692,7 +692,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -753,7 +753,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -815,7 +815,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -879,7 +879,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -943,7 +943,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.createNameCard('2');
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -1017,7 +1017,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     insert newList;
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -1090,7 +1090,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     insert newList;
     Test.stopTest();
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -1161,7 +1161,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.convertLead();   // 取引開始済みに
     db.createNameCard('1');
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -1175,7 +1175,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     update cards;
     Test.stopTest();
 
-    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     //Set<String> emails = new Set<String>();
     //for (SmartViscaf__NameCard__c c : cards) {
     //  emails.add(c.SmartViscaf__email__c);  // 変更後のメアド
@@ -1188,7 +1188,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
     // 名刺のリード、アカウント、コンタクトへの参照
     for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
-      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__lead__c != null);
       System.assert(c.SmartViscaf__account__c != null);
       System.assert(c.SmartViscaf__contact__c != null);
     }
@@ -1199,9 +1199,9 @@ private class SB_NameCardL_RenkeiHelperTest2
     System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
-  // リードが取引開始済みだけど、アカウントはあって更新、コンタクトはなくなってて作成
+  // リードが取引開始済みだけど、アカウントはあって更新、コンタクトはなくなってて作成 → やっぱ コンタクトは作らない
   @isTest
-  static void test_updateAccountCreateContact_LeadRenkei_Converted() {
+  static void test_updateAccountNoopeContact_LeadRenkei_Converted() {
     // SmartVisca設定
     SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
     svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true; // 2018.03.xx v1.22  Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
@@ -1248,7 +1248,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     System.assertEquals(acntIds.size(), [SELECT Id FROM Account WHERE Id IN :acntIds].size());
     System.assertEquals(0, [SELECT Id FROM Contact WHERE Id IN :contIds].size());
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> prefs = new Set<String>();
     for (SmartViscaf__NameCard__c c : cards) {
@@ -1263,7 +1263,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     update cards;
     Test.stopTest();
 
-    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     //Set<String> emails = new Set<String>();
     //for (SmartViscaf__NameCard__c c : cards) {
     //  emails.add(c.SmartViscaf__email__c);  // 変更後のメアド
@@ -1274,19 +1274,20 @@ private class SB_NameCardL_RenkeiHelperTest2
     //System.assertEquals(2, leads.size());
     //　アカウントはある
     System.assertEquals(acntIds.size(), [SELECT Id, Name FROM Account WHERE Id IN :acntIds].size());
-    //　コンタクトが 更新後のメアドでできてる。
-    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    //　コンタクト が 更新後のメアドでできてる。→ やっぱ、作らない。
+    System.assertEquals(0, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
     // 名刺のリード、アカウント、コンタクトへの参照
     for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
-      System.assert(c.SmartViscaf__lead__c == null);
+      System.assert(c.SmartViscaf__lead__c != null);
       System.assert(c.SmartViscaf__account__c != null);
-      System.assert(c.SmartViscaf__contact__c != null);
+      System.assert(c.SmartViscaf__contact__c == null);
     }
     // リードなし
     System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
     // アカウント更新
     System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
-    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
+    // コンタクト なし
+    System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
   }
 
   // リードが取引開始済みだけど、アカウント、コンタクト なくなってて なにもせず。
@@ -1339,7 +1340,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     System.assertEquals(0, [SELECT Id FROM Account WHERE Id IN :acntIds].size());
     System.assertEquals(0, [SELECT Id FROM Contact WHERE Id IN :contIds].size());
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> companies = new Set<String>();
     Set<String> prefs = new Set<String>();
@@ -1356,7 +1357,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     update cards;
     Test.stopTest();
 
-    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     //Set<String> emails = new Set<String>();
     //for (SmartViscaf__NameCard__c c : cards) {
     //  emails.add(c.SmartViscaf__email__c);  // 変更後のメアド
@@ -1418,7 +1419,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     db.convertLead();   // 取引開始済みに
     db.createNameCard('1');
 
-    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     Set<String> emails = new Set<String>();
     Set<String> companies = new Set<String>();
     Set<String> prefs = new Set<String>();
@@ -1435,7 +1436,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     update cards;
     Test.stopTest();
 
-    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
     //Set<String> emails = new Set<String>();
     //for (SmartViscaf__NameCard__c c : cards) {
     //  emails.add(c.SmartViscaf__email__c);  // 変更後のメアド
@@ -1445,7 +1446,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     // リード
     System.assertEquals(0, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
     //　アカウント
-    System.assertEquals(0, [SELECT Id, Name FROM Account WHERE Name IN :companies].size());
+    System.assertEquals(4, [SELECT Id, Name FROM Account WHERE Name IN :companies].size());
     //　コンタクト
     System.assertEquals(0, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
     // 名刺のリード、アカウント、コンタクトへの参照
@@ -1458,8 +1459,104 @@ private class SB_NameCardL_RenkeiHelperTest2
     System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
     // アカウント
     System.assertEquals(0, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    // コンタクト
     System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE MailingState IN :prefs].size());
 
+  }
+
+  // リード、アカウント、コンタクト既存で、リードが取引開始済みだけど、開始済みコンタクト なくなってて なにもせず。
+  @isTest
+  static void test_missingContact_LeadRenkei_Converted_withExistAccountContact() {
+    // SmartVisca設定
+    SmartViscaf__SmartViscaConfig__c svConfig = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
+    svConfig.SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c = true; // 2018.03.xx v1.22  Lead連携拡張パッケージの中にある 自動連携のトリガハンドラを呼ぶ
+    // Lead 拡張パッケージ v2.0 からの項目
+    svConfig.RenkeiCreateContactOnAcountWithoutLead__c = true; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+    svConfig.RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+    svConfig.RenkeiContactToCampaignMember__c = false;  // デフォルト false 統合版自動連携: 取引先責任者もキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateToCampaignMember__c = false; // デフォルト false 統合版自動連携: 更新でもキャンペーンメンバーにする。
+    svConfig.RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
+    upsert svConfig;
+    // 名刺基本設定 リード連携は無効　で、 キャンペンメンバー化も無効
+    SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
+    bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
+    bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiActiveCampaignMember__c = false; // キャンペンメンバー
+    bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
+    bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
+    bs.SmartViscaf__RenkeiContactNOExistCreateNew__c = true;  // 取引先責任者を新規作
+    bs.SmartViscaf__RenkeiLeadNOExistCreateNew__c = true; // リードを新規作
+    bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
+    bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
+    bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
+    insert bs;
+    TestDb db = new TestDb();
+    db.initialize();
+    db.createMapping();
+    db.createAccount();
+    db.createContact();
+    db.createLead();
+    db.convertLead();   // 取引開始済みに
+    db.cloneLead();     // 取引開始済み以外のリードもあり
+    db.createNameCard('1');
+
+    //　コンバートしたコンタクトを削除
+    List<Lead> leads = [SELECT Id, Name, ConvertedAccountId, ConvertedContactId FROM Lead WHERE IsConverted = true];
+    System.assertEquals(2, leads.size());
+    List<Id> acntIds = new List<Id>();
+    List<Id> contIds = new List<Id>();
+    for (Lead l : leads) {
+      acntIds.add(l.ConvertedAccountId);
+      contIds.add(l.ConvertedContactId);
+    }
+    Database.delete(contIds); // コンタクト削除
+    //Database.delete(acntIds); // アカウント削除
+    //System.assertEquals(0, [SELECT Id FROM Account WHERE Id IN :acntIds].size());
+    System.assertEquals(0, [SELECT Id FROM Contact WHERE Id IN :contIds].size());
+
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    Set<String> emails = new Set<String>();
+    Set<String> companies = new Set<String>();
+    Set<String> prefs = new Set<String>();
+    for (SmartViscaf__NameCard__c c : cards) {
+      //c.SmartViscaf__email__c += '2';      // メアドを変更するようにする。
+      emails.add(c.SmartViscaf__email__c);
+      companies.add(c.SmartViscaf__company_name__c);
+      prefs.add(c.SmartViscaf__address_pref__c);
+      c.SmartViscaf__delivery_type__c = '2';
+    }
+
+    Test.startTest();
+    // 納品 2 に、更新s
+    update cards;
+    Test.stopTest();
+
+    //List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, Name, SmartViscaf__email__c, SmartViscaf__company_name__c, SmartViscaf__address_pref__c, SmartViscaf__delivery_type__c FROM SmartViscaf__NameCard__c');
+    //Set<String> emails = new Set<String>();
+    //for (SmartViscaf__NameCard__c c : cards) {
+    //  emails.add(c.SmartViscaf__email__c);  // 変更後のメアド
+    //}
+    System.assertEquals(2, emails.size());
+    // リード
+    System.assertEquals(4, [SELECT Id, Name, Email, Company, FirstName, LastName FROM Lead WHERE Email IN :emails].size());
+    //　アカウント 既存＋コンバート
+    System.assertEquals(4, [SELECT Id, Name FROM Account WHERE Name IN :companies].size());
+    //　コンタクト
+    System.assertEquals(2, [SELECT Id, Name, Email, Account.Name, FirstName, LastName FROM Contact WHERE Email IN :emails].size());
+    // 名刺のリード、アカウント、コンタクトへの参照
+    for (SmartViscaf__NameCard__c c : [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c]) {
+      System.assert(c.SmartViscaf__lead__c != null);
+      System.assert(c.SmartViscaf__account__c != null);
+      System.assert(c.SmartViscaf__contact__c == null);
+    }
+    // リード 更新されてない
+    System.assertEquals(0, [SELECT Id, Name FROM Lead WHERE State IN :prefs].size());
+    // アカウント 既存 は更新されてる。
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE BillingState IN :prefs].size());
+    // コンタクト
+    // 取引開始したアカウントにコンタクトはない。
+    System.assertEquals(0, [SELECT Id, Name FROM Contact WHERE AccountId IN :acntIds].size());
   }
 
 

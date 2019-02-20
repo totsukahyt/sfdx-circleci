@@ -26,7 +26,7 @@ private class SB_NCL_TwowayRegistControllerTest2
       svConfig.RenkeiContactToCampaignMember__c = false;  // デフォルト false 統合版自動連携: 取引先責任者もキャンペーンメンバーにする。
       svConfig.RenkeiUpdateToCampaignMember__c = false; // デフォルト false 統合版自動連携: 更新でもキャンペーンメンバーにする。
       svConfig.RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
-      svConfig.LeadRegist_CampaignList__c = '10;true ;In Progress, Planned,進行中; Email, Other'; // リードに登録 キャンペーンリスト
+      svConfig.SRegistCampaignList__c = '10;true ;In Progress, Planned,進行中; Email, Other'; // Sキャンペーンリストの候補条件
     }
 
     // 名刺基本設定

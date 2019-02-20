@@ -263,10 +263,12 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
     public List<Candidate> getLeadCandidates() { return leadCandidates; }
     private Candidate leadWinner;    // 採用したリードの登録先候補 取引開始済はない
     public RenkeiProcess leadProcess;
-    private Boolean isConverted;    // 取引開始済みのリード があった。
+    public Boolean haveConvertedLead() { return this.haveConvertedLead; }
+    private Boolean haveConvertedLead;    // 取引開始済みのリード があった。
     private Id validConvertedAccountId;   // 有効な取引開始したアカウントのId
     private Id validConvertedContactId;   // 有効な取引開始したコンタクトのId
     private Map<Id, Lead> convertedLeads; // リード登録先候補 のうち、取引開始済みのリード
+    private Map<Id, Id> convertedAcntId2LeadId; // 取引開始済みアカウント と、取引開始済みのリード
     //private Lead convertedLead;
     private List<Id> acntWithConvertedContIds; // リードからコンバートしたアカウントのうち、コンバートしたコンタクトをもってるアカウント
 
@@ -277,8 +279,9 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
       this.lead = null;
       this.leadWinner = null;
       this.leadProcess = RenkeiProcess.None;
-      this.isConverted = false;
+      this.haveConvertedLead = false;
       this.convertedLeads = new Map<Id, Lead>();
+      this.convertedAcntId2LeadId = new Map<Id, Id>();
       //this.convertedLead = null;
       this.acntWithConvertedContIds = new List<Id>();
       //this.convertedAccountId = null;
@@ -288,11 +291,15 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
     public void addLeadCandidate(Lead l) {
       if (l.isConverted) {
         // 取引開始済み
-        this.isConverted = true;
+        this.haveConvertedLead = true;
         //this.convertedAccountId = l.convertedAccountId != null ? l.convertedAccountId : this.convertedAccountId;
         //this.convertedContactId = l.convertedAccountId != null && l.convertedContactId != null ? l.convertedContactId : this.convertedContactId;
         //this.leadWinner = this.leadWinner == null || (l.convertedAccountId != null && l.convertedContactId != null) ? can : this.leadWinner;
         this.convertedLeads.put(l.Id, l);
+        if (l.convertedAccount.Name != null) {
+          // アカウントが削除されずある。
+          this.convertedAcntId2LeadId.put(l.convertedAccountId, l.Id);
+        }
         //this.convertedLead = this.leadWinner.candidateId == l.Id ? l : this.convertedLead;
       }
       else {
@@ -319,7 +326,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
     // 1. リード統合版 対象レコードの処理をする前の処理
     // 既存のリード確認、既存
     public override void preProcess() {
-      if (this.isConverted) {
+      if (this.haveConvertedLead) {
         // 取引開始済みリードが該当してた場合
         // 1. リードが取引開始済 → アカウント、コンタクトについて判定 acntWinner を決める。
         judgeConvertedAccount();
@@ -337,7 +344,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
     }
 
     //private AccountCandidate getConvertedAccount() {
-    //  System.assert(this.isConverted);
+    //  System.assert(this.haveConvertedLead);
     //  AccountCandidate result = null;
     //  if (this.acntWithConvertedContIds.isEmpty()) {
     //    // コンバートしたコンタクトがない。
@@ -407,7 +414,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
     // 取引開始済みリードがあったときの判定 → コンバートした取引先の中で決める。コンバートしたアカウント、コタンタクトを対象にする。
     // コンバートしたのがなくなってたり、複数あったら、なにもしない。
     private void judgeConvertedAccount() {
-      System.assert(this.isConverted);
+      System.assert(this.haveConvertedLead);
       if (this.acntWithConvertedContIds.isEmpty()) {
         // コンバートしたコンタクトがない。
         if (this.acntId2AcntCandidate.isEmpty()) {
@@ -418,12 +425,15 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
           this.messages.add('[Converted Account Missing]');
         }
         else if (this.acntId2AcntCandidate.size() == 1) {
-          // アカウントはある。1つだけ → コンタクトを作るつもり
+          // アカウントはある。1つだけ → コンタクトを作る？ → 作成しないことにします。
           this.acntWinner = this.acntId2AcntCandidate.values()[0];
           this.acntId = this.acntWinner.candidateId;
           this.acntProcess = this.setting.SmartViscaf__RenkeiAccountOverwrite__c ? RenkeiProcess.Modify : RenkeiProcess.ModifySkip;
-          this.contProcess = this.setting.SmartViscaf__RenkeiContactNOExistCreateNew__c ? RenkeiProcess.Create : RenkeiProcess.CreateSkip;
-          this.leadProcess = RenkeiProcess.None;
+          //this.contProcess = this.setting.SmartViscaf__RenkeiContactNOExistCreateNew__c ? RenkeiProcess.Create : RenkeiProcess.CreateSkip;
+          // 作成しないことにします。
+          this.contProcess = RenkeiProcess.CreateSkip;
+          this.leadId = this.convertedAcntId2LeadId.get(this.acntId);
+          this.leadProcess = RenkeiProcess.None; // 取引開始すみリードは更新しない
           this.messages.add('[Converted Contact Missing]');
         }
         else {
@@ -439,9 +449,10 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
         this.acntWinner = this.acntId2AcntCandidate.get(this.acntWithConvertedContIds[0]);
         this.acntId = this.acntWinner.candidateId;
         this.contId = ((AccountCandidate)this.acntWinner).getChildCount() == 1 ? ((AccountCandidate)this.acntWinner).childIds[0] : null;
+        this.leadId = this.convertedAcntId2LeadId.get(this.acntId);
         this.acntProcess = this.setting.SmartViscaf__RenkeiAccountOverwrite__c ? RenkeiProcess.Modify : RenkeiProcess.ModifySkip;
         this.contProcess = this.setting.SmartViscaf__RenkeiContactOverwrite__c ? RenkeiProcess.Modify : RenkeiProcess.ModifySkip;
-        this.leadProcess = RenkeiProcess.None;
+        this.leadProcess = RenkeiProcess.None; // 取引開始すみリードは更新しない
         this.messages.add('[Converted Account, Contact]');
       }
       else {

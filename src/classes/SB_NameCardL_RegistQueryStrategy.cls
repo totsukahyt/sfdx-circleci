@@ -90,7 +90,9 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
     'fax',
     'isconverted',   // 取引開始済み
     'convertedaccountid',  // 取引開始済み取引先  該当のアカウントが削除されても残るので注意
-    'convertedcontactid'  // 取引開始済み取引先責任者  該当のコンタクトが削除されても残るので注意
+    'convertedaccount.name',
+    'convertedcontactid',  // 取引開始済み取引先責任者  該当のコンタクトが削除されても残るので注意
+    'convertedcontact.name'
   };
 
   private static final Map<SObjectType, Set<String>> OTYPE2QUERY_FIELDS = new Map<SObjectType, Set<String>> {

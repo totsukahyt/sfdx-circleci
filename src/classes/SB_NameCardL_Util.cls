@@ -120,8 +120,8 @@ public with sharing class SB_NameCardL_Util {
         smartViscaConfig.LeadRegist_DefaultShowLeadListNoExsiting__c = smartViscaConfig.LeadRegist_DefaultShowLeadListNoExsiting__c != null ?
                   smartViscaConfig.LeadRegist_DefaultShowLeadListNoExsiting__c : true;
         // LEX 版 CRMに登録 の キャンペーン 一覧の表示条件 表示件数の上限と、表示するキャンペーンのステータス
-        //smartViscaConfig.LeadRegist_CampaignList__c = String.isBlank(smartViscaConfig.LeadRegist_CampaignList__c) ?
-        //          REGIST_CAMPAIGN_LIST : smartViscaConfig.LeadRegist_CampaignList__c;
+        //smartViscaConfig.SRegistCampaignList__c = String.isBlank(smartViscaConfig.SRegistCampaignList__c) ?
+        //          REGIST_CAMPAIGN_LIST : smartViscaConfig.SRegistCampaignList__c;
       }
       return smartViscaConfig;
     }

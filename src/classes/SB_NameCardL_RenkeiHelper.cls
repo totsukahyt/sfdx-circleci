@@ -293,14 +293,10 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
 
     for (SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder holder : (List<SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder>)this.holders) {
       // SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder holder = (SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder)h;
-      if (holder.isLeadTooMuch()) {   // 既存のリードが複数いる
-        if (SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c ) {// 統合版自動連携:条件に合致する既存リードは全て更新する。
-          holder.putMessage('[Update All Leads]');   // 2017.04.xx
-        }
-        else {
-          holder.putMessage('[Lead duplicate]');   // 2017.04.xx
-          continue;
-        }
+      if (holder.isLeadTooMuch() &&   // 既存のリードが複数いる
+         !SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c) {// 統合版自動連携:条件に合致する既存リードは全て更新する FALSE
+        holder.putMessage('[Lead duplicate]');   // 2017.04.xx
+        continue;
       }
       if (holder.leadProcess == SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Modify) {
         // 既存を更新
@@ -320,8 +316,10 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
             holder.leadProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Modify;
           }
         }
-        else if (SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c){
+        else if (!holder.haveConvertedLead() && // 取引開始済みリードはない
+          SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c){
           // 既存リードが複数 複数を更新
+          holder.putMessage('[Update All Leads]');   // 2017.04.xx
           List<Lead> leads = holder.buildUpdAllLeads(leadId2UpdLead.keySet());
           if (!leads.isEmpty()) {
             updLeadProc.addSObjects(leads);

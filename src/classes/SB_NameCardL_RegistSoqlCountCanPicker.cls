@@ -114,7 +114,6 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
     Map<Id, Map<SObjectType, List<SObject>>> result = new Map<Id, Map<SObjectType, List<SObject>>> ();
     this.qExecutor = SB_NameCardL_RegistQueryExecutor.getInstance();
     List<SmartViscaf__NameCard__c> cards = this.qExecutor.init(cardIds);
-
     if (this.accountQs != null && this.contactQs != null) {
       createAccountsContacts();
     }
@@ -129,7 +128,6 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
     }
     //　名刺ごとに、該当する オブジェクト−レコードのMap を作る。
     for (SmartViscaf__NameCard__c card : cards) {
-      //List<SObject> targets = new List<SObject>();
       Map<SObjectType, List<SObject>> targets = new Map<SObjectType, List<SObject>> ();
       result.put(card.Id, targets);
       for (SObjectType otype : this.otype2Objs.keySet()) {
@@ -152,6 +150,9 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
           }
           records.add(obj);
         }
+      }
+      if (Limits.getCpuTime() >= Limits.getLimitCpuTime()+1000) {
+        throw new SB_NameCardL_RegistCanPickerAbstractException(System.Label.SB_NCLD_Msg_ChooseLessBusinessCards);
       }
     }
     //printCard2Targets (result);

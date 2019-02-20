@@ -240,7 +240,7 @@ public with sharing class SB_NCL_RegistCampaignOptionCreater {
   private class CustomSettigListBuilder extends ListBulider {
     private CampaignListCondition listcond;
     public CustomSettigListBuilder() {
-      this.listcond = new CampaignListCondition(SB_NameCardL_Util.smartViscaConfig.LeadRegist_CampaignList__c);
+      this.listcond = new CampaignListCondition(SB_NameCardL_Util.smartViscaConfig.SRegistCampaignList__c);
     }
     public override List<Campaign> create() {
       Set<String> statuss;  // 状況の条件
@@ -263,7 +263,7 @@ public with sharing class SB_NCL_RegistCampaignOptionCreater {
   public static List<Campaign> createCampaignList() {
     ListBulider builder = null;
     try {
-      if(String.isNotBlank(SB_NameCardL_Util.smartViscaConfig.LeadRegist_CampaignList__c)) {
+      if(String.isNotBlank(SB_NameCardL_Util.smartViscaConfig.SRegistCampaignList__c)) {
         builder = new CustomSettigListBuilder();
       }
     }
@@ -281,7 +281,7 @@ public with sharing class SB_NCL_RegistCampaignOptionCreater {
     List<CampaignOption> result = new List<CampaignOption>();
     //Set<String> statuss;  // 状況の条件
     //Set<String> types;    // 種別の条件
-    //CampaignListCondition listcond = new CampaignListCondition(SB_NameCardL_Util.smartViscaConfig.LeadRegist_CampaignList__c);
+    //CampaignListCondition listcond = new CampaignListCondition(SB_NameCardL_Util.smartViscaConfig.SRegistCampaignList__c);
     // 1. 有効なキャンペーン 数を調べる。 カスタム設定使う型だとだぶる。。
     Integer cnt;
     List<AggregateResult> ars = [SELECT Count(Id) cnt FROM Campaign WHERE IsActive=true];
