@@ -84,6 +84,16 @@
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
         </apex:column>
 
+        <apex:column rendered="{!renkeiType != 'Lead'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__address__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__address__c + ' ' + ncRec.nameCard.SmartViscaf__address_eng__c}"/>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType != 'Lead'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__mobile__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__mobile__c}"/>
+        </apex:column>
+
         <apex:column rendered="{!renkeiType != 'Contact'}">
           <apex:facet name="header">{!$Label.SB_NCLD_Text_Lead}</apex:facet>
           <apex:selectList value="{!ncRec.leadId}" size="1" Id="leadSelectOp" onchange="setDis('{!ncRec.index}', 'contactSelect');">

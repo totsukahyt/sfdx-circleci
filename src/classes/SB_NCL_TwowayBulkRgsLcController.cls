@@ -364,6 +364,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'SmartViscaf__mobile__c',
                                            'string',
                                            false));
+    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
+                                           'SmartViscaf__email__c',
+                                           'string',
+                                           false));
     SB_NameCardL_BulkRegistDTO.DataTableColumnField f2 = new SB_NameCardL_BulkRegistDTO.DataTableColumnField(String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {ACCOUNTLABEL, CONTACTLABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()}),
                                            'Contact',
                                            'plicklist',
@@ -401,6 +405,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
                                            'SmartViscaf__mobile__c',
+                                           'string',
+                                           false));
+    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
+                                           'SmartViscaf__email__c',
                                            'string',
                                            false));
     f1 = new SB_NameCardL_BulkRegistDTO.DataTableColumnField(Lead.sObjectType.getDescribe().getLabel(),
