@@ -248,22 +248,86 @@
         List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
         PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
         Test.setCurrentPage(pageRef);
+        ncList.add(nc);
         ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
         ssc.setSelected(ncList);
         SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
 
 
-        System.assertEquals(nc.OwnerId,ctrl.ownerlead.ownerId);
+        System.assertEquals(null,ctrl.ownerlead.ownerId);
         Id uid = Userinfo.getUserid();
         List<User> us = [Select Id From User Where Id != :uid];
         User u = us[0];
         ctrl.ownerlead.ownerId = u.Id;
-        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
-        PageReference savePageRef = ctrl.save();
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
+            r.leadId = 'new';
+        }
+         ctrl.save();
         List<Lead> ls = [Select Id From Lead];
         System.assertEquals(ls.size(),1);
         Lead le = getLead(nc.Id);
         System.assertEquals(le.OwnerId,u.Id);
+    }
+
+    //カスタム設定によるデフォルトtrue
+    @isTest private static void cusSettingDefTest() {
+        insertNameCard();
+        insCusSetting(true);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+        System.assertEquals(ctrl.registTodo,true);
+        System.assertEquals(ctrl.todo.Subject,'交換true');
+    }
+
+
+    //カスタム設定によるデフォルトtrue
+    @isTest private static void cusSettingDefTestBulk() {
+        insertNameCard();
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+        ncList.add(nc);
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
+            System.assertEquals(r.registTodo,true);
+        }
+    }
+
+     //カスタム設定によるデフォルト false
+    @isTest private static void cusSettingDefFTest() {
+        insertNameCard();
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+        System.assertEquals(ctrl.registTodo,false);
+        System.assertEquals(ctrl.todo.Subject,'交換false');
+    }
+
+
+    //カスタム設定によるデフォルト false
+    @isTest private static void cusSettingDefFTestBulk() {
+        insertNameCard();
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+        ncList.add(nc);
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
+            System.assertEquals(r.registTodo,false);
+        }
     }
 
     private static void insertNameCard()
@@ -367,5 +431,21 @@
         Lead lead = [SELECT Id,OwnerId FROM Lead WHERE NameCard__c = :ncId];
         System.assertNotEquals(null,lead, 'company error');
         return lead;
+    }
+
+    private static void insCusSetting(Boolean flage)
+    {
+        SmartViscaf__SmartViscaConfig__c smartViscaConfig = new SmartViscaf__SmartViscaConfig__c();
+        smartViscaConfig.LeadRegist_DispEmail__c = flage;
+        smartViscaConfig.LeadRegist_DispLastModifiedDate__c = flage;
+        smartViscaConfig.LeadRegist_DispOwner__c = flage;
+        smartViscaConfig.LeadRegist_DispState__c = flage;
+        smartViscaConfig.LeadRegist_Overwrite__c = flage;
+        smartViscaConfig.LeadRegist_DispTitle__c = flage;
+        smartViscaConfig.LeadRegist_DispLeadRectype__c = flage;
+        smartViscaConfig.LeadRegist_TodoSubject__c = flage ? '交換true' : '交換false';
+        smartViscaConfig.LeadRegist_DispCompany__c = flage;
+        smartViscaConfig.LeadRegist_RegistTodo__c = flage;
+        upsert smartViscaConfig;
     }
 }

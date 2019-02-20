@@ -96,7 +96,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>SB_NCLD_Label_LeadRecType</shortDescription>
-        <value>&*lead*&レコードタイプ</value>
+        <value>&amp;*Lead*&amp;レコードタイプ</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Name</fullName>

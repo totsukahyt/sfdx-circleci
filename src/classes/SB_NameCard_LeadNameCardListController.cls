@@ -4,16 +4,12 @@
  * リードを更新
  */
 
-public with sharing class SB_NameCard_LeadNameCardListController
-{
-
-  public class NameCardRecord
-  {
+public with sharing class SB_NameCard_LeadNameCardListController{
+  public class NameCardRecord{
     public Integer index { get; set; }
     public SmartViscaf__NameCard__c nameCard { get; set; }
 
-    public NameCardRecord(Integer index, SmartViscaf__NameCard__c nc)
-    {
+    public NameCardRecord(Integer index, SmartViscaf__NameCard__c nc) {
       this.index = index;
       this.nameCard = nc;
     }
@@ -27,15 +23,10 @@ public with sharing class SB_NameCard_LeadNameCardListController
 
   private Lead lead;
 
-  public SB_NameCard_LeadNameCardListController(ApexPages.StandardController sc)
-  {
+  public SB_NameCard_LeadNameCardListController(ApexPages.StandardController sc) {
     try {
-      this.updateLeadLabel = System.Label.SB_NCLD_Text_UpdateLeadDEV;
-      this.updateLeadLabel = this.updateLeadLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
-      this.updateLeadLabel = this.updateLeadLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
-      this.overwriteLeadInfoLabel = System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV;
-      this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
-      this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+      this.updateLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_UpdateLeadDEV);
+      this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
       this.leadOverwrite = SB_NameCard_LeadRegist.svConfig.overwrite();
       this.nameCardRecordListIndex = -1;
       this.nameCardRecordList = new List<NameCardRecord>();
@@ -51,14 +42,14 @@ public with sharing class SB_NameCard_LeadNameCardListController
           this.nameCardRecordList.add(new NameCardRecord(this.nameCardRecordList.size(), nc));
         }
       }
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       ApexPages.addMessages(e);
     }
   }
 
   // リード
-  private static Lead getLead(Id leadId)
-  {
+  private static Lead getLead(Id leadId) {
     if (leadId == null) return null;
 
     for (Lead lead : [SELECT Id, Name, Email, LastName, FirstName FROM Lead WHERE Id = :leadId]) {
@@ -68,8 +59,7 @@ public with sharing class SB_NameCard_LeadNameCardListController
   }
 
   // 名刺リスト
-  private static List<SmartViscaf__NameCard__c> getNameCardList(Lead lead, Boolean latestonly)
-  {
+  private static List<SmartViscaf__NameCard__c> getNameCardList(Lead lead, Boolean latestonly) {
     if (lead == null) return null;
 
     List<String> whereList = new List<String>();
@@ -97,8 +87,7 @@ public with sharing class SB_NameCard_LeadNameCardListController
             whereStr = '(' + whereStr + ') AND SmartViscaf__delivery_type__c != \'1\' AND SmartViscaf__Parent__c = null';
         }
 
-
-    String soql = 'SELECT Id, Name, OwnerId, Owner.Name, LastModifiedDate,'
+    String soql = 'SELECT Id, Name, OwnerId, Owner.Name, LastModifiedDate,SmartViscaf__division__c,'
       + ' SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c,'
       + ' SmartViscaf__address_bld__c, SmartViscaf__address_eng__c,'
       + ' SmartViscaf__company_name__c, SmartViscaf__web_url1__c, SmartViscaf__tel1__c, SmartViscaf__fax1__c, SmartViscaf__title_name__c,'
@@ -114,8 +103,7 @@ public with sharing class SB_NameCard_LeadNameCardListController
   }
 
   // 更新
-  public PageReference save()
-  {
+  public PageReference save() {
     if (this.lead == null) return null;
     PageReference pageRef;
     Savepoint sp;
@@ -127,7 +115,7 @@ public with sharing class SB_NameCard_LeadNameCardListController
 
       Lead updLead;
       if (this.leadOverwrite) {
-        updLead = SB_NameCard_LeadRegist.getLead(this.lead.Id, ncRec.nameCard, null);
+        updLead = SB_NameCard_LeadRegist.getLead(this.lead.Id, ncRec.nameCard, null,null);
       } else {
         updLead = new Lead(Id=this.lead.Id, NameCard__c=ncRec.nameCard.Id);
       }
@@ -150,7 +138,8 @@ public with sharing class SB_NameCard_LeadNameCardListController
         SB_NameCard_LeadCrudFls.supdate(new List<SmartViscaf__NameCard__c>{new SmartViscaf__NameCard__c(Id=ncRec.nameCard.Id, SmartViscaf__lead__c=updLead.Id)},dml);
       }
       pageRef = (new ApexPages.StandardController(updLead)).view();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       if (sp != null) Database.rollback(sp);
       ApexPages.addMessages(e);
     }
@@ -158,8 +147,7 @@ public with sharing class SB_NameCard_LeadNameCardListController
   }
 
   // キャンセル
-  public PageReference cancel()
-  {
+  public PageReference cancel() {
     if (this.lead == null) return null;
     return (new ApexPages.StandardController(this.lead)).view();
   }

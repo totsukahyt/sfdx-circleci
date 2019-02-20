@@ -48,17 +48,16 @@
         </apex:column>
 
         <apex:column >
+        <!-- SV_DEV-575 リード1.11バージョン:リード詳細画面で「名刺で更新」：役職の項目に「氏名」のリンクが表示されている。 -->
+        <!-- SmartViscaf__title_name__c ~~~~~~~ SmartViscaf__division__c -->
           <apex:facet name="header">{!$Label.SB_NCLD_Label_Division}</apex:facet>
-          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__division__c}"/>
         </apex:column>
 
         <apex:column >
+        <!-- SV_DEV-575 リード1.11バージョン:リード詳細画面で「名刺で更新」：役職の項目に「氏名」のリンクが表示されている。 -->
           <apex:facet name="header">{!$Label.SB_NCLD_Label_Position}</apex:facet>
-          <apex:outputPanel layout="none">
-            <a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
-              <apex:outputText value="{!ncRec.nameCard.Name}"/>
-            </a>
-          </apex:outputPanel>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
         </apex:column>
 
         <apex:column >

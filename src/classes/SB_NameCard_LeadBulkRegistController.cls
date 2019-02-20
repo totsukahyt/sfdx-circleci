@@ -9,8 +9,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     public class LeadBulkRegistControllerException extends exception {}
     public String retUrl{get;set;}
     // 名刺レコード
-    public class NameCardRecord
-    {
+    public class NameCardRecord{
         public SmartViscaf__NameCard__c nameCard { get; private set; }
         public String leadId { get; set; }
         public List<SelectOption> leadSelOptList { get; private set; }
@@ -18,8 +17,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         public Boolean hasError { get; set; }
         public String message { get; set; }
 
-        public NameCardRecord(SmartViscaf__NameCard__c nc, Boolean registTodo)
-        {
+        public NameCardRecord(SmartViscaf__NameCard__c nc, Boolean registTodo) {
             this.nameCard = nc;
             this.leadId = 'none';
             this.leadSelOptList = new List<SelectOption>();
@@ -28,8 +26,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             this.message = '';
         }
 
-        public void setLeadRecord(Map<Id, Lead> idMap, Map<String, List<Lead>> emailListMap, Map<String, List<Lead>> nameListMap)
-        {
+        public void setLeadRecord(Map<Id, Lead> idMap, Map<String, List<Lead>> emailListMap, Map<String, List<Lead>> nameListMap) {
             this.leadSelOptList.clear();
             //this.leadSelOptList.add(new SelectOption('none', '登録しない'));
             this.leadSelOptList.add(new SelectOption('none', System.Label.SB_NCLD_Menu_NotToRegister));
@@ -82,8 +79,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             this.hasError = false;
         }
 
-        private String getLabel(String name, String email)
-        {
+        private String getLabel(String name, String email) {
             String label = String.isBlank(name) ? '' : name;
             label += String.isBlank(email) ? ' <>' : ' <'+email+'>';
             return label;
@@ -216,14 +212,12 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // 検索条件
-    public static List<SelectOption> getSearchTypeList()
-    {
+    public static List<SelectOption> getSearchTypeList() {
         return SB_NameCard_LeadRegist.getSearchTypeList();
     }
 
     // 名刺レコードリスト
-    private static List<NameCardRecord> getNameCardRecordList(List<SmartViscaf__NameCard__c> ncList, Boolean registTodo)
-    {
+    private static List<NameCardRecord> getNameCardRecordList(List<SmartViscaf__NameCard__c> ncList, Boolean registTodo) {
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
 
         for (SmartViscaf__NameCard__c nc : ncList) {
@@ -233,8 +227,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // 検索
-    public void search()
-    {
+    public void search() {
             String message = '';
         try {
             this.hasError = false;
@@ -258,8 +251,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // リード
-    private void setLeadMap(Map<Id, Lead> idMap, Map<String, List<Lead>> emailListMap, Map<String, List<Lead>> nameListMap)
-    {
+    private void setLeadMap(Map<Id, Lead> idMap, Map<String, List<Lead>> emailListMap, Map<String, List<Lead>> nameListMap) {
         this.leadOwnerIdMap.clear();
         String soql = this.soqlMap.get(this.searchType);
         if (String.isBlank(soql)) return;
@@ -280,7 +272,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             if (nameListMap.containsKey(lead.Name)) {
 
                 nameListMap.get(lead.Name).add(lead);
-            } else {
+            }
+            else {
                 nameListMap.put(lead.Name, new List<Lead>{lead});
             }
 
@@ -288,22 +281,23 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             name = lead.LastName;
             if (nameListMap.containsKey(name)) {
                 nameListMap.get(name).add(lead);
-            } else {
+            }
+            else {
                 nameListMap.put(name, new List<Lead>{lead});
             }
             // 名のみ
             name = lead.FirstName;
             if (nameListMap.containsKey(name)) {
                 nameListMap.get(name).add(lead);
-            } else {
+            }
+            else {
                 nameListMap.put(name, new List<Lead>{lead});
             }
         }
     }
 
     // 保存
-    public void save()
-    {
+    public void save() {
         saveOK = true;
         Savepoint sp;
 
@@ -320,7 +314,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
 
             //pageRef = this.retUrl;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             if (sp != null) Database.rollback(sp);
             this.hasError = true;
             saveOK = false;
@@ -331,8 +326,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // リード作成
-    private Integer insertLead()
-    {
+    private Integer insertLead() {
         List<Lead> leadList = new List<Lead>();
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
         String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
@@ -340,8 +334,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
         Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
         for (NameCardRecord ncRec : this.nameCardRecordList) {
-            if (ncRec.leadId != 'new')
-            {
+            if (ncRec.leadId != 'new') {
                 continue;
             }
 
@@ -350,8 +343,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 throw new SB_NameCard_LeadRegist.LeadRegistException(str);
             }
 
-             if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
-              {
+             if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable()) {
                  throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
               }
 
@@ -375,7 +367,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         updateNameCard(leadList, ncRecList, this.insertOption.campaign__c);
 
         // ToDo
-        if(String.valueOf(this.ownerlead.ownerId).startsWith('005')){
+        if(String.valueOf(this.ownerlead.ownerId).startsWith('005')) {
             insertTodo(leadList, ncRecList);
         }
 
@@ -396,8 +388,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             leadId = Id.valueOf(ncRec.leadId);
 
-             if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isUpdateable())
-              {
+             if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isUpdateable()) {
                  throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
               }
             //if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException('リードが重複しています');
@@ -406,7 +397,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             if (this.leadOverwrite) {
                 leadList.add(SB_NameCard_LeadRegist.getLead(leadId, ncRec.nameCard, this.leadOwnerIdMap.get(leadId),null));
-            } else {
+            }
+            else {
                 leadList.add(new Lead(Id=leadId, NameCard__c=ncRec.nameCard.Id));
             }
             ncRecList.add(ncRec);
@@ -436,8 +428,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // リード処理結果
-    private void setResult(List<Database.SaveResult> srList, List<NameCardRecord> ncRecList)
-    {
+    private void setResult(List<Database.SaveResult> srList, List<NameCardRecord> ncRecList) {
         String errMsg = '';
 
         Map<Id,Integer> cardindex = new Map<Id,Integer>();
@@ -449,14 +440,11 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         SB_NameCard_LeadSaveResult dbError = new SB_NameCard_LeadSaveResult();
         dbError.putSaveResults(srList);
 
-        if (dbError.isError()) 
-        {
-            for (Integer i = 0; i < srList.size(); i++)
-            {
+        if (dbError.isError()) {
+            for (Integer i = 0; i < srList.size(); i++) {
                 SB_NameCard_LeadSaveResult.DbErrorHolder err = dbError.getDbErrorHolder(i);
                 NameCardRecord n = ncRecList[0];
-                if (err == null)
-                {
+                if (err == null) {
                     n.hasError = false;
                     //namecardMap.get((String)os[i].get('NameCard__c')).hasSaveError = false;
                     continue;
@@ -467,7 +455,6 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 errMsg += msg;
             }
             //errorMsg += msg;
-            
             throw new SB_NameCard_LeadRegist.LeadRegistException(errMsg);
         }
 
@@ -486,16 +473,14 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // キャンペーンメンバー
-    private static void insertCampaignMember(Id campId, List<Lead> leadList, List<NameCardRecord> ncRecList)
-    {
+    private static void insertCampaignMember(Id campId, List<Lead> leadList, List<NameCardRecord> ncRecList) {
         if (campId == null) return;
         List<CampaignMember> cmList = new List<CampaignMember>();
 
         for (Integer i = 0, len = leadList.size(); i < len; i++) {
             cmList.add(new CampaignMember(CampaignId=campId, LeadId=leadList[i].Id, ContactId=ncRecList[i].nameCard.SmartViscaf__contact__c));
         }
-        if (cmList.size() > 0)
-        {
+        if (cmList.size() > 0) {
             Database.DMLOptions dml = new Database.DMLOptions();
 
             dml.OptAllOrNone = true;
@@ -506,8 +491,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // 名刺
-    private static void updateNameCard(List<Lead> leadList, List<NameCardRecord> ncRecList, Id campId)
-    {
+    private static void updateNameCard(List<Lead> leadList, List<NameCardRecord> ncRecList, Id campId) {
         List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
         Id leadId;
 
@@ -515,14 +499,14 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             leadId = leadList[i].Id;
             if (campId != null && ncRecList[i].nameCard.campaign__c != campId) {
                 ncList.add(new SmartViscaf__NameCard__c(Id=ncRecList[i].nameCard.Id, SmartViscaf__lead__c=leadId, campaign__c=campId));
-            } else if (leadId != ncRecList[i].nameCard.SmartViscaf__lead__c) {
+            }
+            else if (leadId != ncRecList[i].nameCard.SmartViscaf__lead__c) {
 
                 ncList.add(new SmartViscaf__NameCard__c(Id=ncRecList[i].nameCard.Id, SmartViscaf__lead__c=leadId));
             }
         }
 
-        if (ncList.size() > 0)
-        {
+        if (ncList.size() > 0) {
             Database.DMLOptions dml = new Database.DMLOptions();
 
             dml.OptAllOrNone = true;
@@ -533,8 +517,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     }
 
     // ToDo
-    private void insertTodo(List<Lead> leadList, List<NameCardRecord> ncRecList)
-    {
+    private void insertTodo(List<Lead> leadList, List<NameCardRecord> ncRecList) {
         String subject = SB_NameCard_LeadRegist.svConfig.todoSubject();
         List<Task> todoList = new List<Task>();
         Id leadId;
@@ -546,15 +529,13 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             ownerId = this.leadOwnerIdMap.get(leadId);
             if (ownerId == null)
                 ownerId = leadList[i].OwnerId;
-                if(!String.valueOf(ownerId).startsWith('005'))
-                {
+                if(!String.valueOf(ownerId).startsWith('005')) {
                     continue;
                 }
             todoList.add(SB_NameCard_LeadRegist.getTodo(leadId, ownerId, subject, ncRecList[i].nameCard.SmartViscaf__card_exchange_date__c));
         }
 
-        if (todoList.size() > 0)
-        {
+        if (todoList.size() > 0) {
             Database.DMLOptions dml = new Database.DMLOptions();
 
             dml.OptAllOrNone = true;
