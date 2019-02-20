@@ -2,7 +2,7 @@
  * (c) 2018 Sunbridge Inc.
  *
  * 統合版一括登録Lex コントローラ
- * @Version リード拡張：Lead Ex. 1.12 2018/08/XX
+ * @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
  *
  */
 public with sharing class SB_NCL_TwowayBulkRgsLcController {
@@ -330,10 +330,12 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            true);
     f1.eventName = 'cleanContactPlicklist';
     fieldList.add(f1);
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(System.Label.SB_NCLD_Label_ToDoRegistration,
+    f1 = new SB_NameCardL_BulkRegistDTO.DataTableColumnField(System.Label.SB_NCLD_Label_ToDoRegistration,
                                            'ToDo',
                                            'checkbox',
-                                           true));
+                                           true);
+    f1.checkAll = true;
+    fieldList.add(f1);
     fieldMap.put('Lead', fieldList);
     fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
@@ -366,10 +368,12 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            true);
     f2.eventName = 'cleanLeadPlicklist';
     fieldList.add(f2);
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(System.Label.SB_NCLD_Label_ToDoRegistration,
+    f2 = new SB_NameCardL_BulkRegistDTO.DataTableColumnField(System.Label.SB_NCLD_Label_ToDoRegistration,
                                            'ToDo',
                                            'checkbox',
-                                           true));
+                                           true);
+    f2.checkAll = true;
+    fieldList.add(f2);
     fieldMap.put('Contact', fieldList);
     fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
@@ -408,10 +412,12 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            true);
     f2.eventName = 'cleanLeadPlicklist';
     fieldList.add(f2);
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(System.Label.SB_NCLD_Label_ToDoRegistration,
+    f2 = new SB_NameCardL_BulkRegistDTO.DataTableColumnField(System.Label.SB_NCLD_Label_ToDoRegistration,
                                            'ToDo',
                                            'checkbox',
-                                           true));
+                                           true);
+    f2.checkAll = true;
+    fieldList.add(f2);
     fieldMap.put('Both', fieldList);
 
     return JSON.serialize(fieldMap);

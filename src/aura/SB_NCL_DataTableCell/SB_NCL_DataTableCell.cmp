@@ -70,7 +70,7 @@
       </aura:renderIf>
 
       <aura:renderIf isTrue="{!v.field.type == 'checkbox'}">
-          <c:SB_NCL_Checkbox boxid="{!v.gid + 'checkboxdis'}" fieldName="{!v.field.fieldName}" cObjectMap="{!v.cObjectMap}" checked="{!v.checked}" dis="{!v.field.input == false}" boxlabel=""/>
+          <c:SB_NCL_Checkbox boxid="{!v.index + v.field.fieldName}" fieldName="{!v.field.fieldName}" cObjectMap="{!v.cObjectMap}" checked="{!v.checked}" dis="{!v.field.input == false}" boxlabel=""/>
       </aura:renderIf>
 
       <aura:renderIf isTrue="{!v.field.type == 'plicklist'}">

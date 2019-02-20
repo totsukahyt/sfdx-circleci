@@ -1,3 +1,12 @@
+/*
+ * (c) 2016 Sunbridge Inc.
+ *
+ * 統合一括DTOクラス
+ * @Version 1 201８/08/XX
+*  @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
+ *
+ */
+
 public with sharing class SB_NameCardL_BulkRegistDTO {
 
   @AuraEnabled public InputValue inputV {get; set;} // 入力内容
@@ -150,6 +159,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
     @AuraEnabled public Boolean show {get; set;}
     @AuraEnabled public String eventName {get; set;}
     @AuraEnabled public String width {get; set;}
+    @AuraEnabled public Boolean checkAll {get; set;}
 
     /**
      * @description DataTableColumnFieldBeanコンストラクタメソッド
@@ -166,6 +176,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
       this.show = true;
       this.eventName = '';
       this.width = '';
+      this.checkAll = false;
     }
 
     /**

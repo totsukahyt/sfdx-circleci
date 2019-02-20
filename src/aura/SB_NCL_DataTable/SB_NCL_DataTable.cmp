@@ -1,7 +1,7 @@
 <!-- /**
  *
  *  SB_NCL_DataTable
- *  リード拡張環境 一括統合用DataTable
+ *  リード拡張環境 Lightning一括画面のデータを表示するためのコンポネート
  *
  *
  *
@@ -9,7 +9,10 @@
  *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  *  @author mao
- *  @Version 1.12      2017.05.XX SV_DEV-511 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 1.12
+ *  @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
+ *
+ * 
  *
  **/ -->
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >
@@ -51,9 +54,17 @@
                     </th> -->
                     <th style="position:static; " class="slds-text-title_caps slds-is-resizable" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
                       <span tabindex="-1" id="{!'dataTableTheadSpan' + va.fieldName}" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
-                        <a role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
-                          <span title="{!va.label}" class="slds-truncate">{!va.label}</span>
-                        </a>
+
+                        <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                            <label class="slds-checkbox" for="{!va.fieldName}" style="{!if(va.checkAll != true, 'display: none', '')}">
+                              <input name="checkboxtop" type="checkbox" id="{!va.fieldName}" onclick="{!c.selectAll}"/>
+                              <span  class="slds-checkbox--faux checkboxleft"></span>
+                              <span class="slds-assistive-text"></span>
+                            </label>
+                          <span title="{!va.label}" class="slds-truncate">
+                            {!va.label}
+                          </span>
+                        </div>
                         <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
                           <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
                           <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
@@ -66,7 +77,7 @@
                 </tr>
               </thead>
               <tbody>
-                <aura:iteration var="obj" items="{!v.objs}">
+                <aura:iteration var="obj" items="{!v.objs}" indexVar="indx">
                   <tr style="width: 100%;" class="slds-hint-parent" is="lightning-primitive-datatable-row">
                     <aura:renderIf isTrue="{!v.haveError == true}">
                       <td style="width: 30px;" role="gridcell">
@@ -78,7 +89,7 @@
                     <aura:iteration var="field" items="{!v.fieldList}">
                       <!-- <aura:renderIf isTrue="{!field.show == true}"> -->
                         <!-- <aura:renderIf isTrue="{!field.type == 'plicklist'}"> -->
-                          <c:SB_NCL_DataTableCell width="{!field.width}" showType="{!v.showType}" aura:id="{!obj.id + field.fieldName}" eventName="{!field.eventName}" selectMap="{!v.selectMap}" recordId="{!obj.id}" field="{!field}" cObjectMap="{!obj.cObjectMap}"/>
+                          <c:SB_NCL_DataTableCell index="{!indx}" width="{!field.width}" showType="{!v.showType}" aura:id="{!obj.id + field.fieldName}" eventName="{!field.eventName}" selectMap="{!v.selectMap}" recordId="{!obj.id}" field="{!field}" cObjectMap="{!obj.cObjectMap}"/>
                         <!-- </aura:renderIf> -->
 
 

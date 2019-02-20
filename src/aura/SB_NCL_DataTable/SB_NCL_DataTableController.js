@@ -141,5 +141,18 @@
             }
             component.set('v.fieldList', fs);
         }
+    },
+    selectAll : function(component, event, helper) {
+        var objs = component.get('v.objs');
+        var field = event.target.id;
+        var checked = event.target.checked;
+        for (var i = 0; i < objs.length; i ++) {
+            objs[i].cObjectMap[field].checked = checked;
+        }
+        component.set('v.objs', objs);
+
+        for (var i = 0; i < objs.length; i ++) {
+            document.getElementById(i + field).checked = checked;
+        }
     }
 })
