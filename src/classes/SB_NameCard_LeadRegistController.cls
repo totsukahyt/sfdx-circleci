@@ -149,8 +149,11 @@ public with sharing class SB_NameCard_LeadRegistController {
         if (!baseSetting.SmartViscaf__RegistDispLeadOverWriteCheckbox__c) {
           this.showLeadOverwrite = false;
         }
-        this.todo.Subject  = baseSetting.SmartViscaf__RegistToDoSubject__c;
-        this.registTodo    = !baseSetting.SmartViscaf__RegistNoToDo__c;
+        this.todo.Subject = baseSetting.SmartViscaf__RegistToDoSubject__c;
+        if (String.isBlank(this.todo.Subject)) {
+          this.todo.Subject = System.Label.SB_NCLD_Text_BusinessCardExchange;
+        }
+        this.registTodo = !baseSetting.SmartViscaf__RegistNoToDo__c;
         // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
         this.showLeadRecType = leadRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
 
