@@ -85,7 +85,7 @@
         <name>SB_NCLD_Label_Save</name>
     </customLabels>
     <customLabels>
-        <label>Search Conditions</label>
+        <label>Search Criteria</label>
         <name>SB_NCLD_Label_SearchCondition</name>
     </customLabels>
     <customLabels>
@@ -153,7 +153,7 @@
         <name>SB_NCLD_Msg_SpecifyOwnerWhenCreateLead</name>
     </customLabels>
     <customLabels>
-        <label>Select Owner to create a Lead &amp;*smallLead*&amp;</label>
+        <label>Select Owner to create a &amp;*smallLead*&amp;</label>
         <name>SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV</name>
     </customLabels>
     <customLabels>
@@ -201,8 +201,12 @@
         <name>SB_NCLD_Text_RegisterToLead</name>
     </customLabels>
     <customLabels>
-        <label>Register to &amp;*Lead*&amp;s</label>
+        <label>Register to &amp;*Lead*&amp;</label>
         <name>SB_NCLD_Text_RegisterToLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Register To &amp;*Lead*&amp;s</label>
+        <name>SB_NCLD_Text_RegisterToLeadsDEV</name>
     </customLabels>
     <customLabels>
         <label>lead</label>

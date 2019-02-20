@@ -358,6 +358,13 @@
         <value>&amp;*Lead*&amp;に登録</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Text_RegisterToLeadsDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リードに一括登録</shortDescription>
+        <value>リードに一括登録</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Text_SmallLead</fullName>
         <language>ja</language>
         <protected>true</protected>

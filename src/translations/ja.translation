@@ -205,6 +205,10 @@
         <name>SB_NCLD_Text_RegisterToLeadDEV</name>
     </customLabels>
     <customLabels>
+        <label><!-- リードに一括登録 --></label>
+        <name>SB_NCLD_Text_RegisterToLeadsDEV</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Smallリード --></label>
         <name>SB_NCLD_Text_SmallLead</name>
     </customLabels>

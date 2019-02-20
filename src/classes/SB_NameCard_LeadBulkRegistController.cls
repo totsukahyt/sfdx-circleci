@@ -114,7 +114,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     public SB_NameCard_LeadBulkRegistController(ApexPages.StandardSetController controller)
     {
         try {
-            this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadDEV);
+            this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadsDEV);
 
             this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
 
