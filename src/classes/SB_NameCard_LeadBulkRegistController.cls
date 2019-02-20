@@ -68,7 +68,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             }
             //this.leadSelOptList.add(new SelectOption('new', '新規作成'));
             this.leadSelOptList.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
-            this.leadId = 'none';
+            SelectOption ss = leadSelOptList[1];
+            this.leadId = ss.getValue();
             this.hasError = false;
         }
 
