@@ -9,6 +9,7 @@
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1154 LEX画面「リードもしくは取引先・取引先責任者に登録*」一括登録でキャンペーンの状況が無効状態で表示されない。
+ *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1162 LEX統合一括画面検索条件を変更する際にエラーが発生
  *
  **/ -->
 
@@ -75,12 +76,8 @@
 
     <lightning:buttonMenu menuAlignment="right" iconName="utility:search" class="right40" alternativeText="Settings" onselect="{!c.selectedSearchMenu}">
       <aura:iteration var="val" items="{!v.inputV.searchConditions}">
-        <aura:renderIf isTrue="{!val.disabled == true}">
-          <lightning:menuItem class="{!'disLeft ' + val.className}" disabled="true" label="{!val.label}" value="{!val.value}" iconName="{!val.iconName}" checked="{!val.value == v.inputV.searchConditionValue || val.value == v.inputV.searchConditionValueContact}"/>
-        </aura:renderIf>
-        <aura:renderIf isTrue="{!val.disabled != true}">
-          <lightning:menuItem label="{!val.label}" value="{!val.value}" iconName="{!val.iconName}" checked="{!val.value == v.inputV.searchConditionValue || val.value == v.inputV.searchConditionValueContact}"/>
-        </aura:renderIf>
+        <!-- SV_DEV-1162 LEX統合一括画面検索条件を変更する際にエラーが発生 -->
+        <lightning:menuItem class="{!if(val.disabled == true,'disLeft ' + val.className, '')}" disabled="{!val.disabled == true}" label="{!val.label}" value="{!val.value}" iconName="{!val.iconName}" checked="{!val.value == v.inputV.searchConditionValue || val.value == v.inputV.searchConditionValueContact}"/>
       </aura:iteration>
     </lightning:buttonMenu>
 
