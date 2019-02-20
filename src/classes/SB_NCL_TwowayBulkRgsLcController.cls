@@ -408,7 +408,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     SB_NameCardL_BulkRegistDTO.SearchCondition sc1 = new SB_NameCardL_BulkRegistDTO.SearchCondition(Lead.Email.getDescribe().getLabel(), String.valueOf(SEARCHTYPE_EMAIL), 'utility:email', '');
     sc1.groupName = 'Lead';
     inv.searchConditions.add(sc1);
-    SB_NameCardL_BulkRegistDTO.SearchCondition sc2 = new SB_NameCardL_BulkRegistDTO.SearchCondition(Lead.Name.getDescribe().getLabel(), String.valueOf(SEARCHTYPE_NAME), 'utility:user', '');
+    SB_NameCardL_BulkRegistDTO.SearchCondition sc2 = new SB_NameCardL_BulkRegistDTO.SearchCondition(System.Label.SB_NCLD_Label_Name, String.valueOf(SEARCHTYPE_NAME), 'utility:user', '');
     sc2.groupName = 'Lead';
     inv.searchConditions.add(sc2);
     inv.searchConditionValue = String.valueOf(SEARCHTYPE_EMAIL);

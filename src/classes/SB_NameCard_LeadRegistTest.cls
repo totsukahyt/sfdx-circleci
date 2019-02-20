@@ -344,6 +344,7 @@
             for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
                 r.leadId = 'new';
             }
+            ctrl.useNameCardOwner = false;
             ctrl.leadOverwrite = false;
             ctrl.saveLead();
             List<Lead> ls = [Select Id From Lead];
@@ -771,6 +772,7 @@
             ssc.setSelected(ncList);
             SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
             ctrl.insertOption.campaign__c = cm[0].Id;
+            ctrl.useNameCardOwner = false;
             //キャンペーンメンバーの選択リストをAssert
             List<SelectOption> cselectOption = ctrl.getCampaignS();
             System.assertEquals(cselectOption.size(),3);

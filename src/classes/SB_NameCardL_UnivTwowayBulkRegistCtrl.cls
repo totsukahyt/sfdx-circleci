@@ -298,7 +298,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
           this.contactCreateable = Contact.sObjectType.getDescribe().isCreateable();
 
           this.leadOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{LD_LABEL});
-          this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{CO_LABEL});
+          this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_UseNameCardOwnerByObject, new String[]{AC_LABEL});
 
           this.accountAndContact = String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {AC_LABEL, CO_LABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()});
 
