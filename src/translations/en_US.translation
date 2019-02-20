@@ -197,11 +197,11 @@
         <name>SB_NCLD_Text_LeadOverLapDEV</name>
     </customLabels>
     <customLabels>
-        <label>Register to Lead</label>
+        <label>Register to Leads</label>
         <name>SB_NCLD_Text_RegisterToLead</name>
     </customLabels>
     <customLabels>
-        <label>Register to &amp;*Lead*&amp;</label>
+        <label>Register to &amp;*Lead*&amp;s</label>
         <name>SB_NCLD_Text_RegisterToLeadDEV</name>
     </customLabels>
     <customLabels>
@@ -209,7 +209,7 @@
         <name>SB_NCLD_Text_SmallLead</name>
     </customLabels>
     <customLabels>
-        <label>New Lead Settings</label>
+        <label>New &amp;*Lead*&amp; Settings</label>
         <name>SB_NCLD_Text_SpecifiedWhenCreateNew</name>
     </customLabels>
     <customLabels>
@@ -237,7 +237,7 @@
         <name>SB_NC_Line</name>
     </customLabels>
     <customLabels>
-        <label>SearchCriteria</label>
+        <label>Search Criteria</label>
         <name>SB_NC_SearchCriteria</name>
     </customLabels>
     <customLabels>

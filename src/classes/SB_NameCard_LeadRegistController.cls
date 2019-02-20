@@ -59,6 +59,7 @@ public with sharing class SB_NameCard_LeadRegistController
     public String registerToLeadLabel{get;set;}
     public String overwriteLeadInfoLabel{get;set;}
     public String createNewLeadLabel{get;set;}
+    public String specifiedWhenCreateNew{get;set;}
 
     public Boolean isAllowDuplicateSave { get; private set; }
 
@@ -70,6 +71,8 @@ public with sharing class SB_NameCard_LeadRegistController
             this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadDEV);
 
             this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
+
+            this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
 
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadRecordListIndex = -1;

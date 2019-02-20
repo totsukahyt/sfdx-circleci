@@ -108,6 +108,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
     public String overwriteLeadInfoLabel{get;set;}
     public String registerToLeadLabel{get;set;}
+    public String specifiedWhenCreateNew{get;set;}
 
 
     public SB_NameCard_LeadBulkRegistController(ApexPages.StandardSetController controller)
@@ -116,6 +117,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadDEV);
 
             this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
+
+            this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
 
             String retUrlStr = System.currentPageReference().getParameters().get('retUrl');
             if (String.isNotBlank(retUrlStr)) this.retUrl = new PageReference(retUrlStr);

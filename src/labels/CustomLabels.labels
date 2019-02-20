@@ -208,7 +208,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>新規作成</shortDescription>
-        <value>新規作成</value>
+        <value>&lt;新規作成&gt;</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Menu_NotToRegister</fullName>
@@ -320,7 +320,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>名刺リスト</shortDescription>
-        <value>名刺リスト</value>
+        <value>名刺で更新</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_Lead</fullName>
@@ -412,6 +412,13 @@
         <protected>true</protected>
         <shortDescription>SB_NC_Line</shortDescription>
         <value>行目</value>
+    </labels>
+    <labels>
+        <fullName>SB_NC_SearchCriteria</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>検索条件</shortDescription>
+        <value>検索条件</value>
     </labels>
     <labels>
         <fullName>SB_NC_iOSDevice</fullName>

@@ -8,9 +8,9 @@
 				<apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}" rerender="pageMsgs, ncRecList"/>
 				<apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
 			</apex:pageBlockButtons>
-
 			<apex:pageBlockSection columns="2">
-				<apex:selectRadio value="{!searchType}">
+
+				<apex:selectRadio label="{!$Label.SB_NC_SearchCriteria}" value="{!searchType}">
 					<apex:selectOptions value="{!searchTypeList}"/>
 					<apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList"/>
 				</apex:selectRadio>
@@ -74,7 +74,7 @@
 				</apex:column>
 			</apex:pageBlockTable>
 
-			<apex:pageBlockSection title="{!$Label.SB_NCLD_Text_SpecifiedWhenCreateNew}" columns="1">
+			<apex:pageBlockSection title="{!specifiedWhenCreateNew}" columns="1">
 				<apex:pageBlockSectionItem >
 					<apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}"/>
 					<apex:inputField value="{!insertOption.campaign__c}"/>
