@@ -1,9 +1,17 @@
-<!-- (c) 2012 SunBridge Inc. -->
+<!--
+/*
+ * (c) 2016 Sunbridge Inc.
+ *
+ * リードに登録
+ */
+-->
 <apex:page standardController="SmartViscaf__NameCard__c" extensions="SB_NameCard_LeadRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="true">
     <apex:pageMessages id="pageMsgs" escape="false"/>
 
     <apex:form id="All">
+
         <apex:inputHidden id="leadRecordListIndex" value="{!leadRecordListIndex}"/>
+        <apex:actionFunction action="{!changeowner}" name="changeowner" reRender="todode,selectowner"/>
 
         <apex:pageBlock title="{!registerToLeadLabel}">
             <apex:pageBlockButtons >
@@ -64,7 +72,7 @@
                     <apex:pageBlockTable id="leadRecordList" value="{!leadRecordList}" var="leadRecord">
                         <apex:column style="width:15px;">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Select}</apex:facet>
-                            <input id="leadRecordList{!leadRecord.index}" type="radio" name="leadRecordsIndex" value="{!leadRecord.index}" onclick="document.getElementById('{!$Component.leadRecordListIndex}').value=this.value"/>
+                            <input id="leadRecordList{!leadRecord.index}" type="radio" name="leadRecordsIndex" value="{!leadRecord.index}" onclick="document.getElementById('{!$Component.leadRecordListIndex}').value=this.value;"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Company']}">
@@ -128,7 +136,7 @@
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 
-            <apex:pageBlockSection title="{!specifiedWhenCreateNew}" columns="1">
+            <apex:pageBlockSection id="selectowner" rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="1">
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}"/>
                     <apex:inputField value="{!nameCard.campaign__c}"/>
@@ -140,7 +148,7 @@
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 
-            <apex:pageBlockSection title="{!$Label.SB_NCLD_Text_ToDo}" columns="1">
+            <apex:pageBlockSection id="todode" title="{!$Label.SB_NCLD_Text_ToDo}" columns="1">
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_Subject}"/>
                     <apex:inputField value="{!todo.Subject}"/>
@@ -158,7 +166,7 @@
 
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_ToDoRegistration}"/>
-                    <apex:inputCheckbox value="{!registTodo}"/>
+                    <apex:inputCheckbox disabled="{!NOT(canEditTodo)}" value="{!registTodo}"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
         </apex:pageBlock>
