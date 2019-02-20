@@ -640,14 +640,13 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
               renkeiType = 'Both';
             }
             else {
-              renkeiType = 'Account';
+              renkeiType = 'Contact';
             }
           }
           else {
-            renkeiType = 'Lead';
+            // renkeiType = 'Lead';
           }
         }
-
         if (message != '') {
                 testError = message;
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
