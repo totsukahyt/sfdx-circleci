@@ -121,7 +121,7 @@
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Company']}">
-                            <apex:facet name="header">{!$Label.SB_NCLD_Label_CompanyName}</apex:facet>
+                            <apex:facet name="header">{!$ObjectType.Lead.Fields.Company.Label}</apex:facet>
                             <apex:outputText id="company" value="{!leadRecord.LeadCompany}"/>
                         </apex:column>
 

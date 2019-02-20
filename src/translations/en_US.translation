@@ -189,7 +189,7 @@
         <name>SB_NCLD_Label_Subject</name>
     </customLabels>
     <customLabels>
-        <label>Add ToDo</label>
+        <label>Add Task</label>
         <name>SB_NCLD_Label_ToDoRegistration</name>
     </customLabels>
     <customLabels>
@@ -279,6 +279,10 @@
     <customLabels>
         <label><!-- SB_NCLD_Msg_CanNotUseInActiveQueue --></label>
         <name>SB_NCLD_Msg_CanNotUseInActiveQueue</name>
+    </customLabels>
+    <customLabels>
+        <label>Too many candidates were found to proceed process. Choose less business cards.</label>
+        <name>SB_NCLD_Msg_ChooseLessBusinessCards</name>
     </customLabels>
     <customLabels>
         <label>Only previously registered leads are shown because too many leads were found</label>
@@ -377,6 +381,10 @@
         <name>SB_NCLD_Text_LeadOverLapDEV</name>
     </customLabels>
     <customLabels>
+        <label>Loading...</label>
+        <name>SB_NCLD_Text_Loading</name>
+    </customLabels>
+    <customLabels>
         <label>Register to Leads</label>
         <name>SB_NCLD_Text_RegisterToLead</name>
     </customLabels>
@@ -429,7 +437,7 @@
         <name>SB_NCLD_Text_SpecifiedWhenOverWrite</name>
     </customLabels>
     <customLabels>
-        <label>ToDo</label>
+        <label>Task</label>
         <name>SB_NCLD_Text_ToDo</name>
     </customLabels>
     <customLabels>

@@ -488,7 +488,14 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>SB_NCLD_Msg_CanNotUseInActiveQueue</shortDescription>
-        <value>ご選択された所有者のキューが利用できません。</value>
+        <value>選択された所有者のキューが利用できません。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Msg_ChooseLessBusinessCards</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Msg_ChooseLessBusinessCards</shortDescription>
+        <value>登録先候補が多すぎるため処理を中断しました。選択する名刺を減らしてください</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Msg_DisplayUnderConditions</fullName>
@@ -784,13 +791,6 @@
         <protected>true</protected>
         <shortDescription>完了</shortDescription>
         <value>完了</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_MSG_ManySelectedCardsCpuTimeOver</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>登録で選択した名刺への登録先候補が多い</shortDescription>
-        <value>選択した名刺が多すぎます。該当レコード数が多く{0}件目の名刺で処理を終了しました。</value>
     </labels>
     <labels>
         <fullName>SB_NCL_NotStarted</fullName>
