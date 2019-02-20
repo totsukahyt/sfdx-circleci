@@ -50,6 +50,8 @@ public with sharing class SB_NameCard_LeadRegistController
     private List<String> emailList = new List<String>();
     private List<Id> nameIdList = new List<Id>();
     private Set<String> nameSet = new Set<String>();
+    private Set<String> lastNameSet = new Set<String>();
+    private Set<String> firstNameSet = new Set<String>();
     private Id campaign;
 
     //
@@ -94,7 +96,8 @@ public with sharing class SB_NameCard_LeadRegistController
 
             List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { this.nameCard };
             SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
-            SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
+            //SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
+            SB_NameCard_LeadRegist.setLastFirstNameSoql(this.soqlMap, this.nameIdList, this.nameSet,this.lastNameSet,this.firstNameSet, ncList);
             this.search();
         } catch (Exception e) {
             ApexPages.addMessages(e);

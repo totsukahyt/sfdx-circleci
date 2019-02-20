@@ -215,6 +215,46 @@ global class SB_NameCard_LeadRegist
         soqlMap.put(SEARCHTYPE_NAME, getSoql(whereList));
     }
 
+        global static void setLastFirstNameSoql(Map<Integer, String> soqlMap, List<Id> nameIdList, Set<String> nameSet,Set<String> lastnameSet,Set<String> firstnameSet, List<SmartViscaf__NameCard__c> ncList)
+    {
+        String lastName;
+        String firstName;
+
+        for (SmartViscaf__NameCard__c nc : ncList) {
+            if (nc.SmartViscaf__lead__c != null) nameIdList.add(nc.SmartViscaf__lead__c);
+
+            if ((lastName = getPersonLastName(nc)) != null){
+                String str = EncodingUtil.urlEncode(lastName,'UTF-8');
+                Blob b = Blob.valueOf(str);
+                String b64 = EncodingUtil.base64Encode(b);
+                lastName = lastName.replaceAll('\'', b64);
+                lastName = String.escapeSingleQuotes(lastName.replaceAll('＼','_'));
+                lastName = lastName.replaceAll(b64, '\'');
+                lastnameSet.add(lastName);
+                //if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
+                //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
+            }
+                 if ((firstName = getPersonFirstName(nc)) != null) {
+                String str = EncodingUtil.urlEncode(firstName,'UTF-8');
+                Blob b = Blob.valueOf(str);
+                String b64 = EncodingUtil.base64Encode(b);
+                firstName = firstName.replaceAll('\'', b64);
+                firstName = String.escapeSingleQuotes(firstName.replaceAll('＼','_'));
+                firstName = firstName.replaceAll(b64, '\'');
+                firstnameSet.add(firstName);
+                //if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
+                //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
+            }
+        }
+        List<String> whereList = new List<String>();
+        if (nameIdList.size() > 0)  whereList.add('Id IN :nameIdList');
+        String str = '';
+        if (lastnameSet.size() > 0) str += 'LastName = :lastnameSet ';
+        if (firstnameSet.size() > 0) str += ' AND FirstName = :firstnameSet';
+        whereList.add(str);
+        soqlMap.put(SEARCHTYPE_NAME, getSoql(whereList));
+    }
+
     // リードSOQL文
     global static String getSoql(List<String> whereList)
     {
@@ -227,6 +267,28 @@ global class SB_NameCard_LeadRegist
         return 'SELECT Id, Company, State, Title, Name, Email, LastModifiedDate, OwnerId, Owner.Name FROM Lead'
             + soqlWhere
             + ' ORDER BY Company ASC NULLS LAST, State ASC NULLS LAST, Title ASC NULLS LAST, Name ASC NULLS LAST, Email ASC NULLS LAST';
+    }
+
+        // 名刺の姓
+    global static String getPersonLastName(SmartViscaf__NameCard__c nc)
+    {
+        Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(nc);
+
+        if (String.isBlank(pnMap.get('last_name'))) {
+           return null;
+        }
+        return pnMap.get('last_name');
+    }
+
+       // 名刺の名
+    global static String getPersonFirstName(SmartViscaf__NameCard__c nc)
+    {
+        Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(nc);
+
+        if (String.isBlank(pnMap.get('first_name'))) {
+            return null;
+        }
+        return pnMap.get('first_name'); // 姓名
     }
 
     // 名刺の姓名
