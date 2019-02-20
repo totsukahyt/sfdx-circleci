@@ -41,9 +41,7 @@ public with sharing class SB_NameCard_LeadNameCardListController{
 
   public SB_NameCard_LeadNameCardListController(ApexPages.StandardController sc) {
     try {
-      // this.updateLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_UpdateLeadDEV);
       this.updateLeadLabel = String.format(System.Label.SB_NCLD_Text_UpdateLeadDEV, new String[]{Lead.sObjectType.getDescribe().getLabel()});
-      // this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
       this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[]{Lead.sObjectType.getDescribe().getLabel()});
       this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c && Lead.SObjectType.getDescribe().isUpdateable();
       this.nameCardRecordListIndex = -1;

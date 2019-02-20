@@ -393,7 +393,6 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   //レコードタイプをに関する初期設定
   public void setRecord() {
       leadRecordTypeId = SB_NameCardL_Util.getDefaultRecordType(Lead.sObjectType);
-      // leadRecType = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_LeadRecType);
       accountRecTypeId = SB_NameCardL_Util.getDefaultRecordType(Account.sObjectType);
       contactRecTypeId = SB_NameCardL_Util.getDefaultRecordType(Contact.sObjectType);
       leadRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {LD_LABEL});
@@ -713,7 +712,6 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                 haveNew = true;
                 if (!useNameCardOwner && String.isBlank(this.ownerlead.OwnerId)) {
                   //(関連)リードを新規作成する場合は「所有者」を指定してください
-                  // String noOwnerIdErrorMessage = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
                   String noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {LD_LABEL});
                   throw new SB_NameCard_LeadRegist.LeadRegistException(noOwnerIdErrorMessage);
                 }
@@ -748,7 +746,6 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
               if (haveNewAccount) {
                 if (!useNameCardContactOwner && String.isBlank(this.ownerAccount.OwnerId)) {
                   //(関連)リードを新規作成する場合は「所有者」を指定してください
-                  // String noOwnerIdErrorMessage = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
                   String noOwnerIdErrorMessage;
                   if (String.isBlank(aacTmp1.accountId)) {
                     noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {AC_LABEL});
@@ -854,15 +851,6 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
         } else {
           this.hasError = false;
         }
-
-        //Integer i = this.insertLead();
-        //i += this.updateLead();
-        //String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
-        //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
-        //System.debug(str);
-        //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
-
-        //pageRef = this.retUrl;
     }
     catch (Exception e) {
         if (sp != null) Database.rollback(sp);

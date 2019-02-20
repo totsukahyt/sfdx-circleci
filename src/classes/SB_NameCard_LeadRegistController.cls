@@ -209,7 +209,6 @@ public with sharing class SB_NameCard_LeadRegistController {
 
     //レコードタイプをに関する初期設定
     public void setRecord() {
-      // leadRecType = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_LeadRecType);
       leadRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {LEADLABEL});
     }
 
@@ -275,7 +274,6 @@ public with sharing class SB_NameCard_LeadRegistController {
               if (lea.Id == this.nameCard.SmartViscaf__lead__c) {
                 this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lea));
               }
-              // String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV);
               String str = String.format(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV, new String[] {LEADLABEL});
 
               //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。'));

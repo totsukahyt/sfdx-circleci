@@ -1,4 +1,6 @@
 /*
+ * SB_NameCard_LeadBulkRegistController
+ *
  * (c) 2016 Sunbridge Inc.
  *
  * リードに一括登録
@@ -82,7 +84,6 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
         this.leadSelOptList.addAll(emailSelOptList);
         this.leadSelOptList.addAll(nameSelOptList);
       } else {
-        // String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV);
         //this.message = '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。';
         this.message = String.format(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV, new String[] {LEADLABEL});
       }
@@ -251,7 +252,6 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
   //レコードタイプをに関する初期設定
   public void setRecord() {
     leadRecordTypeId = SB_NameCardL_Util.getDefaultRecordType(Lead.sObjectType);
-    // leadRecType = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_LeadRecType);
     leadRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {LEADLABEL});
   }
 
@@ -406,7 +406,6 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
                   haveNew = true;
                   if (!useNameCardOwner && String.isBlank(this.ownerlead.OwnerId)) {
                     //(関連)リードを新規作成する場合は「所有者」を指定してください
-                    // String noOwnerIdErrorMessage = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
                     String noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {LEADLABEL});
                     throw new SB_NameCard_LeadRegist.LeadRegistException(noOwnerIdErrorMessage);
                   }
@@ -508,15 +507,6 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
           } else {
             this.hasError = false;
           }
-
-          //Integer i = this.insertLead();
-          //i += this.updateLead();
-          //String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
-          //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
-          //System.debug(str);
-          //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
-
-          //pageRef = this.retUrl;
     }
     catch (Exception e) {
         if (sp != null) Database.rollback(sp);

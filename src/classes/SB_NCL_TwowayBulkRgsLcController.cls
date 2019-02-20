@@ -1,4 +1,6 @@
 /*
+ * SB_NCL_TwowayBulkRgsLcController
+ *
  * (c) 2018 Sunbridge Inc.
  *
  * 統合版一括登録Lex コントローラ
@@ -816,7 +818,6 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                   haveNew = true;
                   if (!useNameCardOwner && String.isBlank(ownerId)) {
                     //(関連)リードを新規作成する場合は「所有者」を指定してください
-                    // String noOwnerIdErrorMessage = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
                     String noOwnerIdErrorMessage = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {LEADLABEL});
                     throw new SB_NameCard_LeadRegist.LeadRegistException(noOwnerIdErrorMessage);
                   }
@@ -945,16 +946,6 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
         } else {
           // this.hasError = false;
         }
-
-        //Integer i = this.insertLead();
-        //i += this.updateLead();
-        //String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
-        //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
-        //System.debug(str);
-        //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
-
-        //pageRef = this.retUrl;
-        //
         message += 'save ok';
         saveResult.data = dataList;
     }

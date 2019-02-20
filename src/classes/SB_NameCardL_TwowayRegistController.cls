@@ -767,7 +767,6 @@ public with sharing class SB_NameCardL_TwowayRegistController {
   //レコードタイプをに関する初期設定
   public void setRecord() {
       leadRecordTypeId = SB_NameCardL_Util.getDefaultRecordType(Lead.sObjectType);
-      // leadRecType = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_LeadRecType);
       leadRecType = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {LEADLABEL});
   }
 
@@ -1070,7 +1069,6 @@ public with sharing class SB_NameCardL_TwowayRegistController {
         }
 
         if (this.pageLead.OwnerId == null) {
-          // String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
           String str = String.format(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV, new String[] {LEADLABEL});
           //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
           throw new SB_NameCard_LeadRegist.LeadRegistException(str);
@@ -1082,7 +1080,6 @@ public with sharing class SB_NameCardL_TwowayRegistController {
           throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
         }
         if (this.leadRecordListIndex < 0) {
-          // String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
           String str = String.format(System.Label.SB_NCLD_Msg_SelectLeadDEV, new String[] {LEADLABEL});
           //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
           throw new SB_NameCard_LeadRegist.LeadRegistException(str);
