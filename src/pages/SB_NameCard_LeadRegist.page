@@ -90,17 +90,17 @@
 
                         <apex:column rendered="{!svConfig.disp['Company']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_CompanyName}</apex:facet>
-                            <apex:outputText id="company" value="{!leadRecord.lead.Company}"/>
+                            <apex:outputText id="company" value="{!leadRecord.pageLead.Company}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['State']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Prefectures}</apex:facet>
-                            <apex:outputText id="state" value="{!leadRecord.lead.State}"/>
+                            <apex:outputText id="state" value="{!leadRecord.pageLead.State}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Title']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Position}</apex:facet>
-                            <apex:outputText id="title" value="{!leadRecord.lead.Title}"/>
+                            <apex:outputText id="title" value="{!leadRecord.pageLead.Title}"/>
                         </apex:column>
 
                         <apex:column >
@@ -113,27 +113,27 @@
                                 </apex:actionSupport>
                             </apex:inputField>
                             <apex:outputPanel layout="none" rendered="{!AND(ISBLANK(leadRecord.lookUpNameCard), NOT(leadRecord.isNew))}">
-                                <a href="/{!leadRecord.lead.Id}" id="lookup{!leadRecord.lead.Id}acc{!leadRecord.index}" onblur="LookupHoverDetail.getHover('lookup{!leadRecord.lead.Id}acc{!leadRecord.index}').hide();" onfocus="LookupHoverDetail.getHover('lookup{!leadRecord.lead.Id}acc{!leadRecord.index}', '/{!leadRecord.lead.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('lookup{!leadRecord.lead.Id}acc{!leadRecord.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!leadRecord.lead.Id}acc{!leadRecord.index}', '/{!leadRecord.lead.Id}/m?isAjaxRequest=1').show();">
-                                    <apex:outputText value="{!leadRecord.lead.Name}"/>
+                                <a href="/{!leadRecord.pageLead.Id}" id="lookup{!leadRecord.pageLead.Id}acc{!leadRecord.index}" onblur="LookupHoverDetail.getHover('lookup{!leadRecord.pageLead.Id}acc{!leadRecord.index}').hide();" onfocus="LookupHoverDetail.getHover('lookup{!leadRecord.pageLead.Id}acc{!leadRecord.index}', '/{!leadRecord.pageLead.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('lookup{!leadRecord.pageLead.Id}acc{!leadRecord.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!leadRecord.pageLead.Id}acc{!leadRecord.index}', '/{!leadRecord.pageLead.Id}/m?isAjaxRequest=1').show();">
+                                    <apex:outputText value="{!leadRecord.pageLead.Name}"/>
                                 </a>
                             </apex:outputPanel>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Email']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Email}</apex:facet>
-                            <apex:outputText id="email" value="{!leadRecord.lead.Email}"/>
+                            <apex:outputText id="email" value="{!leadRecord.pageLead.Email}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['LastModifiedDate']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_LastModiedDate}</apex:facet>
-                            <apex:outputField id="time" value="{!leadRecord.lead.LastModifiedDate}"/>
+                            <apex:outputField id="time" value="{!leadRecord.pageLead.LastModifiedDate}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Owner']}">
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Owner}</apex:facet>
-                            <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(leadRecord.lead.OwnerId))}">
-                                <a href="/{!leadRecord.lead.OwnerId}" id="lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}" onblur="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onfocus="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();">
-                                    <apex:outputText id="ownerName" value="{!leadRecord.lead.Owner.Name}"/>
+                            <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(leadRecord.pageLead.OwnerId))}">
+                                <a href="/{!leadRecord.pageLead.OwnerId}" id="lookup{!leadRecord.pageLead.OwnerId}acc{!leadRecord.index}" onblur="LookupHoverDetail.getHover('lookup{!leadRecord.pageLead.OwnerId}acc{!leadRecord.index}').hide();" onfocus="LookupHoverDetail.getHover('lookup{!leadRecord.pageLead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.pageLead.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('lookup{!leadRecord.pageLead.OwnerId}acc{!leadRecord.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!leadRecord.pageLead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.pageLead.OwnerId}/m?isAjaxRequest=1').show();">
+                                    <apex:outputText id="ownerName" value="{!leadRecord.pageLead.Owner.Name}"/>
                                 </a>
                             </apex:outputPanel>
                         </apex:column>
@@ -155,7 +155,7 @@
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value=""/>
                     <apex:outputPanel >
-                        <apex:inputCheckbox value="{!leadOverwrite}"/>
+                        <apex:inputCheckbox disabled="{!NOT($ObjectType.Lead.updateable)}" value="{!leadOverwrite}"/>
                         <apex:outputLabel value="{!overwriteLeadInfoLabel}"/>
                     </apex:outputPanel>
                 </apex:pageBlockSectionItem>
@@ -176,7 +176,7 @@
 
                 <apex:pageBlockSectionItem Id="ownerSelectItem">
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_Owner}"/>
-                    <apex:inputField id="ownerinput" value="{!lead.OwnerId}" required="false"/>
+                    <apex:inputField id="ownerinput" value="{!pageLead.OwnerId}" required="false"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 

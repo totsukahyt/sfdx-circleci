@@ -8,6 +8,7 @@
  */
 
 public with sharing class SB_NameCard_LeadNameCardListController{
+  public class SB_NameCard_LeadNameCardListControllerException extends exception {}
   public class NameCardRecord{
     public Integer index { get; set; }
     public SmartViscaf__NameCard__c nameCard { get; set; }
@@ -24,20 +25,20 @@ public with sharing class SB_NameCard_LeadNameCardListController{
   public String overwriteLeadInfoLabel{get;set;}
   public String updateLeadLabel{get;set;}
 
-  private Lead lead;
+  private Lead pageLead;
 
   public SB_NameCard_LeadNameCardListController(ApexPages.StandardController sc) {
     try {
       this.updateLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_UpdateLeadDEV);
       this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
-      this.leadOverwrite = SB_NameCard_LeadRegist.svConfig.overwrite();
+      this.leadOverwrite = SB_NameCard_LeadRegist.svConfig.overwrite() && Lead.SObjectType.getDescribe().isUpdateable();
       this.nameCardRecordListIndex = -1;
       this.nameCardRecordList = new List<NameCardRecord>();
 
-      this.lead = getLead(sc.getId());
-      List<SmartViscaf__NameCard__c> nameCardList = getNameCardList(this.lead, false);
+      this.pageLead = getLead(sc.getId());
+      List<SmartViscaf__NameCard__c> nameCardList = getNameCardList(this.pageLead, false);
       if (nameCardList != null && nameCardList.size() > 1000) {
-          nameCardList = getNameCardList(this.lead, true);
+          nameCardList = getNameCardList(this.pageLead, true);
       }
 
       if (nameCardList != null && nameCardList.size() <= 1000) {
@@ -119,16 +120,16 @@ public with sharing class SB_NameCard_LeadNameCardListController{
 
       Lead updLead;
       if (this.leadOverwrite) {
-        updLead = SB_NameCard_LeadRegist.getLead(this.lead.Id, ncRec.nameCard, null,null);
+        updLead = SB_NameCard_LeadRegist.getLead(this.pageLead.Id, ncRec.nameCard, null,null);
       } else {
-        updLead = new Lead(Id=this.lead.Id, NameCard__c=ncRec.nameCard.Id);
+        updLead = new Lead(Id=this.pageLead.Id, NameCard__c=ncRec.nameCard.Id);
       }
 
       sp = Database.setSavepoint();
 
       Database.DMLOptions leaddml = new Database.DMLOptions();
 
-      leaddml.OptAllOrNone = false;
+      leaddml.OptAllOrNone = true;
 
       SB_NameCard_LeadCrudFls.supdate(new List<Lead>{updLead}, leaddml);
 
@@ -145,14 +146,16 @@ public with sharing class SB_NameCard_LeadNameCardListController{
     }
     catch (Exception e) {
       if (sp != null) Database.rollback(sp);
-      ApexPages.addMessages(e);
+      SB_NameCard_LeadNameCardListControllerException aa = new SB_NameCard_LeadNameCardListControllerException();
+      aa.setMessage(e.getMessage());
+      ApexPages.addMessages(aa);
     }
     return pageRef;
   }
 
   // キャンセル
   public PageReference cancel() {
-    if (this.lead == null) return null;
-    return (new ApexPages.StandardController(this.lead)).view();
+    if (this.pageLead == null) return null;
+    return (new ApexPages.StandardController(this.pageLead)).view();
   }
 }

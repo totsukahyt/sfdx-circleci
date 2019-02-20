@@ -19,14 +19,14 @@ public with sharing class SB_NameCard_LeadRegistController
     public class LeadRecord
     {
         public Integer index { get; set; }
-        public Lead lead { get; set; }
+        public Lead pageLead { get; set; }
         public SmartViscaf__NameCard__c lookUpNameCard { get; set; }
         public Boolean isNew { get; set; }
 
         public LeadRecord(Integer index, Lead lead)
         {
             this.index = index;
-            this.lead = lead;
+            this.pageLead = lead;
             this.isNew = false;
         }
 
@@ -44,7 +44,7 @@ public with sharing class SB_NameCard_LeadRegistController
     }
 
     public SmartViscaf__NameCard__c nameCard { get; set; }
-    public Lead lead { get; set; }
+    public Lead pageLead { get; set; }
 
     public SB_NameCard_LeadRegist.svConfig svConfig { get { return SB_NameCard_LeadRegist.svConfig; } }
     public Integer searchType { get; set; }
@@ -81,6 +81,7 @@ public with sharing class SB_NameCard_LeadRegistController
     public String campStatus{get;set;} //キャンペーンStatus
     public Boolean campDisabled{get;set;} //キャンペーンStatus Disabled フラグ
     public Boolean campLookUpDisabled{get;set;} //キャンペーン Disabled フラグ
+    public static final  Map<String, sObjectType> sobjTypeMap = Schema.getGlobalDescribe();
     public  List<SelectOption> campaignStatus {get; set;}
 
 
@@ -93,7 +94,7 @@ public with sharing class SB_NameCard_LeadRegistController
     {
         try {
 
-            this.leadCreateable = Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable();
+            this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
 
             this.createNewLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_CreateNewLeadDEV);
 
@@ -109,7 +110,7 @@ public with sharing class SB_NameCard_LeadRegistController
 
             this.campLookUpDisabled = !SmartViscaf__NameCard__c.campaign__c.getDescribe().isAccessible();
 
-            this.campDisabled = !Schema.getGlobalDescribe().get('CampaignMember').getDescribe().isCreateable() || campLookUpDisabled;
+            this.campDisabled = !CampaignMember.sObjectType.getDescribe().isCreateable() || campLookUpDisabled;
 
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadRecordListIndex = -1;
@@ -118,7 +119,7 @@ public with sharing class SB_NameCard_LeadRegistController
             this.todo = new Task();
             this.isAllowDuplicateSave = false;
 
-            this.leadOverwrite = this.svConfig.overwrite();
+            this.leadOverwrite = this.svConfig.overwrite() && Lead.sObjectType.getDescribe().isUpdateable();
             this.todo.Subject  = this.svConfig.todoSubject();
             this.registTodo    = this.svConfig.registTodo();
             // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
@@ -134,7 +135,7 @@ public with sharing class SB_NameCard_LeadRegistController
 
             this.nameCard = SB_NameCard_LeadRegist.getNameCard(sc.getId());
             this.campaignStatus = getCampaign();
-            this.lead = new Lead(OwnerId=this.nameCard.OwnerId);
+            this.pageLead = new Lead(OwnerId=this.nameCard.OwnerId);
             //if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
             if (this.nameCard == null) {
                 throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_BusinessCardNotFound);
@@ -165,8 +166,8 @@ public with sharing class SB_NameCard_LeadRegistController
     public void checkRadio() {
         LeadRecord lea = this.leadRecordList[this.leadRecordListIndex];
 
-        if (Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable()) {
-            this.leadRecTypeEdit = lea.lookUpNameCard == null && lea.lead == null && LEADRECORDTYPES.size() > 1;
+        if (Lead.sObjectType.getDescribe().isCreateable()) {
+            this.leadRecTypeEdit = lea.lookUpNameCard == null && lea.pageLead == null && LEADRECORDTYPES.size() > 1;
         }
     }
 
@@ -216,15 +217,15 @@ public with sharing class SB_NameCard_LeadRegistController
             List<Lead> leadList = this.getLeadList();
 
             if (leadList != null) {
-            Integer Leadnumber = Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable() ? 998 : 999;
+            Integer Leadnumber = Lead.sObjectType.getDescribe().isCreateable() ? 998 : 999;
                 if (leadList.size() <= Leadnumber) {
                     for (Lead lead : leadList) {
                         this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
                     }
                 } else {
-                        for (Lead lead : leadList) {
-                                if (lead.Id == this.nameCard.SmartViscaf__lead__c) {
-                            this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
+                        for (Lead lea : leadList) {
+                                if (pageLead.Id == this.nameCard.SmartViscaf__lead__c) {
+                            this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lea));
                                 }
                                 String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV);
 
@@ -237,7 +238,7 @@ public with sharing class SB_NameCard_LeadRegistController
             ApexPages.addMessages(e);
         }
         this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), true));
-       if(Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
+       if(Lead.sObjectType.getDescribe().isCreateable())
          {
            this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), false));
          }
@@ -263,7 +264,7 @@ public with sharing class SB_NameCard_LeadRegistController
             if (leadId == null) return;
 
             for (Lead lead : [SELECT Id, Company, State, Title, Name, Email, LastModifiedDate, OwnerId, Owner.Name FROM Lead WHERE Id = :leadId]) {
-                leadRec.lead = lead;
+                leadRec.pageLead = lead;
             }
         } catch (Exception e) {
             ApexPages.addMessages(e);
@@ -286,45 +287,45 @@ public with sharing class SB_NameCard_LeadRegistController
             Id leadId, ownerId;
             if (leadRec.isNew) {
 
-                Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
-                if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
+                Schema.DescribeSObjectResult tar = Lead.sObjectType.getDescribe();
+                if(!Lead.sObjectType.getDescribe().isCreateable())
                 {
                     throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotCreateable,new String[]{tar.label})) ;
                 }
 
-                if (this.lead.OwnerId == null) {
+                if (this.pageLead.OwnerId == null) {
                     String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
 
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
                     throw new SB_NameCard_LeadRegist.LeadRegistException(str);
                 }
-                ownerId = this.lead.OwnerId;
+                ownerId = this.pageLead.OwnerId;
             } else {
-              Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
+              Schema.DescribeSObjectResult tar = Lead.sObjectType.getDescribe();
 
-                 if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isUpdateable())
+                 if(!Lead.sObjectType.getDescribe().isUpdateable())
                    {
                        throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
                    }
 
-                if (leadRec.lead == null) {
+                if (leadRec.pageLead == null) {
                     String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
 
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
                     throw new SB_NameCard_LeadRegist.LeadRegistException(str);
                 }
-                leadId = leadRec.lead.Id;
-                ownerId = leadRec.lead.OwnerId;
+                leadId = leadRec.pageLead.Id;
+                ownerId = leadRec.pageLead.OwnerId;
             }
-            Lead lead;
+            Lead pageLead;
             if (this.leadOverwrite || leadRec.isNew) {
-                lead = SB_NameCard_LeadRegist.getLead(leadId, this.nameCard, ownerId,this.leadRecTypeEdit == true ? this.leadRecordTypeId : null);
+                pageLead = SB_NameCard_LeadRegist.getLead(leadId, this.nameCard, ownerId,this.leadRecTypeEdit == true ? this.leadRecordTypeId : null);
             } else {
-                lead = new Lead(Id=leadId, NameCard__c = this.namecard.Id);
+                pageLead = new Lead(Id=leadId, NameCard__c = this.namecard.Id);
             }
             sp = Database.setSavepoint();
             List<Lead>leads = new List<Lead>();
-            leads.add(lead);
+            leads.add(pageLead);
 
             // リード
             this.upsertLead(leads, leadRec.isNew);
@@ -348,7 +349,7 @@ public with sharing class SB_NameCard_LeadRegistController
                 //キャンペーンメンバーを新規作成
                 //SV_DEV-175 リード登録時にキャンペーン内での状況を選択
                 //SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
-                cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, Status = this.campStatus));
+                cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=pageLead.Id, Status = this.campStatus));
 
                 SB_NameCard_LeadCrudFls.screate(cas,dml);
             }
@@ -372,7 +373,7 @@ public with sharing class SB_NameCard_LeadRegistController
             namecarddml.OptAllOrNone = false;
 
             List< SmartViscaf__NameCard__c > names = new List< SmartViscaf__NameCard__c >();
-
+            System.debug(this.nameCard.SmartViscaf__lead__c + ' ' +  pageLead.Id);
             if (this.nameCard.campaign__c != null && this.nameCard.campaign__c != this.campaign) {
                 //SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
                 //新規の場合のみCampaign__c設定
@@ -381,11 +382,12 @@ public with sharing class SB_NameCard_LeadRegistController
                 } else {
                     names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=pageLead.Id));
                 }
+                
 
                 SB_NameCard_LeadCrudFls.supdate(names, namecarddml);
-            } else if (this.nameCard.SmartViscaf__lead__c != lead.Id) {
+            } else if (this.nameCard.SmartViscaf__lead__c != pageLead.Id) {
 
-                names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id));
+                names.add(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=pageLead.Id));
 
                 SB_NameCard_LeadCrudFls.supdate(names, namecarddml);
             }
@@ -402,13 +404,12 @@ public with sharing class SB_NameCard_LeadRegistController
 
                 List< Task > todos = new List< Task >();
 
-                todos.add(SB_NameCard_LeadRegist.getTodo(lead.Id, ownerId, this.todo.Subject, this.todo.ActivityDate,this.todo.Description));
+                todos.add(SB_NameCard_LeadRegist.getTodo(pageLead.Id, ownerId, this.todo.Subject, this.todo.ActivityDate,this.todo.Description));
                 SB_NameCard_LeadCrudFls.screate(todos,dml);
             }
-            pageRef = (new ApexPages.StandardController(lead)).view();
+            pageRef = (new ApexPages.StandardController(pageLead)).view();
         } catch (Exception e) {
             if (sp != null) Database.rollback(sp);
-
             ApexPages.addMessages(e);
         }
         return pageRef;
@@ -446,7 +447,7 @@ public with sharing class SB_NameCard_LeadRegistController
     //オブジェクトでフォールトのレコードタイプIDを取得
     public static String defaultRecordType(String sobjectname){
         String recordTypeId;
-        List<Schema.RecordTypeInfo> rs =  Schema.getGlobalDescribe().get(sobjectname).getDescribe().getRecordTypeInfos();
+        List<Schema.RecordTypeInfo> rs =  sobjTypeMap.get(sobjectname).getDescribe().getRecordTypeInfos();
         for (RecordTypeInfo r : rs) {
             if (r.isDefaultRecordTypeMapping() && r.isAvailable()) {
                  recordTypeId =  r.getRecordTypeId();
@@ -458,7 +459,7 @@ public with sharing class SB_NameCard_LeadRegistController
     //レコードタイプを取得
     public static List<RecordTypeInfo> getRecordType(String sobjectname){
 
-        List<Schema.RecordTypeInfo> rs =  Schema.getGlobalDescribe().get(sobjectname).getDescribe().getRecordTypeInfos();
+        List<Schema.RecordTypeInfo> rs =  sobjTypeMap.get(sobjectname).getDescribe().getRecordTypeInfos();
         List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
         for (RecordTypeInfo r : rs) {
             if (r.isAvailable()) {

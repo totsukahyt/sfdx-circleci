@@ -171,7 +171,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             this.leadRecTypeEdit = leadCreateable && LEADRECORDTYPES.size() > 1;
 
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
-            this.leadOverwrite = SB_NameCard_LeadRegist.svConfig.overwrite();
+            this.leadOverwrite = SB_NameCard_LeadRegist.svConfig.overwrite() && Lead.sObjectType.getDescribe().isUpdateable();
 
             List<SmartViscaf__NameCard__c> ncList = SB_NameCard_LeadRegist.getNameCardList(controller.getSelected());
             this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodo());
@@ -358,7 +358,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
 
 
-        Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
+        Schema.DescribeSObjectResult tar = Lead.sObjecttype.getDescribe();
         for (NameCardRecord ncRec : this.nameCardRecordList) {
             if (ncRec.leadId != 'new') {
                 continue;
@@ -409,13 +409,13 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         List<Lead> leadList = new List<Lead>();
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
         String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_LeadOverLapDEV);
-        Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
+        Schema.DescribeSObjectResult tar = Lead.sObjectType.getDescribe();
         for (NameCardRecord ncRec : this.nameCardRecordList) {
             if (ncRec.leadId == 'none' || ncRec.leadId == 'new') continue;
 
             leadId = Id.valueOf(ncRec.leadId);
 
-             if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isUpdateable()) {
+             if(!Lead.sObjectType.getDescribe().isUpdateable()) {
                  throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
               }
             //if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException('リードが重複しています');

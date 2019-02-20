@@ -28,7 +28,7 @@
         </apex:selectRadio>
 
         <apex:outputPanel >
-          <apex:inputCheckbox value="{!leadOverwrite}"/>
+          <apex:inputCheckbox disabled="{!NOT($ObjectType.Lead.updateable)}" value="{!leadOverwrite}"/>
           <apex:outputLabel value="{!overwriteLeadInfoLabel}"/>
         </apex:outputPanel>
       </apex:pageBlockSection>

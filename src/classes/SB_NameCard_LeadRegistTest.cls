@@ -26,7 +26,7 @@
 
             ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
             ctrl.registTodo = true;
-            PageReference savePageRef = ctrl.save();
+            PageReference savePageRef = ctrl.saveLead();
             System.assertNotEquals(null, savePageRef, 'Save error');
 
             nc = getNameCard(nc.Id);
@@ -68,7 +68,7 @@
             ctrl.leadRecordListIndex = 0;
             ctrl.checkRadio();
             System.assertEquals(ctrl.leadRecTypeEdit, false);
-            PageReference savePageRef = ctrl.save();
+            PageReference savePageRef = ctrl.saveLead();
             System.assertNotEquals(null, savePageRef, 'Save error');
 
             nc = getNameCard(nc.Id);
@@ -99,7 +99,7 @@
 
             ctrl.nameCardRecordListIndex = 0;
 
-            PageReference savePageRef = ctrl.save();
+            PageReference savePageRef = ctrl.saveLead();
             System.assertNotEquals(null, savePageRef, 'Save error');
 
             nc = getNameCard(nc.Id);
@@ -135,7 +135,7 @@
             ctrl.nameCardRecordList[0].registTodo = true;
             ctrl.ownerlead.OwnerId = Userinfo.getUserid();
 
-            ctrl.save();
+            ctrl.saveLead();
             //System.assertNotEquals(null, savePageRef, 'Save error');
             nc = getNameCard(nc.Id);
             System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
@@ -176,7 +176,7 @@
             ctrl.nameCardRecordList[0].leadId = lead.Id;
             ctrl.nameCardRecordList[0].registTodo = true;
 
-            ctrl.save();
+            ctrl.saveLead();
             //System.assertNotEquals(null, savePageRef, 'Save error');
 
             nc = getNameCard(nc.Id);
@@ -220,7 +220,7 @@
             //ctrl.leadRecordList.get(0).isNew = true;
             ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-2;
 
-            PageReference savePageRef = ctrl.save();
+            PageReference savePageRef = ctrl.saveLead();
             System.assertNotEquals(null, savePageRef, 'Save error');
 
             nc = getNameCard(nc.Id);
@@ -241,11 +241,11 @@
             Test.setCurrentPage(pageRef);
             ApexPages.StandardController sc = new ApexPages.StandardController(nc);
             SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
-            System.assertEquals(nc.OwnerId,ctrl.lead.ownerId);
-            System.assertNotEquals(SB_NameCard_LeadRegistController.smartViscaConfig, null);
-            ctrl.lead.ownerId = u[0].Id;
+            System.assertEquals(nc.OwnerId,ctrl.pageLead.ownerId);
+            // System.assertNotEquals(SB_NameCard_LeadRegistController.smartViscaConfig, null);
+            ctrl.pageLead.ownerId = u[0].Id;
             ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
-            PageReference savePageRef = ctrl.save();
+            PageReference savePageRef = ctrl.saveLead();
 
             List<Lead> ls = [Select Id From Lead];
             System.assertEquals(ls.size(),1);
@@ -276,7 +276,7 @@
                 r.leadId = 'new';
             }
             ctrl.leadOverwrite = false;
-            ctrl.save();
+            ctrl.saveLead();
             List<Lead> ls = [Select Id From Lead];
             System.assertEquals(ls.size(),1);
             Lead le = getLead(nc.Id);
@@ -285,7 +285,7 @@
             for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl1.nameCardRecordList) {
                 r.leadId = 'new';
             }
-            ctrl.save();
+            ctrl.saveLead();
         }
     }
 
@@ -366,11 +366,11 @@
             List<Schema.RecordTypeInfo> rs =  Lead.sObjectType.getDescribe().getRecordTypeInfos();
             List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
             List<QueueSobject> qs = [SELECT Id, QueueId, SobjectType FROM QueueSobject Where SobjectType = 'Lead'];
-            ctrl.lead.ownerId = qs.size() > 0 ? qs[0].QueueId : Userinfo.getUserid();
+            ctrl.pageLead.ownerId = qs.size() > 0 ? qs[0].QueueId : Userinfo.getUserid();
             ctrl.changeOwner();
             //System.assertEquals(!ctrl.canEditTodo, qs.size() > 0);
             if (qs.size() > 0) {
-                ctrl.lead.ownerId = Userinfo.getUserid();
+                ctrl.pageLead.ownerId = Userinfo.getUserid();
                 ctrl.changeOwner();
                 //System.assertEquals(ctrl.canEditTodo, true);
             }
@@ -406,7 +406,7 @@
                 ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
                 ctrl.registTodo = true;
                 //保存
-                PageReference p = ctrl.save();
+                PageReference p = ctrl.saveLead();
                 System.assertEquals(p, null);
             }
         }
@@ -427,14 +427,14 @@
             ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
             ctrl.registTodo = true;
             //保存
-            PageReference p = ctrl.save();
+            PageReference p = ctrl.saveLead();
             System.assertNotEquals(p, null);
             SB_NameCard_LeadRegistController ctrl1 = new SB_NameCard_LeadRegistController(sc);
             //新規リード
             ctrl1.leadRecordListIndex = ctrl1.leadRecordList.size()-1;
             ctrl1.registTodo = true;
             //保存
-            PageReference p1 = ctrl1.save();
+            PageReference p1 = ctrl1.saveLead();
             //System.assertEquals(p1, null);
         }
     }
@@ -453,7 +453,7 @@
             ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
             ssc.setSelected(ncList);
             SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
-            SmartViscaf__SmartViscaConfig__c sms = SB_NameCard_LeadBulkRegistController.smartViscaConfig;
+            // SmartViscaf__SmartViscaConfig__c sms = SB_NameCard_LeadBulkRegistController.smartViscaConfig;
             for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
                 System.assertEquals(r.registTodo,false);
             }
@@ -486,7 +486,7 @@
             //名刺所有者を設定
             ctrl.useNameCardOwner = true;
             //保存
-            ctrl.save();
+            ctrl.saveLead();
             List<Lead> ls = [Select Id,Name,OwnerId From Lead];
             //新規リードassert
             System.assertEquals(ls.size(),1);
@@ -518,7 +518,7 @@
             //名刺所有者を設定
             ctrl.useNameCardOwner = false;
             //保存
-            ctrl.save();
+            ctrl.saveLead();
             List<Lead> ls = [Select Id,Name From Lead];
             //新規リードassert
             System.assertEquals(ls.size(),0);
@@ -553,7 +553,7 @@
             ctrl.useNameCardOwner = true;
             System.runAs(u[1]) {
                 //保存
-                ctrl.save();
+                ctrl.saveLead();
             }
             List<Lead> ls = [Select Id,Name,OwnerId From Lead];
             //新規リードassert
@@ -592,7 +592,7 @@
             ctrl.useNameCardOwner = false;
             System.runAs(u[1]) {
                 //保存
-                ctrl.save();
+                ctrl.saveLead();
             }
             List<Lead> ls = [Select Id,Name,OwnerId From Lead];
             //新規リードassert
@@ -651,7 +651,7 @@
             ctrl.campStatus = 'New1';
             System.runAs(u[1]) {
                 //保存
-                ctrl.save();
+                ctrl.saveLead();
             }
             List<CampaignMember> cmbs = [Select Id,Name,Status From CampaignMember];
             //キャンペーンメンバーをAssert
@@ -718,7 +718,7 @@
             List<SelectOption> so1 = SB_NameCard_LeadBulkRegistController.getSearchTypeList();
             System.assertEquals(so1.size(), 2);
             //保存
-            ctrl.save();
+            ctrl.saveLead();
             List<CampaignMember> cmbs = [Select Id,Name,Status From CampaignMember];
             //キャンペーンメンバーをAssert
             System.assertEquals(cmbs.size(),0);
@@ -765,7 +765,7 @@
             //キャンペーンメンバー状況を設定
             ctrl.campStatus = 'New1';
             //保存
-            ctrl.save();
+            ctrl.saveLead();
             List<CampaignMember> cmbs = [Select Id,Name,Status From CampaignMember];
             //キャンペーンメンバーをAssert
             System.assertEquals(cmbs.size(),1);
