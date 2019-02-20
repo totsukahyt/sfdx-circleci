@@ -255,7 +255,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
             if (baseSetting == null) {
               this.leadOverwrite = true;
             } else {
-              this.leadOverwrite = baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
+              this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
             }
           }
 

@@ -141,7 +141,7 @@ public with sharing class SB_NameCard_LeadRegistController {
           if (baseSetting == null) {
             this.leadOverwrite = true;
           } else {
-            this.leadOverwrite = baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
+            this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
           }
         }
 

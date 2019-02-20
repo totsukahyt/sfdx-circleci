@@ -1,3 +1,10 @@
+/*
+ * (c) 2018 Sunbridge Inc.
+ *
+ * 統合版一括登録Lex コントローラ
+ * @Version リード拡張：Lead Ex. 1.12 2018/08/XX
+ *
+ */
 public with sharing class SB_NCL_TwowayBulkRgsLcController {
 
   private static final String LEADLABEL = Lead.sObjectType.getDescribe().getLabel();
@@ -15,6 +22,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
 
   @RemoteAction
   @AuraEnabled
+  // 全てのデータここで取得
   public static String getAllData(String recordIds, String fieldListStr, String searchType, String recordType) {
     SB_NameCardL_BulkRegistDTO.SaveResult saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
     try{
@@ -88,6 +96,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
 
   @RemoteAction
   @AuraEnabled
+  // タイトルに関する内容ここで取得
   public static String getTitleValue() {
     SB_NameCardL_BulkRegistDTO.TitleValue titleV = new SB_NameCardL_BulkRegistDTO.TitleValue();
     titleV.titleName = System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact;
@@ -100,6 +109,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
 
   @RemoteAction
   @AuraEnabled
+  // 画面入力内容をここで取得
   public static String getInputValue() {
     SmartViscaf__NameCardBasicSetting__c basicSetting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
     SB_NameCardL_BulkRegistDTO.InputValue inv = new SB_NameCardL_BulkRegistDTO.InputValue();
@@ -117,7 +127,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     SB_NameCardL_BulkRegistDTO.LabelValueCheck lc = new SB_NameCardL_BulkRegistDTO.LabelValueCheck();
     lc.label = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[] {LEADLABEL});
     lc.disabled = inv.leadAuthority.isUpdateable == false;
-    lc.checked = basicSetting.SmartViscaf__RegistLeadNotOverWrite__c == true && !lc.disabled;
+    lc.checked = basicSetting.SmartViscaf__RegistLeadNotOverWrite__c == false && !lc.disabled;
     inputO.overWriteCheck = lc;
     inputO.overId = 'Lead';
     inputO.show = false;
@@ -283,6 +293,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     return JSON.serialize(inv);
   }
 
+  // 画面表示項目ここで設定
   @RemoteAction
   @AuraEnabled
   public static String getFieldList() {
@@ -595,12 +606,12 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     }
     return JSON.serialize(saveResult);
   }
-
+  // nullの場合''に変換して返す
   public static String getStr(String s) {
     return (s == null) ? '' : s;
   }
 
-
+  // 選択リスト表示のFormatに変更して返す
   public static String getLabel(String name, String email) {
     String label = String.isBlank(name) ? '' : name;
     label += String.isBlank(email) ? ' <>' : ' <'+email+'>';
@@ -773,6 +784,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                 todoIndexMap.put(i + 1, leadId == 'new' ? null : leadId);
                 todoList.add(i + 1);
               }
+              System.debug(cObjectMap.get('ToDo'));
               SB_NameCardL_RegistHelper.RegistTarget tar = new SB_NameCardL_RegistHelper.RegistTarget(SB_NameCardL_RegistHelper.ProcType.LEAD,
                                                                                                       dataList[i].id,
                                                                                                       null,
@@ -788,7 +800,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
           }
           if (registType != 'Lead') {
             String accId = cObjectMap.get('Contact').value;
-            Boolean registTodo = cObjectMap.get('ToDo').value == 'true';
+            Boolean registTodo = cObjectMap.get('ToDo').checked;
             Id nameCardId = cObjectMap.get('Id').value;
             Id nameCardOwnerId = cObjectMap.get('Id').value;
             if (accId != 'none') {
@@ -918,7 +930,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     return JSON.serialize(saveResult);
     //return pageRef;
   }
-
+  // SB_NameCardL_RegistQueryOptionを初期化して取得
   private static SB_NameCardL_RegistQueryOption getQueryOption(sObjectType type) {
     SB_NameCardL_RegistQueryOption ot = new SB_NameCardL_RegistQueryOption(type);
     ot.queryState = false;

@@ -197,7 +197,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
           if (baseSetting == null) {
             this.leadOverwrite = true;
           } else {
-            this.leadOverwrite = baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
+            this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c;
           }
         }
 
@@ -470,7 +470,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
             throw new SB_NameCard_LeadRegist.LeadRegistException(todoError);
           }
 
-          SB_NameCardL_RegistHelper.RegistParam leadRP = new SB_NameCardL_RegistHelper.RegistParam('Lead',this.leadOverwrite,this.leadRecordTypeId,oId,this.isAllowDuplicateSave);
+          SB_NameCardL_RegistHelper.RegistParam leadRP = new SB_NameCardL_RegistHelper.RegistParam('Lead',this.leadOverwrite,this.leadRecordTypeId,oId,false);
           SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(baseSetting.SmartViscaf__RegistToDoSubject__c,null,null,null);
 
           SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(tars, null, null, leadRP, todoRP);
