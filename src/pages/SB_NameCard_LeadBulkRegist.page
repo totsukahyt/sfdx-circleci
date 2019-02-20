@@ -5,6 +5,7 @@
  * リードに一括登録
  * @Version 1.11 kou 2018.1.xx SV_DEV-748 リードに登録（一括登録）でキュー選択 / 新規作成時にTodo登録がディセーブル表示にならない。
  *                             SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。
+ *                             SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。
  */
 -->
 <apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
@@ -29,7 +30,7 @@
 
         <apex:outputPanel >
           <apex:inputCheckbox disabled="{!NOT($ObjectType.Lead.updateable)}" value="{!leadOverwrite}"/>
-          <apex:outputLabel value="{!overwriteLeadInfoLabel}"/>
+          <apex:outputLabel style="{!IF($ObjectType.Lead.updateable, '', 'color:#999999;')}" value="{!overwriteLeadInfoLabel}"/>
         </apex:outputPanel>
       </apex:pageBlockSection>
 
@@ -88,6 +89,7 @@
       </apex:pageBlockTable>
 
       <apex:pageBlockSection id="newBlock" rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="2">
+        <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem >
           <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
           <apex:inputField onchange="changeCampaign();" value="{!insertOption.campaign__c}" rendered="{!Not(campLookUpDisabled)}"/>
@@ -97,6 +99,7 @@
             <apex:outputText value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/>
         </apex:pageBlockSectionItem> -->
 
+        <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem >
             <apex:outputLabel value="{!$Label.SB_NCLD_Label_CampaignStatus}" style="{!IF(campDisabled,'color:#999999;','')}"/>
             <apex:selectList value="{!campStatus}" multiselect="false" size="1" disabled="{!campDisabled}">

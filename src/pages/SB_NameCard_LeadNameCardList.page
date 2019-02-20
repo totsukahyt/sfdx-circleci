@@ -18,7 +18,7 @@
 
       <apex:pageBlockSection columns="2">
         <apex:outputPanel >
-          <apex:inputCheckbox disabled="{!NOT($ObjectType.Lead.updateable)}" value="{!leadOverwrite}"/>
+          <apex:inputCheckbox value="{!leadOverwrite}"/>
           <apex:outputLabel value="{!overwriteLeadInfoLabel}"/>
         </apex:outputPanel>
       </apex:pageBlockSection>
