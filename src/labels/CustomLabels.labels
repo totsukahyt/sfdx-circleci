@@ -121,10 +121,10 @@
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Count</fullName>
-        <language>en_US</language>
+        <language>ja</language>
         <protected>true</protected>
         <shortDescription>SB_NCLD_Label_Count</shortDescription>
-        <value>Count</value>
+        <value>件</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_CreateNewLead</fullName>
