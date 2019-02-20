@@ -7,7 +7,7 @@
  *
  */
 -->
-<apex:page standardController="Lead" extensions="SB_NameCard_LeadNameCardListController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!updateLeadLabel}" tabStyle="Lead" showHeader="true" sidebar="false" lightningstylesheets="true">
+<apex:page standardController="Lead" extensions="SB_NameCard_LeadNameCardListController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!updateLeadLabel}" tabStyle="Lead" showHeader="true" sidebar="false">
   <apex:pageMessages id="pageMsgs"/>
 
   <apex:form >
