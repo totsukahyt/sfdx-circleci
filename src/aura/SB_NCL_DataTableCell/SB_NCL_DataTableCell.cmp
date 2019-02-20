@@ -31,7 +31,7 @@
 
   <!-- コンポネードgid -->
   <aura:attribute name="gid" type="String"/>
-  <td style="min-width: 100px;" role="gridcell">
+  <td style="{!if(v.field.fieldName=='ToDo', 'min-width: 120px;', 'min-width: 100px;')}" role="gridcell">
     <div class="slds-truncate" style="{!if(v.width != '', 'width:' + v.width + 'px', '')}">
       <aura:renderIf isTrue="{!v.field.type == 'string'}">
         {!v.value}
