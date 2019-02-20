@@ -240,10 +240,13 @@ global with sharing class SB_NameCard_LeadRegist
         String str = '';
         if (lastnameSet.size() > 0) {
             str += ' LastName = :lastnameSet ';
+            if (firstnameSet.size() > 0){
+                str = '(' + str + ' AND FirstName = :firstnameSet' + ')';
+            }
+        } else if (firstnameSet.size() > 0){
+                str = 'FirstName = :firstnameSet';
         }
-        if (firstnameSet.size() > 0){
-            str = '(' + str + ' AND FirstName = :firstnameSet' + ')';
-        }
+        
         whereList.add(str);
         System.debug(firstnameSet);
         System.debug(lastnameSet);
