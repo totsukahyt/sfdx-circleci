@@ -189,7 +189,7 @@ public with sharing class SB_NameCard_LeadRegistController
                  Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
                if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
                       {
-                             throw new LeadRegistControllerException(String.format(System.Label.SB_MSG_CrudNotCreateable,new String[]{tar.label})) ;
+                             throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotCreateable,new String[]{tar.label})) ;
                           }
                           
                 if (this.nameCard.OwnerId == null) {
@@ -204,7 +204,7 @@ public with sharing class SB_NameCard_LeadRegistController
 
                  if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isUpdateable())
                    {
-                       throw new LeadRegistControllerException(String.format(System.Label.SB_MSG_CrudNotUpdateable, new String[]{tar.label}));
+                       throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
                    }
 
                 if (leadRec.lead == null) {

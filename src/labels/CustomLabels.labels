@@ -176,6 +176,34 @@
         <value>ToDo登録</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_MSG_CrudNotCreateable</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>オブジェクトの作成権限がありません。</shortDescription>
+        <value>{0} オブジェクトの作成権限がありません。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_MSG_CrudNotUpdateable</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>オブジェクトの編集権限がありません。</shortDescription>
+        <value>{0} オブジェクトの編集権限がありません。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_MSG_FlsNotCreateable</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>項目の作成権限がありません。</shortDescription>
+        <value>{0} オブジェクトの項目 {1} ({2}) の作成権限がありません。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_MSG_FlsNotUpdateable</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>項目の編集権限がありません。</shortDescription>
+        <value>{0} オブジェクトの項目 {1} ({2}) の編集権限がありません。</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Menu_NewLead</fullName>
         <language>ja</language>
         <protected>true</protected>

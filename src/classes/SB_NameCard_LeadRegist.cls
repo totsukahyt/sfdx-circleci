@@ -238,7 +238,7 @@ global class SB_NameCard_LeadRegist
         for (String s : whereList) soqlWhere += ' OR ' + s;
         soqlWhere = ' WHERE isConverted = FALSE AND (' + soqlWhere.removeStart(' OR ') + ')';
 
-        return 'SELECT Id, Company, State, Title, Name, Email, LastModifiedDate, OwnerId, Owner.Name FROM Lead'
+        return 'SELECT Id, Company, State,LastName,FirstName, Title, Name, Email, LastModifiedDate, OwnerId, Owner.Name FROM Lead'
             + soqlWhere
             + ' ORDER BY Company ASC NULLS LAST, State ASC NULLS LAST, Title ASC NULLS LAST, Name ASC NULLS LAST, Email ASC NULLS LAST';
     }

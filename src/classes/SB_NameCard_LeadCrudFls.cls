@@ -29,7 +29,7 @@
     Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
     // オブジェクト作成権限があるか
     if (!sobjResult.isCreateable()) {
-        throw new CrudFlsException(String.format(Label.SB_MSG_CrudNotCreateable, new String[] {sobjResult.label}));
+        throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_CrudNotCreateable, new String[] {sobjResult.label}));
     }
     Map<string, schema.sObjectField> m = sobjResult.fields.getMap();
     Set<String> keys = getCheckFields(os);    // 入力のあった項目s]
@@ -58,7 +58,7 @@
     Schema.DescribeSObjectResult sobjResult = targetType.getDescribe();
     // オブジェクトの編集権限があるか
     if (!sobjResult.isUpdateable()) {
-        throw new CrudFlsException(String.format(Label.SB_MSG_CrudNotUpdateable, new String[] {sobjResult.label}));
+        throw new CrudFlsException(String.format(Label.SB_NCLD_MSG_CrudNotUpdateable, new String[] {sobjResult.label}));
     }
 
     Map<string, schema.sObjectField> m = sobjResult.fields.getMap();

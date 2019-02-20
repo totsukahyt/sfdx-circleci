@@ -203,21 +203,21 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             // 姓名
             if (nameListMap.containsKey(lead.Name)) {
+
                 nameListMap.get(lead.Name).add(lead);
             } else {
                 nameListMap.put(lead.Name, new List<Lead>{lead});
             }
 
             // 姓のみ
-            name = lead.Name.substringBefore(' ')+' ';
+            name = lead.LastName;
             if (nameListMap.containsKey(name)) {
                 nameListMap.get(name).add(lead);
             } else {
                 nameListMap.put(name, new List<Lead>{lead});
             }
-
             // 名のみ
-            name = ' '+lead.Name.substringAfterLast(' ');
+            name = lead.FirstName;
             if (nameListMap.containsKey(name)) {
                 nameListMap.get(name).add(lead);
             } else {
@@ -276,7 +276,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
              if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
               {
-                 throw new LeadBulkRegistControllerException(String.format(System.Label.SB_MSG_CrudNotUpdateable, new String[]{tar.label}));
+                 throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
               }
             leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, this.insertOption.OwnerId));
             ncRecList.add(ncRec);
@@ -318,7 +318,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
              if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isUpdateable())
               {
-                 throw new LeadBulkRegistControllerException(String.format(System.Label.SB_MSG_CrudNotUpdateable, new String[]{tar.label}));
+                 throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
               }
             //if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException('リードが重複しています');
             if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
