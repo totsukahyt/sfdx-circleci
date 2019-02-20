@@ -86,7 +86,8 @@
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Name}</apex:facet>
                             <apex:outputText value="{!createNewLeadLabel}" rendered="{!leadRecord.isNew}"/>
                             <apex:inputField value="{!leadRecord.lookUpNameCard.SmartViscaf__lead__c}" rendered="{!NOT(ISBLANK(leadRecord.lookUpNameCard))}">
-                                <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs, leadRecordList" oncomplete="document.getElementById('leadRecordList{!leadRecord.index}').checked='checked'">
+                                <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs, leadRecordList" >
+                                <!-- oncomplete="document.getElementById('leadRecordList{!leadRecord.index}').checked='checked'" -->
                                     <apex:param name="lookUpIndex" assignto="{!lookUpIndex}" value="{!leadRecord.index}"/>
                                 </apex:actionSupport>
                             </apex:inputField>
