@@ -1,3 +1,12 @@
+/*
+ * (c) 2018 Sunbridge Inc.
+ *
+ * Classic統合詳細画面 コントローラ　テストクラス
+ * @author kou
+ * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX
+ *
+ */
+
 @isTest
 private class SB_NameCardL_TwowayRegistControllerTest {
 

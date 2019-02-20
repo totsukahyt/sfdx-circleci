@@ -4,6 +4,7 @@
  * Classic統合詳細画面 コントローラ
  * @author kou
  * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX
+ * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX SV_DEV-1151 Classic画面の「リードまたは取引先・取引先責任者に登録」（個別）で「既存取引先レコード」を選択した場合に「取引先レコードタイプ」の選択リストが非表示にならない。
  *
  */
 
@@ -779,7 +780,12 @@ public with sharing class SB_NameCardL_TwowayRegistController {
          CandidateRecord lea = this.leadRecordList[this.leadRecordListIndex];
 
         if (Lead.sObjectType.getDescribe().isCreateable()) {
+          if (lea instanceof LeadLookupCandidate) {
+            this.leadRecTypeEdit = false;
+          }
+          else {
             this.leadRecTypeEdit = lea.getLeadId() == null && LEADRECORDTYPES.size() > 1;
+          }
         }
       }
 
@@ -787,10 +793,20 @@ public with sharing class SB_NameCardL_TwowayRegistController {
         CandidateRecord accRec = this.candidateTable[this.accountTableIndex];
 
         if (Account.sObjectType.getDescribe().isCreateable()) {
-          this.accountRecTypeEdit = String.isBlank(accRec.getAccountId()) && (ACNT_RECORDTYPES.size() > 1);
+           if (accRec instanceof AccountLookupCandidate || accRec instanceof ContactLookupCandidate) {
+              this.accountRecTypeEdit = false;
+           }
+           else {
+              this.accountRecTypeEdit = String.isBlank(accRec.getAccountId()) && (ACNT_RECORDTYPES.size() > 1);
+           }
         }
         if (Contact.sObjectType.getDescribe().isCreateable()) {
-          this.contactRecTypeEdit = String.isBlank(accRec.getContactId()) && (CONT_RECORDTYPES.size() > 1);
+          if (accRec instanceof ContactLookupCandidate) {
+            this.contactRecTypeEdit = false;
+          }
+          else {
+            this.contactRecTypeEdit = String.isBlank(accRec.getContactId()) && (CONT_RECORDTYPES.size() > 1);
+          }
         }
       }
   }
