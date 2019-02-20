@@ -3,6 +3,7 @@
  * (c) 2016 Sunbridge Inc.
  *
  * リードに登録
+ *                             SV_DEV-748 リードに登録（一括登録）でキュー選択 / 新規作成時にTodo登録がディセーブル表示にならない。
  */
 -->
 <apex:page standardController="SmartViscaf__NameCard__c" extensions="SB_NameCard_LeadRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="true" lightningstylesheets="true">
@@ -192,7 +193,8 @@
 
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_ToDoRegistration}"/>
-                    <apex:inputCheckbox disabled="{!NOT(canEditTodo)}" value="{!registTodo}"/>
+                    <apex:inputCheckbox value="{!registTodo}"/>
+                    <!-- disabled="{!NOT(canEditTodo)}" -->
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
         </apex:pageBlock>

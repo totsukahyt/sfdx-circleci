@@ -3,6 +3,7 @@
  * (c) 2016 Sunbridge Inc.
  *
  * リードに一括登録
+ * @Version 1.11 kou 2018.1.xx SV_DEV-748 リードに登録（一括登録）でキュー選択 / 新規作成時にTodo登録がディセーブル表示にならない。
  */
 -->
 <apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false" lightningstylesheets="true">
@@ -79,8 +80,8 @@
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.SB_NCLD_Label_ToDoRegistration}</apex:facet>
-          <apex:inputCheckbox value="{!ncRec.registTodo}"/>
+          <apex:facet name="header"><input type="checkbox" onclick="changecheck(this);" />{!$Label.SB_NCLD_Label_ToDoRegistration}</apex:facet>
+          <apex:inputCheckbox Id="todoCheckbox" value="{!ncRec.registTodo}"/>
         </apex:column>
       </apex:pageBlockTable>
 
@@ -215,6 +216,15 @@
                     ow.value = '';
                     changeOwner();
                 }
+            }
+
+            function changecheck(e) {
+              var arrs = document.getElementsByTagName("input");
+              for(var i=0;i<arrs.length;i++){
+                    if (arrs[i].id.indexOf("todoCheckbox")!=-1){
+                      arrs[i].checked = e.checked;
+                   }
+              }
             }
 
             initset();
