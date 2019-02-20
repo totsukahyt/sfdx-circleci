@@ -611,7 +611,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                                                                 String searchType, String searchContactType,String searchRecordTypes) {
     List<SB_NameCardL_RegistQueryOption> queryOptions = new List<SB_NameCardL_RegistQueryOption>();
 
-    SB_NameCardL_RegistQueryOption queryOption = new SB_NameCardL_RegistQueryOption(Lead.sObjecttype);
+    SB_NameCardL_RegistQueryOption queryOption = getQueryOption(Lead.sObjecttype);
     if (searchType == String.valueOf(SEARCHTYPE_NAME)) {
       queryOption.queryLastName = true;
       queryOption.queryFirstName = true;
@@ -622,8 +622,8 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       queryOption.queryFirstName = false;
       queryOption.queryEMail = true;
     }
-    SB_NameCardL_RegistQueryOption accountQueryOption = new SB_NameCardL_RegistQueryOption(Account.sObjecttype);
-    SB_NameCardL_RegistQueryOption contactQueryOption =  new SB_NameCardL_RegistQueryOption(Contact.sObjecttype);
+    SB_NameCardL_RegistQueryOption accountQueryOption = getQueryOption(Account.sObjecttype);
+    SB_NameCardL_RegistQueryOption contactQueryOption =  getQueryOption(Contact.sObjecttype);
 
 
     if (String.isNotBlank(searchRecordTypes)) {
@@ -928,5 +928,23 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     }
     return JSON.serialize(saveResult);
     //return pageRef;
+  }
+
+  private static SB_NameCardL_RegistQueryOption getQueryOption(sObjectType type) {
+    SB_NameCardL_RegistQueryOption ot = new SB_NameCardL_RegistQueryOption(type);
+    ot.queryState = false;
+    ot.queryCity = false;
+    ot.queryStreet = false;
+    ot.queryZip = false;
+    ot.queryPhone = false;
+    ot.queryCompany = false;
+    ot.queryDept = false;
+    ot.queryUrl = false;
+    ot.queryLastName = false;
+    ot.queryFirstName = false;
+    ot.queryEMail = false;
+    ot.queryTitle = false;
+    ot.queryMobile = false;
+    return ot;
   }
 }

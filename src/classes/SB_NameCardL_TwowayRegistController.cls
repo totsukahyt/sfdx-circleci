@@ -571,10 +571,10 @@ public with sharing class SB_NameCardL_TwowayRegistController {
           this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
           this.screenData = new ScreenData();
           this.registObjs = RegistType.AccountContactLead;
-          this.accountQueryOption = new SB_NameCardL_RegistQueryOption(Account.sObjecttype);
-          this.contactQueryOption =  new SB_NameCardL_RegistQueryOption(Contact.sObjecttype);
+          this.accountQueryOption = getQueryOption(Account.sObjecttype);
+          this.contactQueryOption =  getQueryOption(Contact.sObjecttype);
           if (this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.Lead) {
-            this.leadQueryOption =  new SB_NameCardL_RegistQueryOption(Lead.sObjecttype);
+            this.leadQueryOption =  getQueryOption(Lead.sObjecttype);
           }
 
           String accstr = SB_NameCardL_Util.getDefaultRecordType(Account.sObjectType);
@@ -1336,24 +1336,6 @@ public with sharing class SB_NameCardL_TwowayRegistController {
     }
   }
 
-  // Accountのクエリで Contactをリレーションクエリしてるとき、アカウント単位に コンタクトからテーブルに追加
-  // private void addAccountContact2Table(List<Account> acnts) {
-  //   for (Account acnt : acnts) {
-  //     List<Contact> conts = (List<Contact>)acnt.getSObjects('Contacts');
-  //     if (conts != null && !conts.isEmpty()) {
-  //       // COntact をテーブルへ追加
-  //       // 0: 既存取引先+既存取引先責任者
-  //       addContact2Table(conts);
-  //     }
-  //     //// 1: 既存取引先+既存取引先責任者ルックアップ
-  //     //this.candidateTable.add(new AccountCandidate(this.candidateTable.size(), acnt, true));
-  //     // 2: 既存取引先+新規取引先責任者
-  //     if (Schema.SObjectType.Contact.isCreateable()) {
-  //       this.candidateTable.add(new AccountCandidate(this.candidateTable.size(), acnt));
-  //     }
-  //   }
-  // }
-
   // コンタクトルックアップ 後
   public void postLookupContact() {
     Integer index = Integer.valueOf(System.currentPageReference().getParameters().get('lookUpContactIndex'));
@@ -1365,5 +1347,23 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       ApexPages.addMessages(e);
       testError = e.getMessage();
     }
+  }
+
+  private SB_NameCardL_RegistQueryOption getQueryOption(sObjectType type) {
+    SB_NameCardL_RegistQueryOption ot = new SB_NameCardL_RegistQueryOption(type);
+    ot.queryState = false;
+    ot.queryCity = false;
+    ot.queryStreet = false;
+    ot.queryZip = false;
+    ot.queryPhone = false;
+    ot.queryCompany = false;
+    ot.queryDept = false;
+    ot.queryUrl = false;
+    ot.queryLastName = false;
+    ot.queryFirstName = false;
+    ot.queryEMail = false;
+    ot.queryTitle = false;
+    ot.queryMobile = false;
+    return ot;
   }
 }
