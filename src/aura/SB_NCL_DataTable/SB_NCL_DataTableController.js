@@ -216,8 +216,15 @@
         for (var i = 0; i < objs.length; i ++) {
             objs[i].cObjectMap[field].checked = checked;
         }
+        var fieldList = component.get('v.fieldList');
+        for (var i = 0; i < fieldList.length; i ++) {
+            if (fieldList[i].fieldName == field) {
+                fieldList[i].checkAllCheck = checked;
+                break;
+            }
+        }
+        component.set('v.fieldList', fieldList);
         component.set('v.objs', objs);
-
         for (var i = 0; i < objs.length; i ++) {
             document.getElementById(i + field).checked = checked;
         }
