@@ -336,7 +336,7 @@
           </script>
   </apex:form>
 
-  <apex:form rendered="{!isLex}">
+  <apex:outputPanel rendered="{!isLex}">
     <apex:pageMessages />
     <apex:includeLightning />
 
@@ -361,5 +361,5 @@
         });
       });
     </script>
-  </apex:form>
+  </apex:outputPanel>
 </apex:page>
