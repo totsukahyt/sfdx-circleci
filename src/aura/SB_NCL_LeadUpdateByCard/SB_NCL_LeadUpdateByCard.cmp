@@ -35,7 +35,7 @@
     </center>
   </aura:renderIf>
 
-  <div class="slds-tabs--default" style="position: absolute; top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto;">
+  <div class="slds-tabs--default" style="height: 100%; position: absolute; top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto;">
     <c:SB_NCL_UpdateByCard aura:id="updateNameCardCmp"
                                 titleV="{!v.sObjectDto.titleV}"
                                 inputV="{!v.inputV}"

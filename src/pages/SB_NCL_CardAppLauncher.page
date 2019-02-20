@@ -15,12 +15,12 @@
  *
  **/
 -->
-<apex:page controller="SB_NCL_CardAppLauncherController" title="{!windowTitle}">
+<apex:page controller="SB_NCL_CardAppLauncherController" title="{!windowTitle}" applyHtmlTag="false" showHeader="false">
   <apex:pageMessages />
   <apex:includeLightning />
 
-  <div class="slds">
-    <div id="lt_comp" />
+  <div class="slds" style='height:100%'>
+    <div id="lt_comp" style='height:100%'/>
   </div>
 
   <script>
