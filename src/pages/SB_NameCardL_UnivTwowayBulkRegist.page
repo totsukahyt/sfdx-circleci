@@ -14,7 +14,10 @@
     <apex:actionFunction action="{!saveLead}" name="save" reRender="pageMsgs,saveflage,nameCardTable, ncRecList" oncomplete="saveClick();"/>
     <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newBlock" oncomplete="initset();"/>
     <apex:actionFunction name="changeOwner" reRender="newBlock" oncomplete="initset();"/>
-    <apex:actionFunction name="submit" action="{!submit}" reRender="ncRecList" />
+    <apex:actionFunction name="submit" action="{!submit}" reRender="ncRecList">
+      <apex:param name="changeIndex" value=""/>
+      <apex:param name="changeType" value=""/>
+    </apex:actionFunction>
     <apex:inputHidden value="{!saveOK}" id="saveflage"/>
     <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
       <apex:pageBlockButtons >
@@ -354,15 +357,16 @@
             function setDis(index, renkeiType) {
               var data = document.getElementById('{!$Component.All.blockid.ncRecList}' + ':' + index + ':' + renkeiType + 'Op');
               var data1 = document.getElementById('{!$Component.All.blockid.ncRecList}' + ':' + index + ':' + renkeiType + 'Value');
-              if (renkeiType == 'leadSelect') {
-                data1.value = 'none';
-              } else {
-                data1.value = 0;
-              }
+              // if (renkeiType == 'leadSelect') {
+              //   data1.value = 'none';
+              // } else {
+              //   data1.value = 0;
+              // }
               if (data != null) {
                 data.options[0].selected = true;
               }
-              submit();
+              submit(index, renkeiType);
+            }
             }
 
             initset();

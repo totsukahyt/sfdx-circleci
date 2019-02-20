@@ -873,7 +873,17 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
     //return pageRef;
   }
   public void submit() {
-
+    PageReference page = ApexPages.currentPage();
+    Map<String, String> paras = page.getParameters();
+    Integer index = Integer.valueOf(paras.get('changeIndex'));
+    String type = paras.get('changeType');
+    SB_NameCardL_BulkRegistDTO.CustomObject ncRec = this.nameCardRecordListDTO[index];
+    if (type == 'contactSelect') {
+      ncRec.accAndCon = 0;
+    }
+    else {
+      ncRec.leadId = 'none';
+    }
   }
 
   private SB_NameCardL_RegistQueryOption getQueryOption(sObjectType type) {
