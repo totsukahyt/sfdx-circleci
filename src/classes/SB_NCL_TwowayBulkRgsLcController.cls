@@ -65,10 +65,13 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
             cf.checked = !basicSetting.SmartViscaf__RegistNoToDo__c;
           }
           if (field.fieldName == 'Address') {
-            String address = String.isBlank((String)sobj.get('SmartViscaf__address__c')) ? '' : (String)sobj.get('SmartViscaf__address__c');
-            String addresseng = String.isBlank((String)sobj.get('SmartViscaf__address_eng__c')) ? '' : (String)sobj.get('SmartViscaf__address_eng__c');
-            cf.label = address + ' ' + addresseng;
-            cf.value = address + ' ' + addresseng;
+            String address1 = String.isBlank((String)sobj.get('SmartViscaf__zip_code__c')) ? '' : (String)sobj.get('SmartViscaf__zip_code__c');
+            String address2 = String.isBlank((String)sobj.get('SmartViscaf__address_pref__c')) ? '' : (String)sobj.get('SmartViscaf__address_pref__c');
+            String address3 = String.isBlank((String)sobj.get('SmartViscaf__address__c')) ? '' : (String)sobj.get('SmartViscaf__address__c');
+            String address4 = String.isBlank((String)sobj.get('SmartViscaf__address_bld__c')) ? '' : (String)sobj.get('SmartViscaf__address_bld__c');
+            String address5 = String.isBlank((String)sobj.get('SmartViscaf__address_eng__c')) ? '' : (String)sobj.get('SmartViscaf__address_eng__c');
+            cf.label = address1 + address2 + address3 + address4 + address5;
+            cf.value = address1 + address2 + address3 + address4 + address5;
           }
           cf.type = field.type;
           cf.input = field.input;
@@ -308,8 +311,20 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> fieldMap = new Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>>();
 
     List<SB_NameCardL_BulkRegistDTO.DataTableColumnField> fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
+    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
+                                           'Name',
+                                           'url',
+                                           false));
+    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
+                                           'SmartViscaf__email__c',
+                                           'string',
+                                           false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
                                            'SmartViscaf__company_name__c',
+                                           'string',
+                                           false));
+    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address_pref__c.getDescribe().getLabel(),
+                                           'SmartViscaf__address_pref__c',
                                            'string',
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel(),
@@ -320,18 +335,14 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'SmartViscaf__title_name__c',
                                            'string',
                                            false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
-                                           'Name',
-                                           'url',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
-                                           'Address',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
-                                           'SmartViscaf__mobile__c',
-                                           'string',
-                                           false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
+    //                                        'Address',
+    //                                        'string',
+    //                                        false));
+    // fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
+    //                                        'SmartViscaf__mobile__c',
+    //                                        'string',
+    //                                        false));
     SB_NameCardL_BulkRegistDTO.DataTableColumnField f1 = new SB_NameCardL_BulkRegistDTO.DataTableColumnField(Lead.sObjectType.getDescribe().getLabel(),
                                            'Lead',
                                            'plicklist',
@@ -390,8 +401,20 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     fieldList.add(f2);
     fieldMap.put('Contact', fieldList);
     fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
+        fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
+                                           'Name',
+                                           'url',
+                                           false));
+    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
+                                           'SmartViscaf__email__c',
+                                           'string',
+                                           false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__company_name__c.getDescribe().getLabel(),
                                            'SmartViscaf__company_name__c',
+                                           'string',
+                                           false));
+    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address_pref__c.getDescribe().getLabel(),
+                                           'SmartViscaf__address_pref__c',
                                            'string',
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__division__c.getDescribe().getLabel(),
@@ -402,20 +425,12 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'SmartViscaf__title_name__c',
                                            'string',
                                            false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.Name.getDescribe().getLabel(),
-                                           'Name',
-                                           'url',
-                                           false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__address__c.getDescribe().getLabel(),
                                            'Address',
                                            'string',
                                            false));
     fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__mobile__c.getDescribe().getLabel(),
                                            'SmartViscaf__mobile__c',
-                                           'string',
-                                           false));
-    fieldList.add(new SB_NameCardL_BulkRegistDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(),
-                                           'SmartViscaf__email__c',
                                            'string',
                                            false));
     f1 = new SB_NameCardL_BulkRegistDTO.DataTableColumnField(Lead.sObjectType.getDescribe().getLabel(),

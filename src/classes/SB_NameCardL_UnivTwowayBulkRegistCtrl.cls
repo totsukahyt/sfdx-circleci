@@ -135,6 +135,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   public String  updateForAccount{get; private set;}//既存の取引先責任者の情報を名刺情報で上書きする
   public String  renkeiType{get; set;}//既存の取引先責任者の情報を名刺情報で上書きする
   public Integer searchTypeContact { get; set; }
+  public String accountAndContact { get; set; } // 取引先(部門)/取引先責任者(部署/メール)
 
   public String  leadOwnerLabel{get; set;}//既存の取引先責任者の情報を名刺情報で上書きする
   public String  accountOwnerLabel { get; set; }
@@ -290,6 +291,8 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
 
           this.leadOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{LD_LABEL});
           this.accountOwnerLabel = String.format(System.Label.SB_NCLD_Label_NameCardOwner, new String[]{CO_LABEL});
+
+          this.accountAndContact = String.format(System.Label.SB_NCLD_Label_AccountANDContact, new String[] {AC_LABEL, CO_LABEL, Contact.Department.getDescribe().getLabel(), Contact.Email.getDescribe().getLabel()});
 
 
           // --------------------- changelabel start ---------------------

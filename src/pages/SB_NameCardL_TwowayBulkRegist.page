@@ -49,7 +49,14 @@
           <apex:image value="/img/msg_icons/error16.png" rendered="{!ncRec.hasError}"/>
         </apex:column>
 
-        <apex:column >
+        <apex:column rendered="{!renkeiType == 'Contact'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__company_name__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__company_name__c}"/>
+        </apex:column>
+
+
+
+        <apex:column rendered="{!renkeiType != 'Contact'}">
           <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
           <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.Name.Label}</apex:facet>
           <apex:outputPanel layout="none">
@@ -59,17 +66,17 @@
           </apex:outputPanel>
         </apex:column>
 
-        <apex:column >
+        <apex:column rendered="{!renkeiType != 'Contact'}">
           <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__email__c.Label}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__email__c}"/>
         </apex:column>
 
-        <apex:column >
+        <apex:column rendered="{!renkeiType != 'Contact'}">
           <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__company_name__c.Label}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__company_name__c}"/>
         </apex:column>
 
-        <apex:column >
+        <apex:column rendered="{!renkeiType != 'Contact'}">
           <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__address_pref__c.Label}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__address_pref__c}"/>
         </apex:column>
@@ -86,14 +93,29 @@
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
         </apex:column>
 
+        <apex:column rendered="{!renkeiType == 'Contact'}">
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.Name.Label}</apex:facet>
+          <apex:outputPanel layout="none">
+            <a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
+              <apex:outputText value="{!ncRec.nameCard.Name}"/>
+            </a>
+          </apex:outputPanel>
+        </apex:column>
+
         <apex:column rendered="{!renkeiType != 'Lead'}">
           <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__address__c.Label}</apex:facet>
-          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__address__c + ' ' + ncRec.nameCard.SmartViscaf__address_eng__c}"/>
+         <apex:outputText value="{!ncRec.nameCard.SmartViscaf__zip_code__c} {!ncRec.nameCard.SmartViscaf__address_pref__c}{!ncRec.nameCard.SmartViscaf__address__c}{!ncRec.nameCard.SmartViscaf__address_bld__c}{!ncRec.nameCard.SmartViscaf__address_eng__c}"/>
         </apex:column>
 
         <apex:column rendered="{!renkeiType != 'Lead'}">
           <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__mobile__c.Label}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__mobile__c}"/>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType == 'Contact'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__email__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__email__c}"/>
         </apex:column>
 
         <apex:column rendered="{!renkeiType != 'Contact'}">
@@ -115,6 +137,7 @@
           <apex:inputCheckbox Id="todoCheckbox" value="{!ncRec.registTodo}"/>
         </apex:column>
         <apex:variable var="index" value="{!index + 1}"/>
+
       </apex:pageBlockTable>
 
        <apex:pageBlocksection columns="2" id="overWrite">
