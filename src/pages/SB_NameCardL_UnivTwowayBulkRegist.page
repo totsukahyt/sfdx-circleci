@@ -134,7 +134,7 @@
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header"><input type="checkbox" onclick="changecheck(this);" />{!$Label.SB_NCLD_Label_ToDoRegistration}</apex:facet>
+          <apex:facet name="header"><input type="checkbox" id="allCheckTodo" onclick="changecheck(this);" />{!$Label.SB_NCLD_Label_ToDoRegistration}</apex:facet>
           <apex:inputCheckbox Id="todoCheckbox" value="{!ncRec.registTodo}"/>
         </apex:column>
         <apex:variable var="index" value="{!index + 1}"/>
@@ -370,6 +370,7 @@
             }
 
             initset();
+            document.getElementById('allCheckTodo').checked = {!baseSetting.SmartViscaf__RegistNoToDo__c} == false;
           </script>
   </apex:form>
 
