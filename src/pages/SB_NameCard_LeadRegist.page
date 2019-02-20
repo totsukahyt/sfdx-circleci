@@ -1,15 +1,15 @@
 <!-- (c) 2012 SunBridge Inc. -->
 <apex:page standardController="SmartViscaf__NameCard__c" extensions="SB_NameCard_LeadRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="true">
-    <apex:pageMessages id="pageMsgs"/>
+    <apex:pageMessages id="pageMsgs" escape="false"/>
 
-    <apex:form >
+    <apex:form id="All">
         <apex:inputHidden id="leadRecordListIndex" value="{!leadRecordListIndex}"/>
 
         <apex:pageBlock title="{!registerToLeadLabel}">
             <apex:pageBlockButtons >
                 <apex:outputPanel id="save">
-                    <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}" rerender="pageMsgs, save" rendered="{!NOT(isAllowDuplicateSave)}"/>
-                    <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}{!$Label.SB_NCLD_Label_IgnoreAlert}" rerender="pageMsgs" rendered="{!isAllowDuplicateSave}"/>
+                    <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}" rerender="pageMsgs, save,All" rendered="{!NOT(isAllowDuplicateSave)}"/>
+                    <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}{!$Label.SB_NCLD_Label_IgnoreAlert}" rerender="pageMsgs,All" rendered="{!isAllowDuplicateSave}"/>
                 </apex:outputPanel>
                 <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
             </apex:pageBlockButtons>
