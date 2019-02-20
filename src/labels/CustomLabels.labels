@@ -68,7 +68,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>SB_NCLD_Label_Both_display</shortDescription>
-        <value>両方表示</value>
+        <value>両方</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Campaign</fullName>
