@@ -108,7 +108,7 @@
                     <apex:selectRadio value="{!searchType}">
                         <apex:selectOptions value="{!searchTypeList}"/>
                         <!-- SV_DEV-542 重複エラーが出たときのラジオボタン選択について -->
-                        <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, leadRecordList, leadRecordListIndex, contactRecordList"/>
+                        <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, leadRecordList, leadRecordListIndex, contactRecordList, accountTableIndex"/>
                     </apex:selectRadio>
                 </apex:pageBlockSectionItem>
 
@@ -205,7 +205,7 @@
     <apex:pageBlockSectionItem >
               <apex:outputLabel value="{!$Label.SB_NCLD_Label_SearchCondition}"/>
               <apex:selectRadio value="{!searchField}">
-                <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, leadRecordList, leadRecordListIndex, contactRecordList"/>
+                <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, leadRecordList, leadRecordListIndex, contactRecordList, accountTableIndex"/>
                 <apex:selectOptions value="{!searchTypeSelectOpts}"/>
               </apex:selectRadio>
             </apex:pageBlockSectionItem>
