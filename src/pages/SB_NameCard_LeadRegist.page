@@ -3,6 +3,8 @@
  * (c) 2016 Sunbridge Inc.
  *
  * リードに登録
+ *
+ * @Version 1.11 kou 2018.1.xx SV_DEV-752 リードに登録（個別登録）の画面で英語名刺の場合に「氏名」項目が表示されない。
  *                             SV_DEV-748 リードに登録（一括登録）でキュー選択 / 新規作成時にTodo登録がディセーブル表示にならない。
  *                             SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。
  */
@@ -32,9 +34,11 @@
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$ObjectType.SmartViscaf__NameCard__c.Fields.Name.Label}"/>
                     <apex:panelGroup >
-                        <apex:outputText value="{!nameCard.SmartViscaf__person_name_last__c}"/>
+                        <!-- <apex:outputText value="{!nameCard.SmartViscaf__person_name_last__c}"/>
                         <apex:outputText value=" "/>
-                        <apex:outputText value="{!nameCard.SmartViscaf__person_name_first__c}"/>
+                        <apex:outputText value="{!nameCard.SmartViscaf__person_name_first__c}"/> -->
+                        <!-- SV_DEV-752 リードに登録（個別登録）の画面で英語名刺の場合に「氏名」項目が表示されない。 -->
+                        <apex:outputText value="{!nameCard.Name}"/>
                     </apex:panelGroup>
                 </apex:pageBlockSectionItem>
 
