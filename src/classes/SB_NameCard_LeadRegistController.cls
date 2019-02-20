@@ -364,17 +364,28 @@ public with sharing class SB_NameCard_LeadRegistController
         Database.DMLOptions dmlOpts = new Database.DMLOptions();
         dmlOpts.DuplicateRuleHeader.allowSave = this.isAllowDuplicateSave; // 重複レコードを保存するか
         System.debug(lead);
-        Database.SaveResult sr = isInsert ? SB_NameCard_LeadCrudFls.screate(lead, dmlOpts)[0] : SB_NameCard_LeadCrudFls.supdate(lead, dmlOpts)[0];
-        if (sr.isSuccess()) return;
-
-        for (Database.Error err : sr.getErrors()) {
-            if (err.getStatusCode() == StatusCode.DUPLICATES_DETECTED) {
-                // Datacloud.DuplicateResult
-                Datacloud.DuplicateResult duplicateResult = ((Database.DuplicateError)err).getDuplicateResult();
-                this.isAllowDuplicateSave = duplicateResult.isAllowSave();
-                throw new SB_NameCard_LeadRegist.LeadRegistException(duplicateResult.getErrorMessage());
-            } else {
-                throw new SB_NameCard_LeadRegist.LeadRegistException(err.getMessage());
+        List<Database.SaveResult> sr = isInsert ? SB_NameCard_LeadCrudFls.screate(lead, dmlOpts) : SB_NameCard_LeadCrudFls.supdate(lead, dmlOpts);
+        if (sr[0].isSuccess()) return;
+        SB_NameCard_LeadSaveResult dbError = new SB_NameCard_LeadSaveResult();
+        dbError.putSaveResults(sr);
+         if (dbError.isError())
+        {
+            this.isAllowDuplicateSave = dbError.isAllowSave();
+            String msg = lead[0].getSObjectType().getDescribe().getLabel() + ': ' + dbError.getDbErrorHolder(0).msg;
+            throw new SB_NameCard_LeadRegist.LeadRegistException(msg);
+        }
+        //for (Database.Error err : sr[0].getErrors()) {
+        //    if (err.getStatusCode() == StatusCode.DUPLICATES_DETECTED) {
+        //        // Datacloud.DuplicateResult
+        //        Datacloud.DuplicateResult duplicateResult = ((Database.DuplicateError)err).getDuplicateResult();
+        //        this.isAllowDuplicateSave = duplicateResult.isAllowSave();
+        //        String msg = lead[0].getSObjectType().getDescribe().getLabel() + ': ' + dbError.getDbErrorHolder(0).msg;
+        //        throw new SB_NameCard_LeadRegist.LeadRegistException(msg);
+        //    } else {
+        //        throw new SB_NameCard_LeadRegist.LeadRegistException(err.getMessage());
+        //    }
+        //}
+    }
 
     //オブジェクトでフォールトのレコードタイプIDを取得
     public static String defaultRecordType(String sobjectname){

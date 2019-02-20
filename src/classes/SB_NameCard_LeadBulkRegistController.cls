@@ -440,6 +440,37 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     {
         String errMsg = '';
 
+        Map<Id,Integer> cardindex = new Map<Id,Integer>();
+        for (Integer i = 0 ; i<nameCardRecordList.size() ; i++) {
+            NameCardRecord nr = nameCardRecordList[i];
+            cardindex.put(nr.nameCard.Id,i);
+        }
+
+        SB_NameCard_LeadSaveResult dbError = new SB_NameCard_LeadSaveResult();
+        dbError.putSaveResults(srList);
+
+        if (dbError.isError()) 
+        {
+            for (Integer i = 0; i < srList.size(); i++)
+            {
+                SB_NameCard_LeadSaveResult.DbErrorHolder err = dbError.getDbErrorHolder(i);
+                NameCardRecord n = ncRecList[0];
+                if (err == null)
+                {
+                    n.hasError = false;
+                    //namecardMap.get((String)os[i].get('NameCard__c')).hasSaveError = false;
+                    continue;
+                }
+                n.hasError = true;
+                //namecardMap.get((String)os[i].get('NameCard__c')).hasSaveError = true;
+                String msg = (cardindex.get(n.nameCard.Id)  + 1) + System.Label.SB_NC_Line + ': ' + Lead.getSObjectType().getDescribe().getLabel() + ': ' + err.msg + '<br>';
+                errMsg += msg;
+            }
+            //errorMsg += msg;
+            
+            throw new SB_NameCard_LeadRegist.LeadRegistException(errMsg);
+        }
+
         for (Integer i = 0; i < srList.size(); i++) {
             if (srList[i].isSuccess()) {
                 ncRecList[i].hasError = false;
