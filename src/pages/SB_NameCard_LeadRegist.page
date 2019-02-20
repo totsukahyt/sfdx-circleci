@@ -4,6 +4,7 @@
  *
  * リードに登録
  *                             SV_DEV-748 リードに登録（一括登録）でキュー選択 / 新規作成時にTodo登録がディセーブル表示にならない。
+ *                             SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。
  */
 -->
 <apex:page standardController="SmartViscaf__NameCard__c" extensions="SB_NameCard_LeadRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="true" lightningstylesheets="true">
@@ -15,10 +16,7 @@
         <apex:inputHidden id="canEditTodo" value="{!canEditTodo}"/>
         <apex:actionFunction action="{!changeOwner}" name="changeOwner" reRender="todode,newSelect" oncomplete="initset();"/>
         <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newSelect" oncomplete="initset();"/>
-        <!-- SV_DEV-542 重複エラーが出たときのラジオボタン選択について -->
-        <!-- Start -->
-        <apex:actionFunction name="save"  action="{!save}" reRender="pageMsgs, blockid, leadRecordListIndex, todode" oncomplete="initset();endLoad();"/>
-        <!-- End -->
+        <apex:actionFunction name="save"  action="{!save}" reRender="pageMsgs,blockid,leadRecordListIndex,todode" oncomplete="initset();endLoad();"/>
         <apex:actionFunction action="{!checkRadio}" name="checkRadio" reRender="lRecordType" />
         <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
             <apex:pageBlockButtons >
@@ -32,7 +30,7 @@
 
             <apex:pageBlockSection title="{!$Label.SB_NCLD_Text_BusinessCardInformation}" columns="2">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Name}"/>
+                    <apex:outputLabel value="{!$ObjectType.SmartViscaf__NameCard__c.Fields.Name.Label}"/>
                     <apex:panelGroup >
                         <apex:outputText value="{!nameCard.SmartViscaf__person_name_last__c}"/>
                         <apex:outputText value=" "/>
@@ -41,27 +39,29 @@
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Email}"/>
+                    <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+                    <apex:outputLabel value="{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__email__c.Label}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__email__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_CompanyName}"/>
+                    <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+                    <apex:outputLabel value="{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__company_name__c.Label}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__company_name__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Prefectures}"/>
+                    <apex:outputLabel value="{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__address_pref__c.Label}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__address_pref__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Division}"/>
+                    <apex:outputLabel value="{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__division__c.Label}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__division__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Position}"/>
+                    <apex:outputLabel value="{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__title_name__c.Label}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__title_name__c}"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
@@ -223,17 +223,14 @@
                 }
                 return changeid;
             }
-            //SV_DEV-542 重複エラーが出たときのラジオボタン選択について
-            //Start
             function endLoad() {
                 document.getElementById('leadRecordList' + document.getElementById('{!$Component.leadRecordListIndex}').value).checked = '1';
             }
-            //End
 
             //SV_DEV-283 リード用のキューを所有者に選択できるようにする
             function initset() {
                 var ow = document.getElementById('{!$Component.All.blockid.newSelect.ownerSelectItem.ownerinput}');
-                ow.style = "margin-left:10px;";
+                ow.style="margin-left:10px;";
                 var oDiv = document.getElementById('{!$Component.All.blockid.newSelect.ownerSelectItem.ownerinput}' + '_mlktp');
                 oDiv.onchange = function(){
                     ow.value = '';

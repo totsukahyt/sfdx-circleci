@@ -4,6 +4,7 @@
  *
  * リードに一括登録
  * @Version 1.11 kou 2018.1.xx SV_DEV-748 リードに登録（一括登録）でキュー選択 / 新規作成時にTodo登録がディセーブル表示にならない。
+ *                             SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。
  */
 -->
 <apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false" lightningstylesheets="true">
@@ -39,7 +40,8 @@
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.SB_NCLD_Label_Name}</apex:facet>
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.Name.Label}</apex:facet>
           <apex:outputPanel layout="none">
             <a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
               <apex:outputText value="{!ncRec.nameCard.Name}"/>
@@ -48,27 +50,27 @@
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.SB_NCLD_Label_Email}</apex:facet>
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__email__c.Label}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__email__c}"/>
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.SB_NCLD_Label_CompanyName}</apex:facet>
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__company_name__c.Label}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__company_name__c}"/>
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.SB_NCLD_Label_Prefectures}</apex:facet>
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__address_pref__c.Label}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__address_pref__c}"/>
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.SB_NCLD_Label_Division}</apex:facet>
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__division__c.Label}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__division__c}"/>
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.SB_NCLD_Label_Position}</apex:facet>
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__title_name__c.Label}</apex:facet>
           <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
         </apex:column>
 
