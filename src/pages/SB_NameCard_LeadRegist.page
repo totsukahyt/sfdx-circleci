@@ -136,7 +136,7 @@
 
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_Owner}"/>
-                    <apex:inputField value="{!nameCard.OwnerId}" required="false"/>
+                    <apex:inputField onchange="changeowner();"  value="{!lead.OwnerId}" required="false"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 

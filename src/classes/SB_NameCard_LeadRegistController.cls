@@ -35,6 +35,7 @@ public with sharing class SB_NameCard_LeadRegistController
     }
 
     public SmartViscaf__NameCard__c nameCard { get; set; }
+    public Lead lead { get; set; }
 
     public SB_NameCard_LeadRegist.svConfig svConfig { get { return SB_NameCard_LeadRegist.svConfig; } }
     public Integer searchType { get; set; }
@@ -74,6 +75,7 @@ public with sharing class SB_NameCard_LeadRegistController
 
             this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
 
+            this.lead = new Lead();
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadRecordListIndex = -1;
             this.lookUpIndex = -1;
@@ -201,7 +203,7 @@ public with sharing class SB_NameCard_LeadRegistController
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
                     throw new SB_NameCard_LeadRegist.LeadRegistException(str);
                 }
-                ownerId = this.nameCard.OwnerId;
+                ownerId = this.lead.OwnerId;
             } else {
               Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
 
