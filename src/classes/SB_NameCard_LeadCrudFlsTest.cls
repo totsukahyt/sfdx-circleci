@@ -8,25 +8,6 @@
 
 @isTest private class SB_NameCard_LeadCrudFlsTest
 {
-    //@isTest private static void test1()
-    //{
-    //     insertNameCard();
-    //     SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-    //     System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
-    //     Test.startTest();
-    //     Account acc = new Account();
-    //     List<SObject> objets = new List<SObject>();
-    //     objets.add(acc);
-    //     Database.DMLOptions dml = new Database.DMLOptions();
-
-    //     dml.OptAllOrNone = false;
-
-    //     Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(objets,dml)[0];
-         
-    //     System.assertNotEquals(0,sr.getErrors().size(), 'NameCard error');
-         
-    //     Test.stopTest();
-    //}
 
     @isTest private static void test1()
     {

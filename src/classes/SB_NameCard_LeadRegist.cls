@@ -272,12 +272,14 @@ global class SB_NameCard_LeadRegist
 
         if (String.isBlank(pnMap.get('last_name'))) {
             if (String.isBlank(pnMap.get('first_name'))) return null;
-            return '%'+pnMap.get('first_name'); // 名のみ
+            return pnMap.get('first_name'); // 名のみ
         }
         if (String.isBlank(pnMap.get('first_name'))) {
-            return pnMap.get('last_name')+'%'; // 姓のみ
+            return pnMap.get('last_name'); // 姓のみ
         }
+
         return pnMap.get('last_name')+' '+pnMap.get('first_name'); // 姓名
+       
     }
 
     // リード
