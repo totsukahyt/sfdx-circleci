@@ -1,17 +1,9 @@
 /*
- * (c) 2016 Sunbridge InameCard.SmartViscaf__
+ * (c) 2018 Sunbridge Inc.
  *
- * リードに一括登録
- * @Version 1 2017/11/XX  SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
- *                        SV_DEV-746 リードに登録（一括登録）で、検索条件が「氏名」の場合でメールアドレスが一致した候補が表示される場合がある。
- *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
- *                        SV_DEV-755 無効なユーザでTODO登録したときのエラー
- *                        SV_DEV-751 リードに登録で追加された、キャンペーンメンバーの種別が「取引先責任者」になる。
- *                        SV_DEV-750 既存リードの更新時にもキャンペーンの選択が反映される。
- *                        SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
- *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
- *                        SV_DEV-565 リード登録のリード所有者の修正
- * @Version 1。12 2018/03/XX  SV_DEV-715 「取引先・取引先責任者に登録」の更新時のTodoの任命先は取引先責任者の所有者にする
+ * CLassic 統合一括登録 コントローラ
+ * @author kou
+ * @Version 拡張パッケージ：Lead Ex. 1.12 2018/8/XX
  *
  */
 
@@ -566,6 +558,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
                   }
                   if (opts.size() > 1) {
                     leadSelect = false;
+                    renkeiType = 'Contact';
                   }
                   if (accountCreateable && contactCreateable) {
                     opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NewLead + '/' + System.Label.SB_NCLD_Menu_NewLead));
@@ -584,9 +577,11 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
                     for (sObject sobj : objMap.get(Lead.sObjectType)) {
                       Lead lead = (Lead) sobj;
                       if (String.isBlank(ncRec.leadId)
+                        || ncRec.leadId == 'none'
                         && leadSelect) {
                         ncRec.leadId = lead.Id;
                         ncRec.accAndCon = 0;
+                        renkeiType = 'Lead';
                       }
                       // accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));
                       opts.add(new SelectOption(lead.Id, getLabel(lead.Name, lead.Email)));
@@ -840,27 +835,11 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
     //return pageRef;
   }
 
-  public static List<RecordTypeInfo> getRecordType(Schema.sObjectType obj){
-
-    List<Schema.RecordTypeInfo> rs =  obj.getDescribe().getRecordTypeInfos();
-    List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
-    for (RecordTypeInfo r : rs) {
-      if (r.isAvailable()) {
-        recordtypes.add(r);
-      }
-    }
-    //isMasterメソード使えるにはWinter'16　APIバージョン35.0以降でなければならない、
-    //そのため、今最後のレコードタイプMasterをリストから削除します
-    if (recordtypes.size()>0) {
-      recordtypes.remove(recordtypes.size()-1);
-    }
-    return recordtypes;
-  }
-
   public void submit() {
 
   }
 
+  // SB_NameCardL_RegistQueryOptionを初期化して取得
   private SB_NameCardL_RegistQueryOption getQueryOption(sObjectType type) {
     SB_NameCardL_RegistQueryOption ot = new SB_NameCardL_RegistQueryOption(type);
     ot.queryState = false;
