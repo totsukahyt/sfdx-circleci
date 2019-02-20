@@ -519,6 +519,8 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
 
         inputPlickListVMap = new Map<Id, Map<String, List<SelectOption>>>();
         System.debug(this.nameCardRecordListDTO.size());
+        Boolean haveAccount = false;
+        Boolean haveLead = false;
         for (Integer i = 0; i < this.nameCardRecordListDTO.size(); i ++) {
             Boolean leadSelect = true;
             SB_NameCardL_BulkRegistDTO.CustomObject ncRec = this.nameCardRecordListDTO[i];
@@ -575,6 +577,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
                     leadSelect = false;
                     if (firstSearch) {
                       renkeiType = 'Contact';
+                      haveAccount = true;
                     }
                   }
                   if (accountCreateable && contactCreateable) {
@@ -593,18 +596,15 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
                   if (objMap.containsKey(Lead.sObjectType)) {
                     for (sObject sobj : objMap.get(Lead.sObjectType)) {
                       Lead lead = (Lead) sobj;
-                      if (String.isBlank(ncRec.leadId)
-                        || ncRec.leadId == 'none') {
+                      haveLead = true;
+                      if ((String.isBlank(ncRec.leadId)
+                        || ncRec.leadId == 'none')
+                        && leadSelect) {
                         ncRec.leadId = lead.Id;
                         ncRec.accAndCon = 0;
-                        if (firstSearch) {
                           if (leadSelect) {
                             renkeiType = 'Lead';
                           }
-                          else {
-                            renkeiType = 'Both';
-                          }
-                        }
                       }
                       // accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));
                       opts.add(new SelectOption(lead.Id, getLabel(lead.Name, lead.Email)));
@@ -629,6 +629,20 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
             }
             System.debug(ncRec.leadId );
             inputPlickListVMap.put(ncRec.nameCard.Id, opsMap);
+        }
+
+        if (firstSearch) {
+          if (haveAccount) {
+            if (haveLead) {
+              renkeiType = 'Both';
+            }
+            else {
+              renkeiType = 'Account';
+            }
+          }
+          else {
+            renkeiType = 'Lead';
+          }
         }
 
         if (message != '') {
