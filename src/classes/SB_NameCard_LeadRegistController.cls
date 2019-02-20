@@ -1,0 +1,236 @@
+/*
+ * (c) 2016 Sunbridge Inc.
+ *
+ * リードに登録
+ */
+
+public with sharing class SB_NameCard_LeadRegistController
+{
+    public class LeadRecord
+    {
+        public Integer index { get; set; }
+        public Lead lead { get; set; }
+        public SmartViscaf__NameCard__c lookUpNameCard { get; set; }
+        public Boolean isNew { get; set; }
+
+        public LeadRecord(Integer index, Lead lead)
+        {
+            this.index = index;
+            this.lead = lead;
+            this.isNew = false;
+        }
+
+        public LeadRecord(Integer index, Boolean isLookup)
+        {
+            this.index = index;
+
+            if (isLookUp) {
+                this.lookUpNameCard = new SmartViscaf__NameCard__c();
+                this.isNew = false;
+            } else {
+                this.isNew = true;
+            }
+        }
+    }
+
+    public SmartViscaf__NameCard__c nameCard { get; set; }
+
+    public SB_NameCard_LeadRegist.svConfig svConfig { get { return SB_NameCard_LeadRegist.svConfig; } }
+    public Integer searchType { get; set; }
+    public Integer leadRecordListIndex { get; set; }
+    public Integer lookUpIndex { get; set; }
+    public List<LeadRecord> leadRecordList { get; set; }
+    public Boolean leadOverwrite { get; set; }
+
+    public Task todo { get; set; }
+    public Boolean registTodo { get; set; }
+
+    private Map<Integer, String> soqlMap = new Map<Integer, String>();
+    private List<Id> emailIdList = new List<Id>();
+    private List<String> emailList = new List<String>();
+    private List<Id> nameIdList = new List<Id>();
+    private Set<String> nameSet = new Set<String>();
+    private Id campaign;
+
+    public Boolean isAllowDuplicateSave { get; private set; }
+
+    public SB_NameCard_LeadRegistController(ApexPages.StandardController sc)
+    {
+        try {
+            this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
+            this.leadRecordListIndex = -1;
+            this.lookUpIndex = -1;
+            this.leadRecordList = new List<LeadRecord>();
+            this.todo = new Task();
+            this.isAllowDuplicateSave = false;
+
+            this.leadOverwrite = this.svConfig.overwrite();
+            this.todo.Subject  = this.svConfig.todoSubject();
+            this.registTodo    = this.svConfig.registTodo();
+
+            this.nameCard = SB_NameCard_LeadRegist.getNameCard(sc.getId());
+            if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
+
+            if (String.isBlank(this.nameCard.SmartViscaf__email__c) && (String.isNotBlank(this.nameCard.SmartViscaf__person_name_last__c) || String.isNotBlank(this.nameCard.SmartViscaf__person_name_first__c))) {
+                this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
+            }
+            this.todo.ActivityDate = this.nameCard.SmartViscaf__card_exchange_date__c;
+            this.campaign = this.nameCard.Campaign__c;
+
+            List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { this.nameCard };
+            SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
+            SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
+            this.search();
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+        }
+    }
+
+    // 検索条件
+    public static List<SelectOption> getSearchTypeList()
+    {
+        return SB_NameCard_LeadRegist.getSearchTypeList();
+    }
+
+    // 検索
+    public void search()
+    {
+        this.leadRecordList.clear();
+
+        try {
+            List<Lead> leadList = this.getLeadList();
+
+            if (leadList != null) {
+                if (leadList.size() <= 998) {
+                    for (Lead lead : leadList) {
+                        this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
+                    }
+                } else {
+                	    for (Lead lead : leadList) {
+                	    	    if (lead.Id == this.nameCard.SmartViscaf__lead__c) {
+                            this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
+                	    	    }
+                	    	    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。'));
+                	    }
+                }
+            }
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+        }
+        this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), true));
+        this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), false));
+    }
+
+    // リード
+    private List<Lead> getLeadList()
+    {
+        String soql = this.soqlMap.get(this.searchType);
+        if (String.isBlank(soql)) return null;
+        return Database.query(soql);
+    }
+
+    // リードルックアップ
+    public void setLookUp()
+    {
+        try {
+            if (this.lookUpIndex >= this.leadRecordList.size()) return;
+            LeadRecord leadRec = this.leadRecordList.get(this.lookUpIndex);
+            Id leadId = leadRec.lookUpNameCard.SmartViscaf__lead__c;
+            if (leadId == null) return;
+
+            for (Lead lead : [SELECT Id, Company, State, Title, Name, Email, LastModifiedDate, OwnerId, Owner.Name FROM Lead WHERE Id = :leadId]) {
+                leadRec.lead = lead;
+            }
+        } catch (Exception e) {
+            ApexPages.addMessages(e);
+        }
+    }
+
+    // 保存
+    public PageReference save()
+    {
+        PageReference pageRef;
+        Savepoint sp;
+
+        try {
+            if (this.leadRecordListIndex < 0 || this.leadRecordListIndex >= this.leadRecordList.size()) {
+                throw new SB_NameCard_LeadRegist.LeadRegistException('登録先を選択してください');
+            }
+            LeadRecord leadRec = this.leadRecordList.get(this.leadRecordListIndex);
+            Id leadId, ownerId;
+
+            if (leadRec.isNew) {
+                if (this.nameCard.OwnerId == null) {
+                    throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
+                }
+                ownerId = this.nameCard.OwnerId;
+            } else {
+                if (leadRec.lead == null) {
+                    throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
+                }
+                leadId = leadRec.lead.Id;
+                ownerId = leadRec.lead.OwnerId;
+            }
+            Lead lead;
+            if (this.leadOverwrite || leadRec.isNew) {
+                lead = SB_NameCard_LeadRegist.getLead(leadId, this.nameCard, ownerId);
+            } else {
+                lead = new Lead(Id=leadId, NameCard__c = this.namecard.Id);
+            }
+            sp = Database.setSavepoint();
+
+            // リード
+            this.upsertLead(lead, leadRec.isNew);
+
+            // キャンペーン
+            if (this.nameCard.campaign__c != null && (leadRec.isNew || this.campaign != this.nameCard.campaign__c)) { //try
+                Database.insert(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, ContactId=this.nameCard.SmartViscaf__contact__c));
+            }
+
+            // 名刺
+            if (this.nameCard.campaign__c != null && this.nameCard.campaign__c != this.campaign) {
+                Database.update(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id, Campaign__c=this.nameCard.campaign__c));
+            } else if (this.nameCard.SmartViscaf__lead__c != lead.Id) {
+                Database.update(new SmartViscaf__NameCard__c(Id=this.nameCard.Id, SmartViscaf__lead__c=lead.Id));
+            }
+
+            // ToDo
+            if (this.registTodo) {
+                Database.insert(SB_NameCard_LeadRegist.getTodo(leadId, ownerId, this.todo.Subject, this.todo.ActivityDate));
+            }
+            pageRef = (new ApexPages.StandardController(lead)).view();
+        } catch (Exception e) {
+            if (sp != null) Database.rollback(sp);
+            ApexPages.addMessages(e);
+        }
+        return pageRef;
+    }
+
+    // リード
+    private void upsertLead(Lead lead, Boolean isInsert)
+    {
+        Database.DMLOptions dmlOpts = new Database.DMLOptions();
+        dmlOpts.DuplicateRuleHeader.allowSave = this.isAllowDuplicateSave; // 重複レコードを保存するか
+
+        Database.SaveResult sr = isInsert ? Database.insert(lead, dmlOpts) : Database.update(lead, dmlOpts);
+        if (sr.isSuccess()) return;
+
+        for (Database.Error err : sr.getErrors()) {
+            if (err.getStatusCode() == StatusCode.DUPLICATES_DETECTED) {
+                // Datacloud.DuplicateResult
+                Datacloud.DuplicateResult duplicateResult = ((Database.DuplicateError)err).getDuplicateResult();
+                this.isAllowDuplicateSave = duplicateResult.isAllowSave();
+                throw new SB_NameCard_LeadRegist.LeadRegistException(duplicateResult.getErrorMessage());
+            } else {
+                throw new SB_NameCard_LeadRegist.LeadRegistException(err.getMessage());
+            }
+        }
+    }
+
+    // キャンセル
+    public PageReference cancel()
+    {
+        if (this.nameCard == null) return null;
+        return (new ApexPages.StandardController(this.nameCard)).view();
+    }
+}
