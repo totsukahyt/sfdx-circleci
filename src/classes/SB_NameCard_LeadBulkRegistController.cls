@@ -203,7 +203,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
         }
 
         List<SmartViscaf__NameCard__c> ncList = SB_NameCard_LeadRegist.getNameCardList(controller.getSelected());
-        this.nameCardRecordList = getNameCardRecordList(ncList, !baseSetting.SmartViscaf__RegistNoToDo__c);
+        this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodo());
 
         this.insertOption = new SmartViscaf__NameCard__c(OwnerId=UserInfo.getUserId());
         this.ownerlead = new Lead();
@@ -467,7 +467,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
           }
 
           SB_NameCardL_RegistHelper.RegistParam leadRP = new SB_NameCardL_RegistHelper.RegistParam('Lead',this.leadOverwrite,this.leadRecordTypeId,oId,false);
-          SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(baseSetting.SmartViscaf__RegistToDoSubject__c,null,null,null);
+          SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(SB_NameCard_LeadRegist.svConfig.todoSubject(),null,null,null);
 
           SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(tars, null, null, leadRP, todoRP);
           Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
