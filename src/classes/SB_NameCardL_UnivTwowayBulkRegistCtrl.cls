@@ -629,7 +629,8 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
               opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NewLead + '/' + System.Label.SB_NCLD_Menu_NewLead));
               accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon());
             }
-            if (opts.size() > 1 && setAccount == false) {
+            // 初期検索だけデフォルト既存を選択
+            if (opts.size() > 1 && setAccount == false && firstSearch == true) {
               ncRec.accAndCon = 1;
             }
             opsMap.put('Account', opts);
@@ -656,6 +657,8 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                 if ((String.isBlank(ncRec.leadId)
                   || ncRec.leadId == 'none')
                   && leadSelect
+                  // 初期検索だけデフォルト既存を選択
+                  && firstSearch
                   && setLead == false) {
                   ncRec.leadId = lead.Id;
                   ncRec.accAndCon = 0;
