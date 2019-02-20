@@ -52,11 +52,25 @@ public with sharing class SB_NameCard_LeadRegistController
     private Set<String> nameSet = new Set<String>();
     private Id campaign;
 
+    //
+    public String registerToLeadLabel{get;set;}
+    public String overwriteLeadInfoLabel{get;set;}
+    public String createNewLeadLabel{get;set;}
+
     public Boolean isAllowDuplicateSave { get; private set; }
 
     public SB_NameCard_LeadRegistController(ApexPages.StandardController sc)
     {
         try {
+            this.createNewLeadLabel = System.Label.SB_NCLD_Label_CreateNewLeadDEV;
+            this.createNewLeadLabel = this.createNewLeadLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
+            this.createNewLeadLabel = this.createNewLeadLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+            this.registerToLeadLabel = System.Label.SB_NCLD_Text_RegisterToLeadDEV;
+            this.registerToLeadLabel = this.registerToLeadLabel.replace('&*Lead*&', System.Label.SB_NCLD_Text_Lead);
+            this.registerToLeadLabel = this.registerToLeadLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+            this.overwriteLeadInfoLabel = System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV;
+            this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*Lead*&', System.Label.SB_NCLD_Text_Lead);
+            this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadRecordListIndex = -1;
             this.lookUpIndex = -1;
@@ -112,8 +126,11 @@ public with sharing class SB_NameCard_LeadRegistController
                 	    	    if (lead.Id == this.nameCard.SmartViscaf__lead__c) {
                             this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
                 	    	    }
+                                String str = System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV;
+                                str = str.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+                                str = str.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
                                 //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。'));
-                                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.SB_NCLD_Msg_DisplayUnderConditions));
+                                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING,str));
                 	    }
                 }
             }
@@ -170,15 +187,19 @@ public with sharing class SB_NameCard_LeadRegistController
             if (leadRec.isNew) {
                 SB_NameCard_LeadRegist.isCreateableError(new Lead());
                 if (this.nameCard.OwnerId == null) {
+                String str = System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV;
+                str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
-                    throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLead);
+                    throw new SB_NameCard_LeadRegist.LeadRegistException(str);
                 }
                 ownerId = this.nameCard.OwnerId;
             } else {
                  SB_NameCard_LeadRegist.isUpdateableError(new Lead());
                 if (leadRec.lead == null) {
+                    String str = System.Label.SB_NCLD_Msg_SelectLeadDEV;
+                    str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
-                    throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SelectLead);
+                    throw new SB_NameCard_LeadRegist.LeadRegistException(str);
                 }
                 leadId = leadRec.lead.Id;
                 ownerId = leadRec.lead.OwnerId;

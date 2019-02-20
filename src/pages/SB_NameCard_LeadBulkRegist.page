@@ -1,9 +1,9 @@
 <!-- (c) 2012 Sunbridge Inc. -->
-<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!$Label.SB_NCLD_Text_BulkRegisterToLead}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
+<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
 	<apex:pageMessages id="pageMsgs" escape="false"/>
 
 	<apex:form >
-		<apex:pageBlock title="{!$Label.SB_NCLD_Text_BulkRegisterToLead}">
+		<apex:pageBlock title="{!registerToLeadLabel}">
 			<apex:pageBlockButtons >
 				<apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}" rerender="pageMsgs, ncRecList"/>
 				<apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
@@ -17,7 +17,7 @@
 
 				<apex:outputPanel >
 					<apex:inputCheckbox value="{!leadOverwrite}"/>
-					<apex:outputLabel value="{!$Label.SB_NCLD_Label_OverwriteLeadInfo}"/>
+					<apex:outputLabel value="{!overwriteLeadInfoLabel}"/>
 				</apex:outputPanel>
 			</apex:pageBlockSection>
 

@@ -1,11 +1,11 @@
 <!-- (c) 2012 SunBridge Inc. -->
-<apex:page standardController="SmartViscaf__NameCard__c" extensions="SB_NameCard_LeadRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!$Label.SB_NCLD_Text_RegisterToLead}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="true">
+<apex:page standardController="SmartViscaf__NameCard__c" extensions="SB_NameCard_LeadRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="true">
     <apex:pageMessages id="pageMsgs"/>
 
     <apex:form >
         <apex:inputHidden id="leadRecordListIndex" value="{!leadRecordListIndex}"/>
 
-        <apex:pageBlock title="{!$Label.SB_NCLD_Text_RegisterToLead}">
+        <apex:pageBlock title="{!registerToLeadLabel}">
             <apex:pageBlockButtons >
                 <apex:outputPanel id="save">
                     <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}" rerender="pageMsgs, save" rendered="{!NOT(isAllowDuplicateSave)}"/>
@@ -84,7 +84,7 @@
 
                         <apex:column >
                             <apex:facet name="header">{!$Label.SB_NCLD_Label_Name}</apex:facet>
-                            <apex:outputText value="<リードを新規作成>" rendered="{!leadRecord.isNew}"/>
+                            <apex:outputText value="{!createNewLeadLabel}" rendered="{!leadRecord.isNew}"/>
                             <apex:inputField value="{!leadRecord.lookUpNameCard.SmartViscaf__lead__c}" rendered="{!NOT(ISBLANK(leadRecord.lookUpNameCard))}">
                                 <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs, leadRecordList" oncomplete="document.getElementById('leadRecordList{!leadRecord.index}').checked='checked'">
                                     <apex:param name="lookUpIndex" assignto="{!lookUpIndex}" value="{!leadRecord.index}"/>
@@ -122,7 +122,7 @@
                     <apex:outputLabel value=""/>
                     <apex:outputPanel >
                         <apex:inputCheckbox value="{!leadOverwrite}"/>
-                        <apex:outputLabel value="{!$Label.SB_NCLD_Label_OverwriteLeadInfo}"/>
+                        <apex:outputLabel value="{!overwriteLeadInfoLabel}"/>
                     </apex:outputPanel>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>

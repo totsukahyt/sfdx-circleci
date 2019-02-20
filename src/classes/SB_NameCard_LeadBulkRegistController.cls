@@ -64,8 +64,12 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 this.leadSelOptList.addAll(emailSelOptList);
                 this.leadSelOptList.addAll(nameSelOptList);
             } else {
+                 String str = System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV;
+                 str = str.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+                 str = str.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
+
                 //this.message = '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。';
-                this.message = System.Label.SB_NCLD_Msg_DisplayUnderConditions;
+                this.message = str;
             }
             //this.leadSelOptList.add(new SelectOption('new', '新規作成'))
              if(SB_NameCard_LeadRegist.isCreateable(new Lead()))
@@ -101,9 +105,19 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     private Set<String> nameSet = new Set<String>();
     private Map<Id, Id> leadOwnerIdMap = new Map<Id, Id>();
 
+    public String overwriteLeadInfoLabel{get;set;}
+    public String registerToLeadLabel{get;set;}
+
+
     public SB_NameCard_LeadBulkRegistController(ApexPages.StandardSetController controller)
     {
         try {
+            this.registerToLeadLabel = System.Label.SB_NCLD_Text_RegisterToLeadDEV;
+            this.registerToLeadLabel = this.registerToLeadLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
+            this.registerToLeadLabel = this.registerToLeadLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+            this.overwriteLeadInfoLabel = System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV;
+            this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
+            this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
             String retUrlStr = System.currentPageReference().getParameters().get('retUrl');
             if (String.isNotBlank(retUrlStr)) this.retUrl = new PageReference(retUrlStr);
 
@@ -225,8 +239,10 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             Integer i = this.insertLead();
             i += this.updateLead();
+            String str = System.Label.SB_NCLD_Msg_SelectLeadDEV;
+            str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
             //if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException('リードを選択してください');
-            if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SelectLead);
+            if (i <= 0) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
 
             pageRef = this.retUrl;
         } catch (Exception e) {
@@ -242,7 +258,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     {
         List<Lead> leadList = new List<Lead>();
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
-
+        String str = System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV;
+        str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
         for (NameCardRecord ncRec : this.nameCardRecordList) {
             if (ncRec.leadId != 'new')
             {
@@ -256,7 +273,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             if (this.insertOption.OwnerId == null) {
                 //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
-                throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLead);
+                throw new SB_NameCard_LeadRegist.LeadRegistException(str);
             }
             leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, this.insertOption.OwnerId));
             ncRecList.add(ncRec);
@@ -285,13 +302,15 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         Set<Id> leadIdSet = new Set<Id>();
         List<Lead> leadList = new List<Lead>();
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
-
+        String str = System.Label.SB_NCLD_Text_LeadOverLapDEV;
+        str = str.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+        str = str.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
         for (NameCardRecord ncRec : this.nameCardRecordList) {
             if (ncRec.leadId == 'none' || ncRec.leadId == 'new') continue;
 
             leadId = Id.valueOf(ncRec.leadId);
             //if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException('リードが重複しています');
-            if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Text_LeadOverLap);
+            if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
             leadIdSet.add(leadId);
 
             if (this.leadOverwrite) {

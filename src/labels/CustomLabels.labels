@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>SB_MSG_CrudNotCreateable</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>オブジェクトの作成権限がありません。</shortDescription>
+        <value>{0} オブジェクトの作成権限がありません。</value>
+    </labels>
+    <labels>
+        <fullName>SB_MSG_CrudNotUpdateable</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>オブジェクトの編集権限がありません。</shortDescription>
+        <value>{0} オブジェクトの編集権限がありません。</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_ActivityDate</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -43,6 +57,13 @@
         <value>リードを新規作成</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_CreateNewLeadDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>&lt;リードを新規作成&gt;</shortDescription>
+        <value>&lt;&amp;*Lead*&amp;を新規作成&gt;</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_Division</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -83,6 +104,13 @@
         <protected>true</protected>
         <shortDescription>既存のリードの情報を名刺情報で上書きする</shortDescription>
         <value>既存のリードの情報を名刺情報で上書きする</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_OverwriteLeadInfoDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>(関連)既存のリードの情報を名刺情報で上書きする</shortDescription>
+        <value>既存の&amp;*Lead*&amp;の情報を名刺情報で上書きする</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Owner</fullName>
@@ -176,11 +204,25 @@
         <value>検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Msg_DisplayUnderConditionsDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>(関連)検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。</shortDescription>
+        <value>検索件数が制限を超えたので過去に登録した&amp;*smallLead*&amp;だけに絞って表示します。</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Msg_SelectLead</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>リードを選択してください</shortDescription>
         <value>リードを選択してください</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Msg_SelectLeadDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>(関連)リードを選択してください</shortDescription>
+        <value>&amp;*smallLead*&amp;を選択してください</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Msg_SelectRegisterDestination</fullName>
@@ -197,11 +239,25 @@
         <value>リードを新規作成する場合は「所有者」を指定してください</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>(関連)リードを新規作成する場合は「所有者」を指定してください</shortDescription>
+        <value>&amp;*smallLead*&amp;を新規作成する場合は「所有者」を指定してください</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Text_BulkRegisterToLead</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>リードに一括登録</shortDescription>
         <value>リードに一括登録</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Text_BulkRegisterToLeadDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>(関連)リードに一括登録</shortDescription>
+        <value>&amp;*Lead*&amp;に一括登録</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_BusinessCard</fullName>
@@ -253,11 +309,32 @@
         <value>リードが重複しています</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Text_LeadOverLapDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>(関連)リードが重複しています</shortDescription>
+        <value>&amp;*smallLead*&amp;が重複しています</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Text_RegisterToLead</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>リードに登録</shortDescription>
         <value>リードに登録</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Text_RegisterToLeadDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>(関連)リードに登録</shortDescription>
+        <value>&amp;*Lead*&amp;に登録</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Text_SmallLead</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>Smallリード</shortDescription>
+        <value>lead</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_SpecifiedWhenCreateNew</fullName>
@@ -288,6 +365,13 @@
         <value>リードを更新</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Text_UpdateLeadDEV</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>(関連)リードを更新</shortDescription>
+        <value>&amp;*Lead*&amp;を更新</value>
+    </labels>
+    <labels>
         <fullName>SB_NC_CrudFlsIgnoreObjects</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -300,5 +384,12 @@
         <protected>true</protected>
         <shortDescription>SB_NC_Line</shortDescription>
         <value>行目</value>
+    </labels>
+    <labels>
+        <fullName>SB_NC_iOSDevice</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>重複API名のテスト</shortDescription>
+        <value>SB_NC_iOSDevice</value>
     </labels>
 </CustomLabels>

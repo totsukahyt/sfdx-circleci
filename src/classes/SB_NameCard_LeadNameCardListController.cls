@@ -21,12 +21,20 @@ public with sharing class SB_NameCard_LeadNameCardListController
 	public Boolean leadOverwrite { get; set; }
 	public Integer nameCardRecordListIndex { get; set; }
 	public List<NameCardRecord> nameCardRecordList { get; set; }
+    public String overwriteLeadInfoLabel{get;set;}
+    public String updateLeadLabel{get;set;}
 
 	private Lead lead;
 
 	public SB_NameCard_LeadNameCardListController(ApexPages.StandardController sc)
 	{
 		try {
+			this.updateLeadLabel = System.Label.SB_NCLD_Text_UpdateLeadDEV;
+            this.updateLeadLabel = this.updateLeadLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
+            this.updateLeadLabel = this.updateLeadLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
+			this.overwriteLeadInfoLabel = System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV;
+            this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*Lead*&',System.Label.SB_NCLD_Text_Lead);
+            this.overwriteLeadInfoLabel = this.overwriteLeadInfoLabel.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
 			this.leadOverwrite = SB_NameCard_LeadRegist.svConfig.overwrite();
 			this.nameCardRecordListIndex = -1;
 			this.nameCardRecordList = new List<NameCardRecord>();
