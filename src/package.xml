@@ -25,6 +25,16 @@
         <members>Lead.NameCard__c</members>
         <members>SmartViscaf__NameCard__c.campaign__c</members>
         <members>SmartViscaf__NameCard__c.leadLink__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispCompany__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispEmail__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispLastModifiedDate__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispLeadRectype__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispOwner__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispState__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispTitle__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_Overwrite__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_RegistTodo__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_TodoSubject__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -32,8 +42,8 @@
         <name>CustomLabels</name>
     </types>
     <types>
-        <members>*</members>
-        <name>StaticResource</name>
+        <members>SmartViscaf__NameCard__c-en_US</members>
+        <name>CustomObjectTranslation</name>
     </types>
     <types>
         <members>*</members>
@@ -45,5 +55,5 @@
         <members>SmartViscaf__NameCard__c.LeadRegist</members>
         <name>WebLink</name>
     </types>
-    <version>38.0</version>
+    <version>41.0</version>
 </Package>

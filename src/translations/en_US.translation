@@ -17,7 +17,7 @@
         <name>SB_NCLD_Label_Campaign</name>
     </customLabels>
     <customLabels>
-        <label><!-- キャンペーンメンバー状況 --></label>
+        <label>Campaign member status</label>
         <name>SB_NCLD_Label_CampaignStatus</name>
     </customLabels>
     <customLabels>
@@ -65,7 +65,7 @@
         <name>SB_NCLD_Label_Name</name>
     </customLabels>
     <customLabels>
-        <label><!-- 名刺所有者 --></label>
+        <label>Namecard Owner</label>
         <name>SB_NCLD_Label_NameCardOwner</name>
     </customLabels>
     <customLabels>
@@ -139,6 +139,22 @@
     <customLabels>
         <label>Object: {0} Field: {1} ({2}) is not updateable.</label>
         <name>SB_NCLD_MSG_FlsNotUpdateable</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ToDoの所有者はキューに設定する事ができません --></label>
+        <name>SB_NCLD_MSG_QUEUES_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 選択されたキュー(キューId)ではリードにサポートされていません --></label>
+        <name>SB_NCLD_MSG_QUEUES_LEAD_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録エラー --></label>
+        <name>SB_NCLD_MSG_Regist_Error</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 更新エラー --></label>
+        <name>SB_NCLD_MSG_Update_Error</name>
     </customLabels>
     <customLabels>
         <label>&lt;New&gt;</label>
