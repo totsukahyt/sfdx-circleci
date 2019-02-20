@@ -139,6 +139,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
 
   public Integer searchField { get; set; }  // 検索条件の項目
   public Integer queryMatch { get; set; }   // 完全一致もする？
+  public Boolean firstSearch { get; set; }   // 初期クエリ
 
   @TestVisible private static final Integer SEARCHTYPE_DEFAULT = 0;    // 検索方法のデフォルト値
   @TestVisible private static final Integer FIELD_NAMESITE = 0;  // 検索条件の項目
@@ -209,6 +210,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
           } else {
             renkeiType = 'Contact';
           }
+          this.firstSearch = true;
 
           if (SB_NameCard_LeadRegist.svConfig.config.id == null) {
             this.searchTypeContact = SmartViscaf.SB_NameCard_Util.SEARCHTYPE_NAME_SITE;
@@ -558,7 +560,9 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
                   }
                   if (opts.size() > 1) {
                     leadSelect = false;
-                    renkeiType = 'Contact';
+                    if (firstSearch) {
+                      renkeiType = 'Contact';
+                    }
                   }
                   if (accountCreateable && contactCreateable) {
                     opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NewLead + '/' + System.Label.SB_NCLD_Menu_NewLead));
@@ -581,7 +585,9 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
                         && leadSelect) {
                         ncRec.leadId = lead.Id;
                         ncRec.accAndCon = 0;
-                        renkeiType = 'Lead';
+                        if (firstSearch) {
+                          renkeiType = 'Lead';
+                        }
                       }
                       // accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));
                       opts.add(new SelectOption(lead.Id, getLabel(lead.Name, lead.Email)));
@@ -611,6 +617,7 @@ public with sharing class SB_NameCardL_TwowayBulkRegistController {
                 testError = message;
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
         }
+        firstSearch = false;
     } catch (Exception e) {
         System.debug(e.getStackTraceString());
         testError = e.getMessage();
