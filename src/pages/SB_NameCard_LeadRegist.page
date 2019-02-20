@@ -165,7 +165,7 @@
             <apex:pageBlockSection id="newSelect" rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="2">
                <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
+                    <apex:outputLabel value="{!$ObjectType.Campaign.Label}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
                     <apex:inputField value="{!nameCard.campaign__c}" onchange="changeCampaign()" rendered="{!Not(campLookUpDisabled)}"/>
                 </apex:pageBlockSectionItem>
 
