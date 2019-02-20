@@ -228,12 +228,6 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
       // if (this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.Lead) {
         this.leadQueryOption =  getQueryOption(Lead.sObjecttype);
       // }
-
-      if (SB_NameCard_LeadRegist.svConfig.defaultDisplayExistingLead()) {
-        renkeiType = 'Lead';
-      } else {
-        renkeiType = 'Contact';
-      }
       this.firstSearch = true;
 
       if (SB_NameCard_LeadRegist.svConfig.config.id == null) {
@@ -624,7 +618,6 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
             if (opts.size() > 1) {
               leadSelect = false;
               if (firstSearch) {
-                renkeiType = 'Contact';
                 haveAccount = true;
               }
             }
@@ -666,9 +659,6 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                   && setLead == false) {
                   ncRec.leadId = lead.Id;
                   ncRec.accAndCon = 0;
-                    if (firstSearch) {
-                      renkeiType = 'Lead';
-                    }
                 }
                 // accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));
                 opts.add(new SelectOption(lead.Id, getLabel(lead.Name, lead.Email)));
@@ -683,7 +673,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
               opts.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
               if (String.isBlank(ncRec.leadId)
                   || leadKey == 'new'
-                  || (leadSelect && ncRec.leadId == 'none' && renkeiType == 'Lead')) {
+                  || (leadSelect && ncRec.leadId == 'none' && (renkeiType == 'Lead' || firstSearch == true))) {
                 ncRec.leadId = 'new';
                 ncRec.accAndCon = 0;
               }
@@ -715,7 +705,11 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
         }
         else {
           if (haveLead == false) {
-            // renkeiType = 'Both';
+            if (SB_NameCard_LeadRegist.svConfig.defaultDisplayExistingLead()) {
+              renkeiType = 'Lead';
+            } else {
+              renkeiType = 'Contact';
+            }
           }
           else {
             renkeiType = 'Lead';
