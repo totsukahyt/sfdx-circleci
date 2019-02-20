@@ -622,12 +622,16 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       queryOption.queryFirstName = false;
       queryOption.queryEMail = true;
     }
-
-    if (String.isNotBlank(searchRecordTypes)) {
-            queryOption.setRectypeIds(new Set<Id>((List<Id>)new List<String>(searchRecordTypes.split(','))));
-    }
     SB_NameCardL_RegistQueryOption accountQueryOption = new SB_NameCardL_RegistQueryOption(Account.sObjecttype);
     SB_NameCardL_RegistQueryOption contactQueryOption =  new SB_NameCardL_RegistQueryOption(Contact.sObjecttype);
+
+
+    if (String.isNotBlank(searchRecordTypes)) {
+      Set<Id> recordTypeSet =  new Set<Id>((List<Id>)new List<String>(searchRecordTypes.split(',')));
+      queryOption.setRectypeIds(recordTypeSet);
+      accountQueryOption.setRectypeIds(recordTypeSet);
+      contactQueryOption.setRectypeIds(recordTypeSet);
+    }
 
     accountQueryOption.queryLastName = false;
     accountQueryOption.queryFirstName = false;
