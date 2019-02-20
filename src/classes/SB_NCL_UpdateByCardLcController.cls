@@ -23,7 +23,7 @@ public with sharing class SB_NCL_UpdateByCardLcController {
   **/
   public static String getUpdateByCard(String targetId) {
     SB_NCL_UpdateByCardDTO ba = new SB_NCL_UpdateByCardDTO();
-    ba.titleV.titleName = System.Label.SB_NCLD_Text_BusinessCardList;
+    ba.titleV.titleName = String.format(System.Label.SB_NCLD_Text_BusinessCardList, new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel()});
     ba.titleV.iconName = 'standard:account';
     ba.titleV.iconSize = 'large';
     ba.titleV.closeValue = System.Label.SB_NCLD_Label_Close;

@@ -7,7 +7,7 @@
  * @Version 1 2018/08/XX  SV_DEV-1109 リード拡張パッケージ[統合版]Classic環境でLexのボタンタップすると、エラー発生するため、 LexとClassicを一つボタンから表示させる
  *
  */ -->
-<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCardL_UnivTwowayBulkRegistCtrl" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
+<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCardL_UnivTwowayBulkRegistCtrl" title="{!windowTitle}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
 <apex:pageMessages id="pageMsgs" escape="false"/>
 
   <apex:form id="All" rendered="{!and($User.UIThemeDisplayed != 'Theme4u', $User.UIThemeDisplayed != 'Theme4d')}">

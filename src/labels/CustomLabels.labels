@@ -592,8 +592,15 @@
         <fullName>SB_NCLD_Text_BusinessCardList</fullName>
         <language>ja</language>
         <protected>true</protected>
-        <shortDescription>名刺リスト</shortDescription>
-        <value>名刺で更新</value>
+        <shortDescription>名刺で更新</shortDescription>
+        <value>{0}で更新</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Text_BusinessCardListWindowTitle</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Text_BusinessCardListWindowTitle</shortDescription>
+        <value>{0}: {1}で更新</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_Lead</fullName>
@@ -631,11 +638,25 @@
         <value>{0}に登録</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Text_RegisterToLeadDEVWindowTitle</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Text_RegisterToLeadDEVWindowTitle</shortDescription>
+        <value>{0}: {1}に登録</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Text_RegisterToLead_OR_Account_Contact</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>SB_NCLD_Text_RegisterToLead_OR_Account_Contact</shortDescription>
-        <value>リードまたは取引先・取引先責任者に登録</value>
+        <value>{0}または{1}・{2}</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle</shortDescription>
+        <value>{0}: {1}または{2}・{3}に登録</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_RegisterToLeadsDEV</fullName>
@@ -643,6 +664,20 @@
         <protected>true</protected>
         <shortDescription>リードに一括登録</shortDescription>
         <value>{0}に一括登録</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Text_RegisterToLeadsDEVWindowTitle</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Text_RegisterToLeadsDEVWindowTitle</shortDescription>
+        <value>{0}: {1}に一括登録</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts_WindowTitle</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts_WindowTitle</shortDescription>
+        <value>{0}: {1}または{2}・{3}に一括登録</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_SmallLead</fullName>

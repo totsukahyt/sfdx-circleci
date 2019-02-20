@@ -23,6 +23,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
 
   public String retUrl{get;set;}
   public Boolean useNameCardOwner{get;set;}
+  public String winbdowTitle{get;set;}
 
   //テスト addMessageキャッチよう
   @TestVisible
@@ -156,6 +157,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
 
 
   public SB_NameCard_LeadBulkRegistController(ApexPages.StandardSetController controller) {
+    this.winbdowTitle = String.format(System.Label.SB_NCLD_Text_RegisterToLeadsDEVWindowTitle, new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel(), LEADLABEL});
     PageReference page = ApexPages.currentPage();
     Map<String, String> paras = page.getParameters();
     Boolean bLex = false;

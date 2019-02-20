@@ -86,6 +86,7 @@ public with sharing class SB_NameCard_LeadRegistController {
   public Boolean campDisabled{get;set;} //キャンペーンStatus Disabled フラグ
   public Boolean campLookUpDisabled{get;set;} //キャンペーン Disabled フラグ
   public  List<SelectOption> campaignStatus {get; set;}
+  public String windowTitle{get;set;}
 
   private static final String LEADLABEL = Lead.sObjectType.getDescribe().getLabel();
 
@@ -107,7 +108,7 @@ public with sharing class SB_NameCard_LeadRegistController {
 
     public SB_NameCard_LeadRegistController(ApexPages.StandardController sc) {
       try {
-
+        this.windowTitle = String.format(System.Label.SB_NCLD_Text_RegisterToLeadDEVWindowTitle, new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel(), LEADLABEL});
         this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
 
         this.createNewLeadLabel = String.format(System.Label.SB_NCLD_Label_CreateNewLeadDEV, new String[] {LEADLABEL});

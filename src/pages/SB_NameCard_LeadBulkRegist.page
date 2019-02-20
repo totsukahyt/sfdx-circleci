@@ -8,7 +8,7 @@
  *                             SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。
  */
 -->
-<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
+<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!winbdowTitle}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
   <apex:pageMessages id="pageMsgs" escape="false"/>
 
   <apex:form id="All">

@@ -35,12 +35,14 @@ public with sharing class SB_NameCard_LeadNameCardListController{
   public List<NameCardRecord> nameCardRecordList { get; set; }
   public String overwriteLeadInfoLabel{get;set;}
   public String updateLeadLabel{get;set;}
+  public String windowTitle{get;set;}
   private final static String NAMECARD_QUERY_FROM = 'SELECT {0} FROM SmartViscaf__NameCard__c WHERE Id = :id';
 
   private Lead pageLead;
 
   public SB_NameCard_LeadNameCardListController(ApexPages.StandardController sc) {
     try {
+      this.windowTitle = String.format(System.Label.SB_NCLD_Text_BusinessCardList, new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel()});
       this.updateLeadLabel = String.format(System.Label.SB_NCLD_Text_UpdateLeadDEV, new String[]{Lead.sObjectType.getDescribe().getLabel()});
       this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[]{Lead.sObjectType.getDescribe().getLabel()});
       this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c && Lead.SObjectType.getDescribe().isUpdateable();

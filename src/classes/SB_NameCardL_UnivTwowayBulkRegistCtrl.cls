@@ -143,6 +143,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   public Integer searchField { get; set; }  // 検索条件の項目
   public Integer queryMatch { get; set; }   // 完全一致もする？
   public Boolean firstSearch { get; set; }   // 初期クエリ
+  public String windowTitle { get; set; }
 
   @TestVisible private static final Integer SEARCHTYPE_DEFAULT = 0;    // 検索方法のデフォルト値
   @TestVisible private static final Integer FIELD_NAMESITE = 0;  // 検索条件の項目
@@ -181,7 +182,8 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   public SB_NameCardL_UnivTwowayBulkRegistCtrl(ApexPages.StandardSetController controller) {
     PageReference page = ApexPages.currentPage();
     Map<String, String> paras = page.getParameters();
-    this.registerToLeadLabel = System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact;
+    this.windowTitle = String.format(System.Label.SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts_WindowTitle, new String[] {SmartViscaf__NameCard__c.sObjecttype.getDescribe().getLabel(), LD_LABEL, AC_LABEL, CO_LABEL});
+    this.registerToLeadLabel = String.format(System.Label.SB_NCLD_Text_RegisterToLead_OR_Account_Contact, new String[]{LD_LABEL, AC_LABEL, CO_LABEL});
     if (paras.containsKey('vfRetURLInSFX')
       || Test.isRunningTest() && paras.containsKey('runTestLex')) {
       initLex(controller);

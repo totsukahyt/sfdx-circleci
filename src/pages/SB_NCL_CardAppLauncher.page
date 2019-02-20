@@ -15,7 +15,7 @@
  *
  **/
 -->
-<apex:page controller="SB_NCL_CardAppLauncherController">
+<apex:page controller="SB_NCL_CardAppLauncherController" title="{!windowTitle}">
   <apex:pageMessages />
   <apex:includeLightning />
 
