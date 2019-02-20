@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>*</members>
+        <members>SB_NameCard_LeadBulkRegistController</members>
+        <members>SB_NameCard_LeadCrudFls</members>
+        <members>SB_NameCard_LeadCrudFlsTest</members>
+        <members>SB_NameCard_LeadNameCardListController</members>
+        <members>SB_NameCard_LeadRegist</members>
+        <members>SB_NameCard_LeadRegistController</members>
+        <members>SB_NameCard_LeadRegistTest</members>
+        <members>SB_NameCard_LeadSaveResult</members>
+        <members>SB_NameCard_LeadSaveResultTest</members>
         <name>ApexClass</name>
     </types>
     <types>
-        <members>*</members>
+        <members>SB_NameCard_LeadBulkRegist</members>
+        <members>SB_NameCard_LeadNameCardList</members>
+        <members>SB_NameCard_LeadRegist</members>
         <name>ApexPage</name>
     </types>
     <types>
-        <members>*</members>
-        <name>ApexTrigger</name>
+        <members>Lead.NameCardFreehandmemo__c</members>
+        <members>Lead.NameCardListName__c</members>
+        <members>Lead.NameCardMemo__c</members>
+        <members>Lead.NameCard__c</members>
+        <members>SmartViscaf__NameCard__c.campaign__c</members>
+        <members>SmartViscaf__NameCard__c.leadLink__c</members>
+        <name>CustomField</name>
     </types>
     <types>
         <members>CustomLabels</members>
@@ -19,6 +34,16 @@
     <types>
         <members>*</members>
         <name>StaticResource</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>Translations</name>
+    </types>
+    <types>
+        <members>Lead.LeadNameCardList</members>
+        <members>SmartViscaf__NameCard__c.LeadBulkRegist</members>
+        <members>SmartViscaf__NameCard__c.LeadRegist</members>
+        <name>WebLink</name>
     </types>
     <version>38.0</version>
 </Package>

@@ -29,6 +29,13 @@
         <value>キャンペーン</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_CampaignStatus</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>キャンペーンメンバー状況</shortDescription>
+        <value>キャンペーンメンバー状況</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_Cancel</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -104,6 +111,13 @@
         <protected>true</protected>
         <shortDescription>氏名</shortDescription>
         <value>氏名</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_NameCardOwner</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>名刺所有者</shortDescription>
+        <value>名刺所有者</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_OverwriteLeadInfo</fullName>
@@ -209,6 +223,13 @@
         <protected>true</protected>
         <shortDescription>オブジェクトの編集権限がありません。</shortDescription>
         <value>{0} オブジェクトの編集権限がありません。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_MSG_FlsNotAccessible</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>項目の参照権限がありません。</shortDescription>
+        <value>{0} オブジェクトの項目 {1} ({2}) の参照権限がありません。</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_MSG_FlsNotCreateable</fullName>

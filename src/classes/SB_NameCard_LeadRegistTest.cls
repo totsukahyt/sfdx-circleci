@@ -66,7 +66,8 @@
         ctrl.setLookUp();
 
         ctrl.leadRecordListIndex = 0;
-
+        ctrl.checkRadio();
+        System.assertEquals(ctrl.leadRecTypeEdit, false);
         PageReference savePageRef = ctrl.save();
         System.assertNotEquals(null, savePageRef, 'Save error');
 
@@ -221,7 +222,7 @@
     }
 
     //所有者のデフォルト値のテスト
-    @isTest private static void ownerIdDefTest() {
+    @isTest private static void test_OwnerIdDefTest() {
         insertNameCard();
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
         PageReference pageRef = Page.SB_NameCard_LeadRegist;
@@ -229,6 +230,7 @@
         ApexPages.StandardController sc = new ApexPages.StandardController(nc);
         SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
         System.assertEquals(nc.OwnerId,ctrl.lead.ownerId);
+        System.assertNotEquals(SB_NameCard_LeadRegistController.smartViscaConfig, null);
         Id uid = Userinfo.getUserid();
         List<User> us = [Select Id From User Where Id != :uid];
         User u = us[0];
@@ -242,12 +244,13 @@
     }
 
     //所有者のデフォルト値のテスト
-    @isTest private static void ownerIdDefTestBulk() {
+    @isTest private static void test_OwnerIdDefTestBulk() {
         insertNameCard();
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
         PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        pageRef.getParameters().put('vfRetURLInSFX', '/home/home.jsp');
         Test.setCurrentPage(pageRef);
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
         ncList.add(nc);
         ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
         ssc.setSelected(ncList);
@@ -259,19 +262,28 @@
         List<User> us = [Select Id From User Where Id != :uid];
         User u = us[0];
         ctrl.ownerlead.ownerId = u.Id;
+        System.assertEquals(ctrl.nameCardRecordList.size(),1);
         for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
             r.leadId = 'new';
         }
-         ctrl.save();
+        ctrl.leadOverwrite = false;
+        ctrl.save();
         List<Lead> ls = [Select Id From Lead];
         System.assertEquals(ls.size(),1);
         Lead le = getLead(nc.Id);
         System.assertEquals(le.OwnerId,u.Id);
+        SB_NameCard_LeadBulkRegistController ctrl1 = new SB_NameCard_LeadBulkRegistController(ssc);
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl1.nameCardRecordList) {
+            r.leadId = 'new';
+        }
+        ctrl.save();
     }
 
     //カスタム設定によるデフォルトtrue
-    @isTest private static void cusSettingDefTest() {
+    @isTest private static void test_cusSettingDefTest() {
+        //名刺に関するデータを作成
         insertNameCard();
+        //基本設定に関するデータを作成
         insCusSetting(true);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
         PageReference pageRef = Page.SB_NameCard_LeadRegist;
@@ -284,7 +296,7 @@
 
 
     //カスタム設定によるデフォルトtrue
-    @isTest private static void cusSettingDefTestBulk() {
+    @isTest private static void test_cusSettingDefTestBulk() {
         insertNameCard();
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
         List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
@@ -300,7 +312,7 @@
     }
 
      //カスタム設定によるデフォルト false
-    @isTest private static void cusSettingDefFTest() {
+    @isTest private static void test_cusSettingDefFTest() {
         insertNameCard();
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -308,13 +320,99 @@
         Test.setCurrentPage(pageRef);
         ApexPages.StandardController sc = new ApexPages.StandardController(nc);
         SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+        List<Schema.RecordTypeInfo> rs =  Lead.sObjectType.getDescribe().getRecordTypeInfos();
+        List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
+        for (RecordTypeInfo r : rs) {
+            if (r.isAvailable() && !r.isMaster()) {
+                recordtypes.add(r);
+            }
+        }
+        List<SelectOption> so = ctrl.getleadRecordTypeOptions();
+        System.assertEquals(so.size(), recordtypes.size());
         System.assertEquals(ctrl.registTodo,false);
         System.assertEquals(ctrl.todo.Subject,'交換false');
     }
 
+    //所有者変更などのテスト
+    @isTest private static void test_changeOwnerTest() {
+        insertNameCard();
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+        List<Schema.RecordTypeInfo> rs =  Lead.sObjectType.getDescribe().getRecordTypeInfos();
+        List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
+        List<QueueSobject> qs = [SELECT Id, QueueId, SobjectType FROM QueueSobject Where SobjectType = 'Lead'];
+        ctrl.lead.ownerId = qs.size() > 0 ? qs[0].QueueId : Userinfo.getUserid();
+        ctrl.changeOwner();
+        //System.assertEquals(!ctrl.canEditTodo, qs.size() > 0);
+        if (qs.size() > 0) {
+            ctrl.lead.ownerId = Userinfo.getUserid();
+            ctrl.changeOwner();
+            //System.assertEquals(ctrl.canEditTodo, true);
+        }
+        System.assertEquals(ctrl.registTodo,false);
+        System.assertEquals(ctrl.todo.Subject,'交換false');
+    }
+
+    //エラーケース
+    @isTest private static void test_errorCaseTest() {
+        insertNameCard();
+        insCusSetting(false);
+        Profile prof;
+        try{
+            prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only' OR Name = '参照のみ'];
+        }catch(Exception e){
+            prof = [SELECT Id, UserType, Name FROM Profile WHERE Name = 'Read Only' OR Name = '参照のみ'];
+        }
+        User u1 = new User(Alias = 'test', Email='newusertest@testorgtest.com',
+        EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
+        LocaleSidKey='en_US', ProfileId = prof.Id,
+        TimeZoneSidKey='America/Los_Angeles', UserName='newusertesttest@testorgtest.com');
+
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+        System.runAs(u1){
+            //新規リード
+            ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+            ctrl.registTodo = true;
+            //保存
+            PageReference p = ctrl.save();
+            System.assertEquals(p, null);
+        }
+    }
+
+        //エラーケース
+    @isTest private static void test_errorCase2Test() {
+        insertNameCard();
+        insCusSetting(false);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+        //新規リード
+        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+        ctrl.registTodo = true;
+        //保存
+        PageReference p = ctrl.save();
+        System.assertNotEquals(p, null);
+        SB_NameCard_LeadRegistController ctrl1 = new SB_NameCard_LeadRegistController(sc);
+        //新規リード
+        ctrl1.leadRecordListIndex = ctrl1.leadRecordList.size()-1;
+        ctrl1.registTodo = true;
+        //保存
+        PageReference p1 = ctrl1.save();
+        //System.assertEquals(p1, null);
+    }
 
     //カスタム設定によるデフォルト false
-    @isTest private static void cusSettingDefFTestBulk() {
+    @isTest private static void test_SettingDefFTestBulk() {
         insertNameCard();
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -325,9 +423,306 @@
         ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
         ssc.setSelected(ncList);
         SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        SmartViscaf__SmartViscaConfig__c sms = SB_NameCard_LeadBulkRegistController.smartViscaConfig;
         for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
             System.assertEquals(r.registTodo,false);
         }
+    }
+
+    //名刺所有者使用テストtrue 所有者設定なし
+    @isTest private static void test_NameCardOwnerIdBulk() {
+        //基本設定に関するデータを作成
+        insCusSetting(false);
+        //名刺に関するデータを作成
+        insertNameCardnomail();
+        //ユーザ作成
+        User u = new User(Alias = 'test', Email='newusertest@testorgtest.com',
+        EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
+        LocaleSidKey='en_US', ProfileId = Userinfo.getprofileid(),
+        TimeZoneSidKey='America/Los_Angeles', UserName='newusertesttest@testorgtest.com');
+        insert u;
+
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        SmartViscaf__NameCard__c[] ncList = new SmartViscaf__NameCard__c[]{nc};
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        //リード新規作成
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
+            r.leadId = 'new';
+            System.assertEquals(r.registTodo,false);
+        }
+        ctrl.ownerlead.OwnerId = u.Id;
+        //名刺所有者を設定
+        ctrl.useNameCardOwner = true;
+        //保存
+        ctrl.save();
+        List<Lead> ls = [Select Id,Name,OwnerId From Lead];
+        //新規リードassert
+        System.assertEquals(ls.size(),1);
+        //新規リードOwnerIdassert
+        System.assertEquals(ls[0].OwnerId,Userinfo.getUserid());
+    }
+
+    //名刺所有者使用テストfalse 所有者設定なし
+    @isTest private static void test_NameCardOwnerIdFBulk() {
+        //基本設定に関するデータを作成
+        insCusSetting(false);
+        //名刺に関するデータを作成
+        insertNameCardnomail();
+
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        SmartViscaf__NameCard__c[] ncList = new SmartViscaf__NameCard__c[]{nc};
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        //リード新規作成
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
+            r.leadId = 'new';
+            System.assertEquals(r.registTodo,false);
+        }
+        //名刺所有者を設定
+        ctrl.useNameCardOwner = false;
+        //保存
+        ctrl.save();
+        List<Lead> ls = [Select Id,Name From Lead];
+        //新規リードassert
+        System.assertEquals(ls.size(),0);
+    }
+
+    //名刺所有者使用テストtrue 所有者設定あり
+    @isTest private static void test_NameCardHaveOwnerIdBulk() {
+        //基本設定に関するデータを作成
+        insCusSetting(false);
+        //名刺に関するデータを作成
+        insertNameCardnomail();
+        //ユーザ作成
+        User u = new User(Alias = 'test', Email='newusertest@testorgtest.com',
+        EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
+        LocaleSidKey='en_US', ProfileId = Userinfo.getprofileid(),
+        TimeZoneSidKey='America/Los_Angeles', UserName='newusertesttest@testorgtest.com');
+        insert u;
+
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        SmartViscaf__NameCard__c[] ncList = new SmartViscaf__NameCard__c[]{nc};
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        //リード新規作成
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
+            r.leadId = 'new';
+            System.assertEquals(r.registTodo,false);
+        }
+        ctrl.ownerlead.OwnerId = u.Id;
+        //名刺所有者を設定
+        ctrl.useNameCardOwner = true;
+        //保存
+        ctrl.save();
+        List<Lead> ls = [Select Id,Name,OwnerId From Lead];
+        //新規リードassert
+        System.assertEquals(ls.size(),1);
+        //新規リードOwnerIdassert
+        System.assertEquals(ls[0].OwnerId,Userinfo.getUserid());
+    }
+
+    //名刺所有者使用テストfalse 所有者設定あり
+    @isTest private static void test_NameCardHaveOwnerIdFBulk() {
+        //基本設定に関するデータを作成
+        insCusSetting(false);
+        //名刺に関するデータを作成
+        insertNameCardnomail();
+        //ユーザ作成
+        User u = new User(Alias = 'test', Email='newusertest@testorgtest.com',
+        EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
+        LocaleSidKey='en_US', ProfileId = Userinfo.getprofileid(),
+        TimeZoneSidKey='America/Los_Angeles', UserName='newusertesttest@testorgtest.com');
+        insert u;
+
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        SmartViscaf__NameCard__c[] ncList = new SmartViscaf__NameCard__c[]{nc};
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        //リード新規作成
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
+            r.leadId = 'new';
+            System.assertEquals(r.registTodo,false);
+        }
+        ctrl.ownerlead.OwnerId = u.Id;
+        //名刺所有者を設定
+        ctrl.useNameCardOwner = false;
+        //保存
+        ctrl.save();
+        List<Lead> ls = [Select Id,Name,OwnerId From Lead];
+        //新規リードassert
+        System.assertEquals(ls.size(),1);
+        //新規リードOwnerIdassert
+        System.assertEquals(ls[0].OwnerId, u.Id);
+    }
+
+    //キャンペーン状況に関するテスト -> 一括
+    @isTest private static void test_CampaignMemberStatusBulk() {
+        //基本設定に関するデータを作成
+        insCusSetting(false);
+        //名刺に関するデータを作成
+        insertNameCardnomail();
+        List<Campaign> cm = [Select Id,Name From Campaign];
+        System.assertNotEquals(cm.size(),0);
+        //キャンペーンメンバー状況レコードを作成
+        List<CampaignMemberStatus> cpmsa = [SELECT id, CampaignID, HasResponded, IsDefault, Label, SortOrder
+                                        FROM CampaignMemberStatus Where CampaignId = :cm];
+
+        CampaignMemberStatus newStatus = new CampaignMemberStatus(CampaignID=cm[0].id, Label='New', IsDefault=true, HasResponded=false, SortOrder=3);
+        CampaignMemberStatus newStatus1 = new CampaignMemberStatus(CampaignID=cm[0].id, Label='New1', IsDefault=false, HasResponded=false, SortOrder=4);
+        CampaignMemberStatus newStatus2 = new CampaignMemberStatus(CampaignID=cm[0].id, Label='New2', IsDefault=false, HasResponded=false, SortOrder=5);
+        insert new CampaignMemberStatus[]{newStatus, newStatus1, newStatus2};
+
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        SmartViscaf__NameCard__c[] ncList = new SmartViscaf__NameCard__c[]{nc};
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        ctrl.insertOption.campaign__c = cm[0].Id;
+        //キャンペーンメンバーの選択リストをAssert
+        List<SelectOption> cselectOption = ctrl.getCampaignStatus();
+        System.assertEquals(cselectOption.size(),3);
+        System.assertEquals(cselectOption[0].getvalue(),'New');
+        System.assertEquals(cselectOption[1].getvalue(),'New1');
+        System.assertEquals(cselectOption[2].getvalue(),'New2');
+        //リード新規作成
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
+            r.leadId = 'new';
+            System.assertEquals(r.registTodo,false);
+        }
+        //画面上のキャンペーンを設定
+        ctrl.insertOption.campaign__c = cm[0].id;
+        //名刺所有者を設定
+        ctrl.useNameCardOwner = true;
+        //キャンペーンメンバー状況を設定
+        ctrl.campStatus = 'New1';
+        //保存
+        ctrl.save();
+        List<CampaignMember> cmbs = [Select Id,Name,Status From CampaignMember];
+        //キャンペーンメンバーをAssert
+        System.assertEquals(cmbs.size(),1);
+        //キャンペーンメンバーStatusをAssert
+        System.assertEquals(cmbs[0].Status,'New1');
+    }
+
+    //キャンペーンなし -> 一括
+    @isTest private static void test_NOCampaignMemberBulk() {
+        //基本設定に関するデータを作成
+        insCusSetting(false);
+        //名刺に関するデータを作成
+        insertNameCardnomail();
+        List<Campaign> cm = [Select Id,Name From Campaign];
+        System.assertNotEquals(cm.size(),0);
+        //キャンペーンメンバー状況レコードを作成
+        List<CampaignMemberStatus> cpmsa = [SELECT id, CampaignID, HasResponded, IsDefault, Label, SortOrder
+                                        FROM CampaignMemberStatus Where CampaignId = :cm];
+
+        CampaignMemberStatus newStatus = new CampaignMemberStatus(CampaignID=cm[0].id, Label='New', IsDefault=false, HasResponded=false, SortOrder=3);
+        CampaignMemberStatus newStatus1 = new CampaignMemberStatus(CampaignID=cm[0].id, Label='New1', IsDefault=false, HasResponded=false, SortOrder=4);
+        CampaignMemberStatus newStatus2 = new CampaignMemberStatus(CampaignID=cm[0].id, Label='New2', IsDefault=false, HasResponded=false, SortOrder=5);
+        insert new CampaignMemberStatus[]{newStatus, newStatus1, newStatus2};
+
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        SmartViscaf__NameCard__c[] ncList = new SmartViscaf__NameCard__c[]{nc};
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        ctrl.insertOption.campaign__c = cm[0].Id;
+        //キャンペーンメンバーの選択リストをAssert
+        List<SelectOption> cselectOption = ctrl.getCampaignStatus();
+        System.assertEquals(cselectOption.size(),3);
+        System.assertEquals(cselectOption[0].getvalue(),'New');
+        System.assertEquals(cselectOption[1].getvalue(),'New1');
+        System.assertEquals(cselectOption[2].getvalue(),'New2');
+        //リード新規作成
+        for (SB_NameCard_LeadBulkRegistController.NameCardRecord r : ctrl.nameCardRecordList) {
+            r.leadId = 'new';
+            r.message = 'test';
+            System.assertEquals(r.registTodo,false);
+        }
+        //名刺所有者を設定
+        //ctrl.useNameCardOwner = true;
+        ctrl.search();
+        //キャンペーンメンバー状況を設定
+        ctrl.campStatus = 'New1';
+        List<Schema.RecordTypeInfo> rs =  Lead.sObjectType.getDescribe().getRecordTypeInfos();
+        List<RecordTypeInfo> recordtypes = new List<RecordTypeInfo>();
+        for (RecordTypeInfo r : rs) {
+            if (r.isAvailable() && !r.isMaster()) {
+                recordtypes.add(r);
+            }
+        }
+        List<SelectOption> so = ctrl.getleadrecordtypeOptions();
+        System.assertEquals(so.size(), recordtypes.size());
+        List<SelectOption> so1 = SB_NameCard_LeadBulkRegistController.getSearchTypeList();
+        System.assertEquals(so1.size(), 2);
+        //保存
+        ctrl.save();
+        List<CampaignMember> cmbs = [Select Id,Name,Status From CampaignMember];
+        //キャンペーンメンバーをAssert
+        System.assertEquals(cmbs.size(),0);
+    }
+
+    //キャンペーン状況に関するテスト
+    @isTest private static void test_CampaignMemberStatus() {
+        //基本設定に関するデータを作成
+        insCusSetting(false);
+        //名刺に関するデータを作成
+        insertNameCardnomail();
+        List<Campaign> cm = [Select Id,Name From Campaign];
+        System.assertNotEquals(cm.size(),0);
+        //キャンペーンメンバー状況レコードを作成
+        List<CampaignMemberStatus> cpmsa = [SELECT id, CampaignID, HasResponded, IsDefault, Label, SortOrder
+                                        FROM CampaignMemberStatus Where CampaignId = :cm];
+
+        CampaignMemberStatus newStatus = new CampaignMemberStatus(CampaignID=cm[0].id, Label='New', IsDefault=false, HasResponded=false, SortOrder=3);
+        CampaignMemberStatus newStatus1 = new CampaignMemberStatus(CampaignID=cm[0].id, Label='New1', IsDefault=false, HasResponded=false, SortOrder=4);
+        CampaignMemberStatus newStatus2 = new CampaignMemberStatus(CampaignID=cm[0].id, Label='New2', IsDefault=false, HasResponded=false, SortOrder=5);
+        insert new CampaignMemberStatus[]{newStatus, newStatus1, newStatus2};
+
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        SmartViscaf__NameCard__c[] ncList = new SmartViscaf__NameCard__c[]{nc};
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+        //キャンペーンメンバーの選択リストをAssert
+        List<SelectOption> cselectOption = ctrl.getCampaignStatus();
+        System.assertEquals(cselectOption.size(),3);
+        System.assertEquals(cselectOption[0].getvalue(),'New');
+        System.assertEquals(cselectOption[1].getvalue(),'New1');
+        System.assertEquals(cselectOption[2].getvalue(),'New2');
+
+        //新規リード
+        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+        ctrl.registTodo = true;
+        //画面上のキャンペーンを設定
+        ctrl.namecard.campaign__c = cm[0].id;
+        //キャンペーンメンバー状況を設定
+        ctrl.campStatus = 'New1';
+        //保存
+        ctrl.save();
+        List<CampaignMember> cmbs = [Select Id,Name,Status From CampaignMember];
+        //キャンペーンメンバーをAssert
+        System.assertEquals(cmbs.size(),1);
+        //キャンペーンメンバーStatusをAssert
+        System.assertEquals(cmbs[0].Status,'New1');
     }
 
     private static void insertNameCard()

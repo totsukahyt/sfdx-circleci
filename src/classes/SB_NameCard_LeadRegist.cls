@@ -136,14 +136,14 @@ global with sharing class SB_NameCard_LeadRegist
     global static List<SmartViscaf__NameCard__c> getNameCardList(List<SmartViscaf__NameCard__c> selectedNcList)
     {
         List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
-
+        //SV_DEV-175 リード登録時にキャンペーン内での状況を選択 キャンペーンのStatusクエリ
         for (SmartViscaf__NameCard__c nc : [SELECT Id, Name, OwnerId,
                 SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c,
                 SmartViscaf__address_bld__c, SmartViscaf__address_eng__c,
                 SmartViscaf__company_name__c, SmartViscaf__web_url1__c, SmartViscaf__tel1__c, SmartViscaf__fax1__c,
                 SmartViscaf__division__c, SmartViscaf__title_name__c,
                 SmartViscaf__person_name_last__c, SmartViscaf__person_name_first__c, SmartViscaf__last_name__c, SmartViscaf__first_name__c,
-                SmartViscaf__email__c, SmartViscaf__mobile__c, SmartViscaf__lead__c, campaign__c, SmartViscaf__contact__c,
+                SmartViscaf__email__c, SmartViscaf__mobile__c, SmartViscaf__lead__c, campaign__c, SmartViscaf__contact__c,campaign__r.Status,
                 SmartViscaf__list_name__c, SmartViscaf__memo__c, SmartViscaf__freehandmemo__c, SmartViscaf__card_exchange_date__c
                 FROM SmartViscaf__NameCard__c WHERE Id IN :selectedNcList]) {
             ncList.add(nc);
@@ -166,32 +166,35 @@ global with sharing class SB_NameCard_LeadRegist
         soqlMap.put(SEARCHTYPE_EMAIL, getSoql(whereList));
     }
 
+    //************************************************************************************************************
+    //未使用。global なので消せないので定義だけ残す。
     // リードSOQL文 (SEARCHTYPE_NAME)
     global static void setNameSoql(Map<Integer, String> soqlMap, List<Id> nameIdList, Set<String> nameSet, List<SmartViscaf__NameCard__c> ncList)
     {
-        String name;
+        /************************************************************************************************************/
+        //String name;
 
-        for (SmartViscaf__NameCard__c nc : ncList) {
-            if (nc.SmartViscaf__lead__c != null) nameIdList.add(nc.SmartViscaf__lead__c);
+        //for (SmartViscaf__NameCard__c nc : ncList) {
+        //    if (nc.SmartViscaf__lead__c != null) nameIdList.add(nc.SmartViscaf__lead__c);
 
-            if ((name = getPersonName(nc)) != null) {
-                String str = EncodingUtil.urlEncode(name,'UTF-8');
-                Blob b = Blob.valueOf(str);
-                String b64 = EncodingUtil.base64Encode(b);
-                name = name.replaceAll('\'', b64);
-                name = String.escapeSingleQuotes(name.replaceAll('＼','_'));
-                name = name.replaceAll(b64, '\'');
-                nameSet.add(name);
+        //    if ((name = getPersonName(nc)) != null) {
+        //        String str = EncodingUtil.urlEncode(name,'UTF-8');
+        //        Blob b = Blob.valueOf(str);
+        //        String b64 = EncodingUtil.base64Encode(b);
+        //        name = name.replaceAll('\'', b64);
+        //        name = String.escapeSingleQuotes(name.replaceAll('＼','_'));
+        //        name = name.replaceAll(b64, '\'');
+        //        nameSet.add(name);
 
-                //if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
-                //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
-            }
-        }
-        List<String> whereList = new List<String>();
-        if (nameIdList.size() > 0)  whereList.add('Id IN :nameIdList');
-        if (nameSet.size() > 0) whereList.add('Name LIKE :nameSet');
+        //        //if (name.startsWith(' '))    nameSet.add('%'+name); // 名のみ
+        //        //else if (name.endsWith(' ')) nameSet.add(name+'%'); // 姓のみ
+        //    }
+        //}
+        //List<String> whereList = new List<String>();
+        //if (nameIdList.size() > 0)  whereList.add('Id IN :nameIdList');
+        //if (nameSet.size() > 0) whereList.add('Name LIKE :nameSet');
 
-        soqlMap.put(SEARCHTYPE_NAME, getSoql(whereList));
+        //soqlMap.put(SEARCHTYPE_NAME, getSoql(whereList));
     }
 
     global static void setLastFirstNameSoql(Map<Integer, String> soqlMap, List<Id> nameIdList, Set<String> nameSet,Set<String> lastnameSet,Set<String> firstnameSet, List<SmartViscaf__NameCard__c> ncList)
@@ -345,35 +348,39 @@ global with sharing class SB_NameCard_LeadRegist
     //GlobalクラスのGlobalメソッドが削除されていたため、古いglobalメッソドを残します
     global static Lead getLead(Id leadId, SmartViscaf__NameCard__c nc, Id ownerId)
     {
-        Lead lead = new Lead(Id=leadId);
+        //レコードタイプを対応したため、パラメータを追加する必要です
+        //global static Lead getLead(Id leadId, SmartViscaf__NameCard__c nc, Id ownerId, Id recordtype) 
+        //↑メソッドを追加このメソッドを廃棄します、globalのため削除できません
+        return null;
+        //Lead lead = new Lead(Id=leadId);
 
-        lead.PostalCode = nc.SmartViscaf__zip_code__c;
-        lead.State = nc.SmartViscaf__address_pref__c;
+        //lead.PostalCode = nc.SmartViscaf__zip_code__c;
+        //lead.State = nc.SmartViscaf__address_pref__c;
 
-        Map<String, String> adMap = SmartViscaf.SB_NameCard_Util.getAddress(nc);
-        lead.City = adMap.get('city');
-        lead.Street = adMap.get('street');
+        //Map<String, String> adMap = SmartViscaf.SB_NameCard_Util.getAddress(nc);
+        //lead.City = adMap.get('city');
+        //lead.Street = adMap.get('street');
 
-        lead.Company = nc.SmartViscaf__company_name__c;
-        lead.Website = nc.SmartViscaf__web_url1__c;
-        lead.Phone = nc.SmartViscaf__tel1__c;
-        lead.Fax = nc.SmartViscaf__fax1__c;
-        lead.Title = nc.SmartViscaf__title_name__c;
+        //lead.Company = nc.SmartViscaf__company_name__c;
+        //lead.Website = nc.SmartViscaf__web_url1__c;
+        //lead.Phone = nc.SmartViscaf__tel1__c;
+        //lead.Fax = nc.SmartViscaf__fax1__c;
+        //lead.Title = nc.SmartViscaf__title_name__c;
 
-        Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(nc);
-        lead.LastName = pnMap.get('last_name');
-        lead.FirstName = pnMap.get('first_name');
+        //Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(nc);
+        //lead.LastName = pnMap.get('last_name');
+        //lead.FirstName = pnMap.get('first_name');
 
-        lead.Email = nc.SmartViscaf__email__c;
-        lead.MobilePhone = nc.SmartViscaf__mobile__c;
+        //lead.Email = nc.SmartViscaf__email__c;
+        //lead.MobilePhone = nc.SmartViscaf__mobile__c;
 
-        lead.NameCard__c = nc.Id;
-        lead.NameCardListName__c = nc.SmartViscaf__list_name__c;
-        lead.NameCardMemo__c = nc.SmartViscaf__memo__c;
-        lead.NameCardFreehandmemo__c = nc.SmartViscaf__freehandmemo__c;
-        if (ownerId != null) lead.OwnerId = ownerId;
+        //lead.NameCard__c = nc.Id;
+        //lead.NameCardListName__c = nc.SmartViscaf__list_name__c;
+        //lead.NameCardMemo__c = nc.SmartViscaf__memo__c;
+        //lead.NameCardFreehandmemo__c = nc.SmartViscaf__freehandmemo__c;
+        //if (ownerId != null) lead.OwnerId = ownerId;
 
-        return lead;
+        //return lead;
     }
 
     // ToDo

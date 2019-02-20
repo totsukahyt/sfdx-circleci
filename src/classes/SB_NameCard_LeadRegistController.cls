@@ -68,6 +68,11 @@ public with sharing class SB_NameCard_LeadRegistController
     public String leadRecType{get;set;}    //ラベルSB_NCLD_Label_LeadRecType リードレコードタイプ
     public String leadRecordTypeId{get;set;} //リードレコードタイプID
 
+    //SV_DEV-175 リード登録時にキャンペーン内での状況を選択
+    public String campStatus{get;set;} //キャンペーンStatus
+    public Boolean campDisabled{get;set;} //キャンペーンStatus Disabled フラグ
+    public Boolean campLookUpDisabled{get;set;} //キャンペーン Disabled フラグ
+
     public static SmartViscaf__SmartViscaConfig__c smartViscaConfig {
         get{
             if (smartViscaConfig == null){
@@ -115,9 +120,13 @@ public with sharing class SB_NameCard_LeadRegistController
 
             this.showLeadRecType = LEADRECORDTYPES.size() > 1 && smartViscaConfig.LeadRegist_DispLeadRectype__c;
 
-            this.leadRecTypeEdit = leadCreateable;
+            this.leadRecTypeEdit = leadCreateable && LEADRECORDTYPES.size() > 1;
 
             this.canEditTodo = true;
+
+            this.campLookUpDisabled = !SmartViscaf__NameCard__c.campaign__c.getDescribe().isAccessible();
+
+            this.campDisabled = !Schema.getGlobalDescribe().get('CampaignMember').getDescribe().isCreateable() || campLookUpDisabled;
 
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadRecordListIndex = -1;
@@ -176,6 +185,25 @@ public with sharing class SB_NameCard_LeadRegistController
         for (RecordTypeInfo r : LEADRECORDTYPES) {
             options.add(new SelectOption(r.getRecordTypeId(), r.getName()));
         }
+        return options;
+    }
+
+    //SV_DEV-175 リード登録時にキャンペーン内での状況を選択
+    public  List<SelectOption> getCampaignStatus() {
+        List<SelectOption> options = new List<SelectOption>();
+        //キャンペーンがない時登録しないで表示
+        List<CampaignMemberStatus> cpms = [SELECT id, CampaignID, HasResponded, IsDefault, Label, SortOrder
+                                        FROM CampaignMemberStatus Where CampaignId = :namecard.campaign__c];
+        for (CampaignMemberStatus f: cpms) {
+            if (f.IsDefault == true) {
+                campStatus = f.Label;
+            }
+            options.add(new SelectOption(f.Label, f.Label));
+        }
+        if (String.isNotBlank(this.namecard.campaign__c)) {
+            campStatus = this.namecard.campaign__r.Status;
+        }
+        campDisabled = options.size() <= 0 || campLookUpDisabled;
         return options;
     }
 
@@ -308,15 +336,34 @@ public with sharing class SB_NameCard_LeadRegistController
 
             // キャンペーン
             if (this.nameCard.campaign__c != null && (leadRec.isNew || this.campaign != this.nameCard.campaign__c)) { //try
+                if (!Schema.sObjectType.SmartViscaf__NameCard__c.Fields.campaign__c.isAccessible()) {
+                    String er = String.format(System.Label.SB_NCLD_MSG_FlsNotAccessible,new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel(), 
+                                              Schema.sObjectType.SmartViscaf__NameCard__c.Fields.campaign__c.getLabel(), 'campaign__c'});
+                    throw new SB_NameCard_LeadRegist.LeadRegistException(er);
+                }
+
                 Database.DMLOptions dml = new Database.DMLOptions();
 
                 dml.OptAllOrNone = false;
 
                 List< CampaignMember > cas = new List< CampaignMember >();
-                cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, ContactId=this.nameCard.SmartViscaf__contact__c));
+                System.debug('this.campStatus' + this.campStatus);
+                cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, ContactId=this.nameCard.SmartViscaf__contact__c, Status = this.campStatus));
 
                 SB_NameCard_LeadCrudFls.screate(cas,dml);
             }
+
+            //ToDo更新するのはキャンペーン? キャンペーンメンバ?
+
+             //if (this.nameCard.campaign__c != null && leadRec.isNew) {
+             //   Campaign c = [Select Id,Status From Campaign Where Id = :this.namecard.Campaign__c];
+             //   c.Status = this.campStatus;
+             //   Database.DMLOptions dml = new Database.DMLOptions();
+
+             //   dml.OptAllOrNone = false;
+             //   SB_NameCard_LeadCrudFls.supdate(new List<Campaign>{c},dml);
+             //}
+
 
             // 名刺
 
@@ -419,15 +466,18 @@ public with sharing class SB_NameCard_LeadRegistController
 
     public void changeOwner()
     {
-        if(String.isNotBlank(this.lead.ownerId)){
-             if(String.valueOf(this.lead.ownerId).startsWith('005')){
-                this.canEditTodo = true;
-            }
-            else{
-                this.canEditTodo = false;
-                this.registTodo = false;
-            }
+        if (this.canEditTodo == false) {
+            this.registTodo = false;
         }
+        //if(String.isNotBlank(this.lead.ownerId)){
+        //     if(String.valueOf(this.lead.ownerId).startsWith('005')){
+        //        this.canEditTodo = true;
+        //    }
+        //    else{
+        //        this.canEditTodo = false;
+        //        this.registTodo = false;
+        //    }
+        //}
     }
 
     // キャンセル

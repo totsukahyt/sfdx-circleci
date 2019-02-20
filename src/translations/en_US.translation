@@ -17,6 +17,10 @@
         <name>SB_NCLD_Label_Campaign</name>
     </customLabels>
     <customLabels>
+        <label><!-- キャンペーンメンバー状況 --></label>
+        <name>SB_NCLD_Label_CampaignStatus</name>
+    </customLabels>
+    <customLabels>
         <label>Cancel</label>
         <name>SB_NCLD_Label_Cancel</name>
     </customLabels>
@@ -53,8 +57,16 @@
         <name>SB_NCLD_Label_LastModiedDate</name>
     </customLabels>
     <customLabels>
+        <label>Lead Record Type</label>
+        <name>SB_NCLD_Label_LeadRecType</name>
+    </customLabels>
+    <customLabels>
         <label>Name</label>
         <name>SB_NCLD_Label_Name</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺所有者 --></label>
+        <name>SB_NCLD_Label_NameCardOwner</name>
     </customLabels>
     <customLabels>
         <label>Overwrite Existing Lead</label>
@@ -77,12 +89,20 @@
         <name>SB_NCLD_Label_Prefectures</name>
     </customLabels>
     <customLabels>
+        <label>Select Record Type to create Lead</label>
+        <name>SB_NCLD_Label_RecordTypeExplain</name>
+    </customLabels>
+    <customLabels>
         <label>Register To</label>
         <name>SB_NCLD_Label_RegisterDestinationSelection</name>
     </customLabels>
     <customLabels>
         <label>Save</label>
         <name>SB_NCLD_Label_Save</name>
+    </customLabels>
+    <customLabels>
+        <label>saving</label>
+        <name>SB_NCLD_Label_Saveing</name>
     </customLabels>
     <customLabels>
         <label>Search Criteria</label>
@@ -107,6 +127,10 @@
     <customLabels>
         <label>Object: {0} is not updateable.</label>
         <name>SB_NCLD_MSG_CrudNotUpdateable</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} Field: {1} ({2}) is not accessible</label>
+        <name>SB_NCLD_MSG_FlsNotAccessible</name>
     </customLabels>
     <customLabels>
         <label>Object: {0} Field: {1} ({2}) is not createable.</label>
@@ -153,7 +177,7 @@
         <name>SB_NCLD_Msg_SpecifyOwnerWhenCreateLead</name>
     </customLabels>
     <customLabels>
-        <label>Select Owner to create a &amp;*smallLead*&amp;</label>
+        <label>Select Owner to create a &amp;*Lead*&amp;</label>
         <name>SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV</name>
     </customLabels>
     <customLabels>
