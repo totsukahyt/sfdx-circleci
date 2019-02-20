@@ -786,6 +786,13 @@
         <value>完了</value>
     </labels>
     <labels>
+        <fullName>SB_NCL_MSG_ManySelectedCardsCpuTimeOver</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>登録で選択した名刺への登録先候補が多い</shortDescription>
+        <value>選択した名刺が多すぎます。該当レコード数が多く{0}件目の名刺で処理を終了しました。</value>
+    </labels>
+    <labels>
         <fullName>SB_NCL_NotStarted</fullName>
         <language>ja</language>
         <protected>true</protected>

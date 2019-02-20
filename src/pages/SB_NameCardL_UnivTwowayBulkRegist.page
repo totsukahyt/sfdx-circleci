@@ -19,6 +19,7 @@
       <apex:param name="changeType" value=""/>
     </apex:actionFunction>
     <apex:inputHidden value="{!saveOK}" id="saveflage"/>
+    <apex:inputHidden value="{!baseSetting.SmartViscaf__RegistNoToDo__c}" id="basicToDo"/>
     <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
       <apex:pageBlockButtons >
         <apex:commandButton onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.SB_NCLD_Label_Save}" id="savebtn"/>
@@ -28,18 +29,18 @@
       <apex:pageBlockSection columns="2">
         <apex:selectRadio label="{!$Label.SB_NCLD_Label_CandidateRegistration}" onchange="startLoading();" value="{!renkeiType}">
           <apex:selectOptions value="{!RenkeiTypeList}"/>
-          <apex:actionSupport event="onclick" rerender="pageMsgs, ncRecList, radio, overWrite, newBlock, recordTypeSection" oncomplete="resetOwnerDisable();endLoading();"/>
+          <apex:actionSupport event="onclick" rerender="pageMsgs, ncRecList, radio, overWrite, newBlock, recordTypeSection, basicToDo" oncomplete="resetOwnerDisable();endLoading();"/>
         </apex:selectRadio>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" id="radio">
         <apex:selectRadio label="{!searchCriteriaLead}" onchange="startLoading();" value="{!searchType}" rendered="{!renkeiType != 'Contact'}">
           <apex:selectOptions value="{!searchTypeList}"/>
-          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList" oncomplete="endLoading();"/>
+          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList, basicToDo" oncomplete="endLoading();"/>
         </apex:selectRadio>
         <apex:selectRadio label="{!searchCriteriaAccount}" onchange="startLoading();" value="{!searchTypeContact}" rendered="{!renkeiType != 'Lead'}">
           <apex:selectOptions value="{!searchTypeSelectOpts}"/>
-          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList" oncomplete="endLoading();"/>
+          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList, basicToDo" oncomplete="endLoading();"/>
         </apex:selectRadio>
       </apex:pageBlockSection>
 
@@ -243,6 +244,17 @@
          </apex:pageBlockSectionItem>
       </apex:pageBlockSection>
     </apex:pageBlock>
+    <div id="loadDiv" style="text-align:center;position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 999; vertical-align: center; display: none;">
+      <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.25; z-index: 1000; background-color: black;">
+          &nbsp;
+      </div>
+      <div style="z-index: 1001; position:absolute; left:50%; top:50%; margin-top:-12.5px; margin-left:-70px;">
+          <div style="display: inline-block; padding: 2px; width: 140px; height: 25px;">
+              <img src="/img/loading32.gif" width="23" height="23" />
+              <span style="margin-left: 6px; font-weight: bold; color:white; position: relative; top: -5px;">{!$Label.SB_NCLD_Text_Loading}</span>
+          </div>
+      </div>
+    </div>
     <script >
 
             var saveingValue = "{!$Label.SB_NCLD_Label_Saveing}";
@@ -367,6 +379,7 @@
                       arrs[i].checked = e.checked;
                    }
               }
+              document.getElementById('{!$Component.basicToDo}').value = e.checked == false;
             }
 
             function setDis(index, renkeiType) {
@@ -393,6 +406,15 @@
               if (leadOwnerCheckBox != null) {
                 changeUserNameCardOwner(leadOwnerCheckBox.checked, '1');
               }
+            }
+
+            function startLoading() {
+               document.getElementById('loadDiv').style.display = 'block';
+            }
+
+            function endLoading() {
+               document.getElementById('loadDiv').style.display = 'none';
+               document.getElementById('allCheckTodo').checked = document.getElementById('{!$Component.basicToDo}').value == 'false';
             }
 
             initset();

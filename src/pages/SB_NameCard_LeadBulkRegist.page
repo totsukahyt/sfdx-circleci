@@ -16,6 +16,7 @@
     <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newBlock" oncomplete="initset();"/>
     <apex:actionFunction name="changeOwner" reRender="newBlock" oncomplete="initset();"/>
     <apex:inputHidden value="{!saveOK}" id="saveflage"/>
+    <apex:inputHidden value="{!registTodoAll}" id="allToDo"/>
     <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
       <apex:pageBlockButtons >
         <apex:commandButton onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.SB_NCLD_Label_Save}" id="savebtn"/>
@@ -25,7 +26,7 @@
 
         <apex:selectRadio label="{!$Label.SB_NC_SearchCriteria}" value="{!searchType}">
           <apex:selectOptions value="{!searchTypeList}"/>
-          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList"/>
+          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList" oncomplete="resetTodoCheck();"/>
         </apex:selectRadio>
 
         <apex:outputPanel rendered="{!showLeadOverwrite}">
@@ -230,7 +231,13 @@
                       arrs[i].checked = e.checked;
                    }
               }
+              document.getElementById('{!$Component.allToDo}').value = e.checked;
             }
+
+            function resetTodoCheck() {
+              document.getElementById('allCheckTodo').checked = document.getElementById('{!$Component.allToDo}').value == 'true';
+            }
+
             document.getElementById('allCheckTodo').checked = {!registTodoAll};
             initset();
             changeUserNameCardOwner({!useNameCardOwner});

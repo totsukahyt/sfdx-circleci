@@ -449,6 +449,10 @@
         <name>SB_NCL_Completed</name>
     </customLabels>
     <customLabels>
+        <label><!-- 登録で選択した名刺への登録先候補が多い --></label>
+        <name>SB_NCL_MSG_ManySelectedCardsCpuTimeOver</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 未着手 --></label>
         <name>SB_NCL_NotStarted</name>
     </customLabels>
