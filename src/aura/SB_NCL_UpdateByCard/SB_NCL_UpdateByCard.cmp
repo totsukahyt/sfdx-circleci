@@ -12,7 +12,7 @@
  *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
  *
  **/ -->
-<aura:component implements="force:appHostable,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+<aura:component implements="force:appHostable,force:hasRecordId" access="global" >
   <aura:method name="close" action="{!c.close}" access="global"/>
   <aura:registerEvent name="seSObjEvent" type="c:SB_NCL_UpdateByCardEvent"/>
   <aura:attribute name="reId" type="String"/> <!-- リードID -->
