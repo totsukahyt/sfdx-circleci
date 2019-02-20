@@ -151,7 +151,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodo());
 
             this.insertOption = new SmartViscaf__NameCard__c(OwnerId=UserInfo.getUserId());
-            this.ownerlead = new Lead(OwnerId=UserInfo.getUserId());
+            this.ownerlead = new Lead();
             this.hasError = false;
 
             SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);

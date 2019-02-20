@@ -81,7 +81,6 @@ public with sharing class SB_NameCard_LeadRegistController
 
             this.canEditTodo = true;
 
-            this.lead = new Lead();
 
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadRecordListIndex = -1;
@@ -95,6 +94,7 @@ public with sharing class SB_NameCard_LeadRegistController
             this.registTodo    = this.svConfig.registTodo();
 
             this.nameCard = SB_NameCard_LeadRegist.getNameCard(sc.getId());
+            this.lead = new Lead(OwnerId=this.nameCard.OwnerId);
             //if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
             if (this.nameCard == null) {
                 throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_BusinessCardNotFound);
