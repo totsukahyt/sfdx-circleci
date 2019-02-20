@@ -142,12 +142,20 @@
               }
             }
           }
+          if (value == 'Both') {
+            result.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
+            result.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
+          }
+          else {
+            result.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign");
+            result.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus");
+          }
           var arr = new Array();
           for (var i = 0; i < result.searchConditions.length; i ++) {
             var sc = result.searchConditions[i];
-            if (sc.groupName == cmp.get("v.showPlickListType") && sc.disabled != true) {
-              arr.push(sc);
-            }
+              if ((sc.groupName == value && sc.disabled != true) || value == 'Both') {
+                arr.push(sc);
+              }
           }
           result.searchConditions = arr;
           cmp.set("v.inputV", result);    // 対象の名刺一覧
