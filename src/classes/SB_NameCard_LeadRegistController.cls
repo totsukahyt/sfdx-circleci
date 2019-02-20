@@ -5,6 +5,7 @@
  *
  * @Version 1 2018/01/XX  SV_DEV-753 リードに登録（個別画面）でキャンペーン選択後の「キャンペーンメンバー状況」の値がデフォルト値にならない。
  *                        SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+ *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
  */
 
 public with sharing class SB_NameCard_LeadRegistController
@@ -375,7 +376,11 @@ public with sharing class SB_NameCard_LeadRegistController
             }
 
             // ToDo
-            if (this.registTodo && String.valueOf(ownerId).startsWith('005')) {
+            if (this.registTodo) {
+                // SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
+                if (!String.valueOf(ownerId).startsWith('005')) {
+                    throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_MSG_QUEUES_ERROR);
+                }
                 Database.DMLOptions dml = new Database.DMLOptions();
 
                 dml.OptAllOrNone = false;

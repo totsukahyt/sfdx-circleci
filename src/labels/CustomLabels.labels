@@ -246,6 +246,13 @@
         <value>{0} オブジェクトの項目 {1} ({2}) の編集権限がありません。</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_MSG_QUEUES_ERROR</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>ToDoの所有者はキューに設定する事ができません</shortDescription>
+        <value>ToDoの所有者はキューに設定する事ができません</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Menu_NewLead</fullName>
         <language>ja</language>
         <protected>true</protected>

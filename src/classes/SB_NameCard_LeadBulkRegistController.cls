@@ -4,6 +4,7 @@
  * リードに一括登録
  * @Version 1 2017/11/XX  SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
  *                        SV_DEV-746 リードに登録（一括登録）で、検索条件が「氏名」の場合でメールアドレスが一致した候補が表示される場合がある。
+ *                        SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
  *
  *
  */
@@ -386,9 +387,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         updateNameCard(leadList, ncRecList, this.insertOption.campaign__c);
 
         // ToDo
-        if(!useNameCardOwner && String.valueOf(this.ownerlead.ownerId).startsWith('005')) {
+        // if(!useNameCardOwner && String.valueOf(this.ownerlead.ownerId).startsWith('005')) {
             insertTodo(leadList, ncRecList);
-        }
+        // }
 
         return leadList.size();
     }
@@ -544,25 +545,37 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         List<Task> todoList = new List<Task>();
         Id leadId;
         Id ownerId;
-
+        String errMsg = '';
+        Map<Id,Integer> cardindex = new Map<Id,Integer>();
+        for (Integer i = 0 ; i<nameCardRecordList.size() ; i++) {
+            NameCardRecord nr = nameCardRecordList[i];
+            cardindex.put(nr.nameCard.Id,i);
+        }
         for (Integer i = 0, len = leadList.size(); i < len; i++) {
             if (!ncRecList[i].registTodo) continue;
             leadId = leadList[i].Id;
             ownerId = this.leadOwnerIdMap.get(leadId);
-            if (ownerId == null)
+            if (ownerId == null) {
                 ownerId = leadList[i].OwnerId;
-                if(!String.valueOf(ownerId).startsWith('005')) {
-                    continue;
-                }
+            }
+            // SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
+            if(!String.valueOf(ownerId).startsWith('005')) {
+                ncRecList[i].hasError = true;
+                String msg = (cardindex.get(ncRecList[i].nameCard.Id) + 1) + System.Label.SB_NC_Line + ': ' + 'ToDo' + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR + '<br>';
+                errMsg += msg;
+                continue;
+            }
             todoList.add(SB_NameCard_LeadRegist.getTodo(leadId, ownerId, subject, ncRecList[i].nameCard.SmartViscaf__card_exchange_date__c));
         }
+
+        if (String.isNotBlank(errMsg)) throw new SB_NameCard_LeadRegist.LeadRegistException(errMsg.removeEnd('<br>'));
 
         if (todoList.size() > 0) {
             Database.DMLOptions dml = new Database.DMLOptions();
 
-            dml.OptAllOrNone = true;
+            dml.OptAllOrNone = false;
 
-            SB_NameCard_LeadCrudFls.screate(todoList,dml);
+            this.setResult(SB_NameCard_LeadCrudFls.screate(todoList,dml), ncRecList);
 
          }
     }
