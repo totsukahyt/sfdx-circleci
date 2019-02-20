@@ -546,19 +546,31 @@
     </fields>
     <listViews>
         <fullName>AllOpenLeads</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>LEAD.COMPANY</columns>
+        <columns>LEAD.STATE</columns>
+        <columns>LEAD.EMAIL</columns>
+        <columns>LEAD.STATUS</columns>
+        <columns>LEAD.CREATED_DATE</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>LEAD.UNREAD</columns>
+        <columns>LEAD.RECORDTYPE</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>LEAD.STATUS</field>
             <operation>notContain</operation>
             <value>closed</value>
         </filters>
-        <label>All Open Leads</label>
+        <label>すべての進行中リード</label>
     </listViews>
     <listViews>
-        <fullName>InternationalLeads</fullName>
+        <fullName>InternationalLeads_Lead</fullName>
         <filterScope>Queue</filterScope>
         <label>International Leads</label>
         <queue>InternationalLeads</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
     </listViews>
     <listViews>
         <fullName>MyUnreadLeads</fullName>
@@ -571,15 +583,6 @@
         <label>My Unread Leads</label>
     </listViews>
     <listViews>
-        <fullName>Test_Lead</fullName>
-        <filterScope>Queue</filterScope>
-        <label>Test123</label>
-        <queue>Test321</queue>
-        <sharedTo>
-            <allInternalUsers></allInternalUsers>
-        </sharedTo>
-    </listViews>
-    <listViews>
         <fullName>TodaysLeads</fullName>
         <filterScope>Everything</filterScope>
         <filters>
@@ -590,10 +593,13 @@
         <label>Today&apos;s Leads</label>
     </listViews>
     <listViews>
-        <fullName>USLeads</fullName>
+        <fullName>USEscalations_Lead</fullName>
         <filterScope>Queue</filterScope>
-        <label>US Leads</label>
-        <queue>USLeads</queue>
+        <label>US - Escalations</label>
+        <queue>USEscalations</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
     </listViews>
     <listViews>
         <fullName>USLeads_Lead</fullName>
@@ -857,10 +863,10 @@
         </picklistValues>
     </recordTypes>
     <recordTypes>
-        <fullName>test2</fullName>
+        <fullName>Test2</fullName>
         <active>true</active>
         <businessProcess>Test</businessProcess>
-        <label>test2</label>
+        <label>Test2</label>
         <picklistValues>
             <picklist>Industry</picklist>
             <values>
@@ -1135,6 +1141,6 @@
         <protected>false</protected>
         <showsLocation>false</showsLocation>
         <showsStatus>false</showsStatus>
-        <url>/apex/SB_NC_CardAppLauncher?id={!Lead.Id}&amp;app=updbycard</url>
+        <url>/apex/SB_NCL_CardAppLauncher?id={!Lead.Id}&amp;app=updbycard</url>
     </webLinks>
 </CustomObject>

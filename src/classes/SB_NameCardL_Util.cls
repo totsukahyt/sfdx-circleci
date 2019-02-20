@@ -38,7 +38,7 @@ public with sharing class SB_NameCardL_Util {
     get {
       if (taskStatusValues == null) {
         taskStatusValues = new Map<String, String>();
-        List<TaskStatus> taskstatuses = [ SELECT IsClosed, IsDefault, MasterLabel, SortOrder FROM TaskStatus ORDER BY SortOrder ];
+        List<TaskStatus> taskstatuses = [ SELECT IsClosed, IsDefault, MasterLabel, SortOrder FROM TaskStatus ORDER BY SortOrder LIMIT 5000];
         for (TaskStatus ts : taskstatuses) {
           if (ts.isClosed && ! taskStatusValues.containsKey('Completed')) {
             taskStatusValues.put('Completed', ts.MasterLabel);

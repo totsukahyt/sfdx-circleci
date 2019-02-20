@@ -522,8 +522,12 @@ private class SB_NameCardL_RenkeiHelperTest2
     SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
     bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
     bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiLeadMail__c = false;  // 自動連携:リードメールアドレス
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = true; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
+    bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;   // 自動連携:既存の取引先がなければ新規作成する
+    bs.SmartViscaf__RenkeiContactNOExistCreateNew__c = true;   //  自動連携:既存の取引先責任者がなければ新規作成する
+    bs.SmartViscaf__RenkeiLeadNOExistCreateNew__c = true;   // 自動連携:既存のリードがなければ新規作成する
     bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
     bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
     bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
@@ -599,6 +603,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
     bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
     bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiLeadMail__c = false;  // 自動連携:リードメールアドレス
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = true; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
     bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
@@ -1143,6 +1148,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
     bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
     bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiLeadMail__c = false;  // 自動連携:リードメールアドレス
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = false; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
     bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
@@ -1217,6 +1223,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
     bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
     bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiLeadMail__c = false;  // 自動連携:リードメールアドレス
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = false; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
     bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
@@ -1308,6 +1315,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
     bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
     bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiLeadMail__c = false;  // 自動連携:リードメールアドレス
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = false; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
     bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作
@@ -1400,6 +1408,7 @@ private class SB_NameCardL_RenkeiHelperTest2
     SmartViscaf__NameCardBasicSetting__c bs = SmartViscaf.SB_NC_PostInstallScript.createDefaultBasicSetting();
     bs.SmartViscaf__RenkeiActive__c = true;      // 自動連携機能有効
     bs.SmartViscaf__RenkeiLeadActive__c = true; // リード連携を有効化
+    bs.SmartViscaf__RenkeiLeadMail__c = false;  // 自動連携:リードメールアドレス
     bs.SmartViscaf__RenkeiActiveCampaignMember__c = false; // キャンペンメンバー
     bs.SmartViscaf__RenkeiCampaignStatus__c = SB_NameCardL_Util.getDefaultCampaignStatus(); // キャンペーンメンバーの状況
     bs.SmartViscaf__RenkeiAccountNOExistCreateNew__c = true;  // 取引先を新規作

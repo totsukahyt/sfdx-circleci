@@ -1163,6 +1163,15 @@ LEFT ( SmartViscaf__person_name_last_kana__c , 1)
     </fields>
     <label>名刺</label>
     <listViews>
+        <fullName>InternationalLeads_NameCard</fullName>
+        <filterScope>Queue</filterScope>
+        <label>International Leads</label>
+        <queue>InternationalLeads</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
         <fullName>SmartViscaf__All</fullName>
         <columns>SmartViscaf__delivery_icon__c</columns>
         <columns>SmartViscaf__card_exchange_date__c</columns>
@@ -1178,6 +1187,7 @@ LEFT ( SmartViscaf__person_name_last_kana__c , 1)
         <columns>SmartViscaf__delivery_type__c</columns>
         <filterScope>Everything</filterScope>
         <label>すべて選択</label>
+        <language>ja</language>
     </listViews>
     <listViews>
         <fullName>SmartViscaf__lastMonth</fullName>
@@ -1377,19 +1387,19 @@ LEFT ( SmartViscaf__person_name_last_kana__c , 1)
         <label>02 昨日の名刺</label>
     </listViews>
     <listViews>
-        <fullName>Test321_NameCard</fullName>
+        <fullName>TestNameCard_NameCard</fullName>
         <filterScope>Queue</filterScope>
-        <label>Test123</label>
-        <queue>Test321</queue>
+        <label>TestNameCard</label>
+        <queue>TestNameCard</queue>
         <sharedTo>
             <allInternalUsers></allInternalUsers>
         </sharedTo>
     </listViews>
     <listViews>
-        <fullName>TestNameCard_NameCard</fullName>
+        <fullName>USLeads_NameCard</fullName>
         <filterScope>Queue</filterScope>
-        <label>TestNameCard</label>
-        <queue>TestNameCard</queue>
+        <label>US Leads</label>
+        <queue>USLeads</queue>
         <sharedTo>
             <allInternalUsers></allInternalUsers>
         </sharedTo>
@@ -1412,9 +1422,8 @@ LEFT ( SmartViscaf__person_name_last_kana__c , 1)
         <listViewButtons>SmartViscaf__AccountBulkRegist</listViewButtons>
         <listViewButtons>LeadBulkRegist</listViewButtons>
         <listViewButtons>SmartViscaf__AccountBulkRegistLex</listViewButtons>
-        <listViewButtons>LeadContactBulkRegist_LEX</listViewButtons>
-        <listViewButtons>LeadContactBulkRegist</listViewButtons>
         <listViewButtons>Test4</listViewButtons>
+        <listViewButtons>LeadAccountContactBulkRegistUniv</listViewButtons>
         <lookupDialogsAdditionalFields>SmartViscaf__company_name__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>SmartViscaf__division__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>SmartViscaf__email__c</lookupDialogsAdditionalFields>
@@ -1440,6 +1449,43 @@ LEFT ( SmartViscaf__person_name_last_kana__c , 1)
     </searchLayouts>
     <sharingModel>Private</sharingModel>
     <webLinks>
+        <fullName>LeadAccountContactBulkRegistUniv</fullName>
+        <availability>online</availability>
+        <description>一括の リードまたは取引先・取引先責任者に登録 Lightning、Classic共用</description>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>リードまたは取引先・取引先責任者に登録 *</masterLabel>
+        <openType>sidebar</openType>
+        <page>SB_NameCardL_UnivTwowayBulkRegist</page>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+    </webLinks>
+    <webLinks>
+        <fullName>LeadAccountContactRegist</fullName>
+        <availability>online</availability>
+        <description>個別の リードまたは取引先・取引先責任者に登録 Classic版</description>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>リードまたは取引先・取引先責任者に登録</masterLabel>
+        <openType>sidebar</openType>
+        <page>SB_NameCardL_TwowayRegist</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>LeadAccountContactRegistLex</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>リードまたは取引先・取引先責任者に登録 *</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/SB_NCL_PageDispacher?page=SB_NCL_TwowayRegist&amp;id={!SmartViscaf__NameCard__c.Id}</url>
+    </webLinks>
+    <webLinks>
         <fullName>LeadBulkRegist</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>
@@ -1450,41 +1496,6 @@ LEFT ( SmartViscaf__person_name_last_kana__c , 1)
         <page>SB_NameCard_LeadBulkRegist</page>
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
-    </webLinks>
-    <webLinks>
-        <fullName>LeadContactBulkRegist</fullName>
-        <availability>online</availability>
-        <displayType>massActionButton</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>リードまたは取引先・取引先責任者へ登録*</masterLabel>
-        <openType>sidebar</openType>
-        <page>SB_NameCardL_TwowayBulkRegist</page>
-        <protected>false</protected>
-        <requireRowSelection>true</requireRowSelection>
-    </webLinks>
-    <webLinks>
-        <fullName>LeadContactBulkRegist_LEX</fullName>
-        <availability>online</availability>
-        <displayType>massActionButton</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>リードまたは取引先・取引先責任者へ登録LEX統合</masterLabel>
-        <openType>sidebar</openType>
-        <page>SB_NCL_TwowayBulkRegistLauncher</page>
-        <protected>false</protected>
-        <requireRowSelection>true</requireRowSelection>
-    </webLinks>
-    <webLinks>
-        <fullName>LeadContactRegist</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>リードまたは取引先・取引先責任者に登録</masterLabel>
-        <openType>sidebar</openType>
-        <page>SB_NameCardL_TwowayRegist</page>
-        <protected>false</protected>
     </webLinks>
     <webLinks>
         <fullName>LeadRegist</fullName>

@@ -427,7 +427,7 @@ public virtual class SB_NCL_TestDB {
 
   // 名刺連携項目マッピング レコードの作成
   public virtual void initializeMapping() {
-    List<Smartviscaf__NameCardBasicSetting__c> settings = [SELECT Id, Name FROM Smartviscaf__NameCardBasicSetting__c ORDER BY CreatedDate ASC];
+    List<Smartviscaf__NameCardBasicSetting__c> settings = [SELECT Id, Name FROM Smartviscaf__NameCardBasicSetting__c ORDER BY CreatedDate ASC LIMIT 100];
     Id settingsId = null;
     if (!settings.isEmpty()) {
       settingsId  = settings[0].Id;
@@ -497,65 +497,81 @@ public virtual class SB_NCL_TestDB {
     listCampaign.add(new Campaign(Name='無効キャンペーン', IsActive=false, Status='完了'));
   }
 
+  // // コードスキャンで FLS Update、FLS Create がでるので、
+  // protected Boolean canUpsert(SObjectType otype) {
+  //   return otype.getDescribe().isCreateable() && otype.getDescribe().isUpdateable();
+  // }
+
+  // // コードスキャンで FLS Update、FLS Create がでるので、
+  // protected Boolean canInsert(SObjectType otype) {
+  //   return otype.getDescribe().isCreateable();
+  // }
+
   public virtual void initialize() {
 
     // SmartVisca設定
     initializeSmartViscaConfig();
     if (svConfig !=null) {
-      upsert svConfig;
+      List<SmartViscaf__SmartViscaConfig__c> l = new List<SmartViscaf__SmartViscaConfig__c>();
+      l.add(svConfig);
+      if(svConfig.Id == null) {
+        SmartViscaf.SB_NameCard_CrudFls.screate(l, true);
+      }
+      else {
+        SmartViscaf.SB_NameCard_CrudFls.supdate(l, true);
+      }
     }
     //　ユーザ
     initializeUser();
-    if (listUser.isEmpty() == false)
-      insert listUser;
+    if (!listUser.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.screate(listUser, true);
+    }
     // 名刺基本設定
     initializeBasicSetting();
     if (!listBasicSetting.isEmpty()) {
-      insert listBasicSetting;
+      SmartViscaf.SB_NameCard_CrudFls.screate(listBasicSetting, true);
     }
     // 名刺連携項目マッピング
     initializeMapping();
     if (!listMapping.isEmpty()) {
-      insert listMapping;
+      SmartViscaf.SB_NameCard_CrudFls.screate(listMapping, true);
     }
     // 名刺レコード作成
     initializeKaisha();     // 会社を揃えておく
     initializeEmployee();   // 会社ごとに名刺の人を揃えておく
     initializeNameCard();
-    if (listCard.isEmpty() == false)
-      insert listCard;
-
+    if (!listCard.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.screate(listCard, true);
+    }
     // 名刺にToDoをつける
     initializeTask();
     if (!listTask.isEmpty()) {
-      insert listTask;
+      SmartViscaf.SB_NameCard_CrudFls.screate(listTask, true);
     }
     // 名刺に行動をつける
     initializeEvent();
     if (!listEvent.isEmpty()) {
-      insert listEvent;
+      SmartViscaf.SB_NameCard_CrudFls.screate(listEvent, true);
     }
-
     // アカウント
     initializeAccount();    // 揃えた会社について、取引先を作る。
-    if (mapAccount.isEmpty() == false)
-      insert mapAccount.values();
-
+    if (!mapAccount.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.screate(mapAccount.values(), true);
+    }
     // コンタクト
     initializeContact();    // 揃えた会社ごとに名刺の人で、取引先責任者を作る。
-    if (listContact.isEmpty() == false)
-      insert listContact;
-
+    if (!listContact.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.screate(listContact, true);
+    }
     // リード
     initalizeLead();        // 揃えた会社ごとに名刺の人で、リードを作る。
-    if (listLead.isEmpty() == false) {
-        insert listLead;
+    if (!listLead.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.screate(listLead, true);
     }
-
     // キャンペーン
     initializeCampaign();
-    if (listCampaign.isEmpty() == false) {
-        insert listCampaign;
+    if (!listCampaign.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.screate(listCampaign, true);
     }
 
   }   // initialize()

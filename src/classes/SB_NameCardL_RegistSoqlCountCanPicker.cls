@@ -151,7 +151,7 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
           records.add(obj);
         }
       }
-      if (Limits.getCpuTime() >= Limits.getLimitCpuTime()+1000) {
+      if (Limits.getCpuTime() > Limits.getLimitCpuTime()-1000) {
         throw new SB_NameCardL_RegistCanPickerAbstractException(System.Label.SB_NCLD_Msg_ChooseLessBusinessCards);
       }
     }
@@ -214,9 +214,9 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
 
     System.debug(partialMatchAccount);
     List<Account> acnts; //  = new List<Account>();
-    if (0 <= partialMatchAccount && conts.size() + partialMatchAccount < getAccountTableThreshold()) {
+    if (0 <= partialMatchAccount && (conts.size() + partialMatchAccount) < getAccountTableThreshold()) {
       // 少なかったら
-      // 3.1. 部分一致する アカウント と 名刺から参照してるアカウントを収集
+      // 3.1. 部分一致する アカウント と 名刺から参照してるアカウントを収集 アカウント 0件でもクエリすいるけど、よしとしま。
       acnts = this.qExecutor.getCandidateRecords(this.accountQs);
     }
     else {
@@ -225,11 +225,12 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
       this.accountQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch); // 完全一致
       this.queryProc = QueryProcess.PERFECT;
       acnts = this.qExecutor.getCandidateRecords(this.accountQs);
-      if (!acnts.isEmpty() && conts.size() + acnts.size() > getAccountTableThreshold()) {
+      if ((acnts.isEmpty() && conts.size() > getAccountTableThreshold()) ||
+          (!acnts.isEmpty() && conts.size() + acnts.size() > getAccountTableThreshold())) {
         // 完全一致するアカウントでも多かったら  すてる。
         this.queryProc = QueryProcess.ABANDON;
         acnts.clear();
-        if (conts.size() > getAccountTableThreshold()) {
+        if (conts.size() >= getAccountTableThreshold()) {
           // コンタクトだけでも多かったら捨てる。
           conts.clear();
           // 名刺からコンタクト参照してるコンタクトを抽出 新仕様なので注意
