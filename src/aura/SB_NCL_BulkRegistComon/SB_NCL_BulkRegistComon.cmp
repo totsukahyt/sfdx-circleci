@@ -165,31 +165,6 @@
                         </button>
                       </h3>
                     </div>
-                    <div aria-hidden="false" class="slds-accordion__content" id="accordion-details-01">
-                      <aura:renderIf isTrue="{!and(v.inputV.InputPlickListValues.length > 0, v.inputV.showRecordType)}">
-                        <div class="slds-media" >
-                          <div class="slds-grid slds-wrap slds-grid--pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;">
-                            <div class="slds-text-title">{!$Label.c.SB_NCLD_Label_RecordTypeExplain}</div>
-                          </div>
-                        </div>
-                      </aura:renderIf>
-                    <div class="slds-media" style="{!if(v.inputV.showRecordType,'margin-top:10px;','')}">
-                      <div class="slds-grid slds-wrap slds-grid--pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;">
-                        <aura:iteration var="va" items="{!v.inputV.InputPlickListValues}">
-                          <aura:renderIf isTrue="{!va.show}">
-                            <div class="{!'slds-p-horizontal--small ' + if(v.showType == 'Both', 'slds-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3', 'slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2')}" >
-                              <aura:renderIf isTrue="{!va.plickListOptions.length > 0}">
-                                <lightning:select name="selectItem" label="{!va.plickListTitle}" value="{!va.selectValue}">
-                                  <aura:iteration var="val" items="{!va.plickListOptions}">
-                                    <option value="{!val.value}">{!val.label}</option>
-                                  </aura:iteration>
-                                </lightning:select>
-                              </aura:renderIf>
-                            </div>
-                          </aura:renderIf>
-                        </aura:iteration>
-                      </div>
-                    </div>
                       <aura:renderIf isTrue="{!and(v.showType != 'Contact', and(v.inputV.campaignAuthority.isAccessible, v.inputV.nameCardCampaignisAccessible))}">
                         <div class="slds-media">
                           <div class="slds-grid slds-wrap slds-grid--pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;margin-top:10px;">
@@ -321,6 +296,33 @@
                   <!-- </aura:set> -->
                 <!-- </lightning:accordionSection> -->
               <!-- </lightning:accordion> -->
+                    <div aria-hidden="false" class="slds-accordion__content" id="accordion-details-01">
+                        <aura:renderIf isTrue="{!and(v.inputV.InputPlickListValues.length > 0, v.inputV.showRecordType)}">
+                          <div class="slds-media" >
+                            <div class="slds-grid slds-wrap slds-grid--pull-padded" style="margin-top:20px;width:100%; margin-right: 20px; margin-left: 30px;">
+                              <!-- 新規作成の場合、レコードタイプを選択します。 -->
+                              <div class="slds-text-title">{!$Label.c.SB_NCLD_Label_RecordTypeExplain}</div>
+                            </div>
+                          </div>
+                        </aura:renderIf>
+                      <!-- 新規作成時のレコードタイプ表示 -->
+                      <div class="slds-media" style="{!if(v.inputV.showRecordType,'margin-top:10px;','')}">
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;">
+                          <aura:iteration var="va" items="{!v.inputV.InputPlickListValues}">
+                            <aura:renderIf isTrue="{!and(va.show, v.inputV.showRecordType)}">
+                              <div class="{!'slds-p-horizontal--small ' + if(v.showType == 'Both', 'slds-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3', 'slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2')}" >
+                                <aura:renderIf isTrue="{!va.plickListOptions.length > 0}">
+                                  <lightning:select name="selectItem" label="{!va.plickListTitle}" value="{!va.selectValue}">
+                                    <aura:iteration var="val" items="{!va.plickListOptions}">
+                                      <option value="{!val.value}">{!val.label}</option>
+                                    </aura:iteration>
+                                  </lightning:select>
+                                </aura:renderIf>
+                              </div>
+                            </aura:renderIf>
+                          </aura:iteration>
+                        </div>
+                      </div>
                     </div>
                   </section>
                 </li>
