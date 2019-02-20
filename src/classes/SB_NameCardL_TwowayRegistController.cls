@@ -1209,7 +1209,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
     qExecutor.init(this.nameCard);      // init は オーバーロード されてて、 個別の場合は、これか、 Id をt１つ渡すメソッドをつかって、一括の場合は 複数を渡すのを使います。
     // picker の create もオーバーロード されてて、個別ならこれとかで、一括の場合は Map<Id, List<SObject>> create(Set<Id> cardIds); を名刺レコードIDと 一致するSObjectのリストのマップを返すのを使います。
     Map<SObjectType, List<SObject>> otype2objs = picker.create();
-    Boolean haveAc = otype2objs.get(Account.sObjecttype).size() > 0;
+    Boolean haveAC = otype2objs.get(Account.sObjecttype).size() > 0 || otype2objs.get(Contact.sObjecttype).size() > 0;
     Boolean haveLead = otype2objs.get(Lead.sObjecttype).size() > 0;
     if (((haveAC && haveLead) || (haveAC && !haveLead)) && isFirst) {
        renkeiType = 'Contact';
