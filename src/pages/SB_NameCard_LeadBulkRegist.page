@@ -11,6 +11,7 @@
   <apex:form id="All">
     <apex:actionFunction action="{!save}" name="save" reRender="pageMsgs,saveflage,nameCardTable, ncRecList" oncomplete="saveClick();"/>
     <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newBlock" oncomplete="initset();"/>
+    <apex:actionFunction name="changeOwner" reRender="newBlock" oncomplete="initset();"/>
     <apex:inputHidden value="{!saveOK}" id="saveflage"/>
     <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
       <apex:pageBlockButtons >
@@ -108,6 +109,7 @@
         <apex:pageBlockSectionItem >
           <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_namecardowner}"/>
           <apex:inputCheckbox value="{!useNameCardOwner}" required="false"/>
+          <apex:inputCheckbox onchange="changeUserNameCardOwner(this.checked);"  value="{!useNameCardOwner}" required="false"/>
         </apex:pageBlockSectionItem>
 
          <!-- SV_DEV-175 リード登録時にキャンペーン内での状況を選択 -->
@@ -185,6 +187,14 @@
                 save();
             }
 
+            function changeUserNameCardOwner(flage) {
+                var dis = flage == true ? 'flage' : '';
+                document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_mlktp').disabled = dis;
+                document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_lkwgt').hidden = flage;
+                document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}').disabled = dis;
+                document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinputLabel}').style = flage == true ? 'color:#999999;' : '';
+            }
+
             function isContains(str, substr) {
                 var index = str.indexOf(substr);
                 var changeid = '';
@@ -197,7 +207,18 @@
                 }
                 return changeid;
             }
-            document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}').style="margin-left:10px;";
+
+            function initset() {
+                document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}').style="margin-left:10px;";
+                var oDiv = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_mlktp');
+                var ow = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}');
+                oDiv.onchange = function(){
+                    ow.value = '';
+                    changeOwner();
+                }
+            }
+
+            initset();
           </script>
   </apex:form>
 </apex:page>
