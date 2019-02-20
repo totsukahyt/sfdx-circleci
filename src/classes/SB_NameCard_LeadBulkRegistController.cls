@@ -120,6 +120,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     public String campStatus{get;set;} //キャンペーンStatus
     public Boolean campDisabled{get;set;} //キャンペーンStatus Disabled フラグ
     public Boolean campLookUpDisabled{get;set;} //キャンペーン Disabled フラグ
+    public  List<SelectOption> campaignStatus {get; set;}
     public static SmartViscaf__SmartViscaConfig__c smartViscaConfig {
         get{
             if (smartViscaConfig == null){
@@ -200,6 +201,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
 
             //リードに関する設定
             setRecord();
+            this.CampaignStatus = getCampaignS();
 
             SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
             //SB_NameCard_LeadRegist.setNameSoql(this.soqlMap, this.nameIdList, this.nameSet, ncList);
@@ -210,13 +212,13 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         }
     }
 
+    public void changeCampaign() {
+        this.CampaignStatus = getCampaignS();
+    }
+
     //SV_DEV-175 リード登録時にキャンペーン内での状況を選択
-    public  List<SelectOption> getCampaignStatus(){
+    public  List<SelectOption> getCampaignS(){
         List<SelectOption> options = new List<SelectOption>();
-        if (String.isBlank(insertOption.campaign__c)) {
-            options.add(new SelectOption(System.Label.SB_NCLD_Menu_NotToRegister,''));
-            return options;
-        }
         List<CampaignMemberStatus> cpms = [SELECT id, CampaignID, HasResponded, IsDefault, Label, SortOrder
                                         FROM CampaignMemberStatus Where CampaignId = :insertOption.campaign__c];
         for (CampaignMemberStatus f: cpms) {
@@ -225,7 +227,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             }
             options.add(new SelectOption(f.Label, f.Label));
         }
-        campDisabled = options.size() <= 0 || campLookUpDisabled;
+        this.campDisabled = options.size() <= 0 || campLookUpDisabled;
+        System.debug(campDisabled);
         return options;
     }
 

@@ -10,7 +10,7 @@
 
   <apex:form id="All">
     <apex:actionFunction action="{!save}" name="save" reRender="pageMsgs,saveflage,nameCardTable, ncRecList" oncomplete="saveClick();"/>
-    <apex:actionFunction name="changeCampaign" reRender="newBlock"/>
+    <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newBlock" oncomplete="initset();"/>
     <apex:inputHidden value="{!saveOK}" id="saveflage"/>
     <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
       <apex:pageBlockButtons >
@@ -94,7 +94,7 @@
         </apex:pageBlockSectionItem> -->
 
         <apex:pageBlockSectionItem >
-            <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_campaignstatus}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
+            <apex:outputLabel value="{!$Label.SB_NCLD_Label_CampaignStatus}" style="{!IF(campDisabled,'color:#999999;','')}"/>
             <apex:selectList value="{!campStatus}" multiselect="false" size="1" disabled="{!campDisabled}">
                 <apex:selectOptions value="{!CampaignStatus}"/>
             </apex:selectList>

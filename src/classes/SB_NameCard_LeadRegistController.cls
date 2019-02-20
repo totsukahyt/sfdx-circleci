@@ -72,6 +72,7 @@ public with sharing class SB_NameCard_LeadRegistController
     public String campStatus{get;set;} //キャンペーンStatus
     public Boolean campDisabled{get;set;} //キャンペーンStatus Disabled フラグ
     public Boolean campLookUpDisabled{get;set;} //キャンペーン Disabled フラグ
+    public  List<SelectOption> campaignStatus {get; set;}
 
     public static SmartViscaf__SmartViscaConfig__c smartViscaConfig {
         get{
@@ -108,6 +109,7 @@ public with sharing class SB_NameCard_LeadRegistController
     public SB_NameCard_LeadRegistController(ApexPages.StandardController sc)
     {
         try {
+
             this.leadCreateable = Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable();
 
             this.createNewLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_CreateNewLeadDEV);
@@ -143,6 +145,7 @@ public with sharing class SB_NameCard_LeadRegistController
             setRecord();
 
             this.nameCard = SB_NameCard_LeadRegist.getNameCard(sc.getId());
+            this.campaignStatus = getCampaign();
             this.lead = new Lead(OwnerId=this.nameCard.OwnerId);
             //if (this.nameCard == null) throw new SB_NameCard_LeadRegist.LeadRegistException('名刺がみつかりません');
             if (this.nameCard == null) {
@@ -188,8 +191,12 @@ public with sharing class SB_NameCard_LeadRegistController
         return options;
     }
 
+    public void changeCampaign() {
+        this.campaignStatus = getCampaign();
+    }
+
     //SV_DEV-175 リード登録時にキャンペーン内での状況を選択
-    public  List<SelectOption> getCampaignStatus() {
+    public  List<SelectOption> getCampaign() {
         List<SelectOption> options = new List<SelectOption>();
         //キャンペーンがない時登録しないで表示
         List<CampaignMemberStatus> cpms = [SELECT id, CampaignID, HasResponded, IsDefault, Label, SortOrder
@@ -336,6 +343,7 @@ public with sharing class SB_NameCard_LeadRegistController
 
             // キャンペーン
             if (this.nameCard.campaign__c != null && (leadRec.isNew || this.campaign != this.nameCard.campaign__c)) { //try
+                //名刺キャンペーン参照権限がない場合エラー情報を出します
                 if (!Schema.sObjectType.SmartViscaf__NameCard__c.Fields.campaign__c.isAccessible()) {
                     String er = String.format(System.Label.SB_NCLD_MSG_FlsNotAccessible,new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel(), 
                                               Schema.sObjectType.SmartViscaf__NameCard__c.Fields.campaign__c.getLabel(), 'campaign__c'});
@@ -348,6 +356,8 @@ public with sharing class SB_NameCard_LeadRegistController
 
                 List< CampaignMember > cas = new List< CampaignMember >();
                 System.debug('this.campStatus' + this.campStatus);
+                //キャンペーンメンバーを新規作成
+                //SV_DEV-175 リード登録時にキャンペーン内での状況を選択
                 cas.add(new CampaignMember(CampaignId=this.nameCard.campaign__c, LeadId=lead.Id, ContactId=this.nameCard.SmartViscaf__contact__c, Status = this.campStatus));
 
                 SB_NameCard_LeadCrudFls.screate(cas,dml);
