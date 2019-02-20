@@ -15,7 +15,7 @@
  * 
  *
  **/ -->
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >
+<aura:component implements="force:appHostable" access="global" >
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="fieldList" type="List" />
     <aura:attribute name="title" type="String" />

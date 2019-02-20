@@ -12,7 +12,7 @@
  *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
  *
  **/ -->
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+<aura:component implements="force:appHostable,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
   <aura:method name="close" action="{!c.close}" access="global"/>
   <aura:registerEvent name="seSObjEvent" type="c:SB_NCL_UpdateByCardEvent"/>
   <aura:attribute name="reId" type="String"/>
