@@ -15,3 +15,6 @@
  **/
 .THIS {
 }
+.THIS .slds-form--compound {
+  width:auto !important;
+}
