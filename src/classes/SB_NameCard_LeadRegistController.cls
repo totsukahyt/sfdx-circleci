@@ -35,6 +35,7 @@ public with sharing class SB_NameCard_LeadRegistController
     }
 
     public SmartViscaf__NameCard__c nameCard { get; set; }
+    public Lead lead { get; set; }
 
     public SB_NameCard_LeadRegist.svConfig svConfig { get { return SB_NameCard_LeadRegist.svConfig; } }
     public Integer searchType { get; set; }
@@ -54,18 +55,22 @@ public with sharing class SB_NameCard_LeadRegistController
     private Set<String> lastNameSet = new Set<String>();
     private Set<String> firstNameSet = new Set<String>();
     private Id campaign;
+    public   Boolean  canEditTodo{get;set;}
 
     //
     public String registerToLeadLabel{get;set;}
     public String overwriteLeadInfoLabel{get;set;}
     public String createNewLeadLabel{get;set;}
     public String specifiedWhenCreateNew{get;set;}
+    public Boolean leadCreateable{get;set;}
 
     public Boolean isAllowDuplicateSave { get; private set; }
 
     public SB_NameCard_LeadRegistController(ApexPages.StandardController sc)
     {
         try {
+            this.leadCreateable = Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable();
+
             this.createNewLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_CreateNewLeadDEV);
 
             this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadDEV);
@@ -73,6 +78,10 @@ public with sharing class SB_NameCard_LeadRegistController
             this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
 
             this.specifiedWhenCreateNew = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew);
+
+            this.canEditTodo = true;
+
+            this.lead = new Lead();
 
             this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
             this.leadRecordListIndex = -1;
@@ -197,13 +206,13 @@ public with sharing class SB_NameCard_LeadRegistController
                     throw new LeadRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotCreateable,new String[]{tar.label})) ;
                 }
 
-                if (this.nameCard.OwnerId == null) {
+                if (this.lead.OwnerId == null) {
                     String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
 
                     //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
                     throw new SB_NameCard_LeadRegist.LeadRegistException(str);
                 }
-                ownerId = this.nameCard.OwnerId;
+                ownerId = this.lead.OwnerId;
             } else {
               Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
 
@@ -236,7 +245,6 @@ public with sharing class SB_NameCard_LeadRegistController
 
             // キャンペーン
             if (this.nameCard.campaign__c != null && (leadRec.isNew || this.campaign != this.nameCard.campaign__c)) { //try
-
                 Database.DMLOptions dml = new Database.DMLOptions();
 
                 dml.OptAllOrNone = false;
@@ -268,7 +276,7 @@ public with sharing class SB_NameCard_LeadRegistController
             }
 
             // ToDo
-            if (this.registTodo) {
+            if (this.registTodo && String.valueOf(ownerId).startsWith('005')) {
                 Database.DMLOptions dml = new Database.DMLOptions();
 
                 dml.OptAllOrNone = false;
@@ -276,8 +284,6 @@ public with sharing class SB_NameCard_LeadRegistController
                 List< Task > todos = new List< Task >();
 
                 todos.add(SB_NameCard_LeadRegist.getTodo(lead.Id, ownerId, this.todo.Subject, this.todo.ActivityDate,this.todo.Description));
-                SB_NameCard_LeadCrudFls.screate(todos,dml);
-
                 SB_NameCard_LeadCrudFls.screate(todos,dml);
             }
             pageRef = (new ApexPages.StandardController(lead)).view();
@@ -294,7 +300,7 @@ public with sharing class SB_NameCard_LeadRegistController
     {
         Database.DMLOptions dmlOpts = new Database.DMLOptions();
         dmlOpts.DuplicateRuleHeader.allowSave = this.isAllowDuplicateSave; // 重複レコードを保存するか
-
+        System.debug(lead);
         Database.SaveResult sr = isInsert ? SB_NameCard_LeadCrudFls.screate(lead, dmlOpts)[0] : SB_NameCard_LeadCrudFls.supdate(lead, dmlOpts)[0];
         if (sr.isSuccess()) return;
 
@@ -306,6 +312,19 @@ public with sharing class SB_NameCard_LeadRegistController
                 throw new SB_NameCard_LeadRegist.LeadRegistException(duplicateResult.getErrorMessage());
             } else {
                 throw new SB_NameCard_LeadRegist.LeadRegistException(err.getMessage());
+            }
+        }
+    }
+
+    public void changeowner()
+    {
+        if(String.isNotBlank(this.lead.ownerId)){
+             if(String.valueOf(this.lead.ownerId).startsWith('005')){
+                this.canEditTodo = true;
+            }
+            else{
+                this.canEditTodo = false;
+                this.registTodo = false;
             }
         }
     }

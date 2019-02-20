@@ -80,7 +80,7 @@
         </apex:column>
       </apex:pageBlockTable>
 
-      <apex:pageBlockSection title="{!specifiedWhenCreateNew}" columns="1">
+      <apex:pageBlockSection rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="1">
         <apex:pageBlockSectionItem >
           <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}"/>
           <apex:inputField value="{!insertOption.campaign__c}"/>
@@ -88,7 +88,7 @@
 
         <apex:pageBlockSectionItem >
           <apex:outputLabel value="{!$Label.SB_NCLD_Label_Owner}"/>
-          <apex:inputField value="{!insertOption.OwnerId}" required="false"/>
+          <apex:inputField value="{!ownerlead.OwnerId}" required="false"/>
         </apex:pageBlockSectionItem>
       </apex:pageBlockSection>
     </apex:pageBlock>

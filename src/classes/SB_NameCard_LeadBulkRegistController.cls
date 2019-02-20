@@ -95,7 +95,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     public Boolean leadOverwrite { get; set; }
     public List<NameCardRecord> nameCardRecordList { get; set; }
     public SmartViscaf__NameCard__c insertOption { get; set; }
+    public Lead ownerlead { get; set; }
     public Boolean hasError { get; set; }
+    public Boolean leadCreateable {get;set;}
 
     private Map<Integer, String> soqlMap = new Map<Integer, String>();
     private List<Id> emailIdList = new List<Id>();
@@ -114,6 +116,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController
     public SB_NameCard_LeadBulkRegistController(ApexPages.StandardSetController controller)
     {
         try {
+            this.leadCreateable = Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable();
+
             this.registerToLeadLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_RegisterToLeadsDEV);
 
             this.overwriteLeadInfoLabel = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV);
@@ -130,6 +134,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodo());
 
             this.insertOption = new SmartViscaf__NameCard__c(OwnerId=UserInfo.getUserId());
+            this.ownerlead = new Lead(OwnerId=UserInfo.getUserId());
             this.hasError = false;
 
             SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
@@ -270,7 +275,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 continue;
             }
 
-            if (this.insertOption.OwnerId == null) {
+            if (this.ownerlead.OwnerId == null) {
                 //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
                 throw new SB_NameCard_LeadRegist.LeadRegistException(str);
             }
@@ -279,7 +284,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
               {
                  throw new LeadBulkRegistControllerException(String.format(System.Label.SB_NCLD_MSG_CrudNotUpdateable, new String[]{tar.label}));
               }
-            leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, this.insertOption.OwnerId));
+            leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, this.ownerlead.OwnerId));
             ncRecList.add(ncRec);
         }
 
@@ -298,7 +303,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         updateNameCard(leadList, ncRecList, this.insertOption.campaign__c);
 
         // ToDo
-        insertTodo(leadList, ncRecList);
+        if(String.valueOf(this.ownerlead.ownerId).startsWith('005')){
+            insertTodo(leadList, ncRecList);
+        }
 
         return leadList.size();
     }
@@ -436,6 +443,10 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             ownerId = this.leadOwnerIdMap.get(leadId);
             if (ownerId == null)
                 ownerId = leadList[i].OwnerId;
+                if(!String.valueOf(ownerId).startsWith('005'))
+                {
+                    continue;
+                }
             todoList.add(SB_NameCard_LeadRegist.getTodo(leadId, ownerId, subject, ncRecList[i].nameCard.SmartViscaf__card_exchange_date__c));
         }
 
