@@ -6,6 +6,7 @@
  * @author mao
  * @Version 1.21 2018/08/XX  SV_DEV-1109 リード拡張パッケージ[統合版]Classic環境でLexのボタンタップすると、エラー発生するため、 LexとClassicを一つボタンから表示させる
  * @Version 1.21 2018/09/XX  SV_DEV-1156 LEXかクラシックかの判定がオフィシャルな方法に変更
+ * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
  *
  */
 
@@ -600,12 +601,16 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                     for (sObject sobj : objMap.get(Lead.sObjectType)) {
                       Lead lead = (Lead) sobj;
                       if (String.isBlank(ncRec.leadId)
-                        || ncRec.leadId == 'none'
-                        && leadSelect) {
+                        || ncRec.leadId == 'none') {
                         ncRec.leadId = lead.Id;
                         ncRec.accAndCon = 0;
                         if (firstSearch) {
-                          renkeiType = 'Lead';
+                          if (leadSelect) {
+                            renkeiType = 'Lead';
+                          }
+                          else {
+                            renkeiType = 'Both';
+                          }
                         }
                       }
                       // accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon(c.AccountId, c.Id));

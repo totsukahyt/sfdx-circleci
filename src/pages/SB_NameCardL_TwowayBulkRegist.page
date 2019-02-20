@@ -131,7 +131,7 @@
       <apex:pageBlockSection id="newBlock" rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="2">
         <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}">
-          <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
+          <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign + if(renkeiType == 'Both', $Label.SB_NCLD_Label_Campaign_ForLead, '')}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
           <apex:inputField onchange="changeCampaign();" value="{!campaignOption.campaign__c}" rendered="{!Not(campLookUpDisabled)}"/>
         </apex:pageBlockSectionItem>
 
@@ -141,7 +141,7 @@
 
         <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}">
-            <apex:outputLabel value="{!$Label.SB_NCLD_Label_CampaignStatus}" style="{!IF(campDisabled,'color:#999999;','')}"/>
+            <apex:outputLabel value="{!$Label.SB_NCLD_Label_CampaignStatus + if(renkeiType == 'Both', $Label.SB_NCLD_Label_Campaign_ForLead, '')}" style="{!IF(campDisabled,'color:#999999;','')}"/>
             <apex:selectList value="{!campStatus}" multiselect="false" size="1" disabled="{!campDisabled}">
                 <apex:selectOptions value="{!CampaignStatus}"/>
             </apex:selectList>

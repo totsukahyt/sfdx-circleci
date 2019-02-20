@@ -57,24 +57,37 @@
   changeShowType : function(component, event, helper) {
     var seSObjEvent = component.getEvent("leadBulkRegistEvent");
     var va = event.getParam("value");
+    var inputv = component.get("v.inputV");
+    if (va == 'Both') {
+      inputv.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
+      inputv.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus") + $A.get("$Label.c.SB_NCLD_Label_Campaign_ForLead");
+    }
+    else {
+      inputv.campaignLabel = $A.get("$Label.c.SB_NCLD_Label_Campaign");
+      inputv.campaignStatusPlick.plickListTitle = $A.get("$Label.c.SB_NCLD_Label_CampaignStatus");
+    }
     component.set("v.showType", va);
     seSObjEvent.setParams({
           "name" : "changeShowType",
           "value" : va
       }).fire();
   },
+  // エラー表示画面のOKボタンクリックする際に実行するJS
   hiddenError : function(component, event, helper) {
     component.set("v.showErrorMsg", false);
     var childCmp = component.find('dataTable');
     childCmp.reSetThead();
   },
+  // DataTabeleのヘタ際セット
   reSetThead : function(component, event, helper) {
     var childCmp = component.find('dataTable');
     childCmp.reSetThead();
   },
+  // 新規作成時の指定セクションクリックする際に実行するJS
   changeNewSection : function(component, event, helper) {
     component.set("v.openNewSection",component.get("v.openNewSection") == false);
   },
+  // 上書きの指定セクションクリックする際に実行するJS
   changeOverWriteSection : function(component, event, helper) {
     component.set("v.openOverWriteSection",component.get("v.openOverWriteSection") == false);
   }

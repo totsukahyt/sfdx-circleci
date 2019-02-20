@@ -3,6 +3,7 @@
  *
  * 統合版一括登録Lex コントローラ
  * @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
+ * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
  *
  */
 public with sharing class SB_NCL_TwowayBulkRgsLcController {
@@ -211,7 +212,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     optionGroup.title = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {Lead.sObjecttype.getDescribe().getLabel()});
     optionGroup.titleId = 'Lead';
     SB_NameCardL_BulkRegistDTO.InputPlickListValue inputR = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
-    inputR.plickListTitle = Lead.SobjectType.getDescribe().getLabel();
+    inputR.plickListTitle = String.format(System.Label.SB_NCLD_Label_LeadRecType, new List<String> {Lead.SobjectType.getDescribe().getLabel()});
     inputR.selectValue = SB_NameCardL_Util.getDefaultRecordType(Lead.sObjecttype);
     inputR.show = inv.leadAuthority.isCreateable;
     inv.InputPlickListValues.add(inputR);
@@ -238,7 +239,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     optionGroup.title = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {Account.sObjecttype.getDescribe().getLabel()});
     optionGroup.titleId = 'Account';
     inputR = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
-    inputR.plickListTitle = Account.SobjectType.getDescribe().getLabel();
+    inputR.plickListTitle = String.format(System.Label.SB_NCLD_Label_LeadRecType, new List<String> {Account.SobjectType.getDescribe().getLabel()});
     inputR.selectValue = SB_NameCardL_Util.getDefaultRecordType(Account.sObjecttype);
     inputR.show = false;
     inv.InputPlickListValues.add(inputR);
@@ -264,7 +265,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     optionGroup.title = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {Contact.sObjecttype.getDescribe().getLabel()});
     optionGroup.titleId = 'Contact';
     inputR = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
-    inputR.plickListTitle = Contact.SobjectType.getDescribe().getLabel();
+    inputR.plickListTitle = String.format(System.Label.SB_NCLD_Label_LeadRecType, new List<String> {Contact.SobjectType.getDescribe().getLabel()});
     inputR.selectValue = SB_NameCardL_Util.getDefaultRecordType(Contact.sObjecttype);
     inputR.show = false;
     inv.InputPlickListValues.add(inputR);
@@ -594,7 +595,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                 // testError = message;
                 // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
         }
-        if (haveAccount) {
+        if (haveAccount && haveLead) {
+          saveResult.otherMessage.put('showType', 'Both');
+        }
+        else if (haveAccount) {
           saveResult.otherMessage.put('showType', 'Contact');
         }
         else if (!haveLead) {
