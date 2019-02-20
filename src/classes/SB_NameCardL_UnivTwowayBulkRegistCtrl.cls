@@ -605,7 +605,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                         && leadSelect) {
                         ncRec.leadId = lead.Id;
                         ncRec.accAndCon = 0;
-                          if (leadSelect) {
+                          if (firstSearch) {
                             renkeiType = 'Lead';
                           }
                       }
