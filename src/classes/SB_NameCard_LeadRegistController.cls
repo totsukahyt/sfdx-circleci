@@ -67,7 +67,6 @@ public with sharing class SB_NameCard_LeadRegistController {
   private Set<String> nameSet = new Set<String>();
   private Set<String> lastNameSet = new Set<String>();
   private Set<String> firstNameSet = new Set<String>();
-  private Id campaign;
   public   Boolean  canEditTodo{get;set;}
 
   //
@@ -199,7 +198,6 @@ public with sharing class SB_NameCard_LeadRegistController {
           this.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
         }
         this.todo.ActivityDate = this.nameCard.SmartViscaf__card_exchange_date__c;
-        this.campaign = this.nameCard.Campaign__c;
 
         List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { this.nameCard };
         SB_NameCard_LeadRegist.setEmailSoql(this.soqlMap, this.emailIdList, this.emailList, ncList);
@@ -408,8 +406,8 @@ public with sharing class SB_NameCard_LeadRegistController {
                                                                                                                       leadId,
                                                                                                                       registTodo,
                                                                                                                       this.todo.ActivityDate);
-            if (String.isNotBlank(campaign) && String.isBlank(pageLead.Id)) {
-              tar.setLeadCampaign(campaign, campStatus);
+            if (String.isNotBlank(this.nameCard.Campaign__c) && String.isBlank(pageLead.Id)) {
+              tar.setLeadCampaign(this.nameCard.Campaign__c, campStatus);
             }
 
             SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(new SB_NameCardL_RegistHelper.RegistTarget[]{tar}, null, null, leadRP, todoRP);
