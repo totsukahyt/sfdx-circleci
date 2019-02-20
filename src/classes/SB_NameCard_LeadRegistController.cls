@@ -6,6 +6,7 @@
 
 public with sharing class SB_NameCard_LeadRegistController
 {
+    public class LeadRegistControllerException extends exception {}
     public class LeadRecord
     {
         public Integer index { get; set; }
@@ -116,28 +117,28 @@ public with sharing class SB_NameCard_LeadRegistController
             List<Lead> leadList = this.getLeadList();
 
             if (leadList != null) {
-            Integer Leadnumber = SB_NameCard_LeadCrudFls.isCreateable(new Lead()) ? 998 : 999;
+            Integer Leadnumber = Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable() ? 998 : 999;
                 if (leadList.size() <= Leadnumber) {
                     for (Lead lead : leadList) {
                         this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
                     }
                 } else {
-                	    for (Lead lead : leadList) {
-                	    	    if (lead.Id == this.nameCard.SmartViscaf__lead__c) {
+                        for (Lead lead : leadList) {
+                                if (lead.Id == this.nameCard.SmartViscaf__lead__c) {
                             this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), lead));
                                 }
                                 String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_DisplayUnderConditionsDEV);
 
                                 //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, '検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。'));
                                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING,str));
-                	    }
+                        }
                 }
             }
         } catch (Exception e) {
             ApexPages.addMessages(e);
         }
         this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), true));
-       if(SB_NameCard_LeadCrudFls.isCreateable(new Lead()))
+       if(Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
          {
            this.leadRecordList.add(new leadRecord(this.leadRecordList.size(), false));
          }
@@ -184,7 +185,13 @@ public with sharing class SB_NameCard_LeadRegistController
             LeadRecord leadRec = this.leadRecordList.get(this.leadRecordListIndex);
             Id leadId, ownerId;
             if (leadRec.isNew) {
-                SB_NameCard_LeadCrudFls.isCreateableError(new Lead());
+
+                 Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
+               if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
+                      {
+                             throw new LeadRegistControllerException(String.format(System.Label.SB_MSG_CrudNotCreateable,new String[]{tar.label})) ;
+                          }
+                          
                 if (this.nameCard.OwnerId == null) {
                 String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV);
 
@@ -193,7 +200,13 @@ public with sharing class SB_NameCard_LeadRegistController
                 }
                 ownerId = this.nameCard.OwnerId;
             } else {
-                 SB_NameCard_LeadCrudFls.isUpdateableError(new Lead());
+              Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
+
+                 if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isUpdateable())
+                   {
+                       throw new LeadRegistControllerException(String.format(System.Label.SB_MSG_CrudNotUpdateable, new String[]{tar.label}));
+                   }
+
                 if (leadRec.lead == null) {
                     String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Msg_SelectLeadDEV);
 
@@ -212,13 +225,6 @@ public with sharing class SB_NameCard_LeadRegistController
             sp = Database.setSavepoint();
             List<Lead>leads = new List<Lead>();
             leads.add(lead);
-            if(leadRec.isNew)
-            {
-                SB_NameCard_LeadCrudFls.screateLead(leads);
-            }else
-            {
-                SB_NameCard_LeadCrudFls.supdateLead(leads);
-            }
 
             // リード
             this.upsertLead(lead, leadRec.isNew);
@@ -252,8 +258,9 @@ public with sharing class SB_NameCard_LeadRegistController
     {
         Database.DMLOptions dmlOpts = new Database.DMLOptions();
         dmlOpts.DuplicateRuleHeader.allowSave = this.isAllowDuplicateSave; // 重複レコードを保存するか
-
-        Database.SaveResult sr = isInsert ? Database.insert(lead, dmlOpts) : Database.update(lead, dmlOpts);
+        List<SObject> objets = new List<SObject>();
+        objets.add(lead);
+        Database.SaveResult sr = isInsert ? SB_NameCard_LeadCrudFls.screate(objets, dmlOpts)[0] : SB_NameCard_LeadCrudFls.supdate(objets, dmlOpts)[0];
         if (sr.isSuccess()) return;
 
         for (Database.Error err : sr.getErrors()) {

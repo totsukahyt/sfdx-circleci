@@ -18,7 +18,7 @@
         Account acc = new Account();
         List<SObject> objets = new List<SObject>();
         objets.add(acc);
-        SB_NameCard_LeadCrudFls.screateLead(objets);
+        SB_NameCard_LeadCrudFls.screate(objets);
         Test.stopTest();
     }
 
@@ -27,7 +27,7 @@
   
         Test.startTest();
 
-        SB_NameCard_LeadCrudFls.supdateLead(new List<SObject>{new Account()});
+        SB_NameCard_LeadCrudFls.supdate(new List<SObject>{new Account()});
 
         Test.stopTest();
     }
@@ -38,10 +38,10 @@
 
 
         Test.startTest();
-    SB_NameCard_LeadCrudFls.isCreateable(new Account());
-    SB_NameCard_LeadCrudFls.isCreateableError(new Account());
-    SB_NameCard_LeadCrudFls.isUpdateable(new Account());
-    SB_NameCard_LeadCrudFls.isUpdateableError(new Account());
+    SB_NameCard_LeadCrudFls.isCreateable('Account');
+    SB_NameCard_LeadCrudFls.isCreateableError('Account');
+    SB_NameCard_LeadCrudFls.isUpdateable('Account');
+    SB_NameCard_LeadCrudFls.isUpdateableError('Account');
 
 
         Test.stopTest();
@@ -68,7 +68,7 @@
 		SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
     System.runAs(u2) {
         try{
-           SB_NameCard_LeadCrudFls.screateLead(new List<SObject>{nc});
+           SB_NameCard_LeadCrudFls.screate(new List<SObject>{nc});
         }catch(Exception e)
         {}
          }
@@ -97,7 +97,7 @@
 		SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
     System.runAs(u2) {
         try{
-           SB_NameCard_LeadCrudFls.supdateLead(new List<SObject>{nc});
+           SB_NameCard_LeadCrudFls.supdate(new List<SObject>{nc});
         }catch(Exception e)
         {}
          }

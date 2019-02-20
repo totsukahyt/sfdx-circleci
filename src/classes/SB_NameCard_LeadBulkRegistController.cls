@@ -6,6 +6,7 @@
 
 public with sharing class SB_NameCard_LeadBulkRegistController
 {
+      public class LeadBulkRegistControllerException extends exception {}
     // 名刺レコード
     public class NameCardRecord
     {
@@ -59,7 +60,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                     }
                 }
             }
-            Integer Leadnumber = SB_NameCard_LeadCrudFls.isCreateable(new Lead()) == true ? 998 : 999;
+            Integer Leadnumber = Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable() == true ? 998 : 999;
             if (this.leadSelOptList.size() + emailSelOptList.size() + nameSelOptList.size() <= Leadnumber) {
                 this.leadSelOptList.addAll(emailSelOptList);
                 this.leadSelOptList.addAll(nameSelOptList);
@@ -70,7 +71,7 @@ public with sharing class SB_NameCard_LeadBulkRegistController
                 this.message = str;
             }
             //this.leadSelOptList.add(new SelectOption('new', '新規作成'))
-             if(SB_NameCard_LeadCrudFls.isCreateable(new Lead()))
+             if(Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
              {
                 this.leadSelOptList.add(new SelectOption('new', System.Label.SB_NCLD_Menu_NewLead));
              }
@@ -259,32 +260,35 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
         String str = System.Label.SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV;
         str = str.replace('smallLead',System.Label.SB_NCLD_Text_SmallLead);
+
+          
+        Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
         for (NameCardRecord ncRec : this.nameCardRecordList) {
             if (ncRec.leadId != 'new')
             {
-                SB_NameCard_LeadCrudFls.isUpdateableError(new Lead());
                 continue;
-            }else
-            {
-              SB_NameCard_LeadCrudFls.isCreateable(new Lead());  
             }
-
 
             if (this.insertOption.OwnerId == null) {
                 //throw new SB_NameCard_LeadRegist.LeadRegistException('リードを新規作成する場合は「所有者」を指定してください');
                 throw new SB_NameCard_LeadRegist.LeadRegistException(str);
             }
+
+             if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isCreateable())
+              {
+                 throw new LeadBulkRegistControllerException(String.format(System.Label.SB_MSG_CrudNotUpdateable, new String[]{tar.label}));
+              }
             leadList.add(SB_NameCard_LeadRegist.getLead(null, ncRec.nameCard, this.insertOption.OwnerId));
             ncRecList.add(ncRec);
         }
     
         if (leadList.size() <= 0) return 0;
+        Database.DMLOptions dml = new Database.DMLOptions();
 
-        SB_NameCard_LeadCrudFls.screateLead(leadList);
-        //SB_NameCard_LeadCrudFls.supdateLead(leadList);
+        dml.OptAllOrNone = false;
 
         // リード
-        this.setResult(Database.insert(leadList, false), ncRecList);
+        this.setResult(SB_NameCard_LeadCrudFls.screate(leadList,dml), ncRecList);
 
         // キャンペーンメンバー
         insertCampaignMember(this.insertOption.campaign__c, leadList, ncRecList);
@@ -306,11 +310,16 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         List<Lead> leadList = new List<Lead>();
         List<NameCardRecord> ncRecList = new List<NameCardRecord>();
         String str = SB_NameCard_LeadRegist.changeleadlabel(System.Label.SB_NCLD_Text_LeadOverLapDEV);
-
+        Schema.DescribeSObjectResult tar = Schema.getGlobalDescribe().get('Lead').getDescribe();
         for (NameCardRecord ncRec : this.nameCardRecordList) {
             if (ncRec.leadId == 'none' || ncRec.leadId == 'new') continue;
 
             leadId = Id.valueOf(ncRec.leadId);
+
+             if(!Schema.getGlobalDescribe().get('Lead').getDescribe().isUpdateable())
+              {
+                 throw new LeadBulkRegistControllerException(String.format(System.Label.SB_MSG_CrudNotUpdateable, new String[]{tar.label}));
+              }
             //if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException('リードが重複しています');
             if (leadIdSet.contains(leadId)) throw new SB_NameCard_LeadRegist.LeadRegistException(str);
             leadIdSet.add(leadId);
@@ -325,10 +334,14 @@ public with sharing class SB_NameCard_LeadBulkRegistController
         if (leadList.size() <= 0) return 0;
 
         //SB_NameCard_LeadCrudFls.screateLead(leadList);
-         SB_NameCard_LeadCrudFls.supdateLead(leadList);
+
+             Database.DMLOptions dml = new Database.DMLOptions();
+
+        //エラーなってでも保存続く
+        dml.OptAllOrNone = false;
 
         // リード
-        this.setResult(Database.update(leadList, false), ncRecList);
+        this.setResult(SB_NameCard_LeadCrudFls.supdate(leadList, dml), ncRecList);
 
         // キャンペーンメンバー
         insertCampaignMember(this.insertOption.campaign__c, leadList, ncRecList);
