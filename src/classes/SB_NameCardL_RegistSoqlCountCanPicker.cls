@@ -139,9 +139,6 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
         }
         SB_NameCardL_RegistQueryStrategy.QueryStrategy qs = this.otype2QueryStrategy.get(otype);
         for (SObject obj : objs) {
-          //if (qs.isMatch(card, obj)) {
-          //  targets.add(obj);
-          //}
           if (!qs.isMatch(card, obj)) {
             continue;
           }
@@ -157,8 +154,42 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
         }
       }
     }
+    //printCard2Targets (result);
     return result;
   }
+
+  //// デバッグ用
+  //@TestVisible
+  //private static void printCard2Targets(Map<Id, Map<SObjectType, List<SObject>>> input) {
+  //  Set<String> fields = SB_NameCardL_RegistQueryStrategy.getNameCardFields();
+  //  Set<Id> cardIds = new Set<Id>(input.keySet());
+  //  String query = String.format('SELECT {0} FROM SmartViscaf__NameCard__c WHERE Id = :cardIds', new String[] { String.join(new List<String>(fields), ', ')});
+  //  Map<Id, SObject> cards = new Map<Id, SObject>(Database.query(query));
+
+  //  for(Id d : input.keySet()) {
+  //    System.debug('NameCard: ' + cards.get(d));
+  //    Map<SObjectType, List<SObject>> records = input.get(d);
+  //    if (records.containsKey(Account.sObjecttype)) {
+  //      for (SObject obj : records.get(Account.sObjecttype)) {
+  //        Account acnt = (Account)obj;
+  //        System.debug(acnt);
+  //      }
+  //    }
+  //    if (records.containsKey(Contact.sObjecttype)) {
+  //      for (SObject obj : records.get(Contact.sObjecttype)) {
+  //        Contact cont = (Contact)obj;
+  //        System.debug(cont);
+  //      }
+  //    }
+  //    if (records.containsKey(Lead.sObjecttype)) {
+  //      for (SObject obj : records.get(Lead.sObjecttype)) {
+  //        Lead l = (Lead)obj;
+  //        System.debug(l);
+  //      }
+  //    }
+  //  }
+
+  //}
 
   //// 個別登録での既存レコード検索
   //private Map<SObjectType, List<SObject>> createAccountsContacts(SmartViscaf__NameCard__c card) {
@@ -197,6 +228,15 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
         // 完全一致するアカウントでも多かったら  すてる。
         this.queryProc = QueryProcess.ABANDON;
         acnts.clear();
+        if (conts.size() > getAccountTableThreshold()) {
+          // コンタクトだけでも多かったら捨てる。
+          conts.clear();
+          // 名刺からコンタクト参照してるコンタクトを抽出 新仕様なので注意
+          List<Contact> referencedContacts = this.qExecutor.getReferencedCandidateRecords(Contact.sObjectType);
+          if (referencedContacts != null && !referencedContacts.isEmpty()) {
+            conts.addAll(referencedContacts);
+          }
+        }
         // 名刺からアカウント参照してるアカウントを抽出 新仕様なので注意
         List<Account> referencedAccounts = this.qExecutor.getReferencedCandidateRecords(Account.sObjectType);
         if (referencedAccounts != null && !referencedAccounts.isEmpty()) {

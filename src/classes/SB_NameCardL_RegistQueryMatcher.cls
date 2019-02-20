@@ -315,11 +315,11 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       String first_name = pnMap.get('first_name');
       return
         cont.Id == card.SmartViscaf__contact__c ||
-        ((!this.queryEmail || card.SmartViscaf__email__c == cont.Email) ||
+        (!this.queryEmail || (card.SmartViscaf__email__c!=null && card.SmartViscaf__email__c == cont.Email)) ||
         ((!this.queryFirstName || first_name == cont.FirstName) &&
         (!this.queryLastName || last_name == cont.LastName) &&
         (!this.queryCompany || isMatchKaishaMei(card, cont.Account.Name, this.companyRule)) &&
-        (!this.queryDept || isMatchSite(card, cont.Account.Site, this.deptRule) || isMatchSite(card, cont.Department, this.deptRule))));
+        (!this.queryDept || isMatchSite(card, cont.Account.Site, this.deptRule) || isMatchSite(card, cont.Department, this.deptRule)));
     }
 
   } // public class ContactMatcher extends Matcher {
@@ -379,8 +379,8 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       String first_name = pnMap.get('first_name');
       return
         l.Id == card.SmartViscaf__lead__c ||
-        (!this.queryEmail || card.SmartViscaf__email__c == l.Email) &&
-        (!this.queryFirstName || first_name == l.FirstName) &&
+        (!this.queryEmail || (card.SmartViscaf__email__c != null && card.SmartViscaf__email__c == l.Email)) &&
+        ((!this.queryFirstName || first_name == l.FirstName) &&
         (!this.queryLastName || last_name == l.LastName) &&
         (!this.queryZip || isMatchZip(card, new List<String> { l.PostalCode })) &&
         (!this.queryUrl || isMatchUrl(card, l.WebSite)) &&
@@ -388,7 +388,7 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
         (!this.queryStreet || isMatchStreet(street_nobld, new List<String> { l.Street })) &&
         (!this.queryCity || city == l.City) &&
         (!this.queryState || card.SmartViscaf__address_pref__c == l.State) &&
-        (!this.queryCompany || card.SmartViscaf__company_name__c == companyName || isMatchKaishaMei(card, companyName, this.companyRule));
+        (!this.queryCompany || card.SmartViscaf__company_name__c == companyName || isMatchKaishaMei(card, companyName, this.companyRule)));
       }
   } // public class LeadMatcher extends Matcher {
 
