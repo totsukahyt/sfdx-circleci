@@ -569,8 +569,11 @@ public with sharing class SB_NameCard_LeadBulkRegistController
             }
             // SV_DEV-727 リードへ登録、名刺所有者がキューおよリード所有者がキューの場合
             if(!String.valueOf(ownerId).startsWith('005')) {
+                String todoE = Task.getSobjectType().getDescribe().getLabel();
+                //SV_DEV-755 無効なユーザでTODO登録したときのエラー
+                todoE += System.Label.SB_NCLD_MSG_Regist_Error;
                 ncRecList[i].hasError = true;
-                String msg = (cardindex.get(ncRecList[i].nameCard.Id) + 1) + System.Label.SB_NC_Line + ': ' + 'ToDo' + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR + '<br>';
+                String msg = (cardindex.get(ncRecList[i].nameCard.Id) + 1) + System.Label.SB_NC_Line + ': ' + todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR + '<br>';
                 errMsg += msg;
                 continue;
             }
