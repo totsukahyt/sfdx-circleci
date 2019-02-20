@@ -269,7 +269,7 @@ public with sharing class SB_NameCard_LeadRegistController
                 
                  List< Task > todos = new List< Task >();
                 
-                 todos.add(SB_NameCard_LeadRegist.getTodo(leadId, ownerId, this.todo.Subject, this.todo.ActivityDate));
+                 todos.add(SB_NameCard_LeadRegist.getTodo(lead.Id, ownerId, this.todo.Subject, this.todo.ActivityDate,this.todo.Description));
                            SB_NameCard_LeadCrudFls.screate(todos,dml);
 
                 SB_NameCard_LeadCrudFls.screate(todos,dml);

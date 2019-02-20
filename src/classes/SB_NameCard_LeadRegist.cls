@@ -326,4 +326,16 @@ global class SB_NameCard_LeadRegist
         }
         return todo;
     }
+     // ToDoコメント付き
+    global static Task getTodo(Id leadId, Id ownerId, String subject, Date cardExchangeDate,String description)
+    {
+        Task todo = new Task(WhoId=leadId, Subject=subject, ActivityDate=cardExchangeDate, OwnerId=ownerId,Description = description);
+
+        if (todo.ActivityDate == null || todo.ActivityDate <= Date.today()) {
+            todo.Status = todoStatusMap.get('IsClosed'); // 完了
+        } else {
+            todo.Status = todoStatusMap.get('IsDefault'); // 未着手
+        }
+        return todo;
+    }
 }
