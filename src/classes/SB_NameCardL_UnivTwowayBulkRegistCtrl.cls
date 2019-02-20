@@ -612,6 +612,10 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
                     }
                   }
                   if (accountCreateable && contactCreateable) {
+                    if (accountKey == 'nullnull') {
+                      ncRec.accAndCon = index;
+                      setAccount = true;
+                    }
                     opts.add(new SelectOption(String.valueOf(index), System.Label.SB_NCLD_Menu_NewLead + '/' + System.Label.SB_NCLD_Menu_NewLead));
                     accAndConList.add(new SB_NameCardL_BulkRegistDTO.AccAndCon());
                   }
