@@ -282,8 +282,8 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
           //ラベル:既存の取引先責任者の情報を名刺情報で上書きする
           this.updateForContact =  String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV,new String[]{SB_NameCardL_UnivTwowayBulkRegistCtrl.CO_LABEL});
 
-          this.useNameCardOwner = false;
-          this.useNameCardContactOwner = false;
+          this.useNameCardOwner = true;
+          this.useNameCardContactOwner = true;
 
           this.leadCreateable = Lead.sObjectType.getDescribe().isCreateable();
           this.accountCreateable = Account.sObjectType.getDescribe().isCreateable();

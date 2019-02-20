@@ -132,6 +132,8 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     inv.accountOwnerLabel = ACCOUNTLABEL + System.Label.SB_NCLD_Label_Owner;
     inv.newSectionLabel = String.format(System.Label.SB_NCLD_Text_SpecifiedWhenCreateNew, new String[] {LEADLABEL});
     inv.overWriteLabel = System.Label.SB_NCLD_Text_SpecifiedWhenOverWrite;
+    inv.useNameCardOwner = true;
+    inv.useNameCardAccountOwner = true;
 
     // リード上書き
     SB_NameCardL_BulkRegistDTO.InputRegistOverWritValue inputO = new SB_NameCardL_BulkRegistDTO.InputRegistOverWritValue();
