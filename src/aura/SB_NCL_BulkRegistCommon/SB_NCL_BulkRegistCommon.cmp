@@ -87,7 +87,7 @@
 
   <!-- 統合画面BODY -->
   <div style="margin-top: 101px;height: calc(100% - 101px);">
-    <div style="padding: 0px 0px 48px 0px;">
+    <div style="padding: 0px 0px 0px 0px;">
       <div style="display:inline-block;min-width: 100%; padding: 0.75rem 0.75rem 0.75rem 0.75rem;">
         <!-- 名刺一覧を表示する -->
         <div class="slds-box slds-theme--shade">

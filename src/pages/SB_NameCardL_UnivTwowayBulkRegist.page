@@ -406,7 +406,7 @@
     <apex:pageMessages />
     <apex:includeLightning />
 
-    <div class="slds" style="height: calc(100% - 15px);">
+    <div class="slds" style="height: calc(100% - 50px);">
       <div id="lt_comp" style="height: 100%;"/>
     </div>
 

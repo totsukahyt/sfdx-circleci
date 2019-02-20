@@ -42,6 +42,9 @@
     fs.push({fieldName:'SmartViscaf__email__c'});
     fs.push({fieldName:'SmartViscaf__address_pref__c'});
     component.set('v.fieldList2', fs);
+    window.addEventListener('resize', $A.getCallback(function(){
+        component.reSetThead(component, event, helper);
+    }));
   },
   changeValue : function(component, event, helper) {
 
