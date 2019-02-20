@@ -1225,6 +1225,8 @@ public with sharing class SB_NameCardL_TwowayRegistController {
   private List<CandidateRecord> createCandidateRecordList(Map<SObjectType, List<SObject>> otype2Recs) {
     this.candidateTable.clear();
     this.leadRecordList.clear();
+    this.leadRecordListIndex = -1;
+    this.accountTableIndex = -1;
     if (String.isNotBlank(nameCard.SmartViscaf__company_name__c) && String.isNotBlank(SmartViscaf.SB_NameCard_Util.getPersonName(nameCard).get('last_name'))) {
     // 1. 既存の取引先・取引先責任者 登録用の行の追加
       if ((this.registObjs == RegistType.AccountContactLead || this.registObjs == RegistType.AccountContact) &&
