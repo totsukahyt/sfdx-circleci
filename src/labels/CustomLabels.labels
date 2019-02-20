@@ -81,8 +81,8 @@
         <fullName>SB_NCLD_Label_CampaignStatus</fullName>
         <language>ja</language>
         <protected>true</protected>
-        <shortDescription>キャンペーンメンバー状況</shortDescription>
-        <value>キャンペーンメンバー状況</value>
+        <shortDescription>キャンペーンメンバーの状況</shortDescription>
+        <value>キャンペーンメンバーの状況</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Cancel</fullName>
