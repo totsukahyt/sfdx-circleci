@@ -1,0 +1,73 @@
+<!--
+  SB_NCL_PageDispacher.page
+  SB_NC_PageDispacher.page を 流用
+  Lightning Express 用に Edgeを識別してVFページを開く
+
+  @author sawano
+  @Version 1      2017.01.xx
+  @Version 2      2017.12.xx   v1.22 Winter'18 <apex:slds /> を使用 SV_DEV-704 Lighting Design System は 静的リソースは使わず<apex:slds /> で引用する。
+  SB_NCL_PageDispacher
+
+  Copyright (C) 2017-2018 SunBridge Inc. All Rights Reserved.
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false"
+    standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NCL_PageDispacherController" action="{!init}">
+
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+
+  <apex:includeScript value="{!URLFOR($Resource.SB_NCL_Regist, 'js/jquery.min.js')}"/>
+  <apex:slds />
+</head>
+
+
+<body class="slds-scope">
+
+  <div class="slds">
+
+    <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal--prompt">
+      <div class="slds-modal__container">
+        <div class="slds-modal__header slds-theme--warning slds-theme--alert-texture">
+          <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" id="btClose1" name="btClose1">
+            <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+            <!-- <use xlink:href="{!URLFOR($Resource.SLDS_CSS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use> -->
+            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+            </svg>
+            <span class="slds-assistive-text">Close</span>
+          </button>
+          <h2 class="slds-text-heading--medium" id="prompt-heading-id">ご確認ください</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium">
+          <p>{!message}</p>
+        </div>
+        <div class="slds-modal__footer slds-theme--default">
+          <button class="slds-button slds-button--neutral"  id="btClose2" name="btClose2">OK</button>
+        </div>
+      </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop--open"></div>
+
+  </div>
+
+  <script type="text/javascript">
+    $(function(){
+      // 閉じるボタン クリック
+      $('#btClose1, #btClose2').click(function(e){
+        if( (typeof sforce != 'undefined') && (sforce != null) ) {
+          // S1とか
+          sforce.one.back();
+        }
+        else {
+          // クラシック
+          history.back();
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
+</apex:page>

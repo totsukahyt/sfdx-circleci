@@ -1,0 +1,90 @@
+<!-- /**
+ *
+ *  SB_NCL_DataTableCell
+ *  リード拡張環境 一括統合用DataTable 用Cell
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.12      2017.05.XX SV_DEV-511 [LEX]リードの名刺で更新のLightning版対応
+ *
+ **/ -->
+<aura:component access="global" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:attribute name="field" type="Map" />
+  <aura:attribute name="value" type="String"/>
+  <aura:attribute name="checked" type="Boolean"/>
+  <aura:attribute name="label" type="String"/>
+  <aura:attribute name="type" type="String" />
+  <aura:attribute name="selectMap" type="Map" />
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="plickList" type="List" />
+  <aura:attribute name="cObjectMap" type="Map" />
+  <aura:attribute name="eventName" type="String" />
+  <aura:attribute name="width" type="String" />
+  <aura:attribute name="showType" type="String" default="Lead"/>
+  <aura:registerEvent name="leadBulkRegistEvent" type="c:SB_NCL_BulkRegistComonEvent"/>
+  <aura:method name="cleanPlickList" action="{!c.cleanPlickList}" access="PUBLIC"/>
+
+  <!-- コンポネードgid -->
+  <aura:attribute name="gid" type="String"/>
+  <td style="min-width: 100px;" role="gridcell">
+    <div class="slds-truncate" style="{!if(v.width != '', 'width:' + v.width + 'px', '')}">
+      <aura:renderIf isTrue="{!v.field.type == 'string'}">
+        {!v.value}
+      </aura:renderIf>
+      <aura:renderIf isTrue="{!v.field.type == 'email'}">
+        <aura:renderIf isTrue="{!v.field.input == false}">
+          <lightning:formattedEmail value="{!v.value}"/>
+        </aura:renderIf>
+        <aura:renderIf isTrue="{!v.field.input == true}">
+          <ui:inputEmail value="{!v.value}" blur="{!c.changeValue}"/>
+        </aura:renderIf>
+      </aura:renderIf>
+      <aura:renderIf isTrue="{!v.field.type == 'url'}">
+        <aura:renderIf isTrue="{!v.field.input == false}">
+          <lightning:formattedUrl label="{!v.label}" value="{!v.value}"/>
+        </aura:renderIf>
+        <aura:renderIf isTrue="{!v.field.input == true}">
+          <ui:inputURL value="{!v.value}" label="{!v.label}" blur="{!c.changeValue}"/>
+        </aura:renderIf>
+      </aura:renderIf>
+      <aura:renderIf isTrue="{!v.field.type == 'date'}">
+        <aura:renderIf isTrue="{!v.field.input == false}">
+          <lightning:formattedDateTime value="{!v.value}"/>
+        </aura:renderIf>
+        <aura:renderIf isTrue="{!v.field.input == true}">
+          <ui:inputDate value="{!v.value}" blur="{!c.changeValue}"/>
+        </aura:renderIf>
+      </aura:renderIf>
+      <aura:renderIf isTrue="{!v.field.type == 'number'}">
+        <aura:renderIf isTrue="{!v.field.input == false}">
+          <!--<lightning:formattedNumber value="{!v.value}"/>-->
+        </aura:renderIf>
+        <aura:renderIf isTrue="{!v.field.input == true}">
+          <!-- <ui:inputNumber value="{!v.value}" blur="{!c.changeValue}"/>-->
+        </aura:renderIf>
+      </aura:renderIf>
+
+      <aura:renderIf isTrue="{!v.field.type == 'checkbox'}">
+          <c:SB_NCL_Checkbox boxid="{!v.gid + 'checkboxdis'}" fieldName="{!v.field.fieldName}" cObjectMap="{!v.cObjectMap}" checked="{!v.checked}" dis="{!v.field.input == false}" boxlabel=""/>
+      </aura:renderIf>
+
+      <aura:renderIf isTrue="{!v.field.type == 'plicklist'}">
+        <aura:renderIf isTrue="{!v.field.input == false}">
+          {!v.value}
+        </aura:renderIf>
+        <aura:renderIf isTrue="{!v.field.input == true}">
+          <Lightning:Select onchange="{!c.changeValue}">
+            <aura:iteration items="{!v.plickList }" var="va">
+              <option label="{!va.label}" value="{!va.value}" selected="{!va.value == v.value}"/>
+            </aura:iteration>
+          </Lightning:Select>
+        </aura:renderIf>
+      </aura:renderIf>
+      </div>
+  </td>
+</aura:component>

@@ -1,0 +1,97 @@
+<!-- /**
+ *
+ *  SB_NCL_DataTable
+ *  リード拡張環境 一括統合用DataTable
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.12      2017.05.XX SV_DEV-511 [LEX]リードの名刺で更新のLightning版対応
+ *
+ **/ -->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="fieldList" type="List" />
+    <aura:attribute name="title" type="String" />
+    <aura:attribute name="objs" type="List" />
+    <aura:attribute name="fields" type="List" />
+    <aura:attribute name="selectMap" type="Map" />
+    <aura:attribute name="testValue" type="String" />
+    <aura:attribute name="mouseStart" type="string" />
+    <aura:attribute name="oldWidth" type="string" />
+    <aura:attribute name="haveError" type="Boolean" default="false"/>
+    <aura:attribute name="showType" type="String" default="Lead"/>
+    <aura:handler event="aura:doneRendering" action="{!c.reSetThead }"/>
+    <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistComonEvent" action="{!c.doSomething}"/>
+    <aura:handler name="render" value="{!this}" action="{!c.reSetThead}"/>
+
+
+    <!-- <aura:attribute name="mouseStart" type="string" /> -->
+    <aura:attribute name="newWidth" type="string" />
+    <aura:attribute name="currentEle" type="Object" />
+
+    <!-- reSetWidth -->
+    <aura:method name="reSetThead" action="{!c.reSetThead}" access="PUBLIC"/>
+
+      <div class="slds-table_header-fixed_container slds-scrollable_x" style="height: 100%;" onmouseup="{!c.resetColumn}">
+        <div class="slds-scrollable_y" style="max-height:350px;">
+          <div>
+            <table classs="dataTable" summary="" class="slds-table slds-table_header-fixed slds-table_bordered slds-table_edit slds-table_resizable-cols">
+              <thead>
+                <tr aura:id="dataTableTheadTr" class="slds-text-title_caps">
+                  <aura:renderIf isTrue="{!v.haveError == true}">
+                    <th/>
+                  </aura:renderIf>
+                  <aura:iteration var="va" items="{!v.fieldList}">
+                  <!--   <th scope="col" class="slds-text-title_caps" is="lightning-primitive-header-factory">
+                      <div class="slds-truncate" title="{!va.label}">{!va.label}</div>
+                    </th> -->
+                    <th style="position:static; " class="slds-text-title_caps slds-is-resizable" is="lightning-primitive-header-factory" scope="col" tabindex="-1" aria-label="Confidence">
+                      <span tabindex="-1" id="{!'dataTableTheadSpan' + va.fieldName}" class="slds-has-button-menu slds-cell-fixed" onmousemove="{!c.setNewWidth}">
+                        <a role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
+                          <span title="{!va.label}" class="slds-truncate">{!va.label}</span>
+                        </a>
+                        <div is="lightning-primitive-resize-handler" tabindex="-1" data-actionable="true" class="slds-resizable">
+                          <input type="range" min="50" max="1000"  class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-602" tabindex="0"/>
+                          <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}">
+                              <span class="slds-resizable__divider"></span>
+                          </span>
+                        </div>
+                      </span>
+                    </th>
+                  </aura:iteration>
+                </tr>
+              </thead>
+              <tbody>
+                <aura:iteration var="obj" items="{!v.objs}">
+                  <tr style="width: 100%;" class="slds-hint-parent" is="lightning-primitive-datatable-row">
+                    <aura:renderIf isTrue="{!v.haveError == true}">
+                      <td style="width: 30px;" role="gridcell">
+                        <aura:renderIf isTrue="{!obj.haveError == true}">
+                          <lightning:icon iconName="utility:error" size="small" alternativeText="Error!" variant="error"/>
+                        </aura:renderIf>
+                      </td>
+                    </aura:renderIf>
+                    <aura:iteration var="field" items="{!v.fieldList}">
+                      <!-- <aura:renderIf isTrue="{!field.show == true}"> -->
+                        <!-- <aura:renderIf isTrue="{!field.type == 'plicklist'}"> -->
+                          <c:SB_NCL_DataTableCell width="{!field.width}" showType="{!v.showType}" aura:id="{!obj.id + field.fieldName}" eventName="{!field.eventName}" selectMap="{!v.selectMap}" recordId="{!obj.id}" field="{!field}" cObjectMap="{!obj.cObjectMap}"/>
+                        <!-- </aura:renderIf> -->
+
+
+                        <!-- <aura:renderIf isTrue="{!field.type != 'plicklist'}"> -->
+                          <!-- <c:TestDataTableCell field="{!field}" cObjectMap="{!obj.cObjectMap}"/> -->
+                        <!-- </aura:renderIf> -->
+                      <!-- </aura:renderIf> -->
+                    </aura:iteration>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+</aura:component>

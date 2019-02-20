@@ -8,7 +8,7 @@
  *                             SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。
  */
 -->
-<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.smartviscal__sb_ncld_text_businesscard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
+<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_LeadBulkRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
   <apex:pageMessages id="pageMsgs" escape="false"/>
 
   <apex:form id="All">
@@ -18,17 +18,17 @@
     <apex:inputHidden value="{!saveOK}" id="saveflage"/>
     <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
       <apex:pageBlockButtons >
-        <apex:commandButton onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.smartviscal__sb_ncld_label_save}" id="savebtn"/>
-        <apex:commandButton id="cancelbtn" oncomplete="cancelClick();" value="{!$Label.smartviscal__sb_ncld_label_cancel}" immediate="true"/>
+        <apex:commandButton onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.SB_NCLD_Label_Save}" id="savebtn"/>
+        <apex:commandButton id="cancelbtn" oncomplete="cancelClick();" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
       </apex:pageBlockButtons>
       <apex:pageBlockSection columns="2">
 
-        <apex:selectRadio label="{!$Label.smartviscal__sb_nc_searchcriteria}" value="{!searchType}">
+        <apex:selectRadio label="{!$Label.SB_NC_SearchCriteria}" value="{!searchType}">
           <apex:selectOptions value="{!searchTypeList}"/>
           <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList"/>
         </apex:selectRadio>
 
-        <apex:outputPanel >
+        <apex:outputPanel rendered="{!showLeadOverwrite}">
           <apex:inputCheckbox disabled="{!NOT($ObjectType.Lead.updateable)}" value="{!leadOverwrite}"/>
           <apex:outputLabel style="{!IF($ObjectType.Lead.updateable, '', 'color:#999999;')}" value="{!overwriteLeadInfoLabel}"/>
         </apex:outputPanel>
@@ -76,7 +76,7 @@
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.smartviscal__sb_ncld_text_lead}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Text_Lead}</apex:facet>
           <apex:selectList value="{!ncRec.leadId}" size="1">
             <apex:selectOptions value="{!ncRec.leadSelOptList}"/>
           </apex:selectList>
@@ -91,7 +91,7 @@
       <apex:pageBlockSection id="newBlock" rendered="{!leadCreateable}"  title="{!specifiedWhenCreateNew}" columns="2">
         <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem >
-          <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_campaign}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
+          <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
           <apex:inputField onchange="changeCampaign();" value="{!insertOption.campaign__c}" rendered="{!Not(campLookUpDisabled)}"/>
         </apex:pageBlockSectionItem>
 
@@ -101,19 +101,19 @@
 
         <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem >
-            <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_campaignstatus}" style="{!IF(campDisabled,'color:#999999;','')}"/>
+            <apex:outputLabel value="{!$Label.SB_NCLD_Label_CampaignStatus}" style="{!IF(campDisabled,'color:#999999;','')}"/>
             <apex:selectList value="{!campStatus}" multiselect="false" size="1" disabled="{!campDisabled}">
                 <apex:selectOptions value="{!CampaignStatus}"/>
             </apex:selectList>
         </apex:pageBlockSectionItem>
 
         <apex:pageBlockSectionItem id="ownerSelectItem">
-          <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_owner}" id="ownerinputLabel"/>
+          <apex:outputLabel value="{!$Label.SB_NCLD_Label_Owner}" id="ownerinputLabel"/>
           <apex:inputField value="{!ownerlead.OwnerId}" required="false" id="ownerinput"/>
         </apex:pageBlockSectionItem>
 
         <apex:pageBlockSectionItem >
-          <apex:outputLabel value="{!$Label.smartviscal__sb_ncld_label_namecardowner}"/>
+          <apex:outputLabel value="{!useNameCardOwnerLabel}"/>
           <apex:inputCheckbox onchange="changeUserNameCardOwner(this.checked);"  value="{!useNameCardOwner}" required="false"/>
         </apex:pageBlockSectionItem>
 
@@ -159,10 +159,10 @@
             function saveClick(){
                 var saveok = document.getElementById('{!$Component.saveflage}').value;
                 if(saveok == false || saveok == 'false'){
-                    saveBackValue(saveid1,"{!$Label.smartviscal__sb_ncld_label_save}");
-                    saveBackValue(cancelid1,"{!$Label.smartviscal__sb_ncld_label_cancel}");
-                    saveBackValue(saveid2,"{!$Label.smartviscal__sb_ncld_label_save}");
-                    saveBackValue(cancelid2,"{!$Label.smartviscal__sb_ncld_label_cancel}");
+                    saveBackValue(saveid1,"{!$Label.SB_NCLD_Label_Save}");
+                    saveBackValue(cancelid1,"{!$Label.SB_NCLD_Label_Cancel}");
+                    saveBackValue(saveid2,"{!$Label.SB_NCLD_Label_Save}");
+                    saveBackValue(cancelid2,"{!$Label.SB_NCLD_Label_Cancel}");
                     return;
                 }
                 rePage();

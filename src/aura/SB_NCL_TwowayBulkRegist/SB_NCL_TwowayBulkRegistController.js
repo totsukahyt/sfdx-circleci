@@ -1,0 +1,124 @@
+/**
+ *
+ *  SB_NCL_RecordTypeConditionModal
+ *  リード拡張環境 一括統合用コンポネート Controller
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *
+ **/
+({
+  doInit : function (cmp, event, helper) {
+      var targetIds = cmp.get("v.recordId");
+      cmp.set('v.working', true);
+      if (targetIds != null) {
+        helper.searchLead(cmp, event, helper, targetIds);
+        helper.setFieldList(cmp, event, helper);
+        helper.setTitleValue(cmp, event, helper);
+        helper.setInputValue(cmp, event, helper);
+        helper.doInit(cmp, event, helper, targetIds);
+      }
+      else {
+        cmp.set('v.working', false);
+      }
+    },
+    changeSearchCondition : function (cmp, event, helper) {
+      // helper.changeSearchCondition(cmp, event, helper);
+      cmp.set('v.working', true);
+      var targetIds = cmp.get('v.recordId');
+      helper.searchLead(cmp, event, helper, targetIds);
+    },
+    doSomething : function (cmp, event, helper) {
+      var name = event.getParam('name');
+      if (name == 'close') {
+        sforce.one.navigateToURL(cmp.get('v.retUrl'));
+        cmp.set('v.working', false);
+      }
+      else if (name == 'save') {
+        cmp.set('v.working', true);
+        helper.save(cmp, event, helper);
+      }
+      else if (name == 'changeCampaign') {
+        helper.changeCampaign(cmp, event, helper);
+      }
+      else if (name == 'cleanCampaign') {
+        var inpv = cmp.get("v.inputV");
+        inpv.campaignStatusPlick.plickListOptions = null;
+        inpv.campaignStatusPlick.selectValue = null;
+        cmp.set("v.inputV", inpv);
+      }
+      else if (name == 'cleanOwner') {
+        var inv = cmp.get("v.inputV");
+        inv.ownerId = null;
+        cmp.set("v.inputV", inv);
+      }
+      else if (name == 'changeShowType') {
+        var value = event.getParam('value');
+        cmp.set("v.showPlickListType", value);
+        var fieldMap = cmp.get("v.fieldMap");
+        var selectMap = cmp.get("v.selectMap");
+        var dl = cmp.get("v.dataList");
+        cmp.set("v.fieldList", fieldMap[value]);
+        // cmp.set("v.dataList", null);
+        // cmp.set("v.selectMap", null);
+        // cmp.set("v.selectMap", selectMap);
+        // cmp.set("v.dataList", dl);
+        // $A.get('e.force:refreshView').fire();
+        var inputV = cmp.get("v.inputV");
+        inputV.showRecordType = false;
+        inputV.showOverWrite = false;
+        for (var i = 0; i < inputV.InputPlickListValues.length; i ++) {
+          if ((value == 'Lead' && (i == 1 || i == 2))
+              || (value == 'Contact' && i == 0)
+             ) {
+            inputV.InputPlickListValues[i].show = false;
+            inputV.inputRegistOverWritValues[i].show = false;
+          }
+          else {
+            if (i == 0) {
+              if (inputV.InputPlickListValues[i].canShow) {
+                inputV.InputPlickListValues[i].show = inputV.leadAuthority.isCreateable;
+              }
+              inputV.newSectionLabel = inputV.labelMap['LeadNew'];
+            }
+            else if (i == 1) {
+              if (inputV.InputPlickListValues[i].canShow) {
+                inputV.InputPlickListValues[i].show = inputV.accountAuthority.isCreateable;
+              }
+              inputV.newSectionLabel = inputV.labelMap['AccountNew'];
+            }
+            else if (i == 2) {
+              if (inputV.InputPlickListValues[i].canShow) {
+                inputV.InputPlickListValues[i].show = inputV.contactAuthority.isCreateable;
+              }
+              inputV.newSectionLabel = inputV.labelMap['BothNew'];
+            }
+            if (inputV.inputRegistOverWritValues[i].canShow == true) {
+              inputV.inputRegistOverWritValues[i].show = true;
+              inputV.showOverWrite = true;
+            }
+            if (inputV.showRecordType == false) {
+              inputV.showRecordType = inputV.InputPlickListValues[i].plickListOptions.length > 0 && inputV.InputPlickListValues[i].canShow;
+            }
+          }
+        }
+
+        var scs = cmp.get("v.allSearchConditions");    // 対象の名刺一覧
+        var arr = new Array();
+        for (var i = 0; i < scs.length; i ++) {
+          var sc = scs[i];
+          if ((sc.groupName == value && sc.disabled != true) || value == 'Both') {
+            arr.push(sc);
+          }
+        }
+        inputV.searchConditions = arr;
+        cmp.set("v.inputV", inputV);
+        $A.get('e.force:refreshView').fire();
+      }
+    }
+})

@@ -1,0 +1,18 @@
+<!-- /**
+ *
+ *  SB_NCL_BulkRegistComonEvent
+ *  リード拡張環境 Lightning統合用共通コンポネート用イベント
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.12      2017.05.XX SV_DEV-511 [LEX]リードの名刺で更新のLightning版対応
+ *
+ **/ -->
+<aura:event type="APPLICATION" description="Event template">
+  <aura:attribute name="name" type="String" required="true" description="" />
+  <aura:attribute name="value" type="String" required="" description="" />
+</aura:event>

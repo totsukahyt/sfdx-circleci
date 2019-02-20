@@ -35,11 +35,11 @@ private class SB_NameCard_LeadSaveResultTest
 
         Campaign cc = new Campaign();
         cc.Name = 'test';
-        Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<Campaign>{cc},dml)[0];
+        Database.SaveResult sr = SmartViscaf.SB_NameCard_CrudFls.screate(new List<Campaign>{cc},dml)[0];
 
         nc.campaign__c = cc.Id;
 
-        Database.SaveResult sr1 = SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml)[0];
+        Database.SaveResult sr1 = SmartViscaf.SB_NameCard_CrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml)[0];
         System.assertEquals(0, sr.getErrors().size(), 'saveCampaign error');
         System.assertEquals(0, sr1.getErrors().size(), 'savenamecard error');
 
@@ -108,7 +108,7 @@ private class SB_NameCard_LeadSaveResultTest
     errorHolder.buildATags(acnts[0].Id, acnts[0].Name);
     errorHolder.buildATags(acnts[0].Id, acnts[0].Name);
 
-    System.assert(String.isNotBlank(errorHolder.atags));
+    System.assertEquals(false, errorHolder.atags.isEmpty());
   }
 
   @isTest

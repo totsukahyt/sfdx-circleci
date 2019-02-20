@@ -25,18 +25,22 @@ global with sharing class SB_NameCard_LeadRegist
         //private String todoSubject = '名刺交換';
         private String todoSubject = System.Label.SB_NCLD_Text_BusinessCardExchange;
 
+        global SmartViscaf__SmartViscaConfig__c config { get; private set; }
+
         global SvConfig()
         {
             SmartViscaf__SmartViscaConfig__c conf = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId());
             if (conf.Id == null) conf = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId());
             if (conf.Id == null) conf = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
 
+            config = conf;
+
             // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
             List<String> keyList = new List<String> {'Company', 'State', 'Title', 'Email', 'LastModifiedDate', 'Owner', 'LeadRectype'};
             this.disp = new Map<String, Boolean>();
             this.setBoolMap(keyList, this.disp, conf, 'Disp');
 
-            keyList = new List<String> {'Overwrite', 'RegistTodo'};
+            keyList = new List<String> {'Overwrite', 'RegistTodo', 'DefaultShowLeadListNoExsiting'};
             this.setBoolMap(keyList, this.confMap, conf, null);
 
             if (conf.Id != null && conf.get('LeadRegist_DispCompany__c') != null) {
@@ -82,18 +86,20 @@ global with sharing class SB_NameCard_LeadRegist
         {
             return this.confMap.get('RegistTodo');
         }
+
+        global Boolean defaultDisplayExistingLead()
+        {
+            return this.confMap.get('DefaultShowLeadListNoExsiting');
+        }
     }
 
     // インスタンス化させない
     private SB_NameCard_LeadRegist() {}
 
-
     //ラベル変更
     global static String changeleadlabel(String str)
     {
-        str = str.replace('&*smallLead*&',System.Label.SB_NCLD_Text_SmallLead);
-        str = str.replace('&*Lead*&',Schema.getGlobalDescribe().get('Lead').getDescribe().getLabel());
-        return str;
+        return '';
     }
 
     // SmartVisca設定
@@ -147,7 +153,7 @@ global with sharing class SB_NameCard_LeadRegist
     {
         List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
         //SV_DEV-175 リード登録時にキャンペーン内での状況を選択 キャンペーンのStatusクエリ
-        for (SmartViscaf__NameCard__c nc : [SELECT Id, Name, OwnerId,
+        for (SmartViscaf__NameCard__c nc : [SELECT Id, Name, OwnerId, Owner.IsActive,SmartViscaf__account__c,
                 SmartViscaf__zip_code__c, SmartViscaf__address_pref__c, SmartViscaf__address__c,
                 SmartViscaf__address_bld__c, SmartViscaf__address_eng__c,
                 SmartViscaf__company_name__c, SmartViscaf__web_url1__c, SmartViscaf__tel1__c, SmartViscaf__fax1__c,
@@ -255,10 +261,12 @@ global with sharing class SB_NameCard_LeadRegist
         } else if (firstnameSet.size() > 0){
                 str = 'FirstName = :firstnameSet';
         }
-        
-        whereList.add(str);
+        if (String.isNotBlank(str)) {
+            whereList.add(str);
+        }
         System.debug(firstnameSet);
         System.debug(lastnameSet);
+        System.debug(whereList.size());
         System.debug(getSoql(whereList));
         soqlMap.put(SEARCHTYPE_NAME, getSoql(whereList));
     }

@@ -1,0 +1,112 @@
+<!-- /**
+ *
+ *  SB_NCL_UpdateByCard
+ *  リード拡張環境 Lightning名刺で更新共通コンポネート
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author gao
+ *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *
+ **/ -->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+  <aura:method name="close" action="{!c.close}" access="global"/>
+  <aura:registerEvent name="seSObjEvent" type="c:SB_NCL_UpdateByCardEvent"/>
+  <aura:attribute name="reId" type="String"/>
+  <aura:attribute name="radioValue" type="String" />
+  <aura:attribute name="titleV" type="Sobject"/>
+  <aura:attribute name="inputV" type="Sobject"/>
+  <aura:attribute name="dataList" type="Sobject[]"/>
+  <aura:attribute name="fieldList" type="Sobject[]"/>
+  <aura:attribute name="errorMsg" type="String"/>
+
+
+  <lightning:tile label="{!v.titleV.linkName}" href="{!v.titleV.linkTo}" title="TTT" class="slds-page-header">
+    <aura:set attribute="media">
+      <lightning:icon iconName="{!v.titleV.iconName}" size="{!v.titleV.iconSize}" />
+    </aura:set>
+    <aura:set attribute="body">
+      <div class="slds-grid">
+          <div class="slds-grid slds-no-space">
+            <h1 class="slds-text-heading--medium slds-truncate" title="Update by Business Card">{!v.titleV.titleName}</h1>
+          </div>
+        </div>
+    </aura:set>
+    <!-- <p title="Update by Business Card">{!v.titleV.userName}</p> -->
+  </lightning:tile>
+  <aura:renderIf isTrue="{!not(empty(v.errorMsg))}">
+    <ui:message title="" severity="error" closable="false">
+      {!v.errorMsg}
+    </ui:message>
+  </aura:renderIf>
+
+  <aura:if isTrue="{!not(empty(v.inputV.checkboxLabel))}">
+    <lightning:input class="mleft" type="checkbox" label="{!v.inputV.checkboxLabel}" name="{!v.inputV.checkboxLabel}" checked="{!v.inputV.checkboxValue}"/>
+  </aura:if>
+
+  <aura:if isTrue="{!v.inputV.searchTypeSelectOpts.length > 0}">
+    <div style="margin-top: 40px;">
+      <div class="slds-media "  style="margin-left:30px;">
+        <div class="slds-form-element__control" style="width:100%;">
+          <fieldset class="slds-form-element ">
+            <!-- <p style="font-size:14px;" class="slds-section__title ">{!$Label.c.SB_NC_SearchCondition}</p> -->
+            <div class="slds-grid slds-wrap slds-grid--pull-padded" style="width:100%;">
+              <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-16 slds-large-size--1-of-8 "/>
+
+                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-5 slds-large-size--1-of-8 ">
+                  <p style="font-size:14px;margin-top: -10px;" class="slds-section__title ">{!v.inputV.radioTitle}</p>
+                </div>
+                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-3 slds-large-size--1-of-4 ">
+                  <span class="slds-radio">
+                    <input type="radio" id="search0" name="options" onclick="{!c.search1}" checked="{!v.inputV.searchTypeSelectOpts[0].value == v.inputV.radioValue}" />
+                    <label class="slds-radio__label" for="search0">
+                      <span class="slds-radio--faux"></span>
+                      <span class="media__figure">{!v.inputV.searchTypeSelectOpts[0].label}</span>
+                    </label>
+                  </span>
+                </div>
+                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-8 slds-large-size--1-of-8 ">
+                  <span class="slds-radio">
+                    <input type="radio" id="search1" name="options" onclick="{!c.search2}" checked="{!v.inputV.searchTypeSelectOpts[1].value == v.inputV.radioValue}"/>
+                    <label class="slds-radio__label" for="search1">
+                      <span class="slds-radio--faux"></span>
+                      <span class="media__figure">{!v.inputV.searchTypeSelectOpts[1].label}</span>
+                    </label>
+                  </span>
+                </div>
+
+                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-3 slds-large-size--1-of-4 ">
+                  <span class="slds-radio">
+                    <input type="radio" id="search2" name="options" onclick="{!c.search3}" checked="{!v.inputV.searchTypeSelectOpts[2].value == v.inputV.radioValue}"/>
+                    <label class="slds-radio__label" for="search2">
+                      <span class="slds-radio--faux"></span>
+                      <span class="media__figure">{!v.inputV.searchTypeSelectOpts[2].label}</span>
+                    </label>
+                  </span>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+    </div>
+  </aura:if>
+  <div class="slds-scrollable--y">
+    <lightning:datatable data="{!v.dataList }"
+          class="datatable"
+          columns="{! v.fieldList }"
+          keyField="id"
+          onrowaction="{!c.getSelectedName}"
+          hideCheckboxColumn="true"
+          showRowNumberColumn="true"/>
+  </div>
+  <!-- フッター -->
+  <div class="slds-docked-form-footer">
+    <!-- 閉じる ボタン -->
+    <!-- <lightning:layout horizontalAlign="center"> -->
+      <lightning:button label="{!v.titleV.closeValue}" iconName="utility:close" variant="neutral" onclick="{!c.close}" iconPosition="left" />
+    <!-- </lightning:layout> -->
+  </div>
+</aura:component>

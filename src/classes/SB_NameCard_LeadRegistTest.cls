@@ -8,233 +8,303 @@
 
 @isTest private class SB_NameCard_LeadRegistTest
 {
-    @isTest private static void test1()
-    {
-        List<User> u = insertUser();
-        System.runAs(u[1]){
-            insertNameCard(true);
-            SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-            System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
-            Test.startTest();
-            PageReference pageRef = Page.SB_NameCard_LeadRegist;
-            Test.setCurrentPage(pageRef);
+    /**
+      * @description 連携マッピング用データー作成するメソッド
+    **/
+    private static void setMappingDate() {
+      SmartViscaf__NameCardBasicSetting__c setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+      upsert setting;
+      System.assertEquals(true, String.isNotBlank(setting.Id));
+      String objname = 'SmartViscaf__NameCardRenkeiMapping__c';
+      List<RecordType> res = [SELECT Id,Name,Developername FROM RecordType WHERE SobjectType = :objname ORDER BY Developername];
+      System.assertEquals('Lead2', res[2].Developername);
+      System.assertEquals('Contact', res[1].Developername);
+      System.assertEquals('Account', res[0].Developername);
+      System.debug('resresres' + res);
+      List<SmartViscaf__NameCardRenkeiMapping__c> testmapplist = new List<SmartViscaf__NameCardRenkeiMapping__c>();
+      SmartViscaf__NameCardRenkeiMapping__c lmap = new SmartViscaf__NameCardRenkeiMapping__c();
+      lmap.SmartViscaf__IsActive__c = true;
+      lmap.SmartViscaf__TargetName__c = 'Company';
+      lmap.SmartViscaf__NameCardName__c = 'SmartViscaf__company_name__c';
+      lmap.SmartViscaf__BasicSetting__c = setting.Id;
+      lmap.RecordTypeId = res[2].Id; // Lead
+      testmapplist.add(lmap);
 
-            ApexPages.StandardController sc = new ApexPages.StandardController(nc);
-            SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+      lmap = new SmartViscaf__NameCardRenkeiMapping__c();
+      lmap.SmartViscaf__IsActive__c = true;
+      lmap.SmartViscaf__TargetName__c = 'LastName';
+      lmap.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_last__c';
+      lmap.SmartViscaf__BasicSetting__c = setting.Id;
+      lmap.RecordTypeId = res[2].Id; // Lead
+      testmapplist.add(lmap);
 
-            SB_NameCard_LeadRegistController.getSearchTypeList();
+      lmap = new SmartViscaf__NameCardRenkeiMapping__c();
+      lmap.SmartViscaf__IsActive__c = true;
+      lmap.SmartViscaf__TargetName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'NameCard__c';
+      lmap.SmartViscaf__NameCardName__c = 'Id';
+      lmap.SmartViscaf__BasicSetting__c = setting.Id;
+      lmap.RecordTypeId = res[2].Id; // Lead
+      testmapplist.add(lmap);
 
-            ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
-            ctrl.registTodo = true;
-            PageReference savePageRef = ctrl.saveLead();
-            System.assertNotEquals(null, savePageRef, 'Save error');
+      SmartViscaf__NameCardRenkeiMapping__c cmap = new SmartViscaf__NameCardRenkeiMapping__c();
+      cmap.SmartViscaf__IsActive__c = true;
+      cmap.SmartViscaf__TargetName__c = 'LastName';
+      cmap.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_last__c';
+      cmap.RecordTypeId = res[1].Id; // Contact
+      cmap.SmartViscaf__BasicSetting__c = setting.Id;
+      testmapplist.add(cmap);
 
-            nc = getNameCard(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
-            System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
-            ctrl.cancel();
-            Test.stopTest();
-        }
+      SmartViscaf__NameCardRenkeiMapping__c amap = new SmartViscaf__NameCardRenkeiMapping__c();
+      amap.SmartViscaf__IsActive__c = true;
+      amap.SmartViscaf__TargetName__c = 'Name';
+      amap.SmartViscaf__NameCardName__c = 'SmartViscaf__company_name__c';
+      amap.RecordTypeId = res[0].Id; // Account
+      amap.SmartViscaf__BasicSetting__c = setting.Id;
+      testmapplist.add(amap);
+
+
+      insert testmapplist;
+    }
+
+    @isTest private static void test1() {
+      List<User> u = insertUser();
+      System.runAs(u[1]){
+        setMappingDate();
+        insertNameCard(true);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
+        Test.startTest();
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+
+        SB_NameCard_LeadRegistController.getSearchTypeList();
+
+        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+        ctrl.registTodo = true;
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertNotEquals(null, savePageRef, 'Save error');
+
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        ctrl.cancel();
+        Test.stopTest();
+      }
     }
 
     @isTest private static void test2() {
-        List<User> u = insertUser();
-        System.runAs(u[1]){
-            insertNameCard(true);
-            SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-            System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
+      List<User> u = insertUser();
+      System.runAs(u[1]){
+        setMappingDate();
+        insertNameCard(true);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
 
-            insertLead(nc, null);
-            Lead lead = getLead(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
+        insertLead(nc, null);
+        Lead lead = getLead(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 
-            Test.startTest();
+        Test.startTest();
 
-            PageReference pageRef = Page.SB_NameCard_LeadRegist;
-            Test.setCurrentPage(pageRef);
-            ApexPages.StandardController sc = new ApexPages.StandardController(nc);
-            SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
 
-            ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
-            ctrl.search();
-            ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
-            ctrl.search();
+        ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
+        ctrl.search();
+        ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
+        ctrl.search();
 
-            ctrl.lookUpIndex = ctrl.leadRecordList.size()-2;
-            SB_NameCard_LeadRegistController.LeadRecord leadRec = ctrl.leadRecordList.get(ctrl.lookUpIndex);
-            leadRec.lookUpNameCard.SmartViscaf__lead__c = lead.Id;
-            ctrl.setLookUp();
+        ctrl.lookUpIndex = ctrl.leadRecordList.size()-2;
+        SB_NameCard_LeadRegistController.LeadRecord leadRec = ctrl.leadRecordList.get(ctrl.lookUpIndex);
+        leadRec.lookUpNameCard.SmartViscaf__lead__c = lead.Id;
+        ctrl.setLookUp();
 
-            ctrl.leadRecordListIndex = 0;
-            ctrl.checkRadio();
-            System.assertEquals(ctrl.leadRecTypeEdit, false);
-            PageReference savePageRef = ctrl.saveLead();
-            System.assertNotEquals(null, savePageRef, 'Save error');
+        ctrl.leadRecordListIndex = 0;
+        ctrl.checkRadio();
+        System.assertEquals(ctrl.leadRecTypeEdit, false);
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertNotEquals(null, savePageRef, 'Save error');
 
-            nc = getNameCard(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
-            System.assertEquals(lead.Id, nc.SmartViscaf__lead__c, 'LeadId error');
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertEquals(lead.Id, nc.SmartViscaf__lead__c, 'LeadId error');
 
-            Test.stopTest();
-        }
+        Test.stopTest();
+      }
     }
 
     @isTest private static void test3() {
-        List<User> u = insertUser();
-        System.runAs(u[1]){
-            insertNameCard(true);
-            SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-            System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
+      List<User> u = insertUser();
+      System.runAs(u[1]){
+        setMappingDate();
+        insertNameCard(true);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
 
-            insertLead(nc, null);
-            Lead lead = getLead(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
+        insertLead(nc, null);
+        Lead lead = getLead(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 
-            Test.startTest();
+        Test.startTest();
 
-            PageReference pageRef = Page.SB_NameCard_LeadNameCardList;
-            Test.setCurrentPage(pageRef);
-            ApexPages.StandardController sc = new ApexPages.StandardController(lead);
-            SB_NameCard_LeadNameCardListController ctrl = new SB_NameCard_LeadNameCardListController(sc);
+        PageReference pageRef = Page.SB_NameCard_LeadNameCardList;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController sc = new ApexPages.StandardController(lead);
+        SB_NameCard_LeadNameCardListController ctrl = new SB_NameCard_LeadNameCardListController(sc);
 
-            ctrl.nameCardRecordListIndex = 0;
+        ctrl.nameCardRecordListIndex = 0;
 
-            PageReference savePageRef = ctrl.saveLead();
-            System.assertNotEquals(null, savePageRef, 'Save error');
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertNotEquals(null, savePageRef, 'Save error');
 
-            nc = getNameCard(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
-            System.assertEquals(lead.Id, nc.SmartViscaf__lead__c, 'LeadId error');
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertEquals(lead.Id, nc.SmartViscaf__lead__c, 'LeadId error');
 
-            ctrl.cancel();
+        ctrl.cancel();
 
-            Test.stopTest();
-        }
+        Test.stopTest();
+      }
     }
 
     @isTest private static void test4() {
-        List<User> u = insertUser();
-        System.runAs(u[1]){
-            insertNameCard(true);
-            SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-            List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
-            System.debug('SB_NameCard_LeadRegistTest nc.Id: '+ncList[0].Id);
+      List<User> u = insertUser();
+      System.runAs(u[1]){
+        setMappingDate();
+        insertNameCard(true);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+        System.debug('SB_NameCard_LeadRegistTest nc.Id: '+ncList[0].Id);
 
-            Test.startTest();
+        Test.startTest();
 
-            PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
-            pageRef.getParameters().put('retUrl', '/home/home.jsp');
-            Test.setCurrentPage(pageRef);
-            ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
-            ssc.setSelected(ncList);
-            SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+        PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+        pageRef.getParameters().put('retUrl', '/home/home.jsp');
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+        ssc.setSelected(ncList);
+        SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
 
-            SB_NameCard_LeadRegistController.getSearchTypeList();
+        SB_NameCard_LeadRegistController.getSearchTypeList();
 
-            ctrl.nameCardRecordList[0].leadId = 'new';
-            ctrl.nameCardRecordList[0].registTodo = true;
-            ctrl.ownerlead.OwnerId = Userinfo.getUserid();
+        ctrl.nameCardRecordList[0].leadId = 'new';
+        ctrl.nameCardRecordList[0].registTodo = true;
+        ctrl.ownerlead.OwnerId = Userinfo.getUserid();
 
-            ctrl.saveLead();
-            //System.assertNotEquals(null, savePageRef, 'Save error');
-            nc = getNameCard(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
-            System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+ 
+        ctrl.saveLead();
+        System.assertEquals(null, ctrl.testError);
+        System.assertEquals(true, ctrl.saveOK);
+        List<Lead> ls = [SELECT Id
+                           FROM Lead];
+        System.assertEquals(1, ls.size());
+        //System.assertNotEquals(null, savePageRef, 'Save error');
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
 
-            //ctrl.cancel();
+        //ctrl.cancel();
 
-            Test.stopTest();
-        }
+        Test.stopTest();
+      }
     }
 
     @isTest private static void test5() {
         List<User> u = insertUser();
         System.runAs(u[1]){
-            insertNameCard(true);
-            SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-            List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
-            System.debug('SB_NameCard_LeadRegistTest nc.Id: '+ncList[0].Id);
+          setMappingDate();
+          insertNameCard(true);
+          SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+          List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c> { nc };
+          System.debug('SB_NameCard_LeadRegistTest nc.Id: '+ncList[0].Id);
 
-            insertLead(nc, null);
-            Lead lead = getLead(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
+          insertLead(nc, null);
+          Lead lead = getLead(nc.Id);
+          System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 
-            Test.startTest();
+          Test.startTest();
 
-            PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
-            pageRef.getParameters().put('retUrl', '/home/home.jsp');
-            Test.setCurrentPage(pageRef);
-            ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
-            ssc.setSelected(ncList);
-            SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
+          PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
+          pageRef.getParameters().put('retUrl', '/home/home.jsp');
+          Test.setCurrentPage(pageRef);
+          ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(ncList);
+          ssc.setSelected(ncList);
+          SB_NameCard_LeadBulkRegistController ctrl = new SB_NameCard_LeadBulkRegistController(ssc);
 
-            ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
-            ctrl.search();
-            ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
-            ctrl.search();
+          ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
+          ctrl.search();
+          ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
+          ctrl.search();
 
-            ctrl.nameCardRecordList[0].leadId = lead.Id;
-            ctrl.nameCardRecordList[0].registTodo = true;
+          ctrl.nameCardRecordList[0].leadId = lead.Id;
+          ctrl.nameCardRecordList[0].registTodo = true;
 
-            ctrl.saveLead();
-            //System.assertNotEquals(null, savePageRef, 'Save error');
+          ctrl.saveLead();
+          //System.assertNotEquals(null, savePageRef, 'Save error');
 
-            nc = getNameCard(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
-            System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+          nc = getNameCard(nc.Id);
+          System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+          System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
 
-            //ctrl.cancel();
+          //ctrl.cancel();
 
-            Test.stopTest();
+          Test.stopTest();
         }
     }
 
     @isTest private static void test6() {
-        List<User> u = insertUser();
-        System.runAs(u[1]){
-            insertNameCard(false);
+      List<User> u = insertUser();
+      System.runAs(u[1]){
+        setMappingDate();
+        insertNameCard(false);
 
-            SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
-            System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
+        SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
+        System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
 
-            insertLead(nc, null);
-            Lead lead = getLead(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
+        insertLead(nc, null);
+        Lead lead = getLead(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest lead.Id: '+lead.Id);
 
-            Test.startTest();
+        Test.startTest();
 
-            PageReference pageRef = Page.SB_NameCard_LeadRegist;
-            Test.setCurrentPage(pageRef);
-            ApexPages.StandardController sc = new ApexPages.StandardController(nc);
-            SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+        PageReference pageRef = Page.SB_NameCard_LeadRegist;
+        Test.setCurrentPage(pageRef);
+        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
 
-            ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
-            ctrl.search();
-            ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
-            ctrl.search();
+        ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_EMAIL;
+        ctrl.search();
+        ctrl.searchType = SB_NameCard_LeadRegist.SEARCHTYPE_NAME;
+        ctrl.search();
 
-            ctrl.lookUpIndex = ctrl.leadRecordList.size()-2;
-            SB_NameCard_LeadRegistController.LeadRecord leadRec = ctrl.leadRecordList.get(ctrl.lookUpIndex);
-            leadRec.lookUpNameCard.SmartViscaf__lead__c = lead.Id;
-            ctrl.setLookUp();
-            //ctrl.leadRecordList.get(0).isNew = true;
-            ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-2;
+        ctrl.lookUpIndex = ctrl.leadRecordList.size()-2;
+        SB_NameCard_LeadRegistController.LeadRecord leadRec = ctrl.leadRecordList.get(ctrl.lookUpIndex);
+        leadRec.lookUpNameCard.SmartViscaf__lead__c = lead.Id;
+        ctrl.setLookUp();
+        //ctrl.leadRecordList.get(0).isNew = true;
+        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-2;
 
-            PageReference savePageRef = ctrl.saveLead();
-            System.assertNotEquals(null, savePageRef, 'Save error');
+        PageReference savePageRef = ctrl.saveLead();
+        System.assertNotEquals(null, savePageRef, 'Save error');
 
-            nc = getNameCard(nc.Id);
-            System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
-            System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+        nc = getNameCard(nc.Id);
+        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+        System.assertNotEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
 
-            Test.stopTest();
-        }
+        Test.stopTest();
+      }
     }
 
     //所有者のデフォルト値のテスト
     @isTest private static void test_OwnerIdDefTest() {
         List<User> u = insertUser();
         System.runAs(u[1]){
+            setMappingDate();
             insertNameCard(true);
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
             PageReference pageRef = Page.SB_NameCard_LeadRegist;
@@ -246,7 +316,6 @@
             ctrl.pageLead.ownerId = u[0].Id;
             ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
             PageReference savePageRef = ctrl.saveLead();
-
             List<Lead> ls = [Select Id From Lead];
             System.assertEquals(ls.size(),1);
             Lead le = getLead(nc.Id);
@@ -258,6 +327,7 @@
     @isTest private static void test_OwnerIdDefTestBulk() {
         List<User> u = insertUser();
         System.runAs(u[1]){
+            setMappingDate();
             insertNameCard(true);
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
             PageReference pageRef = Page.SB_NameCard_LeadBulkRegist;
@@ -294,6 +364,7 @@
         List<User> u = insertUser();
         System.runAs(u[1]){
             //名刺に関するデータを作成
+            setMappingDate();
             insertNameCard(true);
             //基本設定に関するデータを作成
             insCusSetting(true);
@@ -312,6 +383,7 @@
     @isTest private static void test_cusSettingDefTestBulk() {
         List<User> u = insertUser();
         System.runAs(u[1]){
+            setMappingDate();
             insertNameCard(true);
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
             List<SmartViscaf__NameCard__c> ncList = new List<SmartViscaf__NameCard__c>();
@@ -331,6 +403,7 @@
     @isTest private static void test_cusSettingDefFTest() {
         List<User> u = insertUser();
         System.runAs(u[1]){
+            setMappingDate();
             insertNameCard(true);
             insCusSetting(false);
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -356,6 +429,7 @@
     @isTest private static void test_changeOwnerTest() {
         List<User> u = insertUser();
         System.runAs(u[1]){
+            setMappingDate();
             insertNameCard(true);
             insCusSetting(false);
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -383,6 +457,7 @@
     @isTest private static void test_errorCaseTest() {
         List<User> u = insertUser();
         System.runAs(u[1]){
+            setMappingDate();
             insertNameCard(true);
             insCusSetting(false);
             Profile prof;
@@ -416,6 +491,7 @@
     @isTest private static void test_errorCase2Test() {
         List<User> u = insertUser();
         System.runAs(u[1]){
+            setMappingDate();
             insertNameCard(true);
             insCusSetting(false);
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -443,6 +519,7 @@
     @isTest private static void test_SettingDefFTestBulk() {
         List<User> u = insertUser();
         System.runAs(u[1]){
+            setMappingDate();
             insertNameCard(true);
             insCusSetting(false);
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -468,6 +545,7 @@
             //基本設定に関するデータを作成
             insCusSetting(false);
             //名刺に関するデータを作成
+            setMappingDate();
             insertNameCard(false);
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
             SmartViscaf__NameCard__c[] ncList = new SmartViscaf__NameCard__c[]{nc};
@@ -502,6 +580,7 @@
             //基本設定に関するデータを作成
             insCusSetting(false);
             //名刺に関するデータを作成
+            setMappingDate();
             insertNameCard(false);
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
             SmartViscaf__NameCard__c[] ncList = new SmartViscaf__NameCard__c[]{nc};
@@ -533,6 +612,7 @@
             //基本設定に関するデータを作成
             insCusSetting(false);
             //名刺に関するデータを作成
+            setMappingDate();
             insertNameCard(false);
 
             SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -571,6 +651,7 @@
             //基本設定に関するデータを作成
             insCusSetting(false);
             //名刺に関するデータを作成
+            setMappingDate();
             insertNameCard(false);
 
 
@@ -610,6 +691,7 @@
             //基本設定に関するデータを作成
             insCusSetting(false);
             //名刺に関するデータを作成
+            setMappingDate();
             insertNameCard(false);
 
 
@@ -669,6 +751,7 @@
             //基本設定に関するデータを作成
             insCusSetting(false);
             //名刺に関するデータを作成
+            setMappingDate();
             insertNameCard(false);
             List<Campaign> cm = [Select Id,Name From Campaign];
             System.assertNotEquals(cm.size(),0);
@@ -732,6 +815,7 @@
             //基本設定に関するデータを作成
             insCusSetting(false);
             //名刺に関するデータを作成
+            setMappingDate();
             insertNameCard(false);
             List<Campaign> cm = [Select Id,Name From Campaign];
             System.assertNotEquals(cm.size(),0);
@@ -766,6 +850,7 @@
             ctrl.campStatus = 'New1';
             //保存
             ctrl.saveLead();
+            System.assertEquals(null, ctrl.testError);
             List<CampaignMember> cmbs = [Select Id,Name,Status From CampaignMember];
             //キャンペーンメンバーをAssert
             System.assertEquals(cmbs.size(),1);
@@ -790,6 +875,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
@@ -810,8 +896,9 @@
         ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
         ctrl.registTodo = true;
         PageReference savePageRef = ctrl.saveLead();
-
-        System.assertEquals(ctrl.testError, System.Label.SB_NCLD_MSG_QUEUES_ERROR);
+        String todoE = Task.getSobjectType().getDescribe().getLabel();
+        todoE += System.Label.SB_NCLD_MSG_Regist_Error;
+        System.assertEquals(ctrl.testError, todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR);
 
         System.assertEquals(null, savePageRef, 'Save error');
 
@@ -839,6 +926,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
@@ -874,96 +962,99 @@
     // キュー リード使えない
     // ToDo なし
     // 結果:エラー 選択されたキュー(group name)ではリードにサポートされていません
-    @isTest static void testQueueCantUseLeadNewNoTask() {
-      List<User> u = insertUser();
-        System.runAs(u[1]) {
-        Group g1 = new Group(Name='group name', type='Queue');
-        insert g1;
-        List<QueuesObject> qss = new List<QueuesObject>();
-        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
-        // qss.add(q1);
-        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
-        qss.add(q2);
-        insert qss;
-        insertNameCard(true);
-        insCusSetting(false);
-        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
-        System.assertEquals(namecards.size(), 1);
-        namecards[0].ownerId = g1.Id;
-        update namecards;
-        SmartViscaf__NameCard__c nc = namecards[0];
+    // @isTest static void testQueueCantUseLeadNewNoTask() {
+    //   List<User> u = insertUser();
+    //     System.runAs(u[1]) {
+    //     Group g1 = new Group(Name='group name', type='Queue');
+    //     insert g1;
+    //     List<QueuesObject> qss = new List<QueuesObject>();
+    //     // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+    //     // qss.add(q1);
+    //     QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+    //     qss.add(q2);
+    //     insert qss;
+    //     setMappingDate();
+    //     insertNameCard(true);
+    //     insCusSetting(false);
+    //     List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+    //     System.assertEquals(namecards.size(), 1);
+    //     namecards[0].ownerId = g1.Id;
+    //     update namecards;
+    //     SmartViscaf__NameCard__c nc = namecards[0];
 
-        Test.startTest();
-        PageReference pageRef = Page.SB_NameCard_LeadRegist;
-        Test.setCurrentPage(pageRef);
+    //     Test.startTest();
+    //     PageReference pageRef = Page.SB_NameCard_LeadRegist;
+    //     Test.setCurrentPage(pageRef);
 
-        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
-        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+    //     ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+    //     SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
 
-        SB_NameCard_LeadRegistController.getSearchTypeList();
+    //     SB_NameCard_LeadRegistController.getSearchTypeList();
 
-        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
-        // ctrl.registTodo = true;
-        PageReference savePageRef = ctrl.saveLead();
-        System.assertEquals(null, savePageRef, 'Save error');
-        // エラー Assert
-        System.assertEquals(ctrl.testError, String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}));
+    //     ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+    //     ctrl.pageLead = new Lead(OwnerId = g1.Id);
+    //     // ctrl.registTodo = true;
+    //     PageReference savePageRef = ctrl.saveLead();
+    //     System.assertEquals(null, savePageRef, 'Save error');
+    //     // エラー Assert
+    //     System.assertEquals(ctrl.testError, String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}));
 
-        nc = getNameCard(nc.Id);
-        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
-        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
-        ctrl.cancel();
-        Test.stopTest();
-      }
-    }
+    //     nc = getNameCard(nc.Id);
+    //     System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+    //     System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+    //     ctrl.cancel();
+    //     Test.stopTest();
+    //   }
+    // }
 
     // 詳細
     // リード新規
     // キュー リード使えない
     // ToDo あり
     // 結果:エラー 選択されたキュー(group name)ではリードにサポートされていません
-    @isTest static void testQueueCantUseLeadNewTask() {
-      List<User> u = insertUser();
-        System.runAs(u[1]) {
-        Group g1 = new Group(Name='group name', type='Queue');
-        insert g1;
-        List<QueuesObject> qss = new List<QueuesObject>();
-        // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
-        // qss.add(q1);
-        QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
-        qss.add(q2);
-        insert qss;
-        insertNameCard(true);
-        insCusSetting(false);
-        List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
-        System.assertEquals(namecards.size(), 1);
-        namecards[0].ownerId = g1.Id;
-        update namecards;
-        SmartViscaf__NameCard__c nc = namecards[0];
+    // @isTest static void testQueueCantUseLeadNewTask() {
+    //   List<User> u = insertUser();
+    //     System.runAs(u[1]) {
+    //     Group g1 = new Group(Name='group name', type='Queue');
+    //     insert g1;
+    //     List<QueuesObject> qss = new List<QueuesObject>();
+    //     // QueuesObject q1 = new QueueSObject(QueueID = g1.id, SobjectType = 'Lead');
+    //     // qss.add(q1);
+    //     QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
+    //     qss.add(q2);
+    //     insert qss;
+    //     setMappingDate();
+    //     insertNameCard(true);
+    //     insCusSetting(false);
+    //     List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
+    //     System.assertEquals(namecards.size(), 1);
+    //     namecards[0].ownerId = g1.Id;
+    //     update namecards;
+    //     SmartViscaf__NameCard__c nc = namecards[0];
 
-        Test.startTest();
-        PageReference pageRef = Page.SB_NameCard_LeadRegist;
-        Test.setCurrentPage(pageRef);
+    //     Test.startTest();
+    //     PageReference pageRef = Page.SB_NameCard_LeadRegist;
+    //     Test.setCurrentPage(pageRef);
 
-        ApexPages.StandardController sc = new ApexPages.StandardController(nc);
-        SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
+    //     ApexPages.StandardController sc = new ApexPages.StandardController(nc);
+    //     SB_NameCard_LeadRegistController ctrl = new SB_NameCard_LeadRegistController(sc);
 
-        SB_NameCard_LeadRegistController.getSearchTypeList();
+    //     SB_NameCard_LeadRegistController.getSearchTypeList();
 
-        ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
-        ctrl.registTodo = true;
-        PageReference savePageRef = ctrl.saveLead();
-        System.assertEquals(null, savePageRef, 'Save error');
-        // エラー Assert
-        System.assertEquals(ctrl.testError, String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}));
+    //     ctrl.leadRecordListIndex = ctrl.leadRecordList.size()-1;
+    //     ctrl.registTodo = true;
+    //     PageReference savePageRef = ctrl.saveLead();
+    //     System.assertEquals(null, savePageRef, 'Save error');
+    //     // エラー Assert
+    //     System.assertEquals(ctrl.testError, String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}));
 
-        nc = getNameCard(nc.Id);
-        System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
-        System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
-        ctrl.cancel();
-        Test.stopTest();
-      }
-    }
+    //     nc = getNameCard(nc.Id);
+    //     System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
+    //     System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+    //     ctrl.cancel();
+    //     Test.stopTest();
+    //   }
+    // }
 
     // 詳細
     // リード更新
@@ -981,6 +1072,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -1003,7 +1095,9 @@
         PageReference savePageRef = ctrl.saveLead();
         System.assertEquals(null, savePageRef, 'Save error');
         // エラー Assert
-        System.assertEquals(ctrl.testError, System.Label.SB_NCLD_MSG_QUEUES_ERROR);
+        String todoE = Task.getSobjectType().getDescribe().getLabel();
+        todoE += System.Label.SB_NCLD_MSG_Regist_Error;
+        System.assertEquals(ctrl.testError, todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR);
 
         nc = getNameCard(nc.Id);
         System.debug('SB_NameCard_LeadRegistTest nc.lead__c: '+nc.SmartViscaf__lead__c);
@@ -1029,6 +1123,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -1075,6 +1170,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -1121,6 +1217,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -1141,6 +1238,7 @@
         ctrl.leadRecordListIndex = 0;
         ctrl.registTodo = true;
         PageReference savePageRef = ctrl.saveLead();
+        System.assertEquals(null, ctrl.testError);
         System.assertNotEquals(null, savePageRef, 'Save error');
 
         nc = getNameCard(nc.Id);
@@ -1168,6 +1266,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
@@ -1216,6 +1315,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
@@ -1261,6 +1361,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
@@ -1286,7 +1387,7 @@
         //System.assertNotEquals(null, savePageRef, 'Save error');
         System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
         String msg = 1 + System.Label.SB_NC_Line + ': ' + Lead.getSobjectType().getDescribe().getLabel()
-                                 + System.Label.SB_NCLD_MSG_Regist_Error + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}) + '<br>';
+                                 + System.Label.SB_NCLD_MSG_Regist_Error + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'});
         System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
         System.assertEquals(ctrl.testError, msg);
         Test.stopTest();
@@ -1309,6 +1410,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         List<SmartViscaf__NameCard__c> namecards = [Select Id FROM SmartViscaf__NameCard__c];
@@ -1336,6 +1438,9 @@
         String msg = 1 + System.Label.SB_NC_Line + ': ' + Lead.getSobjectType().getDescribe().getLabel()
                                  + System.Label.SB_NCLD_MSG_Regist_Error + ': ' + String.format(System.Label.SB_NCLD_MSG_QUEUES_LEAD_ERROR,new String[]{'group name'}) + '<br>';
         System.assertEquals(null, nc.SmartViscaf__lead__c, 'nc.lead__c error');
+                String todoE = Task.getSobjectType().getDescribe().getLabel();
+        todoE += System.Label.SB_NCLD_MSG_Regist_Error;
+        msg = 1 + System.Label.SB_NC_Line + ': ' + todoE + ': ' + System.Label.SB_NCLD_MSG_QUEUES_ERROR ;
         System.assertEquals(ctrl.testError, msg);
         Test.stopTest();
       }
@@ -1357,6 +1462,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -1407,6 +1513,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -1453,6 +1560,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -1499,6 +1607,7 @@
         QueuesObject q2 = new QueueSObject(QueueID = g1.id, SobjectType = 'SmartViscaf__NameCard__c');
         qss.add(q2);
         insert qss;
+        setMappingDate();
         insertNameCard(true);
         insCusSetting(false);
         SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
@@ -1529,8 +1638,7 @@
       }
     }
 
-    private static void insertNameCard(Boolean haveMail)
-    {
+    private static void insertNameCard(Boolean haveMail) {
         SmartViscaf__NameCard__c nc = new SmartViscaf__NameCard__c();
         nc.SmartViscaf__zip_code__c = '150-0022';
         nc.SmartViscaf__address_pref__c = '東京都';
@@ -1554,11 +1662,11 @@
         if (haveMail == false) {
             Campaign cc = new Campaign();
             cc.Name = 'test';
-            Database.SaveResult sr1 = SB_NameCard_LeadCrudFls.screate(new List<Campaign>{cc},dml)[0];
+            Database.SaveResult sr1 = SmartViscaf.SB_NameCard_CrudFls.screate(new List<Campaign>{cc},dml)[0];
             System.assertEquals(0, sr1.getErrors().size(), 'NameCard error');
             nc.campaign__c = cc.Id;
         }
-        Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml)[0];
+        Database.SaveResult sr = SmartViscaf.SB_NameCard_CrudFls.screate(new List<SmartViscaf__NameCard__c>{nc},dml)[0];
         System.assertEquals(0, sr.getErrors().size(), 'NameCard error');
     }
 
@@ -1589,7 +1697,7 @@
 
         dml.OptAllOrNone = false;
 
-        Database.SaveResult sr = SB_NameCard_LeadCrudFls.screate(new List<Lead>{lead},dml)[0];
+        Database.SaveResult sr = SmartViscaf.SB_NameCard_CrudFls.screate(new List<Lead>{lead},dml)[0];
         System.debug(sr);
         System.assertEquals(0, sr.getErrors().size(), 'savelead error');
 
@@ -1628,17 +1736,9 @@
 
     private static void insCusSetting(Boolean flage)
     {
-        SmartViscaf__SmartViscaConfig__c smartViscaConfig = new SmartViscaf__SmartViscaConfig__c();
-        smartViscaConfig.LeadRegist_DispEmail__c = flage;
-        smartViscaConfig.LeadRegist_DispLastModifiedDate__c = flage;
-        smartViscaConfig.LeadRegist_DispOwner__c = flage;
-        smartViscaConfig.LeadRegist_DispState__c = flage;
-        smartViscaConfig.LeadRegist_Overwrite__c = flage;
-        smartViscaConfig.LeadRegist_DispTitle__c = flage;
-        smartViscaConfig.LeadRegist_DispLeadRectype__c = flage;
-        smartViscaConfig.LeadRegist_TodoSubject__c = flage ? '交換true' : '交換false';
-        smartViscaConfig.LeadRegist_DispCompany__c = flage;
-        smartViscaConfig.LeadRegist_RegistTodo__c = flage;
-        upsert smartViscaConfig;
+        SmartViscaf__NameCardBasicSetting__c setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+        setting.SmartViscaf__RegistToDoSubject__c = flage ? '交換true' : '交換false';
+        setting.SmartViscaf__RegistNoToDo__c = !flage;
+        upsert setting;
     }
 }

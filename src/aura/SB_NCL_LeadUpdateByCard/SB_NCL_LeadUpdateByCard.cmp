@@ -1,0 +1,47 @@
+<!-- /**
+ *
+ *  SB_NCL_LeadUpdateByCard
+ *  リード拡張環境 Lightning名刺で更新用コンポネート
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author gao
+ *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *
+ **/ -->
+
+<aura:component controller="SB_NCL_UpdateByCardLcController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <!-- エラーメッセージ -->
+  <aura:attribute name="errorMsg" type="String"/>
+  <!-- loading -->
+  <aura:attribute name="loading" type="Boolean"/>
+  <!-- 名刺更新Bean -->
+  <aura:attribute name="sObjectDto" type="Sobject"/>
+  <!-- 表示項目リスト -->
+  <aura:attribute name="fieldList" type="Sobject"/>
+  <!-- 入力に関する内容 -->
+  <aura:attribute name="inputV" type="Sobject"/>
+  <aura:attribute name="working" type="Boolean"/>
+
+  <aura:handler name="seSObjEvent" event="c:SB_NCL_UpdateByCardEvent" action="{!c.updateNameCard}"/>
+
+  <aura:renderIf isTrue="{!v.working}">
+    <center>
+      <lightning:spinner variant="brand" aura:id="mySpinner" size="large"/>
+    </center>
+  </aura:renderIf>
+
+  <div class="slds-tabs--default" style="position: absolute; top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto;">
+    <c:SB_NCL_UpdateByCard aura:id="updateNameCardCmp"
+                                titleV="{!v.sObjectDto.titleV}"
+                                inputV="{!v.inputV}"
+                                fieldList="{!v.fieldList}"
+                                dataList="{!v.sObjectDto.dataList}"
+                                reId="{!v.recordId}"
+                                errorMsg="{!v.errorMsg}"/>
+  </div>
+</aura:component>

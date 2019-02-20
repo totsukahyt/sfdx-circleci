@@ -1,0 +1,80 @@
+<!-- /**
+ *
+ *  SB_NCL_RecordTypeConditionModal
+ *  リード拡張環境 一括統合用Modalコンポネート 
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.12      2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *
+ **/ -->
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" access="global">
+
+  <aura:attribute name="inputV" type="Sobject" />
+  <aura:attribute name="show" type="Boolean" />
+  <aura:attribute name="searchRecordTypes" type="String" />
+  <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistComonEvent" action="{!c.modalSearchRecordTypeChanged}"/>
+  <aura:registerEvent name="changeSearchCondition" type="c:SB_NCL_ChangeSearchConditionEvent"/>
+
+  <aura:renderIf isTrue="{!v.show}">
+  	<div class="demo-only" style="height: 640px;z-index: 9999;">
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.close}">
+   <!--          <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+              <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close" xmlns:xlink="http://www.w3.org/1999/xlink" />
+            </svg> -->
+            <lightning:icon iconName="utility:close" size="small" />
+            <span class="slds-assistive-text">Close</span>
+          </button>
+          <!-- <lightning:button iconName="utility:close" variant="neutral" onclick="{!c.close}" iconPosition="left" /> -->
+          <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!v.inputV.searchConditionRct.title}</h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+          <p>{!v.inputV.searchConditionRct.description}</p>
+          <div class="slds-form-element">
+            <div class="slds-form-element__control">
+              <div class="slds-m-left--large">
+                <div class="slds-form-element__row">
+                  <aura:iteration var="val" items="{!v.inputV.searchConditionRct.searchConditionRecordTypeOptionGroups}">
+                    <fieldset class="slds-form--compound" style="display: inline-block;vertical-align:top;">
+                      <div class="form-element__group">
+                        <aura:renderIf isTrue="{!val.show}">
+                          <fieldset class="slds-form-element" name="{!val.titleId}">
+                            <legend class="slds-form-element__label slds-form-element__label--top">
+                                {!val.title}
+                            </legend>
+                            <div class="slds-form-element__control">
+                              <aura:iteration var="ops" items="{!val.searchConditionplickListOptions}">
+                                <c:SB_NCL_Checkbox checked="{!ops.checked}" boxid="{!ops.value}" boxlabel="{!ops.label}" eventName="modalSearchRecordTypeEvent"/>
+                              </aura:iteration>
+                              <aura:renderIf isTrue="{!val.searchConditionplickListOptions.length == 0}">
+                                <div style="color: rgb(170, 172, 175); font-size: .75rem;">{!$Label.c.SB_NCLD_LabelNoRecordType}</div>
+                              </aura:renderIf>
+                            </div>
+                            </fieldset>
+                          </aura:renderIf>
+                        </div>
+                      </fieldset>
+                  </aura:iteration>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <footer class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" onclick="{!c.close}">Cancel</button>
+          <button class="slds-button slds-button_brand" onclick="{!c.save}">Save</button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </div>
+</aura:renderIf>
+</aura:component>

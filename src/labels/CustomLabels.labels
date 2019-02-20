@@ -15,11 +15,60 @@
         <value>{0} オブジェクトの編集権限がありません。</value>
     </labels>
     <labels>
+        <fullName>SB_MSG_IllegalRequest</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>不正な リクエストです。</shortDescription>
+        <value>不正な リクエストです。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_DontRegister_CompanyNameRequired</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>登録しない(名刺の会社名、姓を設定してください)</shortDescription>
+        <value>登録しない(名刺の会社名、姓を設定してください)</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_DontRegister_NameRequired</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_DontRegister_NameRequired</shortDescription>
+        <value>登録しない(名刺の姓を設定してください)</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_LabelNoRecordType</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_LabelNoRecordType</shortDescription>
+        <value>レコードタイプがありません</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_AND</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_AND</shortDescription>
+        <value>と</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_AccountANDContact</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_AccountANDContact</shortDescription>
+        <value>{0}/{1}({2}/{3})</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_ActivityDate</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>期日</shortDescription>
         <value>期日</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_Both_display</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Both_display</shortDescription>
+        <value>両方表示</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Campaign</fullName>
@@ -43,6 +92,20 @@
         <value>キャンセル</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_CandidateRegistration</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_CandidateRegistration</shortDescription>
+        <value>候補登録先</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_Close</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Close</shortDescription>
+        <value>閉じる</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_Comment</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -57,6 +120,13 @@
         <value>会社名</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_Count</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Count</shortDescription>
+        <value>Count</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_CreateNewLead</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -68,7 +138,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>&lt;リードを新規作成&gt;</shortDescription>
-        <value>&lt;&amp;*Lead*&amp;を新規作成&gt;</value>
+        <value>&lt;{0}を新規作成&gt;</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Division</fullName>
@@ -103,7 +173,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>SB_NCLD_Label_LeadRecType</shortDescription>
-        <value>&amp;*Lead*&amp;レコードタイプ</value>
+        <value>{0}レコードタイプ</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Name</fullName>
@@ -117,7 +187,14 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>名刺所有者</shortDescription>
-        <value>名刺所有者</value>
+        <value>名刺所有者を{0}所有者にする</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_NameCard_Owner_Queue</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_NameCard_Owner_Queue</shortDescription>
+        <value>名刺の所有者はキューに設定されてます</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_OverwriteLeadInfo</fullName>
@@ -131,7 +208,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)既存のリードの情報を名刺情報で上書きする</shortDescription>
-        <value>既存の&amp;*Lead*&amp;の情報を名刺情報で上書きする</value>
+        <value>既存の{0}の情報を名刺情報で上書きする</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Owner</fullName>
@@ -155,6 +232,13 @@
         <value>都道府県</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_Queue</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Queue</shortDescription>
+        <value>キュー</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_RecordTypeExplain</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -167,6 +251,13 @@
         <protected>true</protected>
         <shortDescription>登録先選択</shortDescription>
         <value>登録先選択</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_Registration</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Registration</shortDescription>
+        <value>登録先</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Save</fullName>
@@ -190,11 +281,32 @@
         <value>検索条件</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_SearchRecordTypeExplanation</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_SearchRecordTypeExplanation</shortDescription>
+        <value>検索の対象にするレコードタイプを指定します。</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_Select</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>選択</shortDescription>
         <value>選択</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_Setting</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Setting</shortDescription>
+        <value>設定</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_Site</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Site</shortDescription>
+        <value>部門</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Subject</fullName>
@@ -211,6 +323,20 @@
         <value>ToDo登録</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_MSG_CanNotSetInActiveUserToOwner</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_MSG_CanNotSetInActiveUserToOwner</shortDescription>
+        <value>無効なユーザでは所有者に設定することができません。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_MSG_CompanyNameMissing</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>会社名、姓を設定してください</shortDescription>
+        <value>会社名、姓を設定してください</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_MSG_CrudNotCreateable</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -223,6 +349,13 @@
         <protected>true</protected>
         <shortDescription>オブジェクトの編集権限がありません。</shortDescription>
         <value>{0} オブジェクトの編集権限がありません。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_MSG_Enter</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_MSG_Enter</shortDescription>
+        <value>{0}を入力してください</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_MSG_FlsNotAccessible</fullName>
@@ -244,6 +377,13 @@
         <protected>true</protected>
         <shortDescription>項目の編集権限がありません。</shortDescription>
         <value>{0} オブジェクトの項目 {1} ({2}) の編集権限がありません。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_MSG_NameMissing</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_MSG_NameMissing</shortDescription>
+        <value>姓を設定してください</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_MSG_QUEUES_ERROR</fullName>
@@ -295,6 +435,13 @@
         <value>名刺がみつかりません</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Msg_CanNotUseInActiveQueue</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Msg_CanNotUseInActiveQueue</shortDescription>
+        <value>ご選択された所有者のキューが利用できません。</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Msg_DisplayUnderConditions</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -306,7 +453,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。</shortDescription>
-        <value>検索件数が制限を超えたので過去に登録した&amp;*smallLead*&amp;だけに絞って表示します。</value>
+        <value>検索件数が制限を超えたので過去に登録した{0}だけに絞って表示します。</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Msg_SelectLead</fullName>
@@ -320,7 +467,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)リードを選択してください</shortDescription>
-        <value>&amp;*smallLead*&amp;を選択してください</value>
+        <value>{0}を選択してください</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Msg_SelectRegisterDestination</fullName>
@@ -341,7 +488,28 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)リードを新規作成する場合は「所有者」を指定してください</shortDescription>
-        <value>&amp;*Lead*&amp;を新規作成する場合は「所有者」を指定してください</value>
+        <value>{0}を新規作成する場合は「所有者」を指定してください</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_SearchForAccount</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_SearchForAccount</shortDescription>
+        <value>{0}名</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_SearchForAccountAndDepartment</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_SearchForAccountAndDepartment</shortDescription>
+        <value>{0}名と所属名</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_SpecifyOwnerWhenCreateAcCo</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_SpecifyOwnerWhenCreateAcCo</shortDescription>
+        <value>取引先、取引先責任者を新規作成する場合は「所有者」を指定してください</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_BulkRegisterToLead</fullName>
@@ -411,7 +579,7 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)リードが重複しています</shortDescription>
-        <value>&amp;*smallLead*&amp;が重複しています</value>
+        <value>{0}が重複しています</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_RegisterToLead</fullName>
@@ -425,14 +593,21 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)リードに登録</shortDescription>
-        <value>&amp;*Lead*&amp;に登録</value>
+        <value>{0}に登録</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Text_RegisterToLead_OR_Account_Contact</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Text_RegisterToLead_OR_Account_Contact</shortDescription>
+        <value>リードまたは取引先・取引先責任者に登録</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_RegisterToLeadsDEV</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>リードに一括登録</shortDescription>
-        <value>リードに一括登録</value>
+        <value>{0}に一括登録</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_SmallLead</fullName>
@@ -447,6 +622,13 @@
         <protected>true</protected>
         <shortDescription>新規作成時の指定</shortDescription>
         <value>新規作成時の指定</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Text_SpecifiedWhenOverWrite</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Text_SpecifiedWhenOverWrite</shortDescription>
+        <value>上書きの指定</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_ToDo</fullName>
@@ -474,7 +656,56 @@
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)リードを更新</shortDescription>
-        <value>&amp;*Lead*&amp;を更新</value>
+        <value>{0}を更新</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Completed</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>完了</shortDescription>
+        <value>完了</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_NotStarted</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>未着手</shortDescription>
+        <value>未着手</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Regist_Error_Occured</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>登録でエラーが発生しました。</shortDescription>
+        <value>{0}の登録でエラーが発生しました。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCS1R_Text_CreateNewRecord</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>新規作成する</shortDescription>
+        <value>新規{0}を追加</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCS1R_Text_CreateNewRecordDiscription</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>新規作成の概要</shortDescription>
+        <value>{0}を新たに追加します。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCS1R_Text_SelectOther</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>自動選択以外を選択</shortDescription>
+        <value>{0}を検索</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCS1R_Text_SelectOtherDiscription</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>自動選択以外を選択することの概要</shortDescription>
+        <value>既存の{0}を検索して指定します。</value>
     </labels>
     <labels>
         <fullName>SB_NC_CrudFlsIgnoreObjects</fullName>
@@ -482,6 +713,20 @@
         <protected>true</protected>
         <shortDescription>CRUD/FLS のチェック対象外のオブジェクト</shortDescription>
         <value>null</value>
+    </labels>
+    <labels>
+        <fullName>SB_NC_DontRegister</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>登録しない</shortDescription>
+        <value>登録しない</value>
+    </labels>
+    <labels>
+        <fullName>SB_NC_DontRegister_CompanyNameRequired</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>登録しない(名刺の会社名、姓を設定してください)</shortDescription>
+        <value>登録しない(名刺の会社名、姓を設定してください)</value>
     </labels>
     <labels>
         <fullName>SB_NC_Line</fullName>
@@ -498,10 +743,31 @@
         <value>検索条件</value>
     </labels>
     <labels>
+        <fullName>SB_NC_TEXT_SELECTEDCARDOVER</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>選択した名刺の数が制限を超過してる</shortDescription>
+        <value>選択された名刺が{0}件を超えています。{1}</value>
+    </labels>
+    <labels>
         <fullName>SB_NC_iOSDevice</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>重複API名のテスト</shortDescription>
         <value>SB_NC_iOSDevice</value>
+    </labels>
+    <labels>
+        <fullName>SB_Text_IE11Identity</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>Trident/7.0 以外の Windows IE 11用の識別子 なければ、none</shortDescription>
+        <value>none</value>
+    </labels>
+    <labels>
+        <fullName>SB_Text_WindowsEdgeIdentity</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>Edge 以外の Windows Edge用の識別子 なければ、none</shortDescription>
+        <value>none</value>
     </labels>
 </CustomLabels>

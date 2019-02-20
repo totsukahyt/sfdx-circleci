@@ -6,7 +6,12 @@
     <label>名刺 - リードを更新</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>4</minorNumber>
+        <minorNumber>2</minorNumber>
+        <namespace>MYD2</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>2</majorNumber>
+        <minorNumber>0</minorNumber>
         <namespace>SmartViscaf</namespace>
     </packageVersions>
 </ApexPage>
