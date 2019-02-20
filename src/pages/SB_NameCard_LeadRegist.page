@@ -1,22 +1,28 @@
-<!-- (c) 2012 SunBridge Inc. -->
-<apex:page standardController="SmartViscaf__NameCard__c" extensions="SB_NameCard_LeadRegistController" title="名刺: リードに登録" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="true">
-    <apex:pageMessages id="pageMsgs"/>
+<!--
+/*
+ * (c) 2016 Sunbridge Inc.
+ *
+ * リードに登録
+ */
+-->
+<apex:page standardController="SmartViscaf__NameCard__c" extensions="SB_NameCard_LeadRegistController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!registerToLeadLabel}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="true">
+    <apex:pageMessages id="pageMsgs" escape="false"/>
 
-    <apex:form >
+    <apex:form id="All">
         <apex:inputHidden id="leadRecordListIndex" value="{!leadRecordListIndex}"/>
 
-        <apex:pageBlock title="リードに登録">
+        <apex:pageBlock title="{!registerToLeadLabel}">
             <apex:pageBlockButtons >
                 <apex:outputPanel id="save">
-                    <apex:commandButton action="{!save}" value="保存" rerender="pageMsgs, save" rendered="{!NOT(isAllowDuplicateSave)}"/>
-                    <apex:commandButton action="{!save}" value="保存（アラートを無視）" rerender="pageMsgs" rendered="{!isAllowDuplicateSave}"/>
+                    <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}" rerender="pageMsgs, save,All" rendered="{!NOT(isAllowDuplicateSave)}"/>
+                    <apex:commandButton action="{!save}" value="{!$Label.SB_NCLD_Label_Save}{!$Label.SB_NCLD_Label_IgnoreAlert}" rerender="pageMsgs,All" rendered="{!isAllowDuplicateSave}"/>
                 </apex:outputPanel>
-                <apex:commandButton action="{!cancel}" value="キャンセル" immediate="true"/>
+                <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
             </apex:pageBlockButtons>
 
-            <apex:pageBlockSection title="名刺情報" columns="2">
+            <apex:pageBlockSection title="{!$Label.SB_NCLD_Text_BusinessCardInformation}" columns="2">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="氏名"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Name}"/>
                     <apex:panelGroup >
                         <apex:outputText value="{!nameCard.SmartViscaf__person_name_last__c}"/>
                         <apex:outputText value=" "/>
@@ -25,34 +31,34 @@
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="メールアドレス"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Email}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__email__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="会社名"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_CompanyName}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__company_name__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="都道府県"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Prefectures}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__address_pref__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="所属"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Division}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__division__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="役職"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Position}"/>
                     <apex:outputText value="{!nameCard.SmartViscaf__title_name__c}"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 
-            <apex:pageBlockSection title="リード" columns="1">
+            <apex:pageBlockSection title="{!$Label.SB_NCLD_Text_Lead}" columns="1">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="検索条件"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_SearchCondition}"/>
                     <apex:selectRadio value="{!searchType}">
                         <apex:selectOptions value="{!searchTypeList}"/>
                         <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, leadRecordList"/>
@@ -60,33 +66,34 @@
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="登録先選択"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_RegisterDestinationSelection}"/>
                     <apex:pageBlockTable id="leadRecordList" value="{!leadRecordList}" var="leadRecord">
                         <apex:column style="width:15px;">
-                            <apex:facet name="header">選択</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Select}</apex:facet>
                             <input id="leadRecordList{!leadRecord.index}" type="radio" name="leadRecordsIndex" value="{!leadRecord.index}" onclick="document.getElementById('{!$Component.leadRecordListIndex}').value=this.value"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Company']}">
-                            <apex:facet name="header">会社名</apex:facet>
-                            <apex:outputText value="{!leadRecord.lead.Company}"/>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_CompanyName}</apex:facet>
+                            <apex:outputText id="company" value="{!leadRecord.lead.Company}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['State']}">
-                            <apex:facet name="header">都道府県</apex:facet>
-                            <apex:outputText value="{!leadRecord.lead.State}"/>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Prefectures}</apex:facet>
+                            <apex:outputText id="state" value="{!leadRecord.lead.State}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Title']}">
-                            <apex:facet name="header">役職</apex:facet>
-                            <apex:outputText value="{!leadRecord.lead.Title}"/>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Position}</apex:facet>
+                            <apex:outputText id="title" value="{!leadRecord.lead.Title}"/>
                         </apex:column>
 
                         <apex:column >
-                            <apex:facet name="header">氏名</apex:facet>
-                            <apex:outputText value="<リードを新規作成>" rendered="{!leadRecord.isNew}"/>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Name}</apex:facet>
+                            <apex:outputText value="{!createNewLeadLabel}" rendered="{!leadRecord.isNew}"/>
                             <apex:inputField value="{!leadRecord.lookUpNameCard.SmartViscaf__lead__c}" rendered="{!NOT(ISBLANK(leadRecord.lookUpNameCard))}">
-                                <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs, leadRecordList" oncomplete="document.getElementById('leadRecordList{!leadRecord.index}').checked='checked'">
+                                <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="pageMsgs,time,ownername,email,title,state,company" >
+                                <!-- oncomplete="document.getElementById('leadRecordList{!leadRecord.index}').checked='checked'" -->
                                     <apex:param name="lookUpIndex" assignto="{!lookUpIndex}" value="{!leadRecord.index}"/>
                                 </apex:actionSupport>
                             </apex:inputField>
@@ -98,20 +105,20 @@
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Email']}">
-                            <apex:facet name="header">メールアドレス</apex:facet>
-                            <apex:outputText value="{!leadRecord.lead.Email}"/>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Email}</apex:facet>
+                            <apex:outputText id="email" value="{!leadRecord.lead.Email}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['LastModifiedDate']}">
-                            <apex:facet name="header">最終更新日</apex:facet>
-                            <apex:outputField value="{!leadRecord.lead.LastModifiedDate}"/>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_LastModiedDate}</apex:facet>
+                            <apex:outputField id="time" value="{!leadRecord.lead.LastModifiedDate}"/>
                         </apex:column>
 
                         <apex:column rendered="{!svConfig.disp['Owner']}">
-                            <apex:facet name="header">所有者</apex:facet>
+                            <apex:facet name="header">{!$Label.SB_NCLD_Label_Owner}</apex:facet>
                             <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(leadRecord.lead.OwnerId))}">
                                 <a href="/{!leadRecord.lead.OwnerId}" id="lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}" onblur="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onfocus="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!leadRecord.lead.OwnerId}acc{!leadRecord.index}', '/{!leadRecord.lead.OwnerId}/m?isAjaxRequest=1').show();">
-                                    <apex:outputText value="{!leadRecord.lead.Owner.Name}"/>
+                                    <apex:outputText id="ownername" value="{!leadRecord.lead.Owner.Name}"/>
                                 </a>
                             </apex:outputPanel>
                         </apex:column>
@@ -122,41 +129,41 @@
                     <apex:outputLabel value=""/>
                     <apex:outputPanel >
                         <apex:inputCheckbox value="{!leadOverwrite}"/>
-                        <apex:outputLabel value="既存のリードの情報を名刺情報で上書きする"/>
+                        <apex:outputLabel value="{!overwriteLeadInfoLabel}"/>
                     </apex:outputPanel>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 
-            <apex:pageBlockSection title="新規作成時の指定" columns="1">
+            <apex:pageBlockSection title="{!specifiedWhenCreateNew}" columns="1">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="キャンペーン"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Campaign}"/>
                     <apex:inputField value="{!nameCard.campaign__c}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="所有者"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Owner}"/>
                     <apex:inputField value="{!nameCard.OwnerId}" required="false"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
 
-            <apex:pageBlockSection title="ToDo" columns="1">
+            <apex:pageBlockSection title="{!$Label.SB_NCLD_Text_ToDo}" columns="1">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="件名"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Subject}"/>
                     <apex:inputField value="{!todo.Subject}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="期日"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_ActivityDate}"/>
                     <apex:inputField value="{!todo.ActivityDate}"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="コメント"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_Comment}"/>
                     <apex:inputField value="{!todo.Description}" style="width:800px; height:150px;"/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="ToDo登録"/>
+                    <apex:outputLabel value="{!$Label.SB_NCLD_Label_ToDoRegistration}"/>
                     <apex:inputCheckbox value="{!registTodo}"/>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>

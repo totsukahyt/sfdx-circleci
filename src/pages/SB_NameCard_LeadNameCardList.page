@@ -1,79 +1,85 @@
-<!-- (c) 2015 SunBridge Inc. -->
-<apex:page standardController="Lead" extensions="SB_NameCard_LeadNameCardListController" title="名刺: リードを更新" tabStyle="Lead" showHeader="true" sidebar="false">
-	<apex:pageMessages id="pageMsgs"/>
+<!--
+/*
+ * (c) 2015 SunBridge Inc.
+ *
+ * リードを更新
+ */
+-->
+<apex:page standardController="Lead" extensions="SB_NameCard_LeadNameCardListController" title="{!$Label.SB_NCLD_Text_BusinessCard}: {!updateLeadLabel}" tabStyle="Lead" showHeader="true" sidebar="false">
+  <apex:pageMessages id="pageMsgs"/>
 
-	<apex:form >
-		<apex:pageBlock title="名刺リスト">
-			<apex:pageBlockButtons >
-				<apex:commandButton action="{!cancel}" value="キャンセル" immediate="true"/>
-			</apex:pageBlockButtons>
+  <apex:form >
+    <apex:pageBlock title="{!$Label.SB_NCLD_Text_BusinessCardList}">
+      <apex:pageBlockButtons >
+        <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
+      </apex:pageBlockButtons>
 
-			<apex:pageBlockSection columns="2">
-				<apex:outputPanel >
-					<apex:inputCheckbox value="{!leadOverwrite}"/>
-					<apex:outputLabel value="既存のリードの情報を名刺情報で上書きする"/>
-				</apex:outputPanel>
-			</apex:pageBlockSection>
+      <apex:pageBlockSection columns="2">
+        <apex:outputPanel >
+          <apex:inputCheckbox value="{!leadOverwrite}"/>
+          <apex:outputLabel value="{!overwriteLeadInfoLabel}"/>
+        </apex:outputPanel>
+      </apex:pageBlockSection>
 
-			<apex:pageBlockTable value="{!nameCardRecordList}" var="ncRec">
-				<apex:column >
-					<apex:facet name="header">リードを更新</apex:facet>
-					<apex:outputLink value="javascript:void(0)">
-						更新
-						<apex:actionSupport event="onclick" action="{!save}" rerender="pageMsgs">
-							<apex:param name="nameCardRecordListIndex" assignto="{!nameCardRecordListIndex}" value="{!ncRec.index}"/>
-						</apex:actionSupport>
-					</apex:outputLink>
-				</apex:column>
+      <apex:pageBlockTable value="{!nameCardRecordList}" var="ncRec">
+        <apex:column >
+          <apex:facet name="header">{!updateLeadLabel}</apex:facet>
+          <apex:outputLink value="javascript:void(0)">
+            {!$Label.SB_NCLD_Text_Update}
+            <apex:actionSupport event="onclick" action="{!save}" rerender="pageMsgs">
+              <apex:param name="nameCardRecordListIndex" assignto="{!nameCardRecordListIndex}" value="{!ncRec.index}"/>
+            </apex:actionSupport>
+          </apex:outputLink>
+        </apex:column>
 
-				<apex:column rendered="true">
-					<apex:facet name="header">名刺交換日</apex:facet>
-					<apex:outputField value="{!ncRec.nameCard.SmartViscaf__card_exchange_date__c}"/>
-				</apex:column>
+        <apex:column rendered="true">
+          <apex:facet name="header">{!$Label.SB_NCLD_Text_BusinessCardExchangeDate}</apex:facet>
+          <apex:outputField value="{!ncRec.nameCard.SmartViscaf__card_exchange_date__c}"/>
+        </apex:column>
 
-				<apex:column >
-					<apex:facet name="header">会社名</apex:facet>
-					<apex:outputText value="{!ncRec.nameCard.SmartViscaf__company_name__c}"/>
-				</apex:column>
+        <apex:column >
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_CompanyName}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__company_name__c}"/>
+        </apex:column>
 
-				<apex:column >
-					<apex:facet name="header">都道府県</apex:facet>
-					<apex:outputText value="{!ncRec.nameCard.SmartViscaf__address_pref__c}"/>
-				</apex:column>
+        <apex:column >
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Prefectures}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__address_pref__c}"/>
+        </apex:column>
 
-				<apex:column >
-					<apex:facet name="header">役職</apex:facet>
-					<apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
-				</apex:column>
+        <apex:column >
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Division}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
+        </apex:column>
 
-				<apex:column >
-					<apex:facet name="header">氏名</apex:facet>
-					<apex:outputPanel layout="none">
-						<a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
-							<apex:outputText value="{!ncRec.nameCard.Name}"/>
-						</a>
-					</apex:outputPanel>
-				</apex:column>
+        <apex:column >
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Position}</apex:facet>
+          <apex:outputPanel layout="none">
+            <a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
+              <apex:outputText value="{!ncRec.nameCard.Name}"/>
+            </a>
+          </apex:outputPanel>
+        </apex:column>
 
-				<apex:column >
-					<apex:facet name="header">メールアドレス</apex:facet>
-					<apex:outputText value="{!ncRec.nameCard.SmartViscaf__email__c}"/>
-				</apex:column>
+        <apex:column >
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Email}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__email__c}"/>
+        </apex:column>
 
-				<apex:column >
-					<apex:facet name="header">最終更新日</apex:facet>
-					<apex:outputField value="{!ncRec.nameCard.LastModifiedDate}"/>
-				</apex:column>
+        <apex:column >
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_LastModiedDate}</apex:facet>
+          <apex:outputField value="{!ncRec.nameCard.LastModifiedDate}"/>
+        </apex:column>
 
-				<apex:column >
-					<apex:facet name="header">所有者</apex:facet>
-					<apex:outputPanel layout="none">
-						<a href="/{!ncRec.nameCard.OwnerId}" id="ncOwn_{!ncRec.nameCard.OwnerId}" onblur="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onfocus="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onmouseover="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();">
-							<apex:outputText value="{!ncRec.nameCard.Owner.Name}"/>
-						</a>
-					</apex:outputPanel>
-				</apex:column>
-			</apex:pageBlockTable>
-		</apex:pageBlock>
-	</apex:form>
+        <apex:column >
+          <apex:facet name="header">{!$Label.SB_NCLD_Label_Owner}</apex:facet>
+          <apex:outputPanel layout="none">
+            <a href="/{!ncRec.nameCard.OwnerId}" id="ncOwn_{!ncRec.nameCard.OwnerId}" onblur="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onfocus="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onmouseover="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();">
+              <apex:outputText value="{!ncRec.nameCard.Owner.Name}"/>
+            </a>
+          </apex:outputPanel>
+        </apex:column>
+      </apex:pageBlockTable>
+    </apex:pageBlock>
+  </apex:form>
 </apex:page>

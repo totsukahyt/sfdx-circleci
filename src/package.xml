@@ -6,10 +6,6 @@
     </types>
     <types>
         <members>*</members>
-        <name>ApexComponent</name>
-    </types>
-    <types>
-        <members>*</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -17,12 +13,12 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>*</members>
+        <members>CustomLabels</members>
         <name>CustomLabels</name>
     </types>
     <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>
-    <version>31.0</version>
+    <version>38.0</version>
 </Package>
