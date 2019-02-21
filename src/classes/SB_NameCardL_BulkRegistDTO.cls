@@ -100,6 +100,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
       this.accAndConList = new List<AccAndCon>();
       this.leadId = '';
       this.haveError = false;
+      this.accAndCon = -1;
     }
   }
 
