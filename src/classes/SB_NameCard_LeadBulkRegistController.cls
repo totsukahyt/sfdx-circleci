@@ -296,11 +296,13 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
 
       for (NameCardRecord ncRec : this.nameCardRecordList) {
         if ((!SmartViscaf.SB_NameCard_Util.isEnablePersonAccount() && String.isBlank(ncRec.nameCard.SmartViscaf__company_name__c)) || String.isBlank(SmartViscaf.SB_NameCard_Util.getPersonName(ncRec.nameCard).get('last_name'))) {
-          if ((!SmartViscaf.SB_NameCard_Util.isEnablePersonAccount() && String.isBlank(ncRec.nameCard.SmartViscaf__company_name__c))) {
-            ncRec.leadSelOptList.add(new SelectOption('none', System.Label.SB_NCLD_DontRegister_CompanyNameRequired));
-          }
-          else {
-            ncRec.leadSelOptList.add(new SelectOption('none', System.Label.SB_NCLD_DontRegister_NameRequired));
+          if (ncRec.leadSelOptList.isEmpty()) {
+            if ((!SmartViscaf.SB_NameCard_Util.isEnablePersonAccount() && String.isBlank(ncRec.nameCard.SmartViscaf__company_name__c))) {
+              ncRec.leadSelOptList.add(new SelectOption('none', System.Label.SB_NCLD_DontRegister_CompanyNameRequired));
+            }
+            else {
+              ncRec.leadSelOptList.add(new SelectOption('none', System.Label.SB_NCLD_DontRegister_NameRequired));
+            }
           }
           continue;
         }
