@@ -130,7 +130,7 @@ public with sharing class SB_NameCard_LeadRegistController {
       this.leadRecordList = new List<LeadRecord>();
       this.todo = new Task();
       this.isAllowDuplicateSave = false;
-
+      this.leadOverwrite = false;
       this.cannotUpdataLead = !Lead.sObjectType.getDescribe().isUpdateable();
       if (!canNotUpdataLead) {
         if (baseSetting == null) {

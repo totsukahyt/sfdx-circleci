@@ -153,6 +153,10 @@
         <name>SB_NCLD_Label_RegisterDestinationSelection</name>
     </customLabels>
     <customLabels>
+        <label>登録先</label>
+        <name>SB_NCLD_Label_Registration</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 保存 --></label>
         <name>SB_NCLD_Label_Save</name>
     </customLabels>
@@ -161,7 +165,7 @@
         <name>SB_NCLD_Label_Saveing</name>
     </customLabels>
     <customLabels>
-        <label><!-- 検索条件 --></label>
+        <label>検索条件</label>
         <name>SB_NCLD_Label_SearchCondition</name>
     </customLabels>
     <customLabels>
@@ -365,7 +369,7 @@
         <name>SB_NCLD_Text_BusinessCardListWindowTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- リード --></label>
+        <label>リード</label>
         <name>SB_NCLD_Text_Lead</name>
     </customLabels>
     <customLabels>
@@ -387,6 +391,10 @@
     <customLabels>
         <label><!-- (関連)リードに登録 --></label>
         <name>SB_NCLD_Text_RegisterToLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_RegisterToLeadDEVTitle --></label>
+        <name>SB_NCLD_Text_RegisterToLeadDEVTitle</name>
     </customLabels>
     <customLabels>
         <label>{0}: {1}に登録</label>
@@ -455,86 +463,6 @@
     <customLabels>
         <label><!-- 登録でエラーが発生しました。 --></label>
         <name>SB_NCL_Regist_Error_Occured</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ01 --></label>
-        <name>SB_NCL_Reserved01</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ02 --></label>
-        <name>SB_NCL_Reserved02</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ03 --></label>
-        <name>SB_NCL_Reserved03</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ04 --></label>
-        <name>SB_NCL_Reserved04</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ05 --></label>
-        <name>SB_NCL_Reserved05</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ06 --></label>
-        <name>SB_NCL_Reserved06</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ07 --></label>
-        <name>SB_NCL_Reserved07</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ08 --></label>
-        <name>SB_NCL_Reserved08</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ09 --></label>
-        <name>SB_NCL_Reserved09</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ10 --></label>
-        <name>SB_NCL_Reserved10</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ11 --></label>
-        <name>SB_NCL_Reserved11</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ12 --></label>
-        <name>SB_NCL_Reserved12</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ13 --></label>
-        <name>SB_NCL_Reserved13</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ14 --></label>
-        <name>SB_NCL_Reserved14</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ15 --></label>
-        <name>SB_NCL_Reserved15</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ16 --></label>
-        <name>SB_NCL_Reserved16</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ17 --></label>
-        <name>SB_NCL_Reserved17</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ18 --></label>
-        <name>SB_NCL_Reserved18</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ19 --></label>
-        <name>SB_NCL_Reserved19</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ20 --></label>
-        <name>SB_NCL_Reserved20</name>
     </customLabels>
     <customLabels>
         <label><!-- 新規作成する --></label>
@@ -1801,7 +1729,7 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_Lead_Radio3</name>
     </customLabels>
     <customLabels>
-        <label><!-- 新規作成・上書き処理の設定 --></label>
+        <label><!-- 処理の内容 --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_MultipleExistingProcessing</name>
     </customLabels>
     <customLabels>

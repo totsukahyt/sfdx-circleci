@@ -13,11 +13,11 @@
         <name>SB_MSG_IllegalRequest</name>
     </customLabels>
     <customLabels>
-        <label>Do not register (enter company name and last name)</label>
+        <label><!-- 登録しない(名刺の会社名、姓を設定してください) --></label>
         <name>SB_NCLD_DontRegister_CompanyNameRequired</name>
     </customLabels>
     <customLabels>
-        <label>Do not register (enter last name)</label>
+        <label><!-- SB_NCLD_DontRegister_NameRequired --></label>
         <name>SB_NCLD_DontRegister_NameRequired</name>
     </customLabels>
     <customLabels>
@@ -113,7 +113,7 @@
         <name>SB_NCLD_Label_NameCardOwner</name>
     </customLabels>
     <customLabels>
-        <label>Card owner is a queue</label>
+        <label><!-- SB_NCLD_Label_NameCard_Owner_Queue --></label>
         <name>SB_NCLD_Label_NameCard_Owner_Queue</name>
     </customLabels>
     <customLabels>
@@ -151,6 +151,10 @@
     <customLabels>
         <label>Register To</label>
         <name>SB_NCLD_Label_RegisterDestinationSelection</name>
+    </customLabels>
+    <customLabels>
+        <label>Registration</label>
+        <name>SB_NCLD_Label_Registration</name>
     </customLabels>
     <customLabels>
         <label>Save</label>
@@ -201,11 +205,11 @@
         <name>SB_NCLD_Label_WarningConfirm</name>
     </customLabels>
     <customLabels>
-        <label>Inactive user is not applicable for owner</label>
+        <label><!-- SB_NCLD_MSG_CanNotSetInActiveUserToOwner --></label>
         <name>SB_NCLD_MSG_CanNotSetInActiveUserToOwner</name>
     </customLabels>
     <customLabels>
-        <label>Inactive user ({0})  cannot be assigned Task</label>
+        <label><!-- SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo --></label>
         <name>SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo</name>
     </customLabels>
     <customLabels>
@@ -237,7 +241,7 @@
         <name>SB_NCLD_MSG_FlsNotUpdateable</name>
     </customLabels>
     <customLabels>
-        <label>Enter Last Name</label>
+        <label><!-- SB_NCLD_MSG_NameMissing --></label>
         <name>SB_NCLD_MSG_NameMissing</name>
     </customLabels>
     <customLabels>
@@ -245,19 +249,19 @@
         <name>SB_NCLD_MSG_NotSelectNameCard</name>
     </customLabels>
     <customLabels>
-        <label>Queue ({0}) cannot be assigned Task</label>
+        <label><!-- SB_NCLD_MSG_QUEUES_ERROR --></label>
         <name>SB_NCLD_MSG_QUEUES_ERROR</name>
     </customLabels>
     <customLabels>
-        <label>Queue ({0}) doesn&apos;t support Lead</label>
+        <label><!-- SB_NCLD_MSG_QUEUES_LEAD_ERROR --></label>
         <name>SB_NCLD_MSG_QUEUES_LEAD_ERROR</name>
     </customLabels>
     <customLabels>
-        <label>Registration Error</label>
+        <label><!-- 登録エラー --></label>
         <name>SB_NCLD_MSG_Regist_Error</name>
     </customLabels>
     <customLabels>
-        <label>Update Error</label>
+        <label><!-- 更新エラー --></label>
         <name>SB_NCLD_MSG_Update_Error</name>
     </customLabels>
     <customLabels>
@@ -273,7 +277,7 @@
         <name>SB_NCLD_Msg_BusinessCardNotFound</name>
     </customLabels>
     <customLabels>
-        <label>The queue is unavaliable</label>
+        <label><!-- SB_NCLD_Msg_CanNotUseInActiveQueue --></label>
         <name>SB_NCLD_Msg_CanNotUseInActiveQueue</name>
     </customLabels>
     <customLabels>
@@ -389,6 +393,10 @@
         <name>SB_NCLD_Text_RegisterToLeadDEV</name>
     </customLabels>
     <customLabels>
+        <label><!-- SB_NCLD_Text_RegisterToLeadDEVTitle --></label>
+        <name>SB_NCLD_Text_RegisterToLeadDEVTitle</name>
+    </customLabels>
+    <customLabels>
         <label>{0}: Register to {1}</label>
         <name>SB_NCLD_Text_RegisterToLeadDEVWindowTitle</name>
     </customLabels>
@@ -457,86 +465,6 @@
         <name>SB_NCL_Regist_Error_Occured</name>
     </customLabels>
     <customLabels>
-        <label><!-- リザーブ01 --></label>
-        <name>SB_NCL_Reserved01</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ02 --></label>
-        <name>SB_NCL_Reserved02</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ03 --></label>
-        <name>SB_NCL_Reserved03</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ04 --></label>
-        <name>SB_NCL_Reserved04</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ05 --></label>
-        <name>SB_NCL_Reserved05</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ06 --></label>
-        <name>SB_NCL_Reserved06</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ07 --></label>
-        <name>SB_NCL_Reserved07</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ08 --></label>
-        <name>SB_NCL_Reserved08</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ09 --></label>
-        <name>SB_NCL_Reserved09</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ10 --></label>
-        <name>SB_NCL_Reserved10</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ11 --></label>
-        <name>SB_NCL_Reserved11</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ12 --></label>
-        <name>SB_NCL_Reserved12</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ13 --></label>
-        <name>SB_NCL_Reserved13</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ14 --></label>
-        <name>SB_NCL_Reserved14</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ15 --></label>
-        <name>SB_NCL_Reserved15</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ16 --></label>
-        <name>SB_NCL_Reserved16</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ17 --></label>
-        <name>SB_NCL_Reserved17</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ18 --></label>
-        <name>SB_NCL_Reserved18</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ19 --></label>
-        <name>SB_NCL_Reserved19</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リザーブ20 --></label>
-        <name>SB_NCL_Reserved20</name>
-    </customLabels>
-    <customLabels>
         <label><!-- 新規作成する --></label>
         <name>SB_NCS1R_Text_CreateNewRecord</name>
     </customLabels>
@@ -573,7 +501,7 @@
         <name>SB_NC_DontRegister_CompanyNameRequired</name>
     </customLabels>
     <customLabels>
-        <label>Line</label>
+        <label><!-- SB_NC_Line --></label>
         <name>SB_NC_Line</name>
     </customLabels>
     <customLabels>
@@ -1801,7 +1729,7 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_Lead_Radio3</name>
     </customLabels>
     <customLabels>
-        <label><!-- 新規作成・上書き処理の設定 --></label>
+        <label><!-- 処理の内容 --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_MultipleExistingProcessing</name>
     </customLabels>
     <customLabels>

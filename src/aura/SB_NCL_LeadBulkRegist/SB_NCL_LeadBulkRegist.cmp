@@ -1,0 +1,72 @@
+<!-- /**
+ *
+ *  SB_NCL_LeadBulkRegist
+ *  リード拡張環境 一括用コンポネート 
+ *  パッケージに入れないので，削除がどうか検討中
+ *  現状(1.12から(1.12含む))使ってない
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 拡張パッケージ：Lead Ex. 1.12
+ **/ -->
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" controller="SB_NCL_LeadBulkRegistLcController">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="retUrl" type="String"/>
+  <aura:attribute name="viewId" type="String"/>
+  <aura:attribute name="viewLabel" type="String"/>
+  <aura:attribute name="fromId" type="String"/>
+  <aura:attribute name="fromLabel" type="String"/>
+  <aura:attribute name="mycolumns" type="List" />
+  <aura:attribute name="testValue" type="String" />
+  <aura:attribute name="fieldList" type="List" />
+  <aura:attribute name="inputV" type="Sobject" />
+  <aura:attribute name="titleV" type="Sobject" />
+  <aura:attribute name="dataList" type="Sobject" />
+  <aura:attribute name="cardList" type="List" />
+  <aura:attribute name="lookUpId" type="Sobject" />
+  <aura:attribute name="selectMap" type="Map"/>
+  <aura:attribute name="working" type="Boolean"/>
+  <aura:attribute name="dataCount" type="Integer"/>
+  <aura:attribute name="firstLoading" type="Boolean" default="true"/>
+  <aura:attribute name="errorMsg" type="String" />
+  <aura:attribute name="showErrorMsg" type="String" />
+
+  <aura:attribute name="sobj" type="Sobject" />
+
+  <aura:handler name="changeSearchCondition" event="c:SB_NCL_ChangeSearchConditionEvent" action="{!c.changeSearchCondition}"/>
+  <aura:handler name="leadBulkRegistEvent" event="c:SB_NCL_BulkRegistCommonEvent" action="{!c.doSomething}"/>
+
+  <aura:renderIf isTrue="{!v.working}">
+    <aura:renderIf isTrue="{!v.firstLoading}">
+      <div class="slds-spinner_container" style="background-color:white">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--medium" role="alert">
+          <div class="slds-assistive-text">Loading</div>
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+      <aura:set attribute="else">
+        <lightning:spinner variant="brand" size="large"/>
+      </aura:set>
+    </aura:renderIf>
+  </aura:renderIf>
+
+  <div class="slds-tabs--default" style="position: absolute; top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto; height: 100%;">
+    <c:SB_NCL_BulkRegistCommon aura:id="bulkRegistComon" inputV="{!v.inputV}"
+                                  titleV="{!v.titleV}"
+                                  dataList="{!v.dataList}"
+                                  fieldList="{!v.fieldList}"
+                                  lookUpId="{!v.lookUpId}"
+                                  selectMap="{!v.selectMap}"
+                                  viewId="{!v.viewId}"
+                                  viewLabel="{!v.viewLabel}"
+                                  fromLabel="{!v.fromLabel}"
+                                  fromId="{!v.fromId}"
+                                  dataCount="{!v.dataCount}"
+                                  errorMsg="{!v.errorMsg}"
+                                  showErrorMsg="{!v.showErrorMsg}"/>
+  </div>
+</aura:component>

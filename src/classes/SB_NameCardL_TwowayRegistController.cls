@@ -673,6 +673,7 @@ public with sharing class SB_NameCardL_TwowayRegistController {
         }
       }
 
+      this.leadOverwrite = false;
       if (!canNotUpdataLead) {
         if (baseSetting == null) {
           this.leadOverwrite = true;
