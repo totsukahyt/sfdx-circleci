@@ -319,16 +319,22 @@
             function changeUserNameCardOwner(flage, co) {
                 var dis = flage == true ? 'flage' : '';
                 if (co != '1') {
-                  document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_mlktp').disabled = dis;
-                  document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_lkwgt').hidden = flage;
-                  document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}').disabled = dis;
-                  document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinputLabel}').style = flage == true ? 'color:#999999;' : '';
+                  var ownerinput = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_mlktp');
+                  if (ownerinput != null) {
+                    ownerinput.disabled = dis;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_lkwgt').hidden = flage;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}').disabled = dis;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinputLabel}').style = flage == true ? 'color:#999999;' : '';
+                  }
                 }
                 else {
                   // document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}' + '_mlktp').disabled = dis;
-                  document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}' + '_lkwgt').hidden = flage;
-                  document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}').disabled = dis;
-                  document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinputLabel}').style = flage == true ? 'color:#999999;' : '';
+                  var ownerinput = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}' + '_lkwgt');
+                  if (ownerinput != null) {
+                    ownerinput.hidden = flage;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}').disabled = dis;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinputLabel}').style = flage == true ? 'color:#999999;' : '';
+                  }
                 }
             }
 
