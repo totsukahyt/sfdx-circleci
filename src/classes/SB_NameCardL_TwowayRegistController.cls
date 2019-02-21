@@ -655,6 +655,10 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       this.cannotUpdataContact = !Contact.sObjectType.getDescribe().isUpdateable();
       this.cannotUpdataLead = !Lead.sObjectType.getDescribe().isUpdateable();
 
+      if (this.canNotUpdataAccount) {
+        this.canNotUseStyleAcc = 'color:#999999;';
+      }
+
       if (!cannotUpdataAccount) {
         // デフォルトチェックはカスタム設定から取得
         if (basesetting == null){
@@ -663,6 +667,12 @@ public with sharing class SB_NameCardL_TwowayRegistController {
         else {
           this.accountOverwrite = !basesetting.SmartViscaf__RegistAccountNotOverWrite__c;
         }
+      }
+
+      this.canNotusestylecon = '';
+
+      if (this.canNotUpdataContact) {
+        this.canNotusestylecon = 'color:#999999;';
       }
 
       if (!cannotUpdataContact) {

@@ -256,12 +256,25 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
       this.accountOverWrite = false;
       this.contactOverWrite = false;
       this.leadOverwrite = false;
+
+      this.canNotUseStyleAcc = '';
+
+      if (this.canNotUpdataAccount) {
+        this.canNotUseStyleAcc = 'color:#999999;';
+      }
+
       if (!canNotUpdataAccount) {
         if (baseSetting == null) {
           this.accountOverWrite = true;
         } else {
           this.accountOverWrite = !baseSetting.SmartViscaf__RegistAccountNotOverWrite__c;
         }
+      }
+
+      this.canNotusestylecon = '';
+
+      if (this.canNotUpdataContact) {
+        this.canNotusestylecon = 'color:#999999;';
       }
 
       if (!canNotUpdataContact) {
