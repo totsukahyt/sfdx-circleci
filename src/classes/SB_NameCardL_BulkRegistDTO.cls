@@ -336,7 +336,7 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
     public Authority(sObjectType sObj) {
       Schema.DescribeSObjectResult ds = sObj.getDescribe();
       isCreateable = ds.isCreateable();
-      isUpdateable = ds.isUndeletable();
+      isUpdateable = ds.isUpdateable();
       isDeletable = ds.isDeletable();
       isSearchable = ds.isSearchable();
       isAccessible = ds.isAccessible();
