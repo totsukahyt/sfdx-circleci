@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label><!-- リードまたは取引先に登録の際、ともに既存がない場合、リードのリストを表示 --></label>
+        <name>LeadRegist_DefaultShowLeadListNoExsiting__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 会社名表示 --></label>
+        <name>LeadRegist_DispCompany__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 メール表示 --></label>
+        <name>LeadRegist_DispEmail__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 最終更新日表示 --></label>
+        <name>LeadRegist_DispLastModifiedDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 リードレコードタイプ表示【移行済】 --></label>
+        <name>LeadRegist_DispLeadRectype__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 所有者表示 --></label>
+        <name>LeadRegist_DispOwner__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 都道府県表示 --></label>
+        <name>LeadRegist_DispState__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 役職表示 --></label>
+        <name>LeadRegist_DispTitle__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 名刺情報で上書きする【移行済】 --></label>
+        <name>LeadRegist_Overwrite__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 ToDo登録 --></label>
+        <name>LeadRegist_RegistTodo__c</name>
+    </fields>
+    <fields>
+        <label><!-- リードに登録 ToDo件名 --></label>
+        <name>LeadRegist_TodoSubject__c</name>
+    </fields>
+    <fields>
+        <help><!-- リード用自動連携:キャンペーンIDが指定されていたとき、（作成、あるいは更新したとき）リードに加え取引先責任者もキャンペーンメンバーにする。 --></help>
+        <label><!-- リード用自動連携:取引先責任者もキャンペーンメンバーにする --></label>
+        <name>RenkeiContactToCampaignMember__c</name>
+    </fields>
+    <fields>
+        <help><!-- リード用自動連携:リードと取引先が既存で取引先が特定できて取引先責任者レコードがない場合、取引先責任者を作成する。 --></help>
+        <label><!-- リード用自動連携:リード、取引先既存で取引先責任者を作成する --></label>
+        <name>RenkeiCreateContactOnAcountWithLead__c</name>
+    </fields>
+    <fields>
+        <help><!-- リード用自動連携:該当するリードはなく、取引先が既存で取引先が特定できて取引先責任者レコードがない場合、取引先責任者を作成する。このときリードは作らない。 --></help>
+        <label><!-- リード用自動連携:リードなく、取引先既存で取引先責任者を作成する --></label>
+        <name>RenkeiCreateContactOnAcountWithoutLead__c</name>
+    </fields>
+    <fields>
+        <help><!-- リード用自動連携:名刺に合致する既存の取引先が複数あり特定できないとき、リードを作る。 --></help>
+        <label><!-- リード用自動連携:既存取引先が複数あり特定できないとき、リードを作る --></label>
+        <name>RenkeiCreateLeadOnTooManyAccounts__c</name>
+    </fields>
+    <fields>
+        <help><!-- リード用自動連携:（上書き設定時）該当するリード複数を更新する。オフの場合、該当するリードが複数あったときは更新しない。 --></help>
+        <label><!-- リード用自動連携:条件に合致する既存リードは全て更新する --></label>
+        <name>RenkeiUpdateAllLeadsOnCondition__c</name>
+    </fields>
+    <fields>
+        <help><!-- リード用自動連携:キャンペーンIDが指定されていたとき、作成に加え更新でもキャンペーンメンバーにする。 --></help>
+        <label><!-- リード用自動連携:更新でもキャンペーンメンバーにする --></label>
+        <name>RenkeiUpdateToCampaignMember__c</name>
+    </fields>
+    <fields>
+        <help><!-- キャンペーンのリストに表示する条件
+上限件数; 私のだけなら true を指定 ; 「状況」をカンマ区切り; 「種別」をカンマ区切り
+例 &quot;5;true; ;&quot; --></help>
+        <label><!-- Sキャンペーンリストの候補条件 --></label>
+        <name>SRegistCampaignList__c</name>
+    </fields>
+    <fields>
+        <help><!-- Id,Name以外の画面に表示するリード項目の API名:数値 をカンマ区切りで指定してください。 
+数値 は、 
+・1はリストにのみ表示 
+・2はリストとポップアップに表示 
+・3はポップアップにのみ表示 
+リスト、ポップアップともに記載順に表示します。 --></help>
+        <label><!-- Sリード登録時表示するリードの項目1 --></label>
+        <name>SRegistQueryLeadFields1__c</name>
+    </fields>
+    <fields>
+        <label><!-- Sリード登録時表示するリードの項目2 --></label>
+        <name>SRegistQueryLeadFields2__c</name>
+    </fields>
+    <fields>
+        <help><!-- 取引先・取引先責任者に登録画面で「既存の取引先の情報を名刺情報で上書きする」チェックボックスをデフォルトでチェックなしとします。【移行済】 --></help>
+        <label><!-- 取引先・取引先任者に登録 取引先を名刺情報で上書きしない【移行済】 --></label>
+        <name>SmartViscaf__AccountNotOverWrite__c</name>
+    </fields>
+    <fields>
+        <help><!-- 取引先・取引先責任者に登録画面で「検索条件」のデフォルトを「取引先名のみで検索」にします。 --></help>
+        <label><!-- 取引先・取引先任者に登録 取引先名のみで検索 --></label>
+        <name>SmartViscaf__AccountSearchType__c</name>
+    </fields>
+    <fields>
+        <help><!-- 【移行済】 --></help>
+        <label><!-- 取引先・取引先任者に登録 取引先責任者を名刺情報で上書きしない【移行済】 --></label>
+        <name>SmartViscaf__ContactNotOverWrite__c</name>
+    </fields>
+    <fields>
+        <label><!-- 取引先・取引先任者に登録 取引先所有者表示 --></label>
+        <name>SmartViscaf__DispAccountOwner__c</name>
+    </fields>
+    <fields>
+        <help><!-- 取引先・取引先責任者に登録時に取引先レコードタイプを表示します【移行済】 --></help>
+        <label><!-- 取引先・取引先任者に登録 取引先レコードタイプ表示【移行済】 --></label>
+        <name>SmartViscaf__DispAccountRectype__c</name>
+    </fields>
+    <fields>
+        <label><!-- 取引先・取引先任者に登録 取引先責任者所有者表示 --></label>
+        <name>SmartViscaf__DispContactOwner__c</name>
+    </fields>
+    <fields>
+        <help><!-- 取引先・取引先責任者に登録画面の登録先リストに取引先責任者のレコードタイプを表示します【移行済】 --></help>
+        <label><!-- 取引先・取引先任者に登録 取引先責任者レコードタイプ表示【移行済】 --></label>
+        <name>SmartViscaf__DispContactRectype__c</name>
+    </fields>
+    <fields>
+        <label><!-- 取引先・取引先任者に登録 最終更新日表示 --></label>
+        <name>SmartViscaf__DispLastModifiedDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- 取引先・取引先任者に登録 メールアドレス表示 --></label>
+        <name>SmartViscaf__DispMail__c</name>
+    </fields>
+    <fields>
+        <label><!-- 取引先・取引先任者に登録 携帯電話表示 --></label>
+        <name>SmartViscaf__DispMobile__c</name>
+    </fields>
+    <fields>
+        <label><!-- 取引先・取引先任者に登録 都道府県表示 --></label>
+        <name>SmartViscaf__DispState__c</name>
+    </fields>
+    <fields>
+        <label><!-- 取引先・取引先任者に登録 役職表示 --></label>
+        <name>SmartViscaf__DispTitle__c</name>
+    </fields>
+    <fields>
+        <help><!-- サンブリッジサポートの指示があった場合のみ設定します。 --></help>
+        <label><!-- 組織情報は正規表現を使う --></label>
+        <name>SmartViscaf__OrgTreeUseRegex__c</name>
+    </fields>
+    <fields>
+        <label><!-- S日時のフォーマット --></label>
+        <name>SmartViscaf__SDatetimeFormat__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：英語住所を表示する --></label>
+        <name>SmartViscaf__SDetailShowAddressEng__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：住所を表示する --></label>
+        <name>SmartViscaf__SDetailShowAddress__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：会社名カナを表示する --></label>
+        <name>SmartViscaf__SDetailShowCompanyKana__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：メールアドレスを表示する --></label>
+        <name>SmartViscaf__SDetailShowEMail__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：名刺交換日を表示する --></label>
+        <name>SmartViscaf__SDetailShowExchangeDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：FAX番号を表示する --></label>
+        <name>SmartViscaf__SDetailShowFax__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：手書きメモを表示する --></label>
+        <name>SmartViscaf__SDetailShowFreeHandMemo__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：リスト名を表示する --></label>
+        <name>SmartViscaf__SDetailShowListName__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：メモを表示する --></label>
+        <name>SmartViscaf__SDetailShowMemo__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：携帯電話番号を表示する --></label>
+        <name>SmartViscaf__SDetailShowMobile__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：氏名カナを表示する --></label>
+        <name>SmartViscaf__SDetailShowNameKana__c</name>
+    </fields>
+    <fields>
+        <help><!-- Google News の検索リンクを表示します。 --></help>
+        <label><!-- S名刺詳細：ニュースリンクを表示する --></label>
+        <name>SmartViscaf__SDetailShowNewsLink__c</name>
+    </fields>
+    <fields>
+        <help><!-- 自分所有以外の名刺で所有者を表示する場合にはチェックします。 --></help>
+        <label><!-- S名刺詳細：所有者を表示する --></label>
+        <name>SmartViscaf__SDetailShowOtherOwner__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：電話番号を表示する --></label>
+        <name>SmartViscaf__SDetailShowTel__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：URLを表示する --></label>
+        <name>SmartViscaf__SDetailShowURL__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺詳細：郵便番号を表示する --></label>
+        <name>SmartViscaf__SDetailShowZipCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- サンブリッジサポートの指示があった場合のみ設定します。 --></help>
+        <label><!-- S開発モードで動作する --></label>
+        <name>SmartViscaf__SDevelopment__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺の編集を行う --></label>
+        <name>SmartViscaf__SEnableNameCardEdit__c</name>
+    </fields>
+    <fields>
+        <label><!-- S行動の省略時長さ（分） --></label>
+        <name>SmartViscaf__SEventDurationInMinutes__c</name>
+    </fields>
+    <fields>
+        <help><!-- サンブリッジサポートの指示があった場合のみ設定します。 --></help>
+        <label><!-- S別名前空間名 --></label>
+        <name>SmartViscaf__SExtraNamespace__c</name>
+    </fields>
+    <fields>
+        <help><!-- 近所の名刺を検索するときの距離（キロ）の条件 --></help>
+        <label><!-- S近所の名刺を検索するときの距離（キロ） --></label>
+        <name>SmartViscaf__SFindNearByQueryDistance__c</name>
+    </fields>
+    <fields>
+        <help><!-- 近所の名刺を検索するときの件数の上限値 --></help>
+        <label><!-- S近所の名刺を検索するときの件数の上限値 --></label>
+        <name>SmartViscaf__SFindNearByQueryLimit__c</name>
+    </fields>
+    <fields>
+        <help><!-- Google へ問い合わせる間隔（ミリ秒） --></help>
+        <label><!-- S地理位置情報を取得する間隔 --></label>
+        <name>SmartViscaf__SGeolocationQueryInterval__c</name>
+    </fields>
+    <fields>
+        <label><!-- S地理位置情報を取得する件数 --></label>
+        <name>SmartViscaf__SGeolocationQueryLimit__c</name>
+    </fields>
+    <fields>
+        <label><!-- Ｓ転職済みの名刺は表示しない --></label>
+        <name>SmartViscaf__SIgnoreJobChanged__c</name>
+    </fields>
+    <fields>
+        <label><!-- S名刺一覧のみんなの名刺は最新の名刺以外も対象にする --></label>
+        <name>SmartViscaf__SListQueryIgnoreLatestCard__c</name>
+    </fields>
+    <fields>
+        <help><!-- 名刺一覧で自分の名刺を検索するときの件数の上限値 --></help>
+        <label><!-- S名刺一覧で自分の名刺を検索するときの件数の上限値 --></label>
+        <name>SmartViscaf__SListQueryMineLimit__c</name>
+    </fields>
+    <fields>
+        <help><!-- 名刺一覧でみんなの名刺を検索するときの件数の上限値 --></help>
+        <label><!-- S名刺一覧でみんなの名刺を検索するときの件数の上限値 --></label>
+        <name>SmartViscaf__SListQueryVisibleLimit__c</name>
+    </fields>
+    <fields>
+        <label><!-- S地図のピンに表示する会社数の最大値 --></label>
+        <name>SmartViscaf__SMAXMapInfoWindowCompanies__c</name>
+    </fields>
+    <fields>
+        <label><!-- S地図のピンに表示する会社ごとの氏名数の最大値 --></label>
+        <name>SmartViscaf__SMAXMapInfoWindowPersons__c</name>
+    </fields>
+    <fields>
+        <help><!-- 名刺詳細の組織階層の構築で取得する名刺レコード数の上限値 --></help>
+        <label><!-- S組織階層を作るときに取得する名刺の上限値 --></label>
+        <name>SmartViscaf__SMAXOrgTreeNameCards__c</name>
+    </fields>
+    <fields>
+        <label><!-- S組織情報に役職を表示する --></label>
+        <name>SmartViscaf__SOrgTreeShowTitle__c</name>
+    </fields>
+    <fields>
+        <help><!-- 取引先を登録する際の項目のマッピング 
+名刺の項目API名:(コロン)取引先の項目API名
+カンマで区切る
+1つの名刺項目 から複数項目を作る場合は複数作る --></help>
+        <label><!-- S取引先登録時の項目マッピング1 --></label>
+        <name>SmartViscaf__SRegistAccountFields1__c</name>
+    </fields>
+    <fields>
+        <label><!-- S取引先登録時の項目マッピング2 --></label>
+        <name>SmartViscaf__SRegistAccountFields2__c</name>
+    </fields>
+    <fields>
+        <label><!-- S取引先登録時の項目マッピング3 --></label>
+        <name>SmartViscaf__SRegistAccountFields3__c</name>
+    </fields>
+    <fields>
+        <help><!-- 取引先責任者を登録する際の項目のマッピング 
+名刺の項目API名:(コロン)取引先責任者の項目API名 
+カンマで区切る 
+1つの名刺項目 から複数項目を作る場合は複数作る --></help>
+        <label><!-- S取引先責任者登録時の項目マッピング1 --></label>
+        <name>SmartViscaf__SRegistContactFields1__c</name>
+    </fields>
+    <fields>
+        <label><!-- S取引先責任者登録時の項目マッピング2 --></label>
+        <name>SmartViscaf__SRegistContactFields2__c</name>
+    </fields>
+    <fields>
+        <label><!-- S取引先責任者登録時の項目マッピング3 --></label>
+        <name>SmartViscaf__SRegistContactFields3__c</name>
+    </fields>
+    <fields>
+        <label><!-- S取引先情報を名刺情報で上書きする --></label>
+        <name>SmartViscaf__SRegistOverwriteAccount__c</name>
+    </fields>
+    <fields>
+        <label><!-- S取引先責任者情報を名刺情報で上書きする --></label>
+        <name>SmartViscaf__SRegistOverwriteContact__c</name>
+    </fields>
+    <fields>
+        <help><!-- Id,Name以外の画面に表示する取引先項目の API名:数値 をカンマ区切りで指定してください。
+数値 は、
+・1はリストにのみ表示
+・2はリストとポップアップに表示
+・3はポップアップにのみ表示
+リスト、ポップアップともに記載順に表示します。 --></help>
+        <label><!-- S取引先登録時表示する取引先の項目1 --></label>
+        <name>SmartViscaf__SRegistQueryAccountFields1__c</name>
+    </fields>
+    <fields>
+        <label><!-- S取引先登録時表示する取引先の項目2 --></label>
+        <name>SmartViscaf__SRegistQueryAccountFields2__c</name>
+    </fields>
+    <fields>
+        <help><!-- Id,Name以外の画面に表示する取引先責任者項目の API名:数値 をカンマ区切りで指定してください。 
+数値 は、 
+・1はリストにのみ表示 
+・2はリストとポップアップに表示 
+・3はポップアップにのみ表示 
+リスト、ポップアップともに記載順に表示します。 --></help>
+        <label><!-- S取引先責任者登録時表示する取引先責任者の項目1 --></label>
+        <name>SmartViscaf__SRegistQueryContactFields1__c</name>
+    </fields>
+    <fields>
+        <label><!-- S取引先責任者登録時表示する取引先責任者の項目2 --></label>
+        <name>SmartViscaf__SRegistQueryContactFields2__c</name>
+    </fields>
+    <fields>
+        <label><!-- S取引先登録で検索するときの件数の上限値 --></label>
+        <name>SmartViscaf__SRegistQueryLimit__c</name>
+    </fields>
+    <fields>
+        <help><!-- サンブリッジサポートの指示があった場合のみ設定します。 --></help>
+        <label><!-- Sスキャナー名 --></label>
+        <name>SmartViscaf__SScannerName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Sみんなの名刺でも2次納品以外も検索の対象にする --></label>
+        <name>SmartViscaf__SSearchAllIgnoreDeliveryType__c</name>
+    </fields>
+    <fields>
+        <help><!-- SmartViscaサーバに非標準のサービスIDを使うときに指定します。 --></help>
+        <label><!-- SSmartViscaサーバ サービスID --></label>
+        <name>SmartViscaf__SSmartViscaServeServiceID__c</name>
+    </fields>
+    <fields>
+        <help><!-- 必要に応じてSmartViscaサーバへ送る追加のパラメータを指定します。 --></help>
+        <label><!-- SSmartViscaサーバ オプション --></label>
+        <name>SmartViscaf__SSmartViscaServerOptions__c</name>
+    </fields>
+    <fields>
+        <label><!-- SSmartViscaサーバ プロキシフラグ --></label>
+        <name>SmartViscaf__SSmartViscaServerProxyFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- SmartViscaサーバのAPIに非標準のURLを使うときに指定します。 --></help>
+        <label><!-- SSmartViscaサーバ --></label>
+        <name>SmartViscaf__SSmartViscaServer__c</name>
+    </fields>
+    <fields>
+        <help><!-- 0:取引先責任者　と 取引先
+1:取引先責任者
+2:取引先
+その他：名刺 --></help>
+        <label><!-- S活動の対象とするオブジェクト --></label>
+        <name>SmartViscaf__STargetActivity__c</name>
+    </fields>
+    <fields>
+        <help><!-- 取引先未登録名刺一覧メニュー、取引先登録ボタン を表示する --></help>
+        <label><!-- S取引先、取引先責任者登録機能を使う --></label>
+        <name>SmartViscaf__SUseAccountRegist__c</name>
+    </fields>
+    <fields>
+        <label><!-- S地理情報を使う --></label>
+        <name>SmartViscaf__SUseGIS__c</name>
+    </fields>
+    <fields>
+        <label><!-- S画像データにローカルストレージを使う --></label>
+        <name>SmartViscaf__SUseImageLocalStrage__c</name>
+    </fields>
+    <fields>
+        <label><!-- Sインデックス検索を使う --></label>
+        <name>SmartViscaf__SUseIndexSearch__c</name>
+    </fields>
+    <fields>
+        <label><!-- Sセッションストレージを使う --></label>
+        <name>SmartViscaf__SUseSessionStrage__c</name>
+    </fields>
+    <fields>
+        <help><!-- 行動やToDoは標準の画面を使う場合はチェックします。カスタム項目は、標準の画面でのみ編集可能です。関連付けは標準画面では出来ません。 --></help>
+        <label><!-- S行動やToDoは標準の画面を使う --></label>
+        <name>SmartViscaf__SUseStandardActivityUI__c</name>
+    </fields>
+    <fields>
+        <help><!-- Salesforce１の詳細画面では、標準の画面で編集した結果を、即時反映しません。 --></help>
+        <label><!-- S名刺編集は標準の画面を使う --></label>
+        <name>SmartViscaf__SUseStandardNamecardEditUI__c</name>
+    </fields>
+    <fields>
+        <help><!-- チェックすると、名刺編集も標準の画面になります。 --></help>
+        <label><!-- S名刺詳細は標準の画面を使う --></label>
+        <name>SmartViscaf__SUseStandardNamecardViewUI__c</name>
+    </fields>
+    <fields>
+        <help><!-- 【移行済】 --></help>
+        <label><!-- 取引先・取引先任者に登録 ToDo件名【移行済】 --></label>
+        <name>SmartViscaf__ToDoName__c</name>
+    </fields>
+    <fields>
+        <help><!-- 【移行済】 --></help>
+        <label><!-- 取引先・取引先任者に登録 ToDo登録しない【移行済】 --></label>
+        <name>SmartViscaf__ToDo__c</name>
+    </fields>
+    <fields>
+        <label><!-- トリガで同じ人と名刺交換したらフィードで知らせる --></label>
+        <name>SmartViscaf__TriggerCreateFeedOnName__c</name>
+    </fields>
+    <fields>
+        <label><!-- トリガで名刺履歴を保存する --></label>
+        <name>SmartViscaf__TriggerHistoryIsActive__c</name>
+    </fields>
+    <fields>
+        <help><!-- サンブリッジサポートの指示があった場合のみ設定します。 --></help>
+        <label><!-- トリガでリード拡張パッケージの自動連携を使う --></label>
+        <name>SmartViscaf__TriggerLeadExRenkeiTriggerHandler__c</name>
+    </fields>
+    <fields>
+        <label><!-- トリガで名刺データを名寄せする --></label>
+        <name>SmartViscaf__TriggerMergeNameCards__c</name>
+    </fields>
+    <fields>
+        <label><!-- トリガで取込日時をセットする --></label>
+        <name>SmartViscaf__TriggerRegDateTime__c</name>
+    </fields>
+    <fields>
+        <help><!-- サンブリッジサポートの指示があった場合のみ設定します。 --></help>
+        <label><!-- トリガで自動連携を行う --></label>
+        <name>SmartViscaf__TriggerRenkeiTriggerHandler__c</name>
+    </fields>
+</CustomObjectTranslation>
