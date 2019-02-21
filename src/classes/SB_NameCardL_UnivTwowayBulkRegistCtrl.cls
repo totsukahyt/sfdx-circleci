@@ -564,7 +564,8 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
         SB_NameCardL_BulkRegistDTO.CustomObject ncRec = this.nameCardRecordListDTO[i];
         if (inputPlickListVMapClone != null) {
           Map<String, List<SelectOption>> sopsMap = inputPlickListVMapClone.get(ncRec.nameCard.Id);
-          if (ncRec.accAndCon != 0) {
+          System.debug(ncRec.accAndCon);
+          if (ncRec.accAndCon > 0) {
             SB_NameCardL_BulkRegistDTO.AccAndCon accAndCon2 = ncRec.accAndConList[ncRec.accAndCon - 1];
             accountKey = String.valueOf(accAndCon2.accountId) + String.valueOf(accAndCon2.contactId);
             System.debug(accountKey);
