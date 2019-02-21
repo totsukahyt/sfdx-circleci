@@ -475,7 +475,6 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     SB_NameCardL_BulkRegistDTO.InputPlickListValue inputR = new SB_NameCardL_BulkRegistDTO.InputPlickListValue();
     inputR.plickListTitle = String.format(System.Label.SB_NCLD_Label_LeadRecType, new List<String> {Lead.SobjectType.getDescribe().getLabel()});
     inputR.selectValue = SB_NameCardL_Util.getDefaultRecordType(Lead.sObjecttype);
-    inputR.show = inv.leadAuthority.isCreateable;
     inv.InputPlickListValues.add(inputR);
     for (RecordTypeInfo info : leadRecordTypes) {
       inputR.plickListOptions.add(new SB_NameCardL_BulkRegistDTO.LabelValue(info.getName(), info.getRecordTypeId()));
@@ -497,6 +496,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     }
     inv.showRecordType = !inputR.plickListOptions.isEmpty();
     inputR.canShow = inputR.plickListOptions.size() > 1 && inv.leadAuthority.isCreateable && basicSetting.SmartViscaf__RegistDispLeadRectype__c;
+    inputR.show = false;
     inv.searchConditionRct.searchConditionRecordTypeOptionGroups.add(optionGroup);
 
     List<RecordTypeInfo> accountRecordTypes = SB_NCL_TwowayBulkRgsLcController.getRecordType(Account.sObjecttype);
