@@ -77,10 +77,6 @@
         <name>SB_NCLD_Label_Count</name>
     </customLabels>
     <customLabels>
-        <label><!-- リードを新規作成 --></label>
-        <name>SB_NCLD_Label_CreateNewLead</name>
-    </customLabels>
-    <customLabels>
         <label><!-- &lt;リードを新規作成&gt; --></label>
         <name>SB_NCLD_Label_CreateNewLeadDEV</name>
     </customLabels>
@@ -117,10 +113,6 @@
         <name>SB_NCLD_Label_NameCard_Owner_Queue</name>
     </customLabels>
     <customLabels>
-        <label><!-- 既存のリードの情報を名刺情報で上書きする --></label>
-        <name>SB_NCLD_Label_OverwriteLeadInfo</name>
-    </customLabels>
-    <customLabels>
         <label><!-- (関連)既存のリードの情報を名刺情報で上書きする --></label>
         <name>SB_NCLD_Label_OverwriteLeadInfoDEV</name>
     </customLabels>
@@ -153,10 +145,6 @@
         <name>SB_NCLD_Label_RegisterDestinationSelection</name>
     </customLabels>
     <customLabels>
-        <label>登録先</label>
-        <name>SB_NCLD_Label_Registration</name>
-    </customLabels>
-    <customLabels>
         <label><!-- 保存 --></label>
         <name>SB_NCLD_Label_Save</name>
     </customLabels>
@@ -165,7 +153,7 @@
         <name>SB_NCLD_Label_Saveing</name>
     </customLabels>
     <customLabels>
-        <label>検索条件</label>
+        <label><!-- 検索条件 --></label>
         <name>SB_NCLD_Label_SearchCondition</name>
     </customLabels>
     <customLabels>
@@ -285,16 +273,8 @@
         <name>SB_NCLD_Msg_ChooseLessBusinessCards</name>
     </customLabels>
     <customLabels>
-        <label><!-- 検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。 --></label>
-        <name>SB_NCLD_Msg_DisplayUnderConditions</name>
-    </customLabels>
-    <customLabels>
         <label><!-- (関連)検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。 --></label>
         <name>SB_NCLD_Msg_DisplayUnderConditionsDEV</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リードを選択してください --></label>
-        <name>SB_NCLD_Msg_SelectLead</name>
     </customLabels>
     <customLabels>
         <label><!-- (関連)リードを選択してください --></label>
@@ -303,10 +283,6 @@
     <customLabels>
         <label><!-- 登録先を選択してください --></label>
         <name>SB_NCLD_Msg_SelectRegisterDestination</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リードを新規作成する場合は「所有者」を指定してください --></label>
-        <name>SB_NCLD_Msg_SpecifyOwnerWhenCreateLead</name>
     </customLabels>
     <customLabels>
         <label><!-- (関連)リードを新規作成する場合は「所有者」を指定してください --></label>
@@ -337,14 +313,6 @@
         <name>SB_NCLD_Text_Account_Contact</name>
     </customLabels>
     <customLabels>
-        <label><!-- リードに一括登録 --></label>
-        <name>SB_NCLD_Text_BulkRegisterToLead</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- (関連)リードに一括登録 --></label>
-        <name>SB_NCLD_Text_BulkRegisterToLeadDEV</name>
-    </customLabels>
-    <customLabels>
         <label><!-- 名刺 --></label>
         <name>SB_NCLD_Text_BusinessCard</name>
     </customLabels>
@@ -365,16 +333,8 @@
         <name>SB_NCLD_Text_BusinessCardList</name>
     </customLabels>
     <customLabels>
-        <label>{0}で更新</label>
-        <name>SB_NCLD_Text_BusinessCardListWindowTitle</name>
-    </customLabels>
-    <customLabels>
-        <label>リード</label>
+        <label><!-- リード --></label>
         <name>SB_NCLD_Text_Lead</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- リードが重複しています --></label>
-        <name>SB_NCLD_Text_LeadOverLap</name>
     </customLabels>
     <customLabels>
         <label><!-- (関連)リードが重複しています --></label>
@@ -385,16 +345,8 @@
         <name>SB_NCLD_Text_Loading</name>
     </customLabels>
     <customLabels>
-        <label><!-- リードに登録 --></label>
-        <name>SB_NCLD_Text_RegisterToLead</name>
-    </customLabels>
-    <customLabels>
         <label><!-- (関連)リードに登録 --></label>
         <name>SB_NCLD_Text_RegisterToLeadDEV</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- SB_NCLD_Text_RegisterToLeadDEVTitle --></label>
-        <name>SB_NCLD_Text_RegisterToLeadDEVTitle</name>
     </customLabels>
     <customLabels>
         <label>{0}: {1}に登録</label>
@@ -445,10 +397,6 @@
         <name>SB_NCLD_Text_Update</name>
     </customLabels>
     <customLabels>
-        <label><!-- リードを更新 --></label>
-        <name>SB_NCLD_Text_UpdateLead</name>
-    </customLabels>
-    <customLabels>
         <label><!-- (関連)リードを更新 --></label>
         <name>SB_NCLD_Text_UpdateLeadDEV</name>
     </customLabels>
@@ -463,6 +411,86 @@
     <customLabels>
         <label><!-- 登録でエラーが発生しました。 --></label>
         <name>SB_NCL_Regist_Error_Occured</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ01 --></label>
+        <name>SB_NCL_Reserved01</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ02 --></label>
+        <name>SB_NCL_Reserved02</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ03 --></label>
+        <name>SB_NCL_Reserved03</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ04 --></label>
+        <name>SB_NCL_Reserved04</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ05 --></label>
+        <name>SB_NCL_Reserved05</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ06 --></label>
+        <name>SB_NCL_Reserved06</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ07 --></label>
+        <name>SB_NCL_Reserved07</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ08 --></label>
+        <name>SB_NCL_Reserved08</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ09 --></label>
+        <name>SB_NCL_Reserved09</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ10 --></label>
+        <name>SB_NCL_Reserved10</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ11 --></label>
+        <name>SB_NCL_Reserved11</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ12 --></label>
+        <name>SB_NCL_Reserved12</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ13 --></label>
+        <name>SB_NCL_Reserved13</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ14 --></label>
+        <name>SB_NCL_Reserved14</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ15 --></label>
+        <name>SB_NCL_Reserved15</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ16 --></label>
+        <name>SB_NCL_Reserved16</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ17 --></label>
+        <name>SB_NCL_Reserved17</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ18 --></label>
+        <name>SB_NCL_Reserved18</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ19 --></label>
+        <name>SB_NCL_Reserved19</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ20 --></label>
+        <name>SB_NCL_Reserved20</name>
     </customLabels>
     <customLabels>
         <label><!-- 新規作成する --></label>
@@ -515,10 +543,6 @@
     <customLabels>
         <label>{0}検索条件</label>
         <name>SB_NC_X_SearchCriteria</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- 重複API名のテスト --></label>
-        <name>SB_NC_iOSDevice</name>
     </customLabels>
     <customLabels>
         <label><!-- Trident/7.0 以外の Windows IE 11用の識別子 なければ、none --></label>
@@ -1729,7 +1753,7 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_Lead_Radio3</name>
     </customLabels>
     <customLabels>
-        <label><!-- 処理の内容 --></label>
+        <label><!-- 新規作成・上書き処理の設定 --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_MultipleExistingProcessing</name>
     </customLabels>
     <customLabels>

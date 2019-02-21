@@ -134,13 +134,6 @@
         <value>件</value>
     </labels>
     <labels>
-        <fullName>SB_NCLD_Label_CreateNewLead</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リードを新規作成</shortDescription>
-        <value>リードを新規作成</value>
-    </labels>
-    <labels>
         <fullName>SB_NCLD_Label_CreateNewLeadDEV</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -204,13 +197,6 @@
         <value>名刺の所有者はキューに設定されてます</value>
     </labels>
     <labels>
-        <fullName>SB_NCLD_Label_OverwriteLeadInfo</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>既存のリードの情報を名刺情報で上書きする</shortDescription>
-        <value>既存のリードの情報を名刺情報で上書きする</value>
-    </labels>
-    <labels>
         <fullName>SB_NCLD_Label_OverwriteLeadInfoDEV</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -265,13 +251,6 @@
         <protected>true</protected>
         <shortDescription>登録先選択</shortDescription>
         <value>登録先選択</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCLD_Label_Registration</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>SB_NCLD_Label_Registration</shortDescription>
-        <value>登録先</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Label_Save</fullName>
@@ -498,25 +477,11 @@
         <value>登録先候補が多すぎるため処理を中断しました。選択する名刺を減らしてください</value>
     </labels>
     <labels>
-        <fullName>SB_NCLD_Msg_DisplayUnderConditions</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。</shortDescription>
-        <value>検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。</value>
-    </labels>
-    <labels>
         <fullName>SB_NCLD_Msg_DisplayUnderConditionsDEV</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。</shortDescription>
         <value>検索件数が制限を超えたので過去に登録した{0}だけに絞って表示します。</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCLD_Msg_SelectLead</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リードを選択してください</shortDescription>
-        <value>リードを選択してください</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Msg_SelectLeadDEV</fullName>
@@ -531,13 +496,6 @@
         <protected>true</protected>
         <shortDescription>登録先を選択してください</shortDescription>
         <value>登録先を選択してください</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCLD_Msg_SpecifyOwnerWhenCreateLead</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リードを新規作成する場合は「所有者」を指定してください</shortDescription>
-        <value>リードを新規作成する場合は「所有者」を指定してください</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV</fullName>
@@ -589,20 +547,6 @@
         <value>{0}・{1}</value>
     </labels>
     <labels>
-        <fullName>SB_NCLD_Text_BulkRegisterToLead</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リードに一括登録</shortDescription>
-        <value>リードに一括登録</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCLD_Text_BulkRegisterToLeadDEV</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>(関連)リードに一括登録</shortDescription>
-        <value>&amp;*Lead*&amp;に一括登録</value>
-    </labels>
-    <labels>
         <fullName>SB_NCLD_Text_BusinessCard</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -638,25 +582,11 @@
         <value>{0}で更新</value>
     </labels>
     <labels>
-        <fullName>SB_NCLD_Text_BusinessCardListWindowTitle</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>SB_NCLD_Text_BusinessCardListWindowTitle</shortDescription>
-        <value>{1}で更新</value>
-    </labels>
-    <labels>
         <fullName>SB_NCLD_Text_Lead</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>リード</shortDescription>
         <value>リード</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCLD_Text_LeadOverLap</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リードが重複しています</shortDescription>
-        <value>リードが重複しています</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_LeadOverLapDEV</fullName>
@@ -673,25 +603,11 @@
         <value>ローディング中...</value>
     </labels>
     <labels>
-        <fullName>SB_NCLD_Text_RegisterToLead</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リードに登録</shortDescription>
-        <value>リードに登録</value>
-    </labels>
-    <labels>
         <fullName>SB_NCLD_Text_RegisterToLeadDEV</fullName>
         <language>ja</language>
         <protected>true</protected>
         <shortDescription>(関連)リードに登録</shortDescription>
         <value>{0}に登録</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCLD_Text_RegisterToLeadDEVTitle</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>SB_NCLD_Text_RegisterToLeadDEVTitle</shortDescription>
-        <value>{1}に登録</value>
     </labels>
     <labels>
         <fullName>SB_NCLD_Text_RegisterToLeadDEVWindowTitle</fullName>
@@ -779,13 +695,6 @@
         <value>更新</value>
     </labels>
     <labels>
-        <fullName>SB_NCLD_Text_UpdateLead</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リードを更新</shortDescription>
-        <value>リードを更新</value>
-    </labels>
-    <labels>
         <fullName>SB_NCLD_Text_UpdateLeadDEV</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -812,6 +721,146 @@
         <protected>true</protected>
         <shortDescription>登録でエラーが発生しました。</shortDescription>
         <value>{0}の登録でエラーが発生しました。</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved01</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ01</shortDescription>
+        <value>リザーブ01</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved02</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ02</shortDescription>
+        <value>リザーブ02</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved03</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ03</shortDescription>
+        <value>リザーブ03</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved04</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ04</shortDescription>
+        <value>リザーブ04</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved05</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ05</shortDescription>
+        <value>リザーブ05</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved06</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ06</shortDescription>
+        <value>リザーブ06</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved07</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ07</shortDescription>
+        <value>リザーブ07</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved08</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ08</shortDescription>
+        <value>リザーブ08</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved09</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ09</shortDescription>
+        <value>リザーブ09</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved10</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ10</shortDescription>
+        <value>リザーブ10</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved11</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ11</shortDescription>
+        <value>リザーブ11</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved12</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ12</shortDescription>
+        <value>リザーブ12</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved13</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ13</shortDescription>
+        <value>リザーブ13</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved14</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ14</shortDescription>
+        <value>リザーブ14</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved15</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ15</shortDescription>
+        <value>リザーブ15</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved16</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ16</shortDescription>
+        <value>リザーブ16</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved17</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ17</shortDescription>
+        <value>リザーブ17</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved18</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ18</shortDescription>
+        <value>リザーブ18</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved19</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ19</shortDescription>
+        <value>リザーブ19</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_Reserved20</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>リザーブ20</shortDescription>
+        <value>リザーブ20</value>
     </labels>
     <labels>
         <fullName>SB_NCS1R_Text_CreateNewRecord</fullName>
@@ -903,13 +952,6 @@
         <protected>true</protected>
         <shortDescription>SB_NC_X_SearchCriteria</shortDescription>
         <value>{0}検索条件</value>
-    </labels>
-    <labels>
-        <fullName>SB_NC_iOSDevice</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>重複API名のテスト</shortDescription>
-        <value>SB_NC_iOSDevice</value>
     </labels>
     <labels>
         <fullName>SB_Text_IE11Identity</fullName>

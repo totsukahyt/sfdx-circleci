@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- 名刺設定値 --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- 名刺設定値 --></value>
+    </caseValues>
+    <fields>
+        <label><!-- 並び順 --></label>
+        <name>SmartViscaf__Index__c</name>
+    </fields>
+    <fields>
+        <label><!-- テキスト値01 --></label>
+        <name>SmartViscaf__TextValue01__c</name>
+    </fields>
+    <fields>
+        <label><!-- 種別 --></label>
+        <name>SmartViscaf__Type__c</name>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SaishinInherit</masterLabel>
+            <translation><!-- SaishinInherit --></translation>
+        </picklistValues>
+    </fields>
+    <nameFieldLabel><!-- 名刺設定値名 --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
+</CustomObjectTranslation>
