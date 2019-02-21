@@ -73,7 +73,7 @@
         <type>Default</type>
     </actionOverrides>
     <businessProcesses>
-        <fullName>Test</fullName>
+        <fullName>LeadTest1</fullName>
         <isActive>true</isActive>
         <values>
             <fullName>Closed - Converted</fullName>
@@ -106,6 +106,10 @@
     <fields>
         <fullName>CampaignId</fullName>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>CleanStatus</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
     </fields>
     <fields>
         <fullName>Company</fullName>
@@ -335,14 +339,7 @@
     </fields>
     <fields>
         <fullName>NameCardFreehandmemo__c</fullName>
-        <externalId>false</externalId>
-        <label>名刺手書きメモ</label>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <type>TextArea</type>
-    </fields>
-    <fields>
-        <fullName>NameCardFreehandmemo_del__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>名刺手書きメモ</label>
         <required>false</required>
@@ -351,16 +348,7 @@
     </fields>
     <fields>
         <fullName>NameCardListName__c</fullName>
-        <externalId>false</externalId>
-        <label>名刺リスト名</label>
-        <length>255</length>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>NameCardListName_del__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>名刺リスト名</label>
         <length>255</length>
@@ -371,16 +359,7 @@
     </fields>
     <fields>
         <fullName>NameCardMemo__c</fullName>
-        <externalId>false</externalId>
-        <label>名刺メモ</label>
-        <length>255</length>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>NameCardMemo_del__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>名刺メモ</label>
         <length>255</length>
@@ -392,11 +371,12 @@
     <fields>
         <fullName>NameCard__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>名刺</label>
         <referenceTo>SmartViscaf__NameCard__c</referenceTo>
         <relationshipLabel>リード</relationshipLabel>
-        <relationshipName>NameCard</relationshipName>
+        <relationshipName>NameCards</relationshipName>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Lookup</type>
@@ -533,41 +513,21 @@
         <fullName>Website</fullName>
         <trackFeedHistory>false</trackFeedHistory>
     </fields>
-    <fields>
-        <fullName>uuu__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <externalId>false</externalId>
-        <label>ユーザ</label>
-        <referenceTo>User</referenceTo>
-        <relationshipName>uuu</relationshipName>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <type>Lookup</type>
-    </fields>
     <listViews>
         <fullName>AllOpenLeads</fullName>
-        <columns>FULL_NAME</columns>
-        <columns>LEAD.COMPANY</columns>
-        <columns>LEAD.STATE</columns>
-        <columns>LEAD.EMAIL</columns>
-        <columns>LEAD.STATUS</columns>
-        <columns>LEAD.CREATED_DATE</columns>
-        <columns>CORE.USERS.ALIAS</columns>
-        <columns>LEAD.UNREAD</columns>
-        <columns>LEAD.RECORDTYPE</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>LEAD.STATUS</field>
             <operation>notContain</operation>
             <value>closed</value>
         </filters>
-        <label>すべての進行中リード</label>
+        <label>All Open Leads</label>
     </listViews>
     <listViews>
-        <fullName>InternationalLeads_Lead</fullName>
+        <fullName>Lead_Lead</fullName>
         <filterScope>Queue</filterScope>
-        <label>International Leads</label>
-        <queue>InternationalLeads</queue>
+        <label>Lead</label>
+        <queue>Lead</queue>
         <sharedTo>
             <allInternalUsers></allInternalUsers>
         </sharedTo>
@@ -583,6 +543,15 @@
         <label>My Unread Leads</label>
     </listViews>
     <listViews>
+        <fullName>QueueTest_Lead</fullName>
+        <filterScope>Queue</filterScope>
+        <label>テストキュー</label>
+        <queue>QueueTest</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
         <fullName>TodaysLeads</fullName>
         <filterScope>Everything</filterScope>
         <filters>
@@ -591,24 +560,6 @@
             <value>TODAY</value>
         </filters>
         <label>Today&apos;s Leads</label>
-    </listViews>
-    <listViews>
-        <fullName>USEscalations_Lead</fullName>
-        <filterScope>Queue</filterScope>
-        <label>US - Escalations</label>
-        <queue>USEscalations</queue>
-        <sharedTo>
-            <allInternalUsers></allInternalUsers>
-        </sharedTo>
-    </listViews>
-    <listViews>
-        <fullName>USLeads_Lead</fullName>
-        <filterScope>Queue</filterScope>
-        <label>US Leads</label>
-        <queue>USLeads</queue>
-        <sharedTo>
-            <allInternalUsers></allInternalUsers>
-        </sharedTo>
     </listViews>
     <listViews>
         <fullName>ViewCustom1</fullName>
@@ -639,10 +590,10 @@
     </listViews>
     <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
     <recordTypes>
-        <fullName>Test1</fullName>
+        <fullName>LeadTest1</fullName>
         <active>true</active>
-        <businessProcess>Test</businessProcess>
-        <label>Test1</label>
+        <businessProcess>LeadTest1</businessProcess>
+        <label>LeadTest1</label>
         <picklistValues>
             <picklist>Industry</picklist>
             <values>
@@ -863,10 +814,10 @@
         </picklistValues>
     </recordTypes>
     <recordTypes>
-        <fullName>Test2</fullName>
+        <fullName>LeadTest2</fullName>
         <active>true</active>
-        <businessProcess>Test</businessProcess>
-        <label>Test2</label>
+        <businessProcess>LeadTest1</businessProcess>
+        <label>LeadTest2</label>
         <picklistValues>
             <picklist>Industry</picklist>
             <values>
@@ -1110,37 +1061,23 @@
         <fullName>LeadNameCardList</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
-        <hasMenubar>false</hasMenubar>
-        <hasScrollbars>true</hasScrollbars>
-        <hasToolbar>false</hasToolbar>
         <height>600</height>
-        <isResizable>true</isResizable>
         <linkType>page</linkType>
         <masterLabel>名刺で更新</masterLabel>
-        <openType>newWindow</openType>
+        <openType>noSidebar</openType>
         <page>SB_NameCard_LeadNameCardList</page>
-        <position>none</position>
         <protected>false</protected>
-        <showsLocation>false</showsLocation>
-        <showsStatus>false</showsStatus>
     </webLinks>
     <webLinks>
-        <fullName>LeadNameCardListLex</fullName>
+        <fullName>NameCardListLex</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
         <encodingKey>UTF-8</encodingKey>
-        <hasMenubar>false</hasMenubar>
-        <hasScrollbars>true</hasScrollbars>
-        <hasToolbar>false</hasToolbar>
         <height>600</height>
-        <isResizable>true</isResizable>
         <linkType>url</linkType>
-        <masterLabel>LeadNameCardListLex</masterLabel>
-        <openType>newWindow</openType>
-        <position>none</position>
+        <masterLabel>名刺で更新*</masterLabel>
+        <openType>noSidebar</openType>
         <protected>false</protected>
-        <showsLocation>false</showsLocation>
-        <showsStatus>false</showsStatus>
-        <url>/apex/SB_NCL_CardAppLauncher?id={!Lead.Id}&amp;app=updbycard</url>
+        <url>/apex/SmartViscal__SB_NCL_CardAppLauncher?id={!Lead.Id}&amp;app=updbycard</url>
     </webLinks>
 </CustomObject>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label><!-- Current Generator(s) --></label>
+        <name>CurrentGenerators__c</name>
+    </fields>
+    <fields>
+        <label>Handwritten Notes</label>
+        <name>NameCardFreehandmemo__c</name>
+    </fields>
+    <fields>
+        <label>List Name</label>
+        <name>NameCardListName__c</name>
+    </fields>
+    <fields>
+        <label>Notes</label>
+        <name>NameCardMemo__c</name>
+    </fields>
+    <fields>
+        <label>Business Card</label>
+        <name>NameCard__c</name>
+        <relationshipLabel>Lead</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Number of Locations --></label>
+        <name>NumberofLocations__c</name>
+    </fields>
+    <fields>
+        <label><!-- Primary --></label>
+        <name>Primary__c</name>
+        <picklistValues>
+            <masterLabel>No</masterLabel>
+            <translation><!-- No --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yes</masterLabel>
+            <translation><!-- Yes --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Product Interest --></label>
+        <name>ProductInterest__c</name>
+        <picklistValues>
+            <masterLabel>GC1000 series</masterLabel>
+            <translation><!-- GC1000 series --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GC3000 series</masterLabel>
+            <translation><!-- GC3000 series --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GC5000 series</masterLabel>
+            <translation><!-- GC5000 series --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- SIC Code --></label>
+        <name>SICCode__c</name>
+    </fields>
+    <recordTypes>
+        <label><!-- LeadTest1 --></label>
+        <name>LeadTest1</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- LeadTest2 --></label>
+        <name>LeadTest2</name>
+    </recordTypes>
+    <webLinks>
+        <label>Update by Business Card</label>
+        <name>LeadNameCardList</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- NameCardListLex --></label>
+        <name>NameCardListLex</name>
+    </webLinks>
+</CustomObjectTranslation>
