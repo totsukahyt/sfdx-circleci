@@ -149,6 +149,8 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   public String windowTitle { get; set; }
   public String searchCriteriaLead { get; set; } // リード検索条件
   public String searchCriteriaAccount { get; set; } // 取引先取引先責任者検索条件
+  public Boolean registNoToDo { get; set; } // ToDoに登録
+
 
   @TestVisible private static final Integer SEARCHTYPE_DEFAULT = 0;    // 検索方法のデフォルト値
   @TestVisible private static final Integer FIELD_NAMESITE = 0;  // 検索条件の項目
@@ -219,6 +221,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
         this.retUrl = '/home/home.jsp';
     }
     try {
+      this.registNoToDo = baseSetting.SmartViscaf__RegistNoToDo__c;
       this.registObjs = RegistType.AccountContactLead;
       this.searchCriteriaLead = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {LD_LABEL});
       this.searchCriteriaAccount = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})});

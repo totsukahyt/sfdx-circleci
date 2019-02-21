@@ -267,6 +267,13 @@
         <value>登録先選択</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Label_Registration</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Label_Registration</shortDescription>
+        <value>登録先</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Label_Save</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -680,6 +687,13 @@
         <value>{0}に登録</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_Text_RegisterToLeadDEVTitle</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>SB_NCLD_Text_RegisterToLeadDEVTitle</shortDescription>
+        <value>{1}に登録</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_Text_RegisterToLeadDEVWindowTitle</fullName>
         <language>ja</language>
         <protected>true</protected>
@@ -798,146 +812,6 @@
         <protected>true</protected>
         <shortDescription>登録でエラーが発生しました。</shortDescription>
         <value>{0}の登録でエラーが発生しました。</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved01</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ01</shortDescription>
-        <value>リザーブ01</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved02</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ02</shortDescription>
-        <value>リザーブ02</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved03</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ03</shortDescription>
-        <value>リザーブ03</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved04</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ04</shortDescription>
-        <value>リザーブ04</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved05</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ05</shortDescription>
-        <value>リザーブ05</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved06</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ06</shortDescription>
-        <value>リザーブ06</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved07</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ07</shortDescription>
-        <value>リザーブ07</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved08</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ08</shortDescription>
-        <value>リザーブ08</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved09</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ09</shortDescription>
-        <value>リザーブ09</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved10</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ10</shortDescription>
-        <value>リザーブ10</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved11</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ11</shortDescription>
-        <value>リザーブ11</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved12</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ12</shortDescription>
-        <value>リザーブ12</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved13</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ13</shortDescription>
-        <value>リザーブ13</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved14</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ14</shortDescription>
-        <value>リザーブ14</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved15</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ15</shortDescription>
-        <value>リザーブ15</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved16</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ16</shortDescription>
-        <value>リザーブ16</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved17</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ17</shortDescription>
-        <value>リザーブ17</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved18</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ18</shortDescription>
-        <value>リザーブ18</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved19</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ19</shortDescription>
-        <value>リザーブ19</value>
-    </labels>
-    <labels>
-        <fullName>SB_NCL_Reserved20</fullName>
-        <language>ja</language>
-        <protected>true</protected>
-        <shortDescription>リザーブ20</shortDescription>
-        <value>リザーブ20</value>
     </labels>
     <labels>
         <fullName>SB_NCS1R_Text_CreateNewRecord</fullName>
