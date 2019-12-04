@@ -8,39 +8,6 @@
         <plural>true</plural>
         <value>Business Card History</value>
     </caseValues>
-    <fields>
-        <label><!-- 2次納品部署 --></label>
-        <name>SmartViscaf__Dev__c</name>
-    </fields>
-    <fields>
-        <label><!-- 名刺所有者 --></label>
-        <name>SmartViscaf__NameCardOwner__c</name>
-        <relationshipLabel><!-- 名刺履歴 --></relationshipLabel>
-    </fields>
-    <fields>
-        <label><!-- 名刺オブジェクトID --></label>
-        <name>SmartViscaf__NameCard__c</name>
-    </fields>
-    <fields>
-        <label><!-- 名刺ID --></label>
-        <name>SmartViscaf__card_id__c</name>
-    </fields>
-    <fields>
-        <label><!-- 削除日時 --></label>
-        <name>SmartViscaf__delete_time__c</name>
-    </fields>
-    <fields>
-        <label><!-- エラーコード --></label>
-        <name>SmartViscaf__error_code__c</name>
-    </fields>
-    <fields>
-        <label><!-- 一次納品日時 --></label>
-        <name>SmartViscaf__primary_delivery_time__c</name>
-    </fields>
-    <fields>
-        <label><!-- 二次納品日時 --></label>
-        <name>SmartViscaf__secondary_delivery_time__c</name>
-    </fields>
     <nameFieldLabel>History No</nameFieldLabel>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

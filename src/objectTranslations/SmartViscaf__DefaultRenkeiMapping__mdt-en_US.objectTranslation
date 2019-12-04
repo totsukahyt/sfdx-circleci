@@ -8,21 +8,5 @@
         <plural>true</plural>
         <value><!-- デフォルト名刺連携項目マッピング --></value>
     </caseValues>
-    <fields>
-        <label><!-- 有効 --></label>
-        <name>SmartViscaf__IsActive__c</name>
-    </fields>
-    <fields>
-        <label><!-- 名刺の項目(API名称) --></label>
-        <name>SmartViscaf__NameCardName__c</name>
-    </fields>
-    <fields>
-        <label><!-- 対象の項目(API名称) --></label>
-        <name>SmartViscaf__TargetName__c</name>
-    </fields>
-    <fields>
-        <label><!-- レコードタイプ --></label>
-        <name>SmartViscaf__recordtype__c</name>
-    </fields>
     <startsWith><!-- Consonant --></startsWith>
 </CustomObjectTranslation>
