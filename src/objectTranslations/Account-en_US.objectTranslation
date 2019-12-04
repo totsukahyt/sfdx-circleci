@@ -1,29 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <label><!-- 名刺手書きメモ --></label>
-        <name>SmartViscaf__NameCardFreehandmemo__c</name>
-    </fields>
-    <fields>
-        <help>List Name</help>
-        <label><!-- 名刺リスト名 --></label>
-        <name>SmartViscaf__NameCardListName__c</name>
-    </fields>
-    <fields>
-        <label><!-- 名刺メモ --></label>
-        <name>SmartViscaf__NameCardMemo__c</name>
-    </fields>
-    <fields>
-        <label><!-- 名刺 --></label>
-        <name>SmartViscaf__NameCard__c</name>
-        <relationshipLabel><!-- 取引先 --></relationshipLabel>
-    </fields>
-    <webLinks>
-        <label><!-- NameCardList --></label>
-        <name>SmartViscaf__NameCardList</name>
-    </webLinks>
-    <webLinks>
-        <label><!-- NameCardListLex --></label>
-        <name>SmartViscaf__NameCardListLex</name>
-    </webLinks>
-</CustomObjectTranslation>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata"/>
+

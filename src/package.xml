@@ -21,6 +21,34 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
+        <members>Lead.NameCardFreehandmemo__c</members>
+        <members>Lead.NameCardListName__c</members>
+        <members>Lead.NameCardMemo__c</members>
+        <members>Lead.NameCard__c</members>
+        <members>SmartViscaf__NameCard__c.campaign__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DefaultShowLeadListNoExsiting__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispCompany__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispEmail__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispLastModifiedDate__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispLeadRectype__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispOwner__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispState__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_DispTitle__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_Overwrite__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_RegistTodo__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.LeadRegist_TodoSubject__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.RenkeiContactToCampaignMember__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.RenkeiCreateContactOnAcountWithLead__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.RenkeiCreateContactOnAcountWithoutLead__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.RenkeiCreateLeadOnTooManyAccounts__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.RenkeiUpdateAllLeadsOnCondition__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.RenkeiUpdateToCampaignMember__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.SRegistCampaignList__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.SRegistQueryLeadFields1__c</members>
+        <members>SmartViscaf__SmartViscaConfig__c.SRegistQueryLeadFields2__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
         <members>*</members>
         <name>CustomLabels</name>
     </types>
@@ -29,84 +57,8 @@
         <name>CustomMetadata</name>
     </types>
     <types>
-        <members>Account</members>
-        <members>AccountCleanInfo</members>
-        <members>AccountContactRole</members>
-        <members>Activity</members>
-        <members>Asset</members>
-        <members>AssetRelationship</members>
-        <members>AssistantProgress</members>
-        <members>Campaign</members>
-        <members>CampaignMember</members>
-        <members>Case</members>
-        <members>CaseContactRole</members>
-        <members>CollaborationGroup</members>
-        <members>CollaborationGroupMember</members>
-        <members>Contact</members>
-        <members>ContactCleanInfo</members>
-        <members>ContentVersion</members>
-        <members>Contract</members>
-        <members>ContractContactRole</members>
-        <members>DandBCompany</members>
-        <members>DuplicateRecordItem</members>
-        <members>DuplicateRecordSet</members>
-        <members>EmailMessage</members>
-        <members>Event</members>
-        <members>ExchangeUserMapping</members>
-        <members>FeedItem</members>
-        <members>ForecastingCategoryMapping</members>
-        <members>Idea</members>
-        <members>Lead</members>
-        <members>LeadCleanInfo</members>
-        <members>Macro</members>
-        <members>MacroAction</members>
-        <members>MacroInstruction</members>
-        <members>Opportunity</members>
-        <members>OpportunityCompetitor</members>
-        <members>OpportunityContactRole</members>
-        <members>OpportunityLineItem</members>
-        <members>Order</members>
-        <members>OrderItem</members>
-        <members>OrgDeleteRequest</members>
-        <members>PartnerRole</members>
-        <members>Pricebook2</members>
-        <members>PricebookEntry</members>
-        <members>Product2</members>
-        <members>QuickText</members>
-        <members>RecordAction</members>
-        <members>SOSSession</members>
-        <members>SOSSessionActivity</members>
-        <members>Scorecard</members>
-        <members>ScorecardAssociation</members>
-        <members>ScorecardMetric</members>
-        <members>Site</members>
-        <members>SmartViscaf__DefaultRenkeiMapping__mdt</members>
-        <members>SmartViscaf__JinjiIdoEmail__c</members>
-        <members>SmartViscaf__JinjiIdo__c</members>
-        <members>SmartViscaf__NameCardBasicSetting__c</members>
-        <members>SmartViscaf__NameCardHistory__c</members>
-        <members>SmartViscaf__NameCardRenkeiJyoken__c</members>
-        <members>SmartViscaf__NameCardRenkeiMapping__c</members>
-        <members>SmartViscaf__NameCardSettingValues__c</members>
-        <members>SmartViscaf__NameCard__c</members>
-        <members>SmartViscaf__SmartViscaConfig__c</members>
-        <members>SocialPersona</members>
-        <members>Solution</members>
-        <members>StreamingChannel</members>
-        <members>Task</members>
-        <members>Topic</members>
-        <members>TopicAssignment</members>
-        <members>User</members>
-        <members>UserProvisioningRequest</members>
-        <name>CustomObject</name>
-    </types>
-    <types>
         <members>*</members>
         <name>CustomObjectTranslation</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>CustomSite</name>
     </types>
     <types>
         <members>*</members>
@@ -115,6 +67,17 @@
     <types>
         <members>*</members>
         <name>Translations</name>
+    </types>
+    <types>
+        <members>Lead.LeadNameCardList</members>
+        <members>Lead.NameCardListLex</members>
+        <members>SmartViscaf__NameCard__c.LeadAccountContactBulkRegist</members>
+        <members>SmartViscaf__NameCard__c.LeadAccountContactBulkRegistUniv</members>
+        <members>SmartViscaf__NameCard__c.LeadAccountContactRegist</members>
+        <members>SmartViscaf__NameCard__c.LeadAccountContactRegistLex</members>
+        <members>SmartViscaf__NameCard__c.LeadBulkRegist</members>
+        <members>SmartViscaf__NameCard__c.LeadRegist</members>
+        <name>WebLink</name>
     </types>
     <version>35.0</version>
 </Package>

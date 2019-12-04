@@ -8,19 +8,6 @@
         <plural>true</plural>
         <value>Personnel Change Mail</value>
     </caseValues>
-    <fields>
-        <label><!-- 本文 --></label>
-        <name>SmartViscaf__Body__c</name>
-    </fields>
-    <fields>
-        <label><!-- メール送信日 --></label>
-        <name>SmartViscaf__SendMailDate__c</name>
-    </fields>
-    <fields>
-        <label><!-- メール宛先 --></label>
-        <name>SmartViscaf__User__c</name>
-        <relationshipLabel><!-- 人事異動情報メール通知 --></relationshipLabel>
-    </fields>
     <nameFieldLabel>Name</nameFieldLabel>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

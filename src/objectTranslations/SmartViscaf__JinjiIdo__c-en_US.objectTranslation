@@ -8,47 +8,6 @@
         <plural>true</plural>
         <value>Personnel Changes</value>
     </caseValues>
-    <fields>
-        <label><!-- 会社名 --></label>
-        <name>SmartViscaf__AccountName__c</name>
-    </fields>
-    <fields>
-        <label><!-- 発令日 --></label>
-        <name>SmartViscaf__AnnounceDate__c</name>
-    </fields>
-    <fields>
-        <label><!-- 氏名 --></label>
-        <name>SmartViscaf__ContactName__c</name>
-    </fields>
-    <fields>
-        <label><!-- 削除対象フラグ --></label>
-        <name>SmartViscaf__DaleteTarget__c</name>
-    </fields>
-    <fields>
-        <label><!-- 削除予定日 --></label>
-        <name>SmartViscaf__DeleteDate__c</name>
-    </fields>
-    <fields>
-        <label><!-- 名刺 --></label>
-        <name>SmartViscaf__NameCard__c</name>
-        <relationshipLabel><!-- 人事異動情報 --></relationshipLabel>
-    </fields>
-    <fields>
-        <label><!-- 新職名 --></label>
-        <name>SmartViscaf__NewTitle__c</name>
-    </fields>
-    <fields>
-        <label><!-- 旧職名 --></label>
-        <name>SmartViscaf__OldTitle__c</name>
-    </fields>
-    <fields>
-        <label><!-- 掲載日 --></label>
-        <name>SmartViscaf__PrintedDate__c</name>
-    </fields>
-    <fields>
-        <label><!-- 取引先責任者の役職に反映 --></label>
-        <name>SmartViscaf__PutTitle__c</name>
-    </fields>
     <nameFieldLabel>Name</nameFieldLabel>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
