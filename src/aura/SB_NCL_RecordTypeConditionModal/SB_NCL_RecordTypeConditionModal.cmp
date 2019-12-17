@@ -12,6 +12,7 @@
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1229 [統合版]一括登録Lex版ではリードの場合、あるいは取引先・取引先責任者選択する場合、レコードタイプの設定ポップアップの内容はずっとリードと取引先・取引先責任者のレコードタイプが表示
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  SV_DEV-1866 SLDS CSSクラス名変更対応
  *
  **/ -->
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" access="global">
@@ -43,17 +44,17 @@
         </header>
         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
           <p>{!v.inputV.searchConditionRct.description}</p>
-          <div class="slds-form--compound">
+          <div class="slds-form_compound">
             <div class="slds-form-element__control">
-              <div class="slds-m-left--large">
+              <div class="slds-m-left_large">
                 <div class="slds-form-element__row" style="align-items: flex-start;">
                   <aura:iteration var="val" items="{!v.inputV.searchConditionRct.searchConditionRecordTypeOptionGroups}">
                     <aura:renderIf isTrue="{!and(and(val.titleId != 'Lead', v.showType != 'Lead') || val.titleId == v.showType || v.showType == 'Both', val.searchConditionplickListOptions.length > 0)}">
-                      <fieldset class="slds-form--compound" style="display: inline-block;vertical-align:top;">
+                      <fieldset class="slds-form_compound" style="display: inline-block;vertical-align:top;">
                         <div class="form-element__group">
                           <aura:renderIf isTrue="{!and(val.show, val.searchConditionplickListOptions.length > 0)}">
                             <fieldset class="slds-form-element" name="{!val.titleId}">
-                              <legend class="slds-form-element__label slds-form-element__label--top">
+                              <legend class="slds-form-element__label slds-form-element__label_top">
                                   {!val.title}
                               </legend>
                               <div class="slds-form-element__control">

@@ -11,6 +11,7 @@
  *
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  SV_DEV-1866 SLDS CSSクラス名変更対応
  *
  **/ -->
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" access="global">
@@ -33,7 +34,7 @@
       <aura:renderIf isTrue="{!v.dis != true}">
         <label class="slds-checkbox" for="{!v.boxid}">
           <input name="checkboxtop" type="checkbox" id="{!v.boxid}" checked="{!v.checked}" onclick="{!c.clickbox}"/>
-          <span  class="slds-checkbox--faux checkboxleft"></span>
+          <span  class="slds-checkbox_faux checkboxleft"></span>
           <span class="slds-assistive-text"></span>
           <span style="margin-left: 10px;" class="slds-form-element__label">{!v.boxlabel}</span>
         </label>

@@ -10,6 +10,7 @@
  *
  *  @author gao
  *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  SV_DEV-1867 SLDS CSSクラス名変更対応
  *
  **/ -->
 
@@ -35,7 +36,7 @@
     </center>
   </aura:renderIf>
 
-  <div class="slds-tabs--default" style="height: 100%; position: absolute; top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto;">
+  <div class="slds-tabs_default" style="height: 100%; position: absolute; top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto;">
     <c:SB_NCL_UpdateByCard aura:id="updateNameCardCmp"
                                 titleV="{!v.sObjectDto.titleV}"
                                 inputV="{!v.inputV}"
