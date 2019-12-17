@@ -146,9 +146,20 @@ public with sharing class SB_NameCard_LeadNameCardListController{
 
       Database.DMLOptions leaddml = new Database.DMLOptions();
 
-      leaddml.OptAllOrNone = true;
-
-      SmartViscaf.SB_NameCard_CrudFls.supdate(new List<Lead>{updLead}, leaddml);
+      // SV_DEV-2247 Classic 名刺で更新(Lead)：入力規則エラーメッセージ対応
+      // DMLオプション設定を本体パッケージに合わせておきます
+      //leaddml.OptAllOrNone = true;
+      leaddml.allowFieldTruncation = true;  // 文字列が長かったら詰める。
+      leaddml.DuplicateRuleHeader.allowSave = false;
+      leaddml.DuplicateRuleHeader.runAsCurrentUser = true;
+      List<Database.SaveResult> results = null;
+      //SmartViscaf.SB_NameCard_CrudFls.supdate(new List<Lead>{updLead}, leaddml);
+      results = SmartViscaf.SB_NameCard_CrudFls.supdate(new List<Lead>{updLead}, leaddml);
+      SB_NameCard_LeadSaveResult dbError = new SB_NameCard_LeadSaveResult();
+      dbError.putSaveResults(results);
+      if (dbError.isError()) {
+        throw new SB_NameCard_LeadNameCardListControllerException(dbError.getDbErrorHolder(0).text);
+      }
 
       if (ncRec.nameCard.SmartViscaf__lead__c != updLead.Id) {
 
