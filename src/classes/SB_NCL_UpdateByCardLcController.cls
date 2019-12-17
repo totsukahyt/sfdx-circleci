@@ -6,6 +6,7 @@
  *
  *  @author gao
  *  @Version 1.12      2018.5.xx SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 2.1       2019.12.xx SV_DEV-2375 LEX 名刺で更新(Lead)：更新候補の名刺リストの「更新」列に翻訳が設定されていない
  *
  **/
 
@@ -66,7 +67,8 @@ public with sharing class SB_NCL_UpdateByCardLcController {
     urlB.setURLLabel('Name');
     fieldList.add(urlB);
     fieldList.add(new SB_NCL_UpdateByCardDTO.DataTableColumnField(SmartViscaf__NameCard__c.SmartViscaf__email__c.getDescribe().getLabel(), 'SmartViscaf__email__c', 'text'));
-    SB_NCL_UpdateByCardDTO.DataTableColumnField button = new SB_NCL_UpdateByCardDTO.DataTableColumnField('更新', '更新', 'button');
+    //SV_DEV-2375 リスト「更新」列のラベルをカスタムラベルを読み込むように修正
+    SB_NCL_UpdateByCardDTO.DataTableColumnField button = new SB_NCL_UpdateByCardDTO.DataTableColumnField(System.Label.SB_NCLD_Text_Update, System.Label.SB_NCLD_Text_Update, 'button');
     SB_NCL_UpdateByCardDTO.Button b = new SB_NCL_UpdateByCardDTO.Button();
     b.label = System.Label.SB_NCLD_Text_Update;
     button.typeAttributes = b;
