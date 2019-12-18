@@ -119,7 +119,7 @@
         <description>リード用自動連携:リードと取引先が既存で取引先が特定できて取引先責任者レコードがない場合、取引先責任者を作成する。</description>
         <externalId>false</externalId>
         <inlineHelpText>リード用自動連携:リードと取引先が既存で取引先が特定できて取引先責任者レコードがない場合、取引先責任者を作成する。</inlineHelpText>
-        <label>リード用自動連携:リード、取引先既存で取引先責任者を作成する</label>
+        <label>リード用自動連携:リード、取引先既存で取引先責任者を作成する【移行済】</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -130,7 +130,7 @@
         <description>リード用自動連携:該当するリードはなく、取引先が既存で取引先が特定できて取引先責任者レコードがない場合、取引先責任者を作成する。このときリードは作らない。</description>
         <externalId>false</externalId>
         <inlineHelpText>リード用自動連携:該当するリードはなく、取引先が既存で取引先が特定できて取引先責任者レコードがない場合、取引先責任者を作成する。このときリードは作らない。</inlineHelpText>
-        <label>リード用自動連携:リードなく、取引先既存で取引先責任者を作成する</label>
+        <label>リード用自動連携:リードなく、取引先既存で取引先責任者を作成する【移行済】</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -141,7 +141,7 @@
         <description>リード用自動連携:名刺に合致する既存の取引先が複数あり特定できないとき、リードを作る。</description>
         <externalId>false</externalId>
         <inlineHelpText>リード用自動連携:名刺に合致する既存の取引先が複数あり特定できないとき、リードを作る。</inlineHelpText>
-        <label>リード用自動連携:既存取引先が複数あり特定できないとき、リードを作る</label>
+        <label>リード用自動連携:既存取引先が複数あり特定できないとき、リードを作る【移行済】</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -152,7 +152,7 @@
         <description>リード用自動連携:（上書き設定時）該当するリード複数を更新する。オフの場合、該当するリードが複数あったときは更新しない。</description>
         <externalId>false</externalId>
         <inlineHelpText>リード用自動連携:（上書き設定時）該当するリード複数を更新する。オフの場合、該当するリードが複数あったときは更新しない。</inlineHelpText>
-        <label>リード用自動連携:条件に合致する既存リードは全て更新する</label>
+        <label>リード用自動連携:条件に合致する既存リードは全て更新する【移行済】</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
