@@ -86,7 +86,7 @@
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <label>リードに登録 ToDo登録</label>
+        <label>リードに登録 ToDo登録【移行済】</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -94,7 +94,7 @@
         <fullName>LeadRegist_TodoSubject__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <label>リードに登録 ToDo件名</label>
+        <label>リードに登録 ToDo件名【移行済】</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

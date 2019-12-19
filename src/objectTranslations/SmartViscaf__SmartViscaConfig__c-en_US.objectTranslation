@@ -45,11 +45,11 @@
         <name>LeadRegist_Overwrite__c</name>
     </fields>
     <fields>
-        <label>Reg. To Lead: Add ToDo</label>
+        <label>Reg. To Lead: Add ToDo [Moved]</label>
         <name>LeadRegist_RegistTodo__c</name>
     </fields>
     <fields>
-        <label>Reg. To Lead: ToDo Subject</label>
+        <label>Reg. To Lead: ToDo Subject [Moved]</label>
         <name>LeadRegist_TodoSubject__c</name>
     </fields>
     <fields>
