@@ -4,6 +4,7 @@
  * LEX名刺で更新Launcherコントローラ
  * @author mao
  * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX
+ * @Version 拡張パッケージ：Lead Ex. 2.1  2019/12/XX LEX 名刺で更新(Lead)：ページタイトルが表示されない
  *
  */
 
@@ -27,7 +28,8 @@ public with sharing class SB_NCL_CardAppLauncherController {
   //    LEXで URLで起動させるため、IDを受ける用にVFの中にコンポーネントを展開するので、
   public SB_NCL_CardAppLauncherController() {
     try {
-      this.windowTitle = String.format(System.Label.SB_NCLD_Text_BusinessCardList, new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel()});
+      //SV_DEV-2376 ページタイトルを取引先・取引先責任者の更新に合わせる
+      this.windowTitle = System.Label.SB_NCLD_Text_BusinessCard + '：' + String.format(System.Label.SB_NCLD_Text_BusinessCardList, new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel()});
       List<ApexClass> classes = [SELECT Name, NamespacePrefix FROM ApexClass WHERE Name IN ('SB_NameCard_LeadBulkRegistController', 'SB_NameCard_LeadNameCardListController', 'SB_NameCard_LeadRegistController') OR NamespacePrefix='SmartViscal'];
       String namesp = '';
       if (!classes.isEmpty()) {
