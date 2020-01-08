@@ -10,6 +10,7 @@
  *
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12     2017.05.XX SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  SV_DEV-1866 SLDS CSSクラス名変更対応
  *
  **/ -->
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" controller="SB_NCL_TwowayBulkRgsLcController">
@@ -46,7 +47,7 @@
   <aura:renderIf isTrue="{!v.working}">
     <aura:renderIf isTrue="{!v.firstLoading}">
       <div class="slds-spinner_container" style="background-color:white">
-        <div class="slds-spinner--brand slds-spinner slds-spinner--medium" role="alert">
+        <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
           <div class="slds-assistive-text">Loading</div>
           <div class="slds-spinner__dot-a"></div>
           <div class="slds-spinner__dot-b"></div>
@@ -58,7 +59,7 @@
     </aura:renderIf>
   </aura:renderIf>
 
-  <div class="slds-tabs--default" style=" top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto; height: 100%;">
+  <div class="slds-tabs_default" style=" top: 0px; width: 100%; z-index:9001; left: 0; right: auto;overflow: auto; height: 100%;">
     <c:SB_NCL_BulkRegistCommon aura:id="bulkRegistCommon" inputV="{!v.inputV}"
                                         titleV="{!v.titleV}"
                                         dataList="{!v.dataList}"
