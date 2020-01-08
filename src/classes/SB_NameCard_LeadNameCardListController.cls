@@ -3,6 +3,7 @@
  *
  *  @Version 1    2017/11/XX SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
  *  @Version 1.12 2018/03/XX SV_DEV-523  Classic版 リード拡張パッケージでも「名刺で更新」ボタンのマッピング対応
+ *  @Version 2.1  2019/12/XX SV_DEV-2377 Classic 名刺で更新(Lead)：ページタイトルを他のページと統一する
  *
  *
  * リードを更新
@@ -42,7 +43,9 @@ public with sharing class SB_NameCard_LeadNameCardListController{
 
   public SB_NameCard_LeadNameCardListController(ApexPages.StandardController sc) {
     try {
-      this.windowTitle = String.format(System.Label.SB_NCLD_Text_BusinessCardList, new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel()});
+
+      //SV_DEV-2377 ページタイトルを取引先・取引先責任者の更新に合わせる
+      this.windowTitle = System.Label.SB_NCLD_Text_BusinessCard + '：' + String.format(System.Label.SB_NCLD_Text_BusinessCardList, new String[]{SmartViscaf__NameCard__c.sObjectType.getDescribe().getLabel()});
       this.updateLeadLabel = String.format(System.Label.SB_NCLD_Text_UpdateLeadDEV, new String[]{Lead.sObjectType.getDescribe().getLabel()});
       this.overwriteLeadInfoLabel = String.format(System.Label.SB_NCLD_Label_OverwriteLeadInfoDEV, new String[]{Lead.sObjectType.getDescribe().getLabel()});
       this.leadOverwrite = !baseSetting.SmartViscaf__RegistLeadNotOverWrite__c && Lead.SObjectType.getDescribe().isUpdateable();
@@ -146,9 +149,20 @@ public with sharing class SB_NameCard_LeadNameCardListController{
 
       Database.DMLOptions leaddml = new Database.DMLOptions();
 
-      leaddml.OptAllOrNone = true;
-
-      SmartViscaf.SB_NameCard_CrudFls.supdate(new List<Lead>{updLead}, leaddml);
+      // SV_DEV-2247 Classic 名刺で更新(Lead)：入力規則エラーメッセージ対応
+      // DMLオプション設定を本体パッケージに合わせておきます
+      //leaddml.OptAllOrNone = true;
+      leaddml.allowFieldTruncation = true;  // 文字列が長かったら詰める。
+      leaddml.DuplicateRuleHeader.allowSave = false;
+      leaddml.DuplicateRuleHeader.runAsCurrentUser = true;
+      List<Database.SaveResult> results = null;
+      //SmartViscaf.SB_NameCard_CrudFls.supdate(new List<Lead>{updLead}, leaddml);
+      results = SmartViscaf.SB_NameCard_CrudFls.supdate(new List<Lead>{updLead}, leaddml);
+      SB_NameCard_LeadSaveResult dbError = new SB_NameCard_LeadSaveResult();
+      dbError.putSaveResults(results);
+      if (dbError.isError()) {
+        throw new SB_NameCard_LeadNameCardListControllerException(dbError.getDbErrorHolder(0).text);
+      }
 
       if (ncRec.nameCard.SmartViscaf__lead__c != updLead.Id) {
 

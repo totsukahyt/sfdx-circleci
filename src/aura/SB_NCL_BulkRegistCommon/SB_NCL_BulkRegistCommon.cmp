@@ -11,6 +11,7 @@
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1154 LEX画面「リードもしくは取引先・取引先責任者に登録*」一括登録でキャンペーンの状況が無効状態で表示されない。
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1162 LEX統合一括画面検索条件を変更する際にエラーが発生
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1229 [統合版]一括登録Lex版ではリードの場合、あるいは取引先・取引先責任者選択する場合、レコードタイプの設定ポップアップの内容はずっとリードと取引先・取引先責任者のレコードタイプが表示
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  SV_DEV-1866 SLDS CSSクラス名変更対応
  *
  **/ -->
 
@@ -56,7 +57,7 @@
       </lightning:breadcrumbs>
       <div class="slds-grid">
           <div class="slds-grid slds-no-space">
-            <h1 class="slds-text-heading--medium slds-truncate" title="Update by Business Card">{!v.titleV.titleName}</h1>
+            <h1 class="slds-text-heading_medium slds-truncate" title="Update by Business Card">{!v.titleV.titleName}</h1>
           </div>
         </div>
     </aura:set>
@@ -83,7 +84,7 @@
       </aura:iteration>
     </lightning:buttonMenu>
 
-    <lightning:button class="slds-button slds-button--icon-more" variant="Neutral" label="" iconName="utility:filterList" iconPosition="left" onclick="{!c.showModal }" />
+    <lightning:button class="slds-button slds-button_icon-more" variant="Neutral" label="" iconName="utility:filterList" iconPosition="left" onclick="{!c.showModal }" />
   </div>
 
   <!-- 統合画面BODY -->
@@ -91,13 +92,13 @@
     <div style="padding: 0px 0px 0px 0px;">
       <div style="display:inline-block;min-width: 100%; padding: 0.75rem 0.75rem 0.75rem 0.75rem;">
         <!-- 名刺一覧を表示する -->
-        <div class="slds-box slds-theme--shade">
+        <div class="slds-box slds-theme_shade">
           <c:SB_NCL_DataTable labelMap="{!v.inputV.labelMap}" showType="{!v.showType}" haveError="{!v.dataHasError}" aura:id="dataTable" fieldList="{!v.fieldList}" selectMap="{!v.selectMap}" objs="{!v.dataList}"/>
         </div>
         <div style="position: relative;width: 100%;z-index: 8000; padding: 0.75rem 0px 0px 0px;">
           <!-- 上書きの指定セクション -->
           <aura:renderIf isTrue="{!v.inputV.showOverWrite}">
-            <div class="slds-box slds-theme--shade" style="height: 100%; padding: 10px 0px 10px 0px;">
+            <div class="slds-box slds-theme_shade" style="height: 100%; padding: 10px 0px 10px 0px;">
               <div class="">
                 <h3 class="slds-section__title test-id__section-header-container">
                   <button aria-controls="accordion-details-01" aria-expanded="true" onclick="{!c.changeOverWriteSection}" class="slds-button test-id__section-header-button slds-section__title-action">
@@ -109,10 +110,10 @@
               <!-- 既存上書きのチェックボックスを表示 -->
               <aura:renderIf isTrue="{!v.openOverWriteSection}">
                 <div class="slds-media" >
-                  <div class="slds-grid slds-wrap slds-grid--pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;">
+                  <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;">
                     <aura:iteration var="va" items="{!v.inputV.inputRegistOverWritValues}">
                       <aura:renderIf isTrue="{!va.show}">
-                        <div class="{!'slds-p-horizontal--small ' + if(v.showType == 'Both', 'slds-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3', 'slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2')}" style="">
+                        <div class="{!'slds-p-horizontal_small ' + if(v.showType == 'Both', 'slds-size_1-of-3 slds-medium-size_1-of-3 slds-large-size_1-of-3', 'slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2')}" style="">
                           <c:SB_NCL_Checkbox dis="{!va.overWriteCheck.disabled}" checked="{!va.overWriteCheck.checked}" boxid="{!va.overId + 'checkbox'}" boxlabel="{!va.overWriteCheck.label}"/>
                         </div>
                       </aura:renderIf>
@@ -124,7 +125,7 @@
           </aura:renderIf>
           <aura:renderIf isTrue="{!v.inputV.InputPlickListValues.length > 0}">
 
-            <div class="slds-box slds-theme--shade" style="height: 100%;padding: 10px 0px 10px 0px;margin-top: 0.75rem;">
+            <div class="slds-box slds-theme_shade" style="height: 100%;padding: 10px 0px 10px 0px;margin-top: 0.75rem;">
      <!--          <lightning:accordion aura:id="accordion" activeSectionName="">
                 <lightning:accordionSection name="A" label="{!v.inputV.newSectionLabel}">
                   <aura:set attribute="body"> -->
@@ -144,8 +145,8 @@
                       <!-- キャンペーンを入力するLookup -->
                       <aura:renderIf isTrue="{!and(v.showType != 'Contact', and(v.inputV.campaignAuthority.isAccessible, v.inputV.nameCardCampaignisAccessible))}">
                         <div class="slds-media">
-                          <div class="slds-grid slds-wrap slds-grid--pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;margin-top:10px;">
-                            <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2" style="">
+                          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;margin-top:10px;">
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="">
                               <!-- <ui:inputCheckbox label="{!va.overWriteCheck.label}" value="{!va.overWriteCheck.checked}"/> -->
                               <div class="slds-form-element">
                                 <div class="slds-form-element__control">
@@ -169,7 +170,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2" style="">
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="">
                               <!-- キャンペーンメンバーの状況 -->
                               <aura:renderIf isTrue="{!v.inputV.campaignStatusisAccessible}">
                                 {!v.inputV.campaignStatusPlick.plickListOptions}
@@ -185,9 +186,9 @@
                       </aura:renderIf>
                       <!-- 所有者を入力するLookup(Lead) -->
                       <div class="slds-media" >
-                        <div class="slds-grid slds-wrap slds-grid--pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;margin-top:10px;">
+                        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;margin-top:10px;">
                           <aura:renderIf isTrue="{!v.showType != 'Contact'}">
-                            <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2" style="">
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="">
                               <!-- <ui:inputCheckbox label="{!va.overWriteCheck.label}" value="{!va.overWriteCheck.checked}"/> -->
                               <div class="slds-form-element">
                                 <div class="slds-form-element__control">
@@ -214,7 +215,7 @@
                           </aura:renderIf>
                           <!-- 所有者を入力するLookup(Contact) -->
                           <aura:renderIf isTrue="{!v.showType != 'Lead'}">
-                            <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2">
                               <!-- <ui:inputCheckbox label="{!va.overWriteCheck.label}" value="{!va.overWriteCheck.checked}"/> -->
                               <div class="slds-form-element">
                                 <div class="slds-form-element__control">
@@ -241,7 +242,7 @@
                           </aura:renderIf>
                           <!-- 名刺所有者をリード所有者にする -->
                           <!-- <aura:renderIf isTrue="{!v.showType != 'Contact'}"> -->
-                            <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2" style="{!'display:' + if(v.showType != 'Contact', 'block', 'none')}">
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="{!'display:' + if(v.showType != 'Contact', 'block', 'none')}">
                               <div class="slds-form-element">
                                   <div class="slds-form-element__control" style="{!'margin-top:' + if(v.showType != 'Both', '30px;', '10px;')}">
                                     <span class="slds-checkbox">
@@ -257,7 +258,7 @@
                           <!-- </aura:renderIf> -->
                           <!-- <aura:renderIf isTrue="{!v.showType != 'Lead'}"> -->
                           <!-- 名刺所有者を取引先所有者にする -->
-                          <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2" style="{!'display:' + if(v.showType != 'Lead', 'block', 'none')}">
+                          <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="{!'display:' + if(v.showType != 'Lead', 'block', 'none')}">
                             <div class="slds-form-element">
                                 <div class="slds-form-element__control" style="{!'margin-top:' + if(v.showType != 'Both', '30px;', '10px;')}">
                                   <span class="slds-checkbox">
@@ -289,10 +290,10 @@
                         </aura:renderIf>
                       <!-- 新規作成時のレコードタイプ表示 -->
                       <div class="slds-media" style="{!if(v.inputV.showRecordType,'margin-top:10px;','')}">
-                        <div class="slds-grid slds-wrap slds-grid--pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;">
+                        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%; margin-right: 20px; margin-left: 20px;">
                           <aura:iteration var="va" items="{!v.inputV.InputPlickListValues}">
                             <aura:renderIf isTrue="{!and(va.show, v.inputV.showRecordType)}">
-                              <div class="{!'slds-p-horizontal--small ' + if(v.showType == 'Both', 'slds-size--1-of-3 slds-medium-size--1-of-3 slds-large-size--1-of-3', 'slds-size--1-of-2 slds-medium-size--1-of-2 slds-large-size--1-of-2')}" >
+                              <div class="{!'slds-p-horizontal_small ' + if(v.showType == 'Both', 'slds-size_1-of-3 slds-medium-size_1-of-3 slds-large-size_1-of-3', 'slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2')}" >
                                 <aura:renderIf isTrue="{!va.plickListOptions.length > 0}">
                                   <lightning:select name="selectItem" label="{!va.plickListTitle}" value="{!va.selectValue}">
                                     <aura:iteration var="val" items="{!va.plickListOptions}">
@@ -328,54 +329,54 @@
   <c:SB_NCL_RecordTypeConditionModal showType="{!v.showType}" inputV="{!v.inputV}" show="{!v.showModal}" searchRecordTypesMap="{!v.inputV.searchRecordTypesMap}"/>
   <aura:renderIf isTrue="{!and(v.showErrorMsg == true, not(empty(v.errorMsg)))}">
     <div class="demo-only" style="z-index: 9999;">
-     <div role="dialog" class="slds-modal slds-fade-in-open slds-modal--large">
+     <div role="dialog" class="slds-modal slds-fade-in-open slds-modal_large">
       <div class="slds-modal__container">
        <div class="slds-modal__header">
         <div class="slds-notify_container">
-         <div class="slds-notify slds-notify--toast slds-theme--warning" role="alert">
+         <div class="slds-notify slds-notify_toast slds-theme_warning" role="alert">
           <span class="slds-assistive-text">Error</span>
           <div class="slds-notify__content slds-grid">
            <lightning:icon iconName="utility:warning" size="small"/>
            <div class="slds-col slds-align-middle">
-            <h2 class="slds-text-heading--small">warning</h2>
+            <h2 class="slds-text-heading_small">warning</h2>
            </div>
           </div>
          </div>
         </div>
-        <h2 class="slds-text-heading--medium">&nbsp;</h2>
+        <h2 class="slds-text-heading_medium">&nbsp;</h2>
        </div>
-       <div class="slds-modal__content slds-p-around--medium">
+       <div class="slds-modal__content slds-p-around_medium">
         <ui:outputRichText class="slds-text-longform" value="{!v.errorMsg}"/>
        </div>
        <div class="slds-modal__footer">
-        <button class="slds-button slds-button--neutral slds-container--center slds-button" type="button" onclick="{!if(v.searchError == false, c.hiddenError, c.close)}">
+        <button class="slds-button slds-button_neutral slds-container_center slds-button" type="button" onclick="{!if(v.searchError == false, c.hiddenError, c.close)}">
          <!-- react-text: 528 -->OK
          <!-- /react-text --></button>
        </div>
       </div>
      </div>
-     <div class="slds-backdrop slds-backdrop--open"></div>
+     <div class="slds-backdrop slds-backdrop_open"></div>
     </div>
   </aura:renderIf>
   <!-- 名刺選択されていない場合エラーメッセージを表示します -->
   <aura:renderIf isTrue="{!v.dataList.length == 0}">
-    <div role="dialog" class="slds-modal slds-fade-in-open slds-modal--small">
+    <div role="dialog" class="slds-modal slds-fade-in-open slds-modal_small">
      <div class="slds-modal__container">
       <div class="slds-modal__header">
        <div class="slds-notify_container">
-        <div class="slds-notify slds-notify--toast slds-theme--alert" style="background-color: rgba(84,105,141,.95);" role="alert">
+        <div class="slds-notify slds-notify_toast slds-theme_alert" style="background-color: rgba(84,105,141,.95);" role="alert">
          <span class="slds-assistive-text">Error</span>
          <div class="slds-notify__content slds-grid">
           <lightning:icon iconName="utility:warning" size="small" variant="inverse"/>
           <div class="slds-col slds-align-middle">
-           <h2 class="slds-text-heading--small">{!$Label.c.SB_NCLD_Label_WarningConfirm}</h2>
+           <h2 class="slds-text-heading_small">{!$Label.c.SB_NCLD_Label_WarningConfirm}</h2>
           </div>
          </div>
         </div>
        </div>
-       <h2 class="slds-text-heading--medium">&nbsp;</h2>
+       <h2 class="slds-text-heading_medium">&nbsp;</h2>
       </div>
-      <div class="slds-modal__content slds-p-around--medium">
+      <div class="slds-modal__content slds-p-around_medium">
        <div>
         <div>
          <p>{!$Label.c.SB_NCLD_MSG_NotSelectNameCard}</p>
@@ -383,12 +384,12 @@
        </div>
       </div>
       <div class="slds-modal__footer">
-       <button class="slds-button slds-button--neutral slds-container--center slds-button" type="button" onclick="{!c.close}">
+       <button class="slds-button slds-button_neutral slds-container_center slds-button" type="button" onclick="{!c.close}">
         <!-- react-text: 123 -->OK
         <!-- /react-text --></button>
       </div>
      </div>
     </div>
-    <div class="slds-backdrop slds-backdrop--open"></div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
   </aura:renderIf>
 </aura:component>

@@ -12,10 +12,11 @@
  *  @author sawano
  *  @Version 1      2016.10.xx
  *  @Version 2      2017.10.xx  v1.21 for conde scan
+ *  @Version Lead Ex. 2.1  2019/12/XX LEX 名刺で更新(Lead)：ページタイトルが表示されない件に対応
  *
  **/
 -->
-<apex:page controller="SB_NCL_CardAppLauncherController" title="{!windowTitle}" applyHtmlTag="false" showHeader="false">
+<apex:page controller="SB_NCL_CardAppLauncherController" title="{!windowTitle}">
   <apex:pageMessages />
   <apex:includeLightning />
 

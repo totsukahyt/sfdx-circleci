@@ -11,6 +11,7 @@
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12
  *  @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  SV_DEV-1866 SLDS CSSクラス名変更対応
  *
  * 
  *
@@ -250,7 +251,7 @@
                         <div role="button" tabindex="-1" data-actionable="true" class="slds-th__action slds-text-link_reset slds-is-sorted_asc">
                             <label class="slds-checkbox" for="{!va.fieldName}" style="{!if(va.checkAll != true, 'display: none', '')}">
                               <input name="checkboxtop" type="checkbox" id="{!va.fieldName}" checked="{!va.checkAllCheck}" onclick="{!c.selectAll}"/>
-                              <span  class="slds-checkbox--faux checkboxleft"></span>
+                              <span  class="slds-checkbox_faux checkboxleft"></span>
                               <span class="slds-assistive-text"></span>
                             </label>
                             &nbsp;

@@ -7,11 +7,12 @@
  *  @author gao
  *  @Version 1.12      2018.5.xx SV_DEV-910 [LEX]リードの名刺で更新のLightning版対応
  *  @Version 2.1       2019.12.xx SV_DEV-2375 LEX 名刺で更新(Lead)：更新候補の名刺リストの「更新」列に翻訳が設定されていない
+ *                                SV_DEV-2248 LEX 名刺で更新(Lead)：入力規則エラーメッセージ対応
  *
  **/
 
 public with sharing class SB_NCL_UpdateByCardLcController {
-
+  public class SB_NCL_UpdateByCardLcControllerException extends exception {}
   private final static String NAMECARD_QUERY_FROM = 'SELECT {0} FROM SmartViscaf__NameCard__c WHERE Id = :id';
 
   @RemoteAction
@@ -100,8 +101,21 @@ public with sharing class SB_NCL_UpdateByCardLcController {
       }
       sp = Database.setSavepoint();
       Database.DMLOptions leaddml = new Database.DMLOptions();
-      leaddml.OptAllOrNone = true;
-      SmartViscaf.SB_NameCard_CrudFls.supdate(new List<Lead>{updLead}, leaddml);
+      // SV_DEV-2248 LEX 名刺で更新(Lead)：入力規則エラーメッセージ対応
+      // DMLオプション設定を本体パッケージに合わせておきます
+      //leaddml.OptAllOrNone = true;
+      leaddml.allowFieldTruncation = true;  // 文字列が長かったら詰める。
+      leaddml.DuplicateRuleHeader.allowSave = false;
+      leaddml.DuplicateRuleHeader.runAsCurrentUser = true;
+      List<Database.SaveResult> results = null;
+      //SmartViscaf.SB_NameCard_CrudFls.supdate(new List<Lead>{updLead}, leaddml);
+      results = SmartViscaf.SB_NameCard_CrudFls.supdate(new List<Lead>{updLead}, leaddml);
+      SB_NameCard_LeadSaveResult dbError = new SB_NameCard_LeadSaveResult();
+      dbError.putSaveResults(results);
+      if (dbError.isError()) {
+        throw new SB_NCL_UpdateByCardLcControllerException(dbError.getDbErrorHolder(0).text);
+      }
+
       if (nameCard.SmartViscaf__lead__c != updLead.Id) {
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.OptAllOrNone = false;
