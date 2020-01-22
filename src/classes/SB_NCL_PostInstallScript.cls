@@ -7,6 +7,7 @@
  *  @author sawano
  *  @Version 1      2018.01.xx
  *  lx v1.12    SV_DEV-1251 【カスタム設定】移行済みリード項目の値が反映されない。 → setupBasicSetting の追加
+ *  lx v2.1     SV_DEV-1970 自動連携のリード関連「カスタム設定」項目の移行(リード連携拡張パッケージ側改修
  *
  **/
 //global class SB_NCL_PostInstallScript {
@@ -342,7 +343,7 @@ global class SB_NCL_PostInstallScript implements InstallHandler {
     //new ItemBuilder(3, 'SmartViscaf__RegistDispLeadOverWriteCheckbox__c', true),          //「既存のリードを名刺情報で上書きする」を表示する
     new ItemBuilder(3, 'SmartViscaf__RegistDispLeadRectype__c', 'LeadRegist_DispLeadRectype__c', true),   // リードに登録 リードレコードタイプ選択を表示する  Lead EX  V1.11 から
     //    // 取引先登録:リードを名刺情報で上書きしない リードに登録 名刺情報で上書きする  反転させるので注意！
-    new ItemBuilder(3, 'SmartViscaf__RegistLeadNotOverWrite__c', 'LeadRegist_Overwrite__c', false)
+    new ItemBuilder(3, 'SmartViscaf__RegistLeadNotOverWrite__c', 'LeadRegist_Overwrite__c', false),
     //// リード拡張 キャンペーン適用用
     //new ItemBuilder(3, 'ScanSelectCampaign__c', false),         // スキャン:キャンペーン選択を有効化
     //// リード拡張 自動連携 リード登録関連
@@ -357,12 +358,20 @@ global class SB_NCL_PostInstallScript implements InstallHandler {
     //new ItemBuilder(3, 'RenkeiLeadLastName__c', true),         // v2.0.3 自動連携:リード姓
     //new ItemBuilder(3, 'RenkeiLeadFirstName__c', true),         // v2.0.3 自動連携:リード名
     //new ItemBuilder(3, 'RenkeiLeadMail__c', true)         // v2.0.3 自動連携:リードメールアドレス
+    // パッケージ v2.1 Version 4
+    new ItemBuilder(4,'SmartViscaf__RenkeiCreateContactOnAcountWithLead__c','RenkeiCreateContactOnAcountWithLead__c',false),        // 自動連携:リード、取引先既存で取引先責任者を作成する
+    new ItemBuilder(4,'SmartViscaf__RenkeiCreateContactOnAcountWithoutLead__c','RenkeiCreateContactOnAcountWithoutLead__c',false),  // 自動連携:リードなく、取引先既存で取引先責任者を作成する
+    new ItemBuilder(4,'SmartViscaf__RenkeiCreateLeadOnTooManyAccounts__c','RenkeiCreateLeadOnTooManyAccounts__c',false),            // 自動連携:既存取引先が複数あり特定できないとき、リードを作る
+    new ItemBuilder(4,'SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c','RenkeiUpdateAllLeadsOnCondition__c',false),                // 自動連携:条件に合致する既存リードは全て更新する
+    new ItemBuilder(4,'SmartViscaf__RegistLeadNoToDo__c','LeadRegist_RegistTodo__c',false),                                         // 取引先登録:リードToDo登録しない
+    new ItemBuilder(4,'SmartViscaf__RegistLeadToDoSubject__c','LeadRegist_TodoSubject__c',Label.SmartViscaf.SB_NC_ExchangeCard)     // 取引先登録:リードToDo件名
   };
 
   // V1.20 => 2 から始めます。
   // V1.21 => 3
+  // V2.1  => 4
   @TestVisible
-  private static final Integer CURRENT_SETTING_VERSION = 3;  // 2017.12.xx v1.22
+  private static final Integer CURRENT_SETTING_VERSION = 4;  // 2020.01.xx v2.1
 
   @TestVisible
   private class SB_NameCard_BasicSettingBuilder {

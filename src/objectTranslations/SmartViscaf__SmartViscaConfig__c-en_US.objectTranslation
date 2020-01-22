@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- SmartVisca Custom Setting --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- SmartVisca Custom Settings --></value>
+    </caseValues>
+    <fields>
+        <label>Show Lead list when no L. or Acc. exi.</label>
+        <name>LeadRegist_DefaultShowLeadListNoExsiting__c</name>
+    </fields>
+    <fields>
+        <label>Reg. To Lead: Display Company</label>
+        <name>LeadRegist_DispCompany__c</name>
+    </fields>
+    <fields>
+        <label>Reg. To Lead: Display Email</label>
+        <name>LeadRegist_DispEmail__c</name>
+    </fields>
+    <fields>
+        <label>Reg. To Lead: Display Last Modified</label>
+        <name>LeadRegist_DispLastModifiedDate__c</name>
+    </fields>
+    <fields>
+        <label>Reg. to Lead Show L. RecordType [Moved]</label>
+        <name>LeadRegist_DispLeadRectype__c</name>
+    </fields>
+    <fields>
+        <label>Reg. To Lead: Display Owner</label>
+        <name>LeadRegist_DispOwner__c</name>
+    </fields>
+    <fields>
+        <label>Reg. To Lead: Display Prefecture</label>
+        <name>LeadRegist_DispState__c</name>
+    </fields>
+    <fields>
+        <label>Reg. To Lead: Display Title</label>
+        <name>LeadRegist_DispTitle__c</name>
+    </fields>
+    <fields>
+        <label>Reg. To Lead:OverwriteExistingL. [Moved]</label>
+        <name>LeadRegist_Overwrite__c</name>
+    </fields>
+    <fields>
+        <label>Reg. To Lead: Add ToDo [Moved]</label>
+        <name>LeadRegist_RegistTodo__c</name>
+    </fields>
+    <fields>
+        <label>Reg. To Lead: ToDo Subject [Moved]</label>
+        <name>LeadRegist_TodoSubject__c</name>
+    </fields>
+    <fields>
+        <help>Lead Auto Conversion: Create campaign member for contact in addtion to lead (when creating or updating), if a campaign ID is specified.</help>
+        <label>L Auto Conv.: Contacts can be camp. mem.</label>
+        <name>RenkeiContactToCampaignMember__c</name>
+    </fields>
+    <fields>
+        <help>Lead Auto Conversion: Create contact when lead exists and corresponding account is unique.</help>
+        <label>L Auto Conv.: newC.whenL. A.exi. [Moved]</label>
+        <name>RenkeiCreateContactOnAcountWithLead__c</name>
+    </fields>
+    <fields>
+        <help>Lead Auto Conversion: Create contact when lead doesn’t exist and corresponding account is unique. Lead won’t be created.</help>
+        <label>L Auto Conv.: newC.whenA. exep.L [Moved]</label>
+        <name>RenkeiCreateContactOnAcountWithoutLead__c</name>
+    </fields>
+    <fields>
+        <help>Lead Auto Conversion: Create lead when multiple corresponding account exist.</help>
+        <label>L Auto Conv.:newL.whenMul.Acc.exi[Moved]</label>
+        <name>RenkeiCreateLeadOnTooManyAccounts__c</name>
+    </fields>
+    <fields>
+        <help>Lead Auto Conversion: (When overwriting is set) Update multiple corresponding leads. If it is off, do not update when there are multiple corresponding leads.</help>
+        <label>L Auto Conv.:UpdateAllCorrespon.L[Moved]</label>
+        <name>RenkeiUpdateAllLeadsOnCondition__c</name>
+    </fields>
+    <fields>
+        <help>Lead Auto Conversion: Create campaign member also at update not only at creation, if campaign ID is specified.</help>
+        <label>L Auto Conv.: camp. member reg. at upd.</label>
+        <name>RenkeiUpdateToCampaignMember__c</name>
+    </fields>
+    <fields>
+        <help>Conditions displayed in the list of campaigns Maximum number of entries; Specify true only for myself; Comma-separated &quot;&quot;status&quot;&quot;; Comma separated &quot;&quot;types&quot;&quot; Example &quot;&quot;5; true;;&quot;&quot;</help>
+        <label>Campaign List Search Condition</label>
+        <name>SRegistCampaignList__c</name>
+    </fields>
+    <fields>
+        <help>Specify comma separated &lt;Lead field API Name&gt;:&lt;number&gt; to show in regsistering acct. Name and Id are display anyway &lt;number&gt; should be 1 for display the field in list only 2 for display the field in list and popup 3 for display the field in popup only</help>
+        <label>SDisplayed Item of Lead Registration1</label>
+        <name>SRegistQueryLeadFields1__c</name>
+    </fields>
+    <fields>
+        <label>SDisplayed Item of Lead Registration2</label>
+        <name>SRegistQueryLeadFields2__c</name>
+    </fields>
+    <startsWith><!-- Consonant --></startsWith>
+</CustomObjectTranslation>
