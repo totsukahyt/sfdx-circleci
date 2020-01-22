@@ -13,6 +13,7 @@
  *                        SV_DEV-762 名刺オブジェクトの編集権限がない場合にリードに登録の処理が終了しない。
  *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
  *                        SV_DEV-565 リード登録のリード所有者の修正
+ * lx2.1 2020.01.xx SV_DEV-770 Classic リード登録 一括：重複ルールでの一致するレコードが多いとCPUタイムアウトエラーになる。
  *
  */
 
@@ -526,8 +527,11 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
       this.hasError = true;
       saveOK = false;
       System.debug(e.getMessage());
-      testError = e.getMessage();
-      ApexPages.addMessages(e);
+      //SV_DEV-770 コストの高かったaddMessages(e)処理を取り止め、ApexPages.Messageをセットする仕様に変更しました
+      //testError = e.getMessage();
+      //ApexPages.addMessages(e);
+      ApexPages.Message errMsg = new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage());
+      ApexPages.addMessage(errMsg);
     }
     //return pageRef;
   }

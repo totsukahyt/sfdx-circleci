@@ -10,7 +10,8 @@
  *
  * @author mao
  * @Version 拡張パッケージ：Lead Ex. 1.12 2018/8/XX
- *
+ * @Version 拡張パッケージ：Lead Ex. 2.1  2019/12/XX
+ *           SV_DEV-2256,SV_DEV-2257,SV_DEV-2258,SV_DEV-2259 無効ユーザを所有者として登録した場合のメッセージ表示
  */
 
 
@@ -45,6 +46,9 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
 
     // ToDoキューName検索
     Map<Id, Id> todoQueueName = new Map<Id, Id>();
+
+    // 画面で直接指定されたユーザIDのMap 2.1  2019.12.xx
+    Map<Id, Id> cardId2UserId = new Map<Id, Id>();
 
 
 
@@ -82,12 +86,14 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
               }
               // 画面所有者はユーザ
               else {
-                // ToDo画面上から選択する際にユーザは有効で,保存の時無効になったケースは今考えない
+                // To-Do画面上から選択する際にユーザは有効で,保存の時無効になったケースは今考えない
                 // if (!needCheckUserActiveMap.containsKey(req.leadParam.ownerid)) {
                 //   needCheckUserActiveMap.put(req.leadParam.ownerid, new List<Id>());
                 // }
                 // needCheckUserActiveMap.get(ret.cardId).add(req.leadParam.ownerid);
                 // needCheckUserActiveSet.add(req.leadParam.ownerid);
+                // 2.1  2019.12.xx 無効ユーザかのチェック対象に追加
+                cardId2UserId.put(ret.cardId, req.leadParam.ownerid);
               }
             }
           }
@@ -130,7 +136,9 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
                 continue;
               }
               else {
-                // ToDo画面上から選択する際にユーザは有効で,保存の時無効になったケースは今考えない
+                // To-Do画面上から選択する際にユーザは有効で,保存の時無効になったケースは今考えない
+                // 2.1  2019.12.xx 無効ユーザかのチェック対象に追加
+                cardId2UserId.put(ret.cardId, req.acntParam.ownerid);
               }
             }
           }
@@ -164,7 +172,9 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
                 continue;
               }
               else {
-                // ToDo画面上から選択する際にユーザは有効で,保存の時無効になったケースは今考えない
+                // To-Do画面上から選択する際にユーザは有効で,保存の時無効になったケースは今考えない
+                // 2.1  2019.12.xx 無効ユーザかのチェック対象に追加
+                cardId2UserId.put(ret.cardId, req.contParam.ownerid);
               }
             }
           }
@@ -326,7 +336,17 @@ public with sharing class SB_NameCardL_RegistOwenrCheckHelper {
                                 System.Label.SB_NCLD_MSG_Regist_Error + ': ' +
                                 String.format(System.Label.SB_NCLD_MSG_QUEUES_ERROR, new String[]{qMap.get(todoQueueName.get(cardId))});
           ownerErrorMap.put(cardId, errorMessage);
+      }
     }
+    // v2.1 所有者直指定のを調べる
+    if (!cardId2UserId.isEmpty()) {
+      Map<Id, User> users = new Map<Id, User>([SELECT Id, Name, IsActive FROM User WHERE Id IN : cardId2UserId.values()]);
+      for (Id cardId : cardId2UserId.keySet()) {
+        User u = users.get(cardId2UserId.get(cardId));
+        if (u != null && u.IsActive == false) {
+           ownerErrorMap.put(cardId, System.Label.SB_NCLD_MSG_CanNotSetInActiveUserToOwner);
+        }
+      }
     }
     return ownerErrorMap;
   }

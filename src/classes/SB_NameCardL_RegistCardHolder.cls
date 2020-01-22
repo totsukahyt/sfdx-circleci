@@ -15,6 +15,7 @@
  *    → 次は 基本の v2.1 にこれを移す そのときは global  になる
  *
  * lx2.0 2018.06.xx
+ * lx2.1 2020.01.xx SV_DEV-1365 取引先参照権限がない場合にリード登録時に名刺の取引先項目権限エラーになる。
  *
  **/
 public with sharing class SB_NameCardL_RegistCardHolder {
@@ -240,14 +241,20 @@ public with sharing class SB_NameCardL_RegistCardHolder {
        if (this.acntResult == ProcessResult.CREATE || this.acntResult == ProcessResult.MODIFY || this.acntResult == ProcessResult.OTHERS) {
          // アカウントを追加・更新していたら => 既存取引先上書き不可
          this.card.SmartViscaf__isNotOverwrite__c = !this.card.SmartViscaf__isNotOverwrite__c && !this.setting.SmartViscaf__RenkeiAccountOverwrite__c && this.card.SmartViscaf__account__c == null;
+         // SV_DEV-1365 追加・更新したときのみ値をセット
+         this.card.SmartViscaf__account__c = getAccountId() != null ? getAccountId() : this.card.SmartViscaf__account__c;  // アカウントの参照 NULL かも
        }
        if (this.contResult == ProcessResult.CREATE || this.contResult == ProcessResult.MODIFY || this.contResult == ProcessResult.OTHERS) {
          // コンタクトを追加・更新していたら => 既存取引先責任者上書き不可
          this.card.SmartViscaf__isNotOverContactwrite__c = !this.card.SmartViscaf__isNotOverContactwrite__c && !this.setting.SmartViscaf__RenkeiContactOverwrite__c && this.card.SmartViscaf__contact__c == null;
+         // SV_DEV-1365 追加・更新したときのみ値をセット
+         this.card.SmartViscaf__contact__c = getContactId() !=null ? getContactId() : this.card.SmartViscaf__contact__c;   // コンタクトの参照 NULL かも
        }
-      this.card.SmartViscaf__account__c = getAccountId() != null ? getAccountId() : this.card.SmartViscaf__account__c;  // アカウントの参照 NULL かも
-      this.card.SmartViscaf__contact__c = getContactId() !=null ? getContactId() : this.card.SmartViscaf__contact__c;   // コンタクトの参照 NULL かも
-      this.card.SmartViscaf__lead__c = getLeadId() !=null ? getLeadId() : this.card.SmartViscaf__lead__c;   // コンタクトの参照 NULL かも
+       if (this.leadResult == ProcessResult.CREATE || this.leadResult == ProcessResult.MODIFY || this.leadResult == ProcessResult.OTHERS) {
+         // SV_DEV-1365 追加・更新したときのみ値をセット
+         this.card.SmartViscaf__lead__c = getLeadId() !=null ? getLeadId() : this.card.SmartViscaf__lead__c;   // コンタクトの参照 NULL かも
+       }
+
       // if (this.card.Id != null && this.card.SmartViscaf__contact__c != null) { //
       //   putContactLead(this.card.Id, this.card.SmartViscaf__contact__c);   // 名刺ID- Contact Id  あとで活動のWhoIdにコンタクトIDをつけるのにつかう
       // }
