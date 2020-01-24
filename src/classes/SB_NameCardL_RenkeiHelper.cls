@@ -15,6 +15,7 @@
  *
  *  SB_NameCardL_RenkeiHelper
  *  lx v2.0 (v.1.12) SB_NameCard_RenkeiTriggerHelper + SB_NameCard_RegistProcessor の改造
+ *  lx2.1 2020.01.xx SV_DEV-1970 自動連携のリード関連「カスタム設定」項目の移行(リード連携拡張パッケージ側改修
  *
  **/
 public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiHelperAbstract {
@@ -294,7 +295,9 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
     for (SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder holder : (List<SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder>)this.holders) {
       // SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder holder = (SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder)h;
       if (holder.isLeadTooMuch() &&   // 既存のリードが複数いる
-         !SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c) {// 統合版自動連携:条件に合致する既存リードは全て更新する FALSE
+        // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+        // !SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c) {// 統合版自動連携:条件に合致する既存リードは全て更新する FALSE
+         !setting.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c) {// 統合版自動連携:条件に合致する既存リードは全て更新する FALSE
         holder.putMessage('[Lead duplicate]');   // 2017.04.xx
         continue;
       }
@@ -317,7 +320,9 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
           }
         }
         else if (!holder.haveConvertedLead() && // 取引開始済みリードはない
-          SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c){
+          // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+          //SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c){
+          setting.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c){
           // 既存リードが複数 複数を更新
           holder.putMessage('[Update All Leads]');   // 2017.04.xx
           List<Lead> leads = holder.buildUpdAllLeads(leadId2UpdLead.keySet());
