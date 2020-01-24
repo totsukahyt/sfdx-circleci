@@ -5,6 +5,7 @@
  * classicのページを表示、Lex環境の方はlexのページを表示　方針にして、一つボタンに統一すること
  * @author mao
  * @Version 1 2018/08/XX  SV_DEV-1109 リード拡張パッケージ[統合版]Classic環境でLexのボタンタップすると、エラー発生するため、 LexとClassicを一つボタンから表示させる
+ * @Version 2.1 yoshida 2020.01 SV_DEV-2113 Classic 統合版登録 一括：キャンペーン選択後に所有者選択エリアが有効化されてしまう
  *
  */ -->
 <apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCardL_UnivTwowayBulkRegistCtrl" title="{!windowTitle}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
@@ -12,7 +13,7 @@
 
   <apex:form id="All" rendered="{!and($User.UIThemeDisplayed != 'Theme4u', $User.UIThemeDisplayed != 'Theme4d')}">
     <apex:actionFunction action="{!saveLead}" name="save" reRender="pageMsgs,saveflage,nameCardTable, ncRecList" oncomplete="saveClick();"/>
-    <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newBlock" oncomplete="initset();"/>
+    <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newBlock" oncomplete="initset();resetOwnerDisable()"/>
     <apex:actionFunction name="changeOwner" reRender="newBlock" oncomplete="initset();"/>
     <apex:actionFunction name="submit" action="{!submit}" reRender="ncRecList" oncomplete="endLoading();">
       <apex:param name="changeIndex" value=""/>
@@ -22,12 +23,12 @@
     <apex:inputHidden value="{!registNoToDo}" id="basicToDo"/>
     <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
       <apex:pageBlockButtons >
-        <apex:commandButton disabled="{!searchError}" onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.sb_ncld_label_save}" id="savebtn"/>
-        <apex:commandButton id="cancelbtn" oncomplete="cancelClick();" value="{!$Label.sb_ncld_label_cancel}" immediate="true"/>
+        <apex:commandButton disabled="{!searchError}" onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.SB_NCLD_Label_Save}" id="savebtn"/>
+        <apex:commandButton id="cancelbtn" oncomplete="cancelClick();" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
       </apex:pageBlockButtons>
 
       <apex:pageBlockSection columns="2">
-        <apex:selectRadio disabled="{!searchError}" label="{!$Label.sb_ncld_label_candidateregistration}" onchange="startLoading();" value="{!renkeiType}">
+        <apex:selectRadio disabled="{!searchError}" label="{!$Label.SB_NCLD_Label_CandidateRegistration}" onchange="startLoading();" value="{!renkeiType}">
           <apex:selectOptions value="{!RenkeiTypeList}"/>
           <apex:actionSupport event="onclick" rerender="pageMsgs, ncRecList, radio, overWrite, newBlock, recordTypeSection, basicToDo" oncomplete="resetOwnerDisable();endLoading();"/>
         </apex:selectRadio>
@@ -121,7 +122,7 @@
         </apex:column>
 
         <apex:column rendered="{!renkeiType != 'Contact'}">
-          <apex:facet name="header">{!$Label.sb_ncld_text_lead}</apex:facet>
+          <apex:facet name="header">{!$Label.SB_NCLD_Text_Lead}</apex:facet>
           <apex:selectList value="{!ncRec.leadId}" size="1" Id="leadSelectOp" onchange="setDis('{!ncRec.index}', 'contactSelect');">
             <apex:selectOptions value="{!inputPlickListVMap[ncRec.nameCard.Id]['Lead']}"/>
           </apex:selectList>
@@ -167,7 +168,7 @@
       <apex:pageBlockSection id="newBlock" rendered="{!leadCreateable}"  title="{!if(renkeiType == 'Contact', specifiedWhenCreateNewAccount, if(renkeiType == 'Lead', specifiedWhenCreateNew, specifiedWhenCreateNewBoth))}" columns="2">
         <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}">
-          <apex:outputLabel value="{!$ObjectType.Campaign.Label + if(renkeiType == 'Both', $Label.sb_ncld_label_campaign_forlead, '')}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
+          <apex:outputLabel value="{!$ObjectType.Campaign.Label + if(renkeiType == 'Both', $Label.SB_NCLD_Label_Campaign_ForLead, '')}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
           <apex:inputField onchange="changeCampaign();" value="{!campaignOption.campaign__c}" rendered="{!Not(campLookUpDisabled)}"/>
         </apex:pageBlockSectionItem>
 
@@ -177,19 +178,19 @@
 
         <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}">
-            <apex:outputLabel value="{!$Label.sb_ncld_label_campaignstatus + if(renkeiType == 'Both', $Label.sb_ncld_label_campaign_forlead, '')}" style="{!IF(campDisabled,'color:#999999;','')}"/>
+            <apex:outputLabel value="{!$Label.SB_NCLD_Label_CampaignStatus + if(renkeiType == 'Both', $Label.SB_NCLD_Label_Campaign_ForLead, '')}" style="{!IF(campDisabled,'color:#999999;','')}"/>
             <apex:selectList value="{!campStatus}" multiselect="false" size="1" disabled="{!campDisabled}">
                 <apex:selectOptions value="{!CampaignStatus}"/>
             </apex:selectList>
         </apex:pageBlockSectionItem>
 
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}" id="ownerSelectItem">
-          <apex:outputLabel value="{!$ObjectType.Lead.Label + $Label.sb_ncld_label_owner}" id="ownerinputLabel"/>
+          <apex:outputLabel value="{!$ObjectType.Lead.Label + $Label.SB_NCLD_Label_Owner}" id="ownerinputLabel"/>
           <apex:inputField value="{!ownerlead.OwnerId}" required="false" id="ownerinput"/>
         </apex:pageBlockSectionItem>
 
         <apex:pageBlockSectionItem rendered="{!renkeiType != 'Lead'}" id="ownerSelectItem1">
-          <apex:outputLabel value="{!$ObjectType.Account.Label + $Label.sb_ncld_label_owner}" id="ownerinputLabel"/>
+          <apex:outputLabel value="{!$ObjectType.Account.Label + $Label.SB_NCLD_Label_Owner}" id="ownerinputLabel"/>
           <apex:inputField value="{!ownerAccount.OwnerId}" required="false" id="ownerinput"/>
         </apex:pageBlockSectionItem>
 
@@ -283,10 +284,10 @@
             function saveClick(){
                 var saveok = document.getElementById('{!$Component.saveflage}').value;
                 if(saveok == false || saveok == 'false'){
-                    saveBackValue(saveid1,"{!$Label.sb_ncld_label_save}");
-                    saveBackValue(cancelid1,"{!$Label.sb_ncld_label_cancel}");
-                    saveBackValue(saveid2,"{!$Label.sb_ncld_label_save}");
-                    saveBackValue(cancelid2,"{!$Label.sb_ncld_label_cancel}");
+                    saveBackValue(saveid1,"{!$Label.SB_NCLD_Label_Save}");
+                    saveBackValue(cancelid1,"{!$Label.SB_NCLD_Label_Cancel}");
+                    saveBackValue(saveid2,"{!$Label.SB_NCLD_Label_Save}");
+                    saveBackValue(cancelid2,"{!$Label.SB_NCLD_Label_Cancel}");
                     return;
                 }
                 rePage();
