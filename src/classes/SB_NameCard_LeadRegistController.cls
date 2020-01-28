@@ -13,7 +13,7 @@
  *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
  *                        SV_DEV-565 リード登録のリード所有者の修正
  * @Version 1。12 2018/03/XX  SV_DEV-715 「取引先・取引先責任者に登録」の更新時のTodoの任命先は取引先責任者の所有者にする
- *
+ * @Version 2.1 2020.01.xx SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
  */
 
 public with sharing class SB_NameCard_LeadRegistController {
@@ -144,11 +144,15 @@ public with sharing class SB_NameCard_LeadRegistController {
       if (!baseSetting.SmartViscaf__RegistDispLeadOverWriteCheckbox__c) {
         this.showLeadOverwrite = false;
       }
-      this.todo.Subject = SB_NameCard_LeadRegist.svConfig.todoSubject();
+      // SV_DEV-1092 リード用の設定を読み込み
+      //this.todo.Subject = SB_NameCard_LeadRegist.svConfig.todoSubject();
+      this.todo.Subject = SB_NameCard_LeadRegist.svConfig.todoSubjectL();
       if (String.isBlank(this.todo.Subject)) {
         this.todo.Subject = System.Label.SB_NCLD_Text_BusinessCardExchange;
       }
-      this.registTodo = SB_NameCard_LeadRegist.svConfig.registTodo();
+      // SV_DEV-1092 リード用の設定を読み込み
+      //this.registTodo = SB_NameCard_LeadRegist.svConfig.registTodo();
+      this.registTodo = SB_NameCard_LeadRegist.svConfig.registTodoL();
       // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
       this.showLeadRecType = leadRecordTypes.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
 

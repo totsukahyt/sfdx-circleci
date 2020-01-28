@@ -7,6 +7,7 @@
  * @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1231 LEX画面「リードまたは取引先・取引先責任者に登録*」一括登録で、ビル情報・英語住所が住所項目に表示されない。
+ * @Version 拡張パッケージ：Lead Ex. 2.1   2020.01.xx   SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
  *
  */
 public with sharing class SB_NCL_TwowayBulkRgsLcController {
@@ -53,9 +54,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
             cf.label = (String)sobj.get(field.fieldName);
             cf.value = (String)sobj.get(field.fieldName);
           }
-          if (field.fieldName == 'ToDo' && String.isBlank(fieldListStr) || fieldListStr == '[]') {
-            cf.checked = !basicSetting.SmartViscaf__RegistNoToDo__c;
-          }
+          // SV_DEV-1092 searchAllLead後に値をセットするよう変更
+          // if (field.fieldName == 'ToDo' && String.isBlank(fieldListStr) || fieldListStr == '[]') {
+          //   cf.checked = !basicSetting.SmartViscaf__RegistNoToDo__c;
+          // }
 
           cf.type = field.type;
           cf.input = field.input;
@@ -320,18 +322,33 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                 // testError = message;
                 // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, message));
         }
+        // SV_DEV-1092 登録対象のオブジェクト用の設定を読み込み
+        Boolean cbInitValue;
         if (haveAccount && haveLead) {
           saveResult.otherMessage.put('showType', 'Both');
+          cbInitValue = SB_NameCard_LeadRegist.svConfig.registTodo();
         }
         else if (haveAccount) {
           saveResult.otherMessage.put('showType', 'Contact');
+          cbInitValue = SB_NameCard_LeadRegist.svConfig.registTodo();
         }
         else if (haveAccount == false && haveLead == false) {
           saveResult.otherMessage.put('showType', SB_NameCard_LeadRegist.svConfig.defaultDisplayExistingLead() ? 'Lead' : 'Contact');
+          if (SB_NameCard_LeadRegist.svConfig.defaultDisplayExistingLead()){
+            cbInitValue = SB_NameCard_LeadRegist.svConfig.registTodoL();
+          }else{
+            cbInitValue = SB_NameCard_LeadRegist.svConfig.registTodo();
+          }
         }
         else {
           saveResult.otherMessage.put('showType', 'Lead');
+          cbInitValue = SB_NameCard_LeadRegist.svConfig.registTodoL();
         }
+        for (String sKey : nameCardObjMap.keySet()) {
+          nameCardObjMap.get(sKey).cObjectMap.get('ToDo').checked = cbInitValue;
+        }
+
+        //nameCardObjMap
         // saveResult.success = true;
         // saveResult.data = inputPlickListVMap;
     } catch (Exception e) {
@@ -609,7 +626,9 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'checkbox',
                                            true);
     f1.checkAll = true;
-    f1.checkAllCheck = !SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistNoToDo__c;
+    // SV_DEV-1092 登録対象のオブジェクト用の設定を読み込み
+    //f1.checkAllCheck = !SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistNoToDo__c;
+    f1.checkAllCheck = SB_NameCard_LeadRegist.svConfig.registTodoL();
     fieldList.add(f1);
     fieldMap.put('Lead', fieldList);
     fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
@@ -652,7 +671,9 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'checkbox',
                                            true);
     f2.checkAll = true;
-    f2.checkAllCheck = !SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistNoToDo__c;
+    // SV_DEV-1092 登録対象のオブジェクト用の設定を読み込み
+    //f2.checkAllCheck = !SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistNoToDo__c;
+    f2.checkAllCheck = SB_NameCard_LeadRegist.svConfig.registTodo();
     fieldList.add(f2);
     fieldMap.put('Contact', fieldList);
     fieldList = new List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>();
@@ -701,7 +722,9 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
                                            'checkbox',
                                            true);
     f2.checkAll = true;
-    f2.checkAllCheck = !SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistNoToDo__c;
+    // SV_DEV-1092 登録対象のオブジェクト用の設定を読み込み
+    //f2.checkAllCheck = !SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistNoToDo__c;
+    f2.checkAllCheck = SB_NameCard_LeadRegist.svConfig.registTodo();
     fieldList.add(f2);
     fieldMap.put('Both', fieldList);
 
@@ -1192,7 +1215,9 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
           accountRP = new SB_NameCardL_RegistHelper.RegistParam('Account', accountOverwrite, accountRecordTypeId,oIdAccount,false);
           contactRP = new SB_NameCardL_RegistHelper.RegistParam('Contact', contactOverwrite, contactRecordTypeId,oIdAccount,false);
         }
-        SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistToDoSubject__c,null,null,null);
+        // SV_DEV-1092 SmartVisca基本設定のリード用の件名から読み込むよう修正
+        //SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RegistToDoSubject__c,null,null,null);
+        SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(SB_NameCard_LeadRegist.svConfig.todoSubject(),SB_NameCard_LeadRegist.svConfig.todoSubjectL(),null,null,null);
 
         SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(tars, accountRP, contactRP, leadRP, todoRP);
         Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
