@@ -180,6 +180,7 @@ public with sharing class SB_NameCardL_RegistHelper  {
   // +---- リクエスト 登録するToDo の内容用クラス ----+
   public virtual class TodoParam {
     @TestVisible public String subject { get; private set; }        // ToDoの件名
+    @TestVisible public String subjectL{ get; private set; }        // ToDoの件名(リード)
     @TestVisible public Date activityDate { get; private set; }     // 未使用？
     @TestVisible public String comment { get; private set; }        // コメント
     @TestVisible public Id ownerId { get; private set; }   // ToDoの所有者
@@ -187,6 +188,13 @@ public with sharing class SB_NameCardL_RegistHelper  {
     // 2017.04.xx
     public TodoParam(String subject, Date activityDate, String comment, Id ownerId) {
       this.subject = subject;
+      this.activityDate = activityDate;
+      this.comment = comment;
+      this.ownerId = ownerId;
+    }
+    public TodoParam(String subject, String subjectL, Date activityDate, String comment, Id ownerId) {
+      this.subject = subject;
+      this.subjectL = subjectL;
       this.activityDate = activityDate;
       this.comment = comment;
       this.ownerId = ownerId;
@@ -780,7 +788,18 @@ public with sharing class SB_NameCardL_RegistHelper  {
         continue;
       }
       Task todo = holder.createTodoPrototype(req.todoParam.ownerId);
-      todo.Subject = this.req.todoParam.subject;
+      // SV_DEV-1092 適切な件名を付与する
+      //todo.Subject = this.req.todoParam.subject;
+      if ( String.isBlank(this.req.todoParam.subjectL) ){
+        todo.Subject = this.req.todoParam.subject;
+      } else {
+        if ( holder.pType != SB_NameCardL_RegistHelper.ProcType.LEAD){
+          todo.Subject = this.req.todoParam.subject;
+        }else{
+          todo.Subject = this.req.todoParam.subjectL;
+        }
+      }
+
       todo.Description = this.req.todoParam.comment;
       if (todo.ActivityDate <= Date.today() || todo.ActivityDate == null)  {
         todo.Status = SB_NameCardL_Util.taskStatusValues.get('Completed');

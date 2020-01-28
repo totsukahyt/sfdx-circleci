@@ -14,6 +14,7 @@
  *                        SV_DEV-760 既存リードを更新した場合に名刺のキャンペーン項目が更新される。
  *                        SV_DEV-565 リード登録のリード所有者の修正
  * lx2.1 2020.01.xx SV_DEV-770 Classic リード登録 一括：重複ルールでの一致するレコードが多いとCPUタイムアウトエラーになる。
+ *                  SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
  *
  */
 
@@ -207,9 +208,13 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
         if (!baseSetting.SmartViscaf__RegistDispLeadOverWriteCheckbox__c) {
           this.showLeadOverwrite = false;
         }
-        this.registTodoAll = SB_NameCard_LeadRegist.svConfig.registTodo();
+        // SV_DEV-1092 リード用の設定を読み込み
+        //this.registTodoAll = SB_NameCard_LeadRegist.svConfig.registTodo();
+        this.registTodoAll = SB_NameCard_LeadRegist.svConfig.registTodoL();
         List<SmartViscaf__NameCard__c> ncList = SB_NameCard_LeadRegist.getNameCardList(controller.getSelected());
-        this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodo());
+        // SV_DEV-1092 リード用の設定を読み込み
+        //this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodo());
+        this.nameCardRecordList = getNameCardRecordList(ncList, SB_NameCard_LeadRegist.svConfig.registTodoL());
 
         this.insertOption = new SmartViscaf__NameCard__c(OwnerId=UserInfo.getUserId());
         this.ownerlead = new Lead();
@@ -480,7 +485,9 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
       }
 
       SB_NameCardL_RegistHelper.RegistParam leadRP = new SB_NameCardL_RegistHelper.RegistParam('Lead',this.leadOverwrite,this.leadRecordTypeId,oId,false);
-      SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(SB_NameCard_LeadRegist.svConfig.todoSubject(),null,null,null);
+      // SV_DEV-1092 リード用の設定を読み込み
+      //SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(SB_NameCard_LeadRegist.svConfig.todoSubject(),null,null,null);
+      SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(SB_NameCard_LeadRegist.svConfig.todoSubjectL(),null,null,null);
 
       SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(tars, null, null, leadRP, todoRP);
       Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);
