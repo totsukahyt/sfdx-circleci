@@ -1,3 +1,13 @@
+/**
+ *SB_NameCardL_RenkeiCardHolder
+ *
+ *  自動連携用の 名刺レコードと登録先レコードを保持するクラス
+ *
+ * Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ * lx2.1 2020.01.xx SV_DEV-1970 自動連携のリード関連「カスタム設定」項目の移行(リード連携拡張パッケージ側改修
+ *
+ **/
 public with sharing class SB_NameCardL_RenkeiCardHolder {
 
   // public enum RegistProcess { Create, Modify, CreateSkip, ModifySkip, LinkOnly }  // 処理内容の識別
@@ -552,7 +562,9 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
         //  アカウント ある
         else if (this.acntId != null && this.contId == null) {
           //  アカウント あるけど コンタクトない。
-          if (SB_NameCardL_Util.smartViscaConfig.RenkeiCreateContactOnAcountWithoutLead__c) {
+          // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+          //if (SB_NameCardL_Util.smartViscaConfig.RenkeiCreateContactOnAcountWithoutLead__c) {
+          if (this.setting.SmartViscaf__RenkeiCreateContactOnAcountWithoutLead__c) {
             // (リードなく、取引先既存で取引先責任者を作成する オン)
             this.leadProcess = RenkeiProcess.CreateSkip;  // リード作らない + コンタクト作る（判定そのまま）
           }
@@ -571,7 +583,9 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
         }
         else {
           // アカウント特定できない
-          if (SB_NameCardL_Util.smartViscaConfig.RenkeiCreateLeadOnTooManyAccounts__c ) {
+          // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+          //if (SB_NameCardL_Util.smartViscaConfig.RenkeiCreateLeadOnTooManyAccounts__c ) {
+          if (this.setting.SmartViscaf__RenkeiCreateLeadOnTooManyAccounts__c ) {
             //  (既存取引先が複数あり特定できないとき、リードを作る。オン)
             this.leadProcess = this.setting.SmartViscaf__RenkeiLeadNOExistCreateNew__c ? RenkeiProcess.Create : RenkeiProcess.CreateSkip;
           }
@@ -589,9 +603,13 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
           this.leadId = this.leadWinner.candidateId;
           this.leadProcess = this.setting.SmartViscaf__RenkeiLeadOverwrite__c ? RenkeiProcess.Modify : RenkeiProcess.ModifySkip;
         }
+        // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+        //else if (
+        //  // 既存リード沢山
+        //  SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c ) {// 統合版自動連携:条件に合致する既存リードは全て更新する。
         else if (
           // 既存リード沢山
-          SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c ) {// 統合版自動連携:条件に合致する既存リードは全て更新する。
+          this.setting.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c ) {// 統合版自動連携:条件に合致する既存リードは全て更新する。
           this.leadProcess = this.setting.SmartViscaf__RenkeiLeadOverwrite__c ? RenkeiProcess.Modify : RenkeiProcess.ModifySkip;
         }
         if (this.acntCandidates.isEmpty()) {
@@ -602,7 +620,9 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
         //  アカウント ある
         else if (this.acntId != null && this.contId == null) {
           //  アカウント あるけど コンタクトない。
-          if (!SB_NameCardL_Util.smartViscaConfig.RenkeiCreateContactOnAcountWithLead__c) {
+          // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+          //if (!SB_NameCardL_Util.smartViscaConfig.RenkeiCreateContactOnAcountWithLead__c) {
+          if (!this.setting.SmartViscaf__RenkeiCreateContactOnAcountWithLead__c) {
             // リード、取引先既存で取引先責任者を作成する オフ
             //this.acntProcess = RenkeiProcess.ModifySkip; // アカウント更新しない（判定変える）
             //this.acnt = null;
@@ -634,7 +654,9 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
     public List<Lead> buildUpdAllLeads(Set<Id> withoutLeadIds) {
       List<Lead> result = new List<Lead>();
       if (this.leadCandidates.isEmpty() ||
-        (this.leadCandidates.size() > 1 && SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c == false)) {
+        // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+        //(this.leadCandidates.size() > 1 && SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c == false)) {
+        (this.leadCandidates.size() > 1 && this.setting.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c == false)) {
           return result;
       }
       // リード用のマッピングレコードから、変換クラスを作成
