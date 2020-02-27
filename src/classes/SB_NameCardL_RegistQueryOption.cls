@@ -33,6 +33,7 @@ public virtual class SB_NameCardL_RegistQueryOption {
   public Boolean queryFirstName;
   public Boolean queryEMail;
   public Boolean queryOnlyEMail; // コンタクトのクエリで メアドだけで該当にする。
+  public Boolean queryNameOrEMail;    // v2.0.3 ← 基本 v2.4   姓名 か EMail いずれかが一致してればいい
   public Boolean queryTitle;
   public Boolean queryMobile;
   public CompanyMatcing companyRule;  // { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
@@ -59,6 +60,7 @@ public virtual class SB_NameCardL_RegistQueryOption {
     this.queryFirstName = true;
     this.queryEMail = true;
     this.queryOnlyEMail = false;
+    this.queryNameOrEMail = false;
     this.queryTitle = false;
     this.queryMobile = false;
     this.companyRule = CompanyMatcing.PartialMatch;  // 法人格を除いて部分一致
@@ -84,6 +86,7 @@ public virtual class SB_NameCardL_RegistQueryOption {
     this.queryFirstName = true;
     this.queryEMail = true;
     this.queryOnlyEMail = target == Contact.sObjecttype ? true : false;
+    this.queryNameOrEMail = this.queryOnlyEMail; //
     this.queryTitle = false;
     this.queryMobile = false;
     this.companyRule = CompanyMatcing.PartialMatch;  // 法人格を除いて部分一致
