@@ -368,6 +368,8 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       this.queryLastName = qo.queryLastName;
       this.queryFirstName = qo.queryFirstName;
       this.queryEMail = qo.queryEMail;
+      this.queryOnlyEMail = qo.queryOnlyEMail;    // v2.0.3 2020.02.xx
+      this.queryNameOrEMail = qo.queryNameOrEMail;    // v2.0.3 2020.02.xx
       this.queryTitle = qo.queryTitle;
       this.queryMobile = qo.queryMobile;
       this.companyRule = qo.companyRule;

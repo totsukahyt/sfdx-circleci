@@ -7,6 +7,7 @@
  *  2016.11.09  コードスキャンで global なメソッドは with sharing が必要とのことなので、 with sharing  を付けた。
  *  @Version 1 2017/11/XX  SV_DEV-681 Lead一括登録での候補検索時の姓、名の文字列のエスケープは完全一致なので、不要では。
  *                         SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
+ * lx2.1 2020.01.xx SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
  */
 
 global with sharing class SB_NameCard_LeadRegist
@@ -24,6 +25,11 @@ global with sharing class SB_NameCard_LeadRegist
         private Map<String, Boolean> confMap = new Map<String, Boolean>();
         //private String todoSubject = '名刺交換';
         private String todoSubject = System.Label.SB_NCLD_Text_BusinessCardExchange;
+        private String todoSubjectL = System.Label.SB_NCLD_Text_BusinessCardExchange;
+        private Boolean registTodo;
+        private Boolean registTodoL;
+
+        private SmartViscaf__NameCardBasicSetting__c baseSetting;
 
         global SmartViscaf__SmartViscaConfig__c config { get; private set; }
 
@@ -32,6 +38,7 @@ global with sharing class SB_NameCard_LeadRegist
             SmartViscaf__SmartViscaConfig__c conf = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId());
             if (conf.Id == null) conf = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId());
             if (conf.Id == null) conf = SmartViscaf__SmartViscaConfig__c.getOrgDefaults();
+            baseSetting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
 
             config = conf;
 
@@ -43,9 +50,18 @@ global with sharing class SB_NameCard_LeadRegist
             keyList = new List<String> {'Overwrite', 'RegistTodo', 'DefaultShowLeadListNoExsiting'};
             this.setBoolMap(keyList, this.confMap, conf, null);
 
-            if (conf.Id != null && conf.get('LeadRegist_DispCompany__c') != null) {
-                this.todoSubject = conf.LeadRegist_TodoSubject__c; // defined in Lead Package
+            // SV_DEV-1092 SmartVisca基本設定から読み込むよう修正
+            //if (conf.Id != null && conf.get('LeadRegist_DispCompany__c') != null) {
+            //    this.todoSubject = conf.LeadRegist_TodoSubject__c; // defined in Lead Package
+            //}
+            if (baseSetting.SmartViscaf__RegistToDoSubject__c != null) {
+              this.todoSubject = baseSetting.SmartViscaf__RegistToDoSubject__c;
             }
+            if (baseSetting.SmartViscaf__RegistLeadToDoSubject__c != null) {
+              this.todoSubjectL = baseSetting.SmartViscaf__RegistLeadToDoSubject__c;
+            }
+            registTodo = !baseSetting.SmartViscaf__RegistNoToDo__c;       //登録"しない"フラグなので読み替え
+            registTodoL = !baseSetting.SmartViscaf__RegistLeadNoToDo__c;  //登録"しない"フラグなので読み替え
         }
 
         private void setBoolMap(List<String> keyList, Map<String, Boolean> bMap, SmartViscaf__SmartViscaConfig__c conf, String keyPrefix)
@@ -82,9 +98,21 @@ global with sharing class SB_NameCard_LeadRegist
             return this.todoSubject;
         }
 
+        global String todoSubjectL()
+        {
+            return this.todoSubjectL;
+        }
+
         global Boolean registTodo()
         {
-            return this.confMap.get('RegistTodo');
+            // SV_DEV-1092 SmartVisca基本設定から読み込むよう修正
+            //return this.confMap.get('RegistTodo');
+            return this.registTodo;
+        }
+
+        global Boolean registTodoL()
+        {
+            return this.registTodoL;
         }
 
         global Boolean defaultDisplayExistingLead()

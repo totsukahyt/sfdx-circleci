@@ -7,6 +7,7 @@
  * @Version 1.21 2018/08/XX  SV_DEV-1109 リード拡張パッケージ[統合版]Classic環境でLexのボタンタップすると、エラー発生するため、 LexとClassicを一つボタンから表示させる
  * @Version 1.21 2018/09/XX  SV_DEV-1156 LEXかクラシックかの判定がオフィシャルな方法に変更
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
+ * @Version 拡張パッケージ：Lead Ex. 2.1   2020.01.xx   SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
  *
  */
 
@@ -152,6 +153,7 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
   public Boolean registNoToDo { get; set; } // ToDoに登録
 
 
+
   @TestVisible private static final Integer SEARCHTYPE_DEFAULT = 0;    // 検索方法のデフォルト値
   @TestVisible private static final Integer FIELD_NAMESITE = 0;  // 検索条件の項目
   @TestVisible private static final Integer FIELD_NAME = 1;
@@ -221,7 +223,9 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
         this.retUrl = '/home/home.jsp';
     }
     try {
-      this.registNoToDo = baseSetting.SmartViscaf__RegistNoToDo__c;
+      // SV_DEV-1092 登録対象オブジェクトが確定してからセット
+      //this.registNoToDo = baseSetting.SmartViscaf__RegistNoToDo__c;
+      
       this.registObjs = RegistType.AccountContactLead;
       this.searchCriteriaLead = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {LD_LABEL});
       this.searchCriteriaAccount = String.format(System.Label.SB_NC_X_SearchCriteria, new String[] {String.format(System.Label.SB_NCLD_Text_Account_Contact, new String[] {AC_LABEL, CO_LABEL})});
@@ -736,6 +740,16 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
           }
           // renkeiType = 'Lead';
         }
+        // SV_DEV-1092 登録対象のオブジェクト用の設定を読み込み
+        Boolean registTodo;
+        if ( renkeiType == 'Lead' ){
+          registTodo = SB_NameCard_LeadRegist.svConfig.registTodoL();
+        }else{
+          registTodo = SB_NameCard_LeadRegist.svConfig.registTodo();
+        }
+        this.registNoToDo = !registTodo;
+        for (SB_NameCardL_BulkRegistDTO.CustomObject item:this.nameCardRecordListDTO) item.registTodo = registTodo;
+
       }
       if (message != '') {
         testError = message;
@@ -912,7 +926,9 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
       System.debug(conre);
       System.debug(renkeiType);
 
-      SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(baseSetting.SmartViscaf__RegistToDoSubject__c,null,null,null);
+      // SV_DEV-1092 SmartVisca基本設定のリード用の件名から読み込むよう修正
+      //SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(baseSetting.SmartViscaf__RegistToDoSubject__c,null,null,null);
+      SB_NameCardL_RegistHelper.TodoParam todoRP = new SB_NameCardL_RegistHelper.TodoParam(SB_NameCard_LeadRegist.svConfig.todoSubject(),SB_NameCard_LeadRegist.svConfig.todoSubjectL(),null,null,null);
 
       SB_NameCardL_RegistHelper.RegistRequest re = new SB_NameCardL_RegistHelper.RegistRequest(tars, acre, conre, leadRP, todoRP);
       Map<Id, String> ownerErrorMap = SB_NameCardL_RegistOwenrCheckHelper.doCheck(re);

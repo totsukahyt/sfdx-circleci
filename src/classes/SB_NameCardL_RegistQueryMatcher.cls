@@ -289,13 +289,20 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
   //  ContactMatcher
   ////////////////
   public class ContactMatcher extends Matcher {
-    private Boolean queryEmail;
-    private Boolean queryFirstName;
-    private Boolean queryLastName;
-    private Boolean queryCompany;
-    private Boolean queryDept;
-    private SB_NameCardL_RegistQueryOption.CompanyMatcing companyRule;
-    private SB_NameCardL_RegistQueryOption.DeptMatcing deptRule;
+    @TestVisible private Boolean queryOnlyEMail;     // v2.0.3 2020.02.xx
+    @TestVisible private Boolean queryEmail;
+    @TestVisible private Boolean queryFirstName;
+    @TestVisible private Boolean queryLastName;
+    @TestVisible private Boolean queryCompany;
+    @TestVisible private Boolean queryDept;
+    @TestVisible private Boolean queryNameOrEMail;   // v2.0.3 2020.02.xx
+    @TestVisible private SB_NameCardL_RegistQueryOption.CompanyMatcing companyRule;
+    @TestVisible private SB_NameCardL_RegistQueryOption.DeptMatcing deptRule;
+
+    public ContactMatcher() {
+      this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
+      this.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.FullMatch;
+    }
 
     public ContactMatcher(SB_NameCardL_RegistQueryStrategy.ContactQueryStrategy qs) {
       this.queryEmail = qs.queryEmail;
@@ -305,6 +312,8 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       this.queryDept = qs.queryDept;
       this.companyRule = qs.companyRule;
       this.deptRule = qs.deptRule;
+      this.queryOnlyEMail = qs.queryOnlyEMail;  // v2.0.3 2020.02.xx
+      this.queryNameOrEMail = qs.queryNameOrEMail;   // v2.0.3 2020.02.xx
     }
 
     public override Boolean isMatch(SmartViscaf__NameCard__c card, SObject target) {
@@ -315,9 +324,14 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       String first_name = pnMap.get('first_name');
       return
         cont.Id == card.SmartViscaf__contact__c ||
-        (!this.queryEmail || (card.SmartViscaf__email__c!=null && card.SmartViscaf__email__c == cont.Email)) ||
-        ((!this.queryFirstName || first_name == cont.FirstName) &&
-        (!this.queryLastName || last_name == cont.LastName) &&
+        // 2020.02.xx v2.0.3 SV_DEV-2527 リード拡張の自動連携で取引先責任者について、不適切なレコードを更新する。または、作成されるべき新規取引先責任者レコードが作成されない。
+        (this.queryOnlyEMail && (card.SmartViscaf__email__c!=null && card.SmartViscaf__email__c == cont.Email)) ||
+        (((this.queryNameOrEMail &&    // 姓名 OR EMail どちらか一致 で
+          (((!this.queryFirstName || first_name == cont.FirstName) && (!this.queryLastName || last_name == cont.LastName)) ||
+          (!this.queryEmail || (card.SmartViscaf__email__c!=null && card.SmartViscaf__email__c == cont.Email)))) ||
+        ((!this.queryEmail || (card.SmartViscaf__email__c!=null && card.SmartViscaf__email__c == cont.Email)) &&
+        (!this.queryFirstName || first_name == cont.FirstName) &&
+        (!this.queryLastName || last_name == cont.LastName))) &&
         (!this.queryCompany || isMatchKaishaMei(card, cont.Account.Name, this.companyRule)) &&
         (!this.queryDept || isMatchSite(card, cont.Account.Site, this.deptRule) || isMatchSite(card, cont.Department, this.deptRule)));
     }

@@ -5,7 +5,7 @@
  * @author kou
  * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX
  * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX SV_DEV-1151 Classic画面の「リードまたは取引先・取引先責任者に登録」（個別）で「既存取引先レコード」を選択した場合に「取引先レコードタイプ」の選択リストが非表示にならない。
- *
+ * @Version 拡張パッケージ：Lead Ex. 2.1  2020.01.xx SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
  */
 
 public with sharing class SB_NameCardL_TwowayRegistController {
@@ -413,6 +413,10 @@ public with sharing class SB_NameCardL_TwowayRegistController {
 
   public Task todo { get; set; }
   public Boolean registTodo { get; set; }
+  // SV_DEV-1092 ToDo登録有無/件名の読み分け対応
+  public String todoSubject  { get; set; }
+  public String todoSubjectL { get; set; }
+  public Boolean registTodoL { get; set; }
 
   private Map<Integer, String> soqlMap = new Map<Integer, String>();
   private List<Id> emailIdList = new List<Id>();
@@ -478,7 +482,6 @@ public with sharing class SB_NameCardL_TwowayRegistController {
   public String accountContact { get; set; }
 
   public Boolean isFirst = true;
-
 
   private SB_NameCardL_RegistQueryOption accountQueryOption;  // アカウント検索オプション
   private SB_NameCardL_RegistQueryOption contactQueryOption; // コンタクト検索オプション
@@ -708,11 +711,17 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       this.leadRecordList = new List<CandidateRecord>();
       this.todo = new Task();
       this.isAllowDuplicateSave = false;
-      this.todo.Subject  = baseSetting.SmartViscaf__RegistToDoSubject__c;
-      if (String.isBlank(this.todo.Subject)) {
-        this.todo.Subject = System.Label.SB_NCLD_Text_BusinessCardExchange;
-      }
-      this.registTodo    = !baseSetting.SmartViscaf__RegistNoToDo__c;
+      // SV_DEV-1092 画面側で登録有無・件名を読み込ませる
+      //this.todo.Subject  = baseSetting.SmartViscaf__RegistToDoSubject__c;
+      //if (String.isBlank(this.todo.Subject)) {
+      //  this.todo.Subject = System.Label.SB_NCLD_Text_BusinessCardExchange;
+      //}
+      //this.registTodo    = !baseSetting.SmartViscaf__RegistNoToDo__c;
+      this.todoSubject = SB_NameCard_LeadRegist.svConfig.todoSubject();
+      this.todoSubjectL = SB_NameCard_LeadRegist.svConfig.todoSubjectL();
+      this.registTodo = SB_NameCard_LeadRegist.svConfig.registTodo();
+      this.registTodoL = SB_NameCard_LeadRegist.svConfig.registTodoL();
+      
       // SV_DEV-747 リード拡張パッケージのカスタム設定：リードに登録 リードレコードタイプ表示の初期値がOFF
       this.showLeadRecType = LEADRECORDTYPES.size() > 1 && baseSetting.SmartViscaf__RegistDispLeadRectype__c;
 

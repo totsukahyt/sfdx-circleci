@@ -6,6 +6,7 @@
  * @author mao
  * @Version 1 2018/08/XX  SV_DEV-1109 リード拡張パッケージ[統合版]Classic環境でLexのボタンタップすると、エラー発生するため、 LexとClassicを一つボタンから表示させる
  * @Version 2.1 yoshida 2020.01 SV_DEV-2113 Classic 統合版登録 一括：キャンペーン選択後に所有者選択エリアが有効化されてしまう
+ *                              SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
  *
  */ -->
 <apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCardL_UnivTwowayBulkRegistCtrl" title="{!windowTitle}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
