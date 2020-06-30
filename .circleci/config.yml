@@ -21,7 +21,7 @@ jobs:
       - checkout
       - slack/notify:
           ENV=environmentVar/env.txt
-          channel: circlecidevelop
+          channel: "circlecidevelop"
           color: '#42e2f4'
           author_name: $SLACK_AUTHOR_NAME
           image_url: "https://cultofthepartyparrot.com/parrots/hd/parrot.gif"
