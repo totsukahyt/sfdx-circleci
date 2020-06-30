@@ -45,7 +45,7 @@ jobs:
           name: Setup Org
           command: |
             echo 'Running tests'
-            echo sfdx force --help
+            help = sfdx force --help
             sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername -a fipoDE
             sfdx force --help
             sfdx force:user:password:generate --targetusername <username>
