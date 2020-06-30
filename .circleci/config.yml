@@ -1,4 +1,6 @@
 version: 2
+orbs:
+  slack: circleci/slack@3.4.2
 
 general:
 # Uncomment the following to specify only a specific branch
@@ -17,6 +19,13 @@ jobs:
       - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
     steps:
       - checkout
+      - slack/notify:
+          channel: CHANNELID
+          color: '#42e2f4'
+          mentions: 'USERID1,USERID2,'
+          message: This is a custom message notification
+          webhook: $SLACK_WEBHOOK
+          
       - run:
           name: Download CLI
           command: |
