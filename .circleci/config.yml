@@ -22,7 +22,6 @@ jobs:
       - slack/notify:
           channel: circlecidevelop
           color: '#42e2f4'
-          username: "circleCI"
           message: featureブランチが作成されました。<<pipeline.git.branch>>
           webhook: ${SLACK_WEBHOOK}
           
