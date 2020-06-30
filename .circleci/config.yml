@@ -50,8 +50,9 @@ jobs:
             resultScrach=${createScrach##*:}
             echo $resultScrach
             generatePass=`sfdx force:user:password:generate --targetusername $resultScrach`
-            trimPass=${generatePass}
-            echo $generatePass
+            tempTrimPass=${generatePass#"Successfully set the password"}
+            tempTrimPass=${tempTrimPass%%"for"*}
+            echo tempTrimPass
             sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM
       - run:
           name: Run Apex Tests
