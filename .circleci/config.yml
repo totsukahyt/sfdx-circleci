@@ -22,6 +22,9 @@ jobs:
       - slack/notify:
           channel: circlecidevelop
           color: '#42e2f4'
+          author_name: "circleCI"
+          image_url: "https://cultofthepartyparrot.com/parrots/hd/parrot.gif"
+          include_job_number_field: false
           message: featureブランチが作成されました。<<pipeline.git.branch>>
           webhook: ${SLACK_WEBHOOK}
           
