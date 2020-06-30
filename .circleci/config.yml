@@ -20,9 +20,10 @@ jobs:
     steps:
       - checkout
       - slack/notify:
+          ENV=environmentVar/env.txt
           channel: circlecidevelop
           color: '#42e2f4'
-          author_name: "circleCI"
+          author_name: $SLACK_AUTHOR_NAME
           image_url: "https://cultofthepartyparrot.com/parrots/hd/parrot.gif"
           include_job_number_field: false
           message: featureブランチが作成されました。<<pipeline.git.branch>>
