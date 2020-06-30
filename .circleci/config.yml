@@ -20,11 +20,10 @@ jobs:
     steps:
       - checkout
       - slack/notify:
-          channel: CHANNELID
+          channel: circlecidevelop
           color: '#42e2f4'
-          mentions: 'USERID1,USERID2,'
           message: This is a custom message notification
-          webhook: $SLACK_WEBHOOK
+          webhook: ${SLACK_WEBHOOK}
           
       - run:
           name: Download CLI
