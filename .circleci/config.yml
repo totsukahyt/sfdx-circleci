@@ -45,11 +45,13 @@ jobs:
             echo $list
              if [[ "$list" =  *${CIRCLE_BRANCH}* ]] ; then
               echo 'すでに環境が作成されています。'
+              sfdx force:source:push -u ${CIRCLE_BRANCH}
             else
-              echo 'create-feature-scratch'
+              echo 'Featrue/scratch環境の作成 '
 
               sfdx force:org:create username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30  --wait 5 
               sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
+              sfdx force:source:push -u ${CIRCLE_BRANCH}
             fi
 
       - run: cat /tmp/ss.txt
@@ -68,14 +70,58 @@ jobs:
 
 
       - slack/notify:
-          channel: '#general'
+          channel: '#featureScrach'
           color: '#42e2f4'
-          mentions: 'USERID1,USERID2,'
-          message: '${CIRCLE_BRANCH} $VERY_IMPORTANT'
+          message: "${CIRCLE_BRANCH} $'\n' ${VERY_IMPORTANT}"
           webhook: '${SLACK_WEBHOOK}'
           include_job_number_field: false
 
+####################################################################################################
+## JOB:     build-and-test
+## PURPOSE:
+####################################################################################################
+  build-and-test:
+    docker:
+      - image: ncino/ci-sfdx
+    # machine: true
+    working_directory: ~/ci_app
+    steps:
+      - checkout
+      - run:
+          name: create-feature-scratch
+          command: |
+            openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV} 
+            sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias circleCI
+            sfdx force:org:create username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a master_${CIRCLE_BRANCH} -s -d 30  --wait 5 
+            sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
+            sfdx force:source:push -u master_${CIRCLE_BRANCH}
+      - run:
+          name: Run Apex Tests
+          command: |
+            mkdir -p ~/junit
+            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5 | sed 's/"/------/g' >> /tmp/ss.txt
 
+      - run: cat /tmp/ss.txt
+
+      # - run:
+      #    name: 実行時の PATH 書き換えおよび環境変数定義
+      #    command: |
+      #     sfdx force:org:list --all  >> /tmp/ss.txt
+      - run: |
+          echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
+          source $BASH_ENV
+      - run: echo $VERY_IMPORTANT
+      # - run: sfdx force:org:list >> /tmp/artifacts.txt
+      # - sfdx/scratch-open:
+      #     scratch-alias: circleci
+
+
+      - slack/notify:
+          channel: '#masterTest'
+          color: '#42e2f4'
+          message: "${VERY_IMPORTANT}"
+          webhook: '${SLACK_WEBHOOK}'
+          include_job_number_field: false
 
 
 
@@ -95,8 +141,22 @@ workflows:
       - create-dev-scratch-org:
           requires:
             - build
+  build_and_test:
+    jobs:
+      - build:
+        filters:
+              branches:
+                only:
+                  - master
+                ignore:
+                  - PreProduction
+                  - Production
+                  - /feature.*/
+      - build-and-test:
+          requires:
+            - build
 
-          
+
   # build_and_test:
   #   jobs:
   #     - build
