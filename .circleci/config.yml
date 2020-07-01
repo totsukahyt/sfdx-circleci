@@ -12,6 +12,10 @@ general:
 
 jobs:
   build:
+    docker:
+        - image: ncino/ci-sfdx
+      # machine: true
+      working_directory: ~/ci_app
     executor: sfdx/default
     # environment:
     #   RES: res
@@ -29,10 +33,10 @@ jobs:
 ## PURPOSE:
 ####################################################################################################
   create-dev-scratch-org:
-    docker:
-      - image: ncino/ci-sfdx
-    # machine: true
-    working_directory: ~/ci_app
+    # docker:
+    #   - image: ncino/ci-sfdx
+    # # machine: true
+    # working_directory: ~/ci_app
     steps:
       - checkout
       - run:
