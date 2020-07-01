@@ -73,8 +73,8 @@ workflows:
   #               - Production
   build_and_test:
     jobs:
-      - build:
-          context: org-sbdevhub
+      - build
+          # context: org-sbdevhub
           # filters:
           #   branches:
           #     only:
