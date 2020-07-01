@@ -11,10 +11,7 @@ general:
 
 jobs:
   build:
-    docker:
-      - image: ncino/ci-sfdx
-    # machine: true
-    no_output_timeout: 30m
+    machine: true
     working_directory: ~/ci_app
     environment:
       # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
@@ -22,11 +19,6 @@ jobs:
       - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
     steps:
       - checkout
-      - run:
-          name: File List
-          command: |
-            ls -l -R
-            df -hT
       - run:
           name: Download CLI
           command: |
@@ -46,6 +38,7 @@ jobs:
             #- echo $HUB_SERVER_KEY_HEX | xxd -r -ps >> keys/hub.key
             openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
             #- openssl rsa -in keys/hub.key -check -noout
+
 
 
 
