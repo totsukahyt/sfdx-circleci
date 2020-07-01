@@ -3,6 +3,11 @@ orbs:
   slack: circleci/slack@3.4.2
 
 general:
+# Uncomment the following to specify only a specific branch
+#   branches:
+#     only:
+#       - dev # specific branch
+#       - /dev-.*/ # or regexes
 
 jobs:
   build:
@@ -53,8 +58,6 @@ jobs:
       - image: ncino/ci-sfdx
     # machine: true
     working_directory: ~/ci_app
-    environment:
-
     steps:
       - checkout
       - run:
@@ -97,7 +100,6 @@ workflows:
           filters:
             branches:
               ignore:
-                - test
                 - master
                 - PreProduction
                 - Production
