@@ -75,10 +75,10 @@ workflows:
     jobs:
       - build:
           context: org-sbdevhub
-          filters:
-            branches:
-              only:
-                - master
+          # filters:
+          #   branches:
+          #     only:
+          #       - master
   # create_beta_package:
   #   jobs:
   #     - create-beta-package:
