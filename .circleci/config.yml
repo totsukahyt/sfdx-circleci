@@ -80,12 +80,6 @@ jobs:
           echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
           source $BASH_ENV
 
-      - slack/notify:
-          channel: '#general'
-          color: '#42e2f4'
-          include_job_number_field: false
-          message: 'testbranch'
-          webhook: '${SLACK_WEBHOOK}'
 
 
 workflows:
@@ -120,3 +114,11 @@ workflows:
   #                - /v.*/
   #           branches:
   #             ignore: /.*/
+
+  
+      # - slack/notify:
+      #     channel: '#general'
+      #     color: '#42e2f4'
+      #     include_job_number_field: false
+      #     message: 'testbranch'
+      #     webhook: '${SLACK_WEBHOOK}'
