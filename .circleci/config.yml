@@ -39,7 +39,7 @@ jobs:
           name: create-feature-scratch
           command: |
             echo 'create-feature-scratch'
-            sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername
+            # sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername
 
             sfdx force:org:create -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30 --wait 5
             sfdx force:user:password:generate -u circleci  >> $BASH_ENV
