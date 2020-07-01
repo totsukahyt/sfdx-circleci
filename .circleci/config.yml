@@ -38,14 +38,15 @@ jobs:
       - run:
           name: create-feature-scratch
           command: |
-          list=`sfdx force:org:list`
-          if[ "`echo $list = grep ${CIRCLE_BRANCH}`" ]; then
-            echo 'create-feature-scratch'
-            # openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
-            # sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
-          else
-            echo 'すでに環境が作成されています。'
-          fi
+          
+            list=`sfdx force:org:list`
+            if[ "`echo $list = grep ${CIRCLE_BRANCH}`" ]; then
+              echo 'create-feature-scratch'
+              # openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
+              # sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
+            else
+              echo 'すでに環境が作成されています。'
+            fi
 
       - run:
          name: パスワード生成
