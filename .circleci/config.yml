@@ -92,7 +92,6 @@ workflows:
   version: 2
   create_dev_scratch_org:
     jobs:
-      - build
       - create-dev-scratch-org:
           requires: 
             - build
