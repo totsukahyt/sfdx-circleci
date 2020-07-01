@@ -1,17 +1,16 @@
 version: 2.1
 orbs:
+  sfdx: circleci/salesforce-sfdx@2.0.0
   slack: circleci/slack@3.4.2
 
 general:
-# Uncomment the following to specify only a specific branch
-#   branches:
-#     only:
-#       - dev # specific branch
-#       - /dev-.*/ # or regexes
 
 jobs:
   build:
-    machine: true
+    docker:
+      - image: ncino/ci-sfdx
+    # machine: true
+    no_output_timeout: 30m
     working_directory: ~/ci_app
     environment:
       # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
@@ -19,15 +18,11 @@ jobs:
       - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
     steps:
       - checkout
-      - slack/notify:
-          channel: "circlecidevelop"
-          color: '#42e2f4'
-          author_name: $SLACK_AUTHOR_NAME
-          image_url: "https://cultofthepartyparrot.com/parrots/hd/parrot.gif"
-          include_job_number_field: false
-          message: featureブランチが作成されました。<<pipeline.git.branch>>
-          webhook: ${SLACK_WEBHOOK}
-          
+      - run:
+          name: File List
+          command: |
+            ls -l -R
+            df -hT
       - run:
           name: Download CLI
           command: |
@@ -47,41 +42,81 @@ jobs:
             #- echo $HUB_SERVER_KEY_HEX | xxd -r -ps >> keys/hub.key
             openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
             #- openssl rsa -in keys/hub.key -check -noout
-          ### Uncomment the following if performing deployments
-          #- echo 'make deploy key'
-          #- echo $DEPLOY_SERVER_KEY_HEX | xxd -r -ps >> keys/deploy.key
-          #- openssl rsa -in keys/deploy.key -check -noout
-          #- sfdx force:auth:jwt:grant --clientid $DEPLOY_CONSUMER_KEY --jwtkeyfile keys/deploy.key --username $DEPLOY_SFDC_USER -a deploy
-      - run:
-          name: Setup Org
-          command: |
-            echo 'Running tests'
-            sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername -a fipoDE
-            createScrach=`sfdx force:org:create -s -f ~/ci_app/config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM --wait 3`
-            resultScrach=${createScrach##*:}
-            echo $resultScrach
-            generatePass=`sfdx force:user:password:generate --targetusername $resultScrach`
-            tempTrimPass=${generatePass#"Successfully set the password"}
-            tempTrimPass=${tempTrimPass%%"for"*}
-            echo tempTrimPass
-            sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM 
-      - run:
-          name: Run Apex Tests
-          command: |
-            mkdir -p ~/junit
-            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
-      - store_test_results:
-          path: ~/junit
-      - run:
-          name: Delete Useless Scratch Org
-          command: |
-            sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
 
-### Uncomment the following if performing deployments
-#deployment:
-#  override:
-#    - sfdx force:source:convert -r force-app -d testDeploy
-#    - . cleanupDeploy.sh
-#    - sfdx force:mdapi:deploy -d testDeploy/ -u deploy -w 2
 
-# sfdx force:user:password:generate --targetusername <username>
+
+####################################################################################################
+## JOB:     create-dev-scratch-org
+## PURPOSE:
+####################################################################################################
+  create-dev-scratch-org:
+    docker:
+      - image: ncino/ci-sfdx
+    # machine: true
+    working_directory: ~/ci_app
+    environment:
+
+    steps:
+      - checkout
+      - run:
+          name: create-feature-scratch
+          command: |
+            echo 'create-feature-scratch'
+            sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername
+
+            ##  ~/ci_app/config/project-scratch-def.json場所確認
+            sfdx force:org:create -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30 --wait 5
+            sfdx force:user:password:generate -u circleci  >> $BASH_ENV
+      - run:
+         name: 実行時の PATH 書き換えおよび環境変数定義
+         command: |
+          sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID} >> /tmp/ss.txt
+      - run:
+         name: 実行時の PATH 書き換えおよび環境変数定義
+         command: |
+          sfdx force:org:list >> /tmp/ss.txt
+      - run: |
+          echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
+          source $BASH_ENV
+
+      - slack/notify:
+          channel: '#general'
+          color: '#42e2f4'
+          include_job_number_field: false
+          message: 'testbranch'
+          webhook: '${SLACK_WEBHOOK}'
+
+
+workflows:
+  version: 2
+  create_dev_scratch_org:
+    jobs:
+      - build
+      - create-dev-scratch-org:
+          requires: 
+            - build
+          context: org-sbdevhub
+          filters:
+            branches:
+              ignore:
+                - master
+                - PreProduction
+                - Production
+  # build_and_test:
+  #   jobs:
+  #     - build:
+  #         context: org-sbdevhub
+  #         filters:
+  #           branches:
+  #             only:
+  #               - master
+  # create_beta_package:
+  #   jobs:
+  #     - create-beta-package:
+  #         context: org-sbdevhub
+  #         filters:  # ブランチのない、「v」から始まるタグに対してのみ実行します。
+  #           tags:
+  #              only:
+  #                - /v.*/
+  #           branches:
+  #             ignore: /.*/
