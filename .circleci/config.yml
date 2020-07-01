@@ -38,13 +38,17 @@ jobs:
       - run:
           name: create-feature-scratch
           command: |
+          list='sfdx force:org:list'
+          if[ "`echo $list = grep ${CIRCLE_BRANCH}`" ]; then
             echo 'create-feature-scratch'
             openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
             sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
+          else
+            echo 'すでに環境が作成されています。'
+          fi
 
-            sfdx force:org:create username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30 --wait 5 
       - run:
-         name: 実行時の PATH 書き換えおよび環境変数定義
+         name: パスワード生成
          command: |
           sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org >> /tmp/ss.txt
       - run:
@@ -54,6 +58,12 @@ jobs:
       - run: |
           echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
           source $BASH_ENV
+      - slack/notify:
+          channel: '#general'
+          color: '#42e2f4'
+          include_job_number_field: false
+          message: 'testbranch'
+          webhook: '${SLACK_WEBHOOK}'
 
 
 
