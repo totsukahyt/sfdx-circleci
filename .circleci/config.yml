@@ -28,52 +28,55 @@ jobs:
 ## JOB:     create-dev-scratch-org
 ## PURPOSE:
 ####################################################################################################
-#   create-dev-scratch-org:
-#     docker:
-#       - image: ncino/ci-sfdx
-#     # machine: true
-#     working_directory: ~/ci_app
-#     steps:
-#       - checkout
-#       - run:
-#           name: create-feature-scratch
-#           command: |
-#             echo 'create-feature-scratch'
-#             sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername
+  create-dev-scratch-org:
+    docker:
+      - image: ncino/ci-sfdx
+    # machine: true
+    working_directory: ~/ci_app
+    steps:
+      - checkout
+      - run:
+          name: create-feature-scratch
+          command: |
+            echo 'create-feature-scratch'
+            sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername
 
-#             sfdx force:org:create -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30 --wait 5
-#             sfdx force:user:password:generate -u circleci  >> $BASH_ENV
-#       - run:
-#          name: 実行時の PATH 書き換えおよび環境変数定義
-#          command: |
-#           sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID} >> /tmp/ss.txt
-#       - run:
-#          name: 実行時の PATH 書き換えおよび環境変数定義
-#          command: |
-#           sfdx force:org:list >> /tmp/ss.txt
-#       - run: |
-#           echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
-#           source $BASH_ENV
+            sfdx force:org:create -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30 --wait 5
+            sfdx force:user:password:generate -u circleci  >> $BASH_ENV
+      - run:
+         name: 実行時の PATH 書き換えおよび環境変数定義
+         command: |
+          sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID} >> /tmp/ss.txt
+      - run:
+         name: 実行時の PATH 書き換えおよび環境変数定義
+         command: |
+          sfdx force:org:list >> /tmp/ss.txt
+      - run: |
+          echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
+          source $BASH_ENV
 
 
 
 workflows:
   version: 2.1
-  # create_dev_scratch_org:
-  #   jobs:
-  #     - create-dev-scratch-org:
-  #         requires:
-  #           - build
-  #         context: org-sbdevhub
-  #         filters:
-  #           branches:
-  #             ignore:
-  #               - master
-  #               - PreProduction
-  #               - Production
-  build_and_test:
+  create_dev_scratch_org:
     jobs:
       - build
+      - create-dev-scratch-org:
+          requires:
+            - build
+          context: org-sbdevhub
+          filters:
+            branches:
+              only:
+                - /feature.*/
+              ignore:
+                - master
+                - PreProduction
+                - Production
+  # build_and_test:
+  #   jobs:
+  #     - build
           # context: org-sbdevhub
           # filters:
           #   branches:
