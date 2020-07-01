@@ -125,7 +125,10 @@ jobs:
           message: "${VERY_IMPORTANT}"
           webhook: '${SLACK_WEBHOOK}'
           include_job_number_field: false
-
+      - run:
+          name: delete MasterScratch
+          command: |
+            sfdx force:org:delete -u ${CIRCLE_BRANCH} -p
 
 
 workflows:
