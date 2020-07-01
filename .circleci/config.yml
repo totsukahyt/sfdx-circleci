@@ -39,7 +39,7 @@ jobs:
           name: create-feature-scratch
           command: |
             echo 'create-feature-scratch'
-            - run: sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
+            sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
 
             sfdx force:org:create -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30 --wait 5
             sfdx force:user:password:generate -u circleci  >> $BASH_ENV
@@ -53,7 +53,18 @@ jobs:
           sfdx force:org:list >> /tmp/ss.txt
       - run: |
           echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
-          source $BASH_ENV
+          source $
+      - slack/notify:
+          channel: '#general'
+          color: '#42e2f4'
+          include_job_number_field: false
+          message: 'testbranch'
+          webhook: '${SLACK_WEBHOOK}'
+
+####################################################################################################
+## JOB:     Slack
+## PURPOSE:
+####################################################################################################
 
 
 
