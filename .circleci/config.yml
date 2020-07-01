@@ -70,7 +70,7 @@ jobs:
 
 
       - slack/notify:
-          channel: '#featureScrach'
+          channel: circlecidevelop
           color: '#42e2f4'
           message: "${CIRCLE_BRANCH} $'\n' ${VERY_IMPORTANT}"
           webhook: '${SLACK_WEBHOOK}'
@@ -117,7 +117,7 @@ jobs:
 
 
       - slack/notify:
-          channel: '#masterTest'
+          channel: circlecidevelop
           color: '#42e2f4'
           message: "${VERY_IMPORTANT}"
           webhook: '${SLACK_WEBHOOK}'
