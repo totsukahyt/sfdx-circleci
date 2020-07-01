@@ -43,31 +43,39 @@ jobs:
             list=`sfdx force:org:list`
             echo $list
              if [[ "$list" =  *"testtestteasgagbaws"* ]] ; then
+              echo 'すでに環境が作成されています。'
+            else
               echo 'create-feature-scratch'
               # openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
               # sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
               # sfdx force:org:create username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30  --wait 5 
-            else
-              echo 'すでに環境が作成されています。'
+              # sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
             fi
 
-      - run:
-         name: パスワード生成
-         command: |
-          sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org >> /tmp/ss.txt
-      - run:
-         name: 実行時の PATH 書き換えおよび環境変数定義
-         command: |
-          sfdx force:org:list >> /tmp/ss.txt
+      - run: cat /tmp/ss.txt
+
+      # - run:
+      #    name: 実行時の PATH 書き換えおよび環境変数定義
+      #    command: |
+      #     sfdx force:org:list --all  >> /tmp/ss.txt
       - run: |
           echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
           source $BASH_ENV
+      - run: echo $VERY_IMPORTANT
+      # - run: sfdx force:org:list >> /tmp/artifacts.txt
+      # - sfdx/scratch-open:
+      #     scratch-alias: circleci
+
+
       - slack/notify:
           channel: '#general'
           color: '#42e2f4'
-          include_job_number_field: false
-          message: 'testbranch'
+          mentions: 'USERID1,USERID2,'
+          message: '${CIRCLE_BRANCH} $VERY_IMPORTANT'
           webhook: '${SLACK_WEBHOOK}'
+          include_job_number_field: false
+
+
 
 
 
