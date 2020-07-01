@@ -99,6 +99,7 @@ workflows:
           filters:
             branches:
               ignore:
+                - test
                 - master
                 - PreProduction
                 - Production
