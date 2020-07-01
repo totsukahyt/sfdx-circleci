@@ -11,41 +11,14 @@ general:
 
 jobs:
   build:
-    docker:
-      - image: ncino/ci-sfdx
-    # machine: true
-    no_output_timeout: 30m
-    working_directory: ~/ci_app
-    environment:
-      # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
-      # and https://developer.salesforce.com/media/salesforce-cli/manifest.json
-      - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+    executor: sfdx/default
+    # environment:
+    #   RES: res
     steps:
       - checkout
-      - run:
-          name: File List
-          command: |
-            ls -l -R
-            df -hT
-      - run:
-          name: Download CLI
-          command: |
-            mkdir sfdx
-            wget -qO- $DX_CLI_URL | tar xJ -C sfdx --strip-components 1
-      - run:
-          name: Install CLI
-          command: |
-            ./sfdx/install
-            sfdx
-            mkdir tmp
-      - run:
-          name: Create hub key
-          command: |
-            echo 'make hub key'
-            #- mkdir keys
-            #- echo $HUB_SERVER_KEY_HEX | xxd -r -ps >> keys/hub.key
-            openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
-            #- openssl rsa -in keys/hub.key -check -noout
+      - sfdx/install
+      - run: echo $SFDX_JWT_KEY | base64 --decode --ignore-garbage > ./server.key
+      - run: sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
 
 
 
