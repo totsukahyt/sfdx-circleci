@@ -61,19 +61,20 @@ workflows:
   version: 2.1
   create_dev_scratch_org:
     jobs:
-      - build
+      - build:
+        filters:
+              branches:
+                only:
+                  - /feature.*/
+                ignore:
+                  - master
+                  - PreProduction
+                  - Production
       - create-dev-scratch-org:
           requires:
             - build
-          context: org-sbdevhub
-          filters:
-            branches:
-              only:
-                - /feature.*/
-              ignore:
-                - master
-                - PreProduction
-                - Production
+
+          
   # build_and_test:
   #   jobs:
   #     - build
