@@ -1,6 +1,5 @@
 version: 2.1
 orbs:
-  sfdx: circleci/salesforce-sfdx@2.0.0
   slack: circleci/slack@3.4.2
 
 general:
@@ -64,7 +63,6 @@ jobs:
             echo 'create-feature-scratch'
             sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername
 
-            ##  ~/ci_app/config/project-scratch-def.json場所確認
             sfdx force:org:create -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30 --wait 5
             sfdx force:user:password:generate -u circleci  >> $BASH_ENV
       - run:
