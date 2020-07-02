@@ -139,25 +139,18 @@ jobs:
 
 workflows:
   version: 2.1
-  create_dev_scratch_org:
+  all_jobs:
     jobs:
-      - build:
-        filters:
-              branches:
-                only:
-                  - /feature.*/
-                ignore:
-                  - master
-                  - PreProduction
-                  - Production
       - create-dev-scratch-org:
-          requires:
-            - build
-  
-  tag:
-    jobs:
+          filters:
+            branches:
+              only: /feature.*/
+      - create-beta-package:
+          filters:
+            branches:
+              only: pre-production
       - tag:
-        filters:
+          filters:
             tags:
               only: Test
   # build_and_test:
