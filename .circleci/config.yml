@@ -159,7 +159,7 @@ workflows:
       - tag:
         filters:
             tags:
-              only: tagTest
+              only: Test
   # build_and_test:
   #   jobs:
   #     - build:
