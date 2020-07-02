@@ -54,6 +54,7 @@ jobs:
               # sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
               # sfdx force:source:push -u ${CIRCLE_BRANCH}
               # cat /tmp/ss.txt
+
             else
               echo 'すでに環境が作成されています。'
               
@@ -130,6 +131,18 @@ jobs:
           command: |
             sfdx force:org:delete -u ${CIRCLE_BRANCH} -p
 
+  tag:
+      machine: true
+      working_directory: ~/ci_app
+      steps:
+        - checkout
+
+        - slack/notify:
+            channel: circlecidevelop
+            color: '#42e2f4'
+            message: "${VERY_IMPORTANT}"
+            webhook: '${SLACK_WEBHOOK}'
+            include_job_number_field: false
 
 workflows:
   version: 2.1
@@ -147,6 +160,13 @@ workflows:
       - create-dev-scratch-org:
           requires:
             - build
+  
+  tag:
+    jobs:
+      - tag:
+        filters:
+            tags:
+              only: tagTest
   # build_and_test:
   #   jobs:
   #     - build:
