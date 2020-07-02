@@ -59,7 +59,8 @@ jobs:
               
             fi
       - when:
-          condition: equal: [ "1", ${SCRATCH_CNT} ]
+          condition:
+            - equal: [ "1", ${SCRATCH_CNT} ]
           steps:
             - run: cat /tmp/ss.txt
 
@@ -68,7 +69,8 @@ jobs:
       #    command: |
       #     sfdx force:org:list --all  >> /tmp/ss.txt
       - when:
-          condition: equal: [ "1", ${SCRATCH_CNT} ]
+          condition:
+              equal: [ "1", ${SCRATCH_CNT} ]
           steps:
               - run: |
                   echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
