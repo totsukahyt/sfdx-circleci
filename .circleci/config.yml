@@ -69,7 +69,7 @@ jobs:
       - slack/notify:
           channel: circlecidevelop
           color: '#42e2f4'
-          message: "${CIRCLE_BRANCH} $'\n' ${VERY_IMPORTANT}"
+          message: "${CIRCLE_BRANCH} \n' ${VERY_IMPORTANT}"
           webhook: '${SLACK_WEBHOOK}'
           include_job_number_field: false
 
@@ -131,9 +131,9 @@ jobs:
         - checkout
 
         - slack/notify:
-            channel: circlecidevelop
+            channel: tagtest
             color: '#42e2f4'
-            message: "${VERY_IMPORTANT}"
+            message: "tagtest"
             webhook: '${SLACK_WEBHOOK}'
             include_job_number_field: false
 
@@ -152,7 +152,7 @@ workflows:
       - tag:
           filters:
             tags:
-              only: Test
+              only: Testaaa
   # build_and_test:
   #   jobs:
   #     - build:
