@@ -148,7 +148,7 @@ workflows:
         - tag:
             filters:
               tags:
-                only: master
+                ignore: tagTest
   # build_and_test:
   #   jobs:
   #     - build:
