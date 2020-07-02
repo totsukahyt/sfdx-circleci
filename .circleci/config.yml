@@ -50,10 +50,10 @@ jobs:
             if [ "${SCRATCH_CNT}" = "1" ]; then
               echo 'Featrue/scratch環境の作成 '
 
-              sfdx force:org:create username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30  --wait 5 
-              sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
-              sfdx force:source:push -u ${CIRCLE_BRANCH}
-              cat /tmp/ss.txt
+              # sfdx force:org:create username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30  --wait 5 
+              # sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
+              # sfdx force:source:push -u ${CIRCLE_BRANCH}
+              # cat /tmp/ss.txt
             else
               echo 'すでに環境が作成されています。'
               
@@ -67,21 +67,29 @@ jobs:
       #    name: 実行時の PATH 書き換えおよび環境変数定義
       #    command: |
       #     sfdx force:org:list --all  >> /tmp/ss.txt
-      - run: |
-          echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
-          source $BASH_ENV
-      - run: echo $VERY_IMPORTANT
+      - when:
+          condition: ${SCRATCH_CNT}
+          steps:
+              - run: |
+                  echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
+                  source $BASH_ENV
+      - when:
+          condition: ${SCRATCH_CNT}
+          steps:                  
+            - run: echo $VERY_IMPORTANT
       # - run: sfdx force:org:list >> /tmp/artifacts.txt
       # - sfdx/scratch-open:
       #     scratch-alias: circleci
 
-
-      - slack/notify:
-          channel: circlecidevelop
-          color: '#42e2f4'
-          message: "${CIRCLE_BRANCH} $'\n' ${VERY_IMPORTANT}"
-          webhook: '${SLACK_WEBHOOK}'
-          include_job_number_field: false
+      - when:
+          condition: ${SCRATCH_CNT}
+          steps:
+            - slack/notify:
+                channel: circlecidevelop
+                color: '#42e2f4'
+                message: "${CIRCLE_BRANCH} $'\n' ${VERY_IMPORTANT}"
+                webhook: '${SLACK_WEBHOOK}'
+                include_job_number_field: false
 
 ####################################################################################################
 ## JOB:     build-and-test
