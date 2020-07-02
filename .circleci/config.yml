@@ -41,6 +41,7 @@ jobs:
             openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV} 
             sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias circleCI
             sfdx force:data:soql:query -q "SELECT Name,OrgName,ScratchOrg,Description FROM ScratchOrgInfo WHERE status = 'Active' AND OrgName = '$CIRCLE_BRANCH'" -u circleCI | wc -l > scratchorg.cnt
+            echo `sfdx force:data:soql:query -q "SELECT Name,OrgName,ScratchOrg,Description FROM ScratchOrgInfo WHERE status = 'Active' AND OrgName = '$CIRCLE_BRANCH'" -u DevHub | wc -l > scratchorg.cnt`
             cat scratchorg.cnt
             SCRATCH_CNT=$(cat scratchorg.cnt)
             echo "scratch:count=${SCRATCH_CNT}"
@@ -91,7 +92,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: create-feature-scratch
+          name: create-master-scratch
           command: |
             openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV} 
             sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias circleCI
