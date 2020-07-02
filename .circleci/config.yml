@@ -149,20 +149,20 @@ workflows:
       - create-dev-scratch-org:
           requires:
             - build
-  build_and_test:
-    jobs:
-      - build:
-        filters:
-              branches:
-                only:
-                  - master
-                ignore:
-                  - PreProduction
-                  - Production
-                  - /feature.*/
-      - build-and-test:
-          requires:
-            - build
+  # build_and_test:
+  #   jobs:
+  #     - build:
+  #       filters:
+  #             branches:
+  #               only:
+  #                 - master
+  #               ignore:
+  #                 - PreProduction
+  #                 - Production
+  #                 - /feature.*/
+  #     - build-and-test:
+  #         requires:
+  #           - build
 
 
   # build_and_test:
