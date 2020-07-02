@@ -150,7 +150,7 @@ workflows:
               branches:
                 only: null
               tags:
-                only: tag1
+                only: tagtest3
   # build_and_test:
   #   jobs:
   #     - build:
