@@ -140,15 +140,15 @@ jobs:
 workflows:
   version: 2.1
   all_jobs:
-    jobs:
-      - create-dev-scratch-org:
-          filters:
-            branches:
-              only: /feature.*/
-      - tag:
-          filters:
-            tags:
-              only: Testaaa
+      jobs:
+        - create-dev-scratch-org:
+            filters:
+              branches:
+                only: /feature.*/
+        - tag:
+            filters:
+              tags:
+                only: master
   # build_and_test:
   #   jobs:
   #     - build:
