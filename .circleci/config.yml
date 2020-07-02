@@ -60,13 +60,6 @@ jobs:
               
             fi
 
-      - run: cat /tmp/ss.txt
-
-      - run: |
-            echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
-            source $BASH_ENV
-
-      run: echo $VERY_IMPORTANT
 
       # - run: sfdx force:org:list >> /tmp/artifacts.txt
       # - sfdx/scratch-open:
