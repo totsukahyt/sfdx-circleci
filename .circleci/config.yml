@@ -147,8 +147,10 @@ workflows:
                 only: /feature.*/
         - tag:
             filters:
+              branches:
+                only: null
               tags:
-                ignore: tagTest1
+                only: tag1
   # build_and_test:
   #   jobs:
   #     - build:
