@@ -58,7 +58,8 @@ jobs:
               echo 'すでに環境が作成されています。'
               
             fi
-
+      when:
+        condition: ${SCRATCH_CNT}
       - run: cat /tmp/ss.txt
 
       # - run:
