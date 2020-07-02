@@ -41,7 +41,7 @@ jobs:
             openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV} 
             sfdx force:auth:jwt:grant --clientid ${SFDX_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias circleCI
             sfdx force:data:soql:query -q "SELECT Name,OrgName,ScratchOrg,Description FROM ScratchOrgInfo WHERE status = 'Active' AND OrgName = '$CIRCLE_BRANCH'" -u circleCI | wc -l > scratchorg.cnt
-            echo `sfdx force:data:soql:query -q "SELECT Name,OrgName,ScratchOrg,Description FROM ScratchOrgInfo WHERE status = 'Active' AND OrgName = '$CIRCLE_BRANCH'" -u DevHub | wc -l > scratchorg.cnt`
+            echo `sfdx force:data:soql:query -q "SELECT Name,OrgName,ScratchOrg,Description FROM ScratchOrgInfo WHERE status = 'Active' AND OrgName = '$CIRCLE_BRANCH'" -u circleCI | wc -l > scratchorg.cnt`
             cat scratchorg.cnt
             SCRATCH_CNT=$(cat scratchorg.cnt)
             echo "scratch:count=${SCRATCH_CNT}"
@@ -53,6 +53,7 @@ jobs:
               sfdx force:org:create username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30  --wait 5 
               sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
               sfdx force:source:push -u ${CIRCLE_BRANCH}
+              cat /tmp/ss.txt
             else
               echo 'すでに環境が作成されています。'
               
