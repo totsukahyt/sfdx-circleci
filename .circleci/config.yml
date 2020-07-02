@@ -58,9 +58,10 @@ jobs:
               echo 'すでに環境が作成されています。'
               
             fi
-      when:
-        condition: ${SCRATCH_CNT}
-      - run: cat /tmp/ss.txt
+      - when:
+          condition: ${SCRATCH_CNT}
+          steps:
+            - run: cat /tmp/ss.txt
 
       # - run:
       #    name: 実行時の PATH 書き換えおよび環境変数定義
