@@ -52,10 +52,12 @@ jobs:
 
               sfdx force:org:create orgName=${CIRCLE_BRANCH} username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30  --wait 5 
               sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
+              echo ` sfdx force:user:display --targetusername ${CIRCLE_WORKFLOW_ID}@test.org`
               sfdx force:source:push -u ${CIRCLE_BRANCH}
               cat /tmp/ss.txt
             else
               echo 'すでに環境が作成されています。'
+              echo ` sfdx force:user:display --targetusername ${CIRCLE_WORKFLOW_ID}@test.org`
               
             fi
 
