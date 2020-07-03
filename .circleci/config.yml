@@ -50,22 +50,16 @@ jobs:
             if [ "${SCRATCH_CNT}" = "1" ]; then
               echo 'Featrue/scratch環境の作成 '
 
-              # sfdx force:org:create username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30  --wait 5 
-              # sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
-              # sfdx force:source:push -u ${CIRCLE_BRANCH}
-              # cat /tmp/ss.txt
+              sfdx force:org:create orgName=${CIRCLE_BRANCH} username=${CIRCLE_WORKFLOW_ID}@test.org -f config/project-scratch-def.json -a ${CIRCLE_BRANCH} -s -d 30  --wait 5 
+              sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@test.org | sed 's/"/------/g' >> /tmp/ss.txt
+              sfdx force:source:push -u ${CIRCLE_BRANCH}
+              cat /tmp/ss.txt
+
             else
               echo 'すでに環境が作成されています。'
               
             fi
 
-      - run: cat /tmp/ss.txt
-
-      - run: |
-            echo 'export VERY_IMPORTANT=$(cat /tmp/ss.txt)' >> $BASH_ENV
-            source $BASH_ENV
-
-      run: echo $VERY_IMPORTANT
 
       # - run: sfdx force:org:list >> /tmp/artifacts.txt
       # - sfdx/scratch-open:
@@ -75,7 +69,7 @@ jobs:
       - slack/notify:
           channel: circlecidevelop
           color: '#42e2f4'
-          message: "${CIRCLE_BRANCH} $'\n' ${VERY_IMPORTANT}"
+          message: "${CIRCLE_BRANCH} \n' ${VERY_IMPORTANT}"
           webhook: '${SLACK_WEBHOOK}'
           include_job_number_field: false
 
@@ -130,23 +124,31 @@ jobs:
           command: |
             sfdx force:org:delete -u ${CIRCLE_BRANCH} -p
 
+  tag:
+      machine: true
+      working_directory: ~/ci_app
+      steps:
+        - checkout
+
+        - slack/notify:
+            channel: tagtest
+            color: '#42e2f4'
+            message: "tagtest"
+            webhook: '${SLACK_WEBHOOK}'
+            include_job_number_field: false
 
 workflows:
   version: 2.1
-  create_dev_scratch_org:
-    jobs:
-      - build:
-        filters:
+  all_jobs:
+      jobs:
+        - create-dev-scratch-org:
+            filters:
               branches:
-                only:
-                  - /feature.*/
-                ignore:
-                  - master
-                  - PreProduction
-                  - Production
-      - create-dev-scratch-org:
-          requires:
-            - build
+                only: /feature.*/
+        - tag:
+            filters:
+              tags:
+                only: tagtest3
   # build_and_test:
   #   jobs:
   #     - build:
