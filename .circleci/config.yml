@@ -146,11 +146,6 @@ workflows:
             branches:
               only: 
                 - /feature.*/
-      - create-beta-package:
-          filters:
-            branches:
-              only: 
-                - pre-production
 
   # build_and_test:
   #   jobs:
