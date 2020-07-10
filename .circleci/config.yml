@@ -36,7 +36,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: create-feature-scratch
+          name: run cypress
           command: |
             npx cypress run -s test/actions.spec.js
 
