@@ -1,4 +1,5 @@
 {
+    "integrationFolder": "./test",
     "env":{},
     "video": false
 }
