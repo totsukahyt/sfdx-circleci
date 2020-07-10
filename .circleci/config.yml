@@ -38,7 +38,8 @@ jobs:
       - run:
           name: run cypress
           command: |
-            npx cypress run -s test/actions.spec.js
+            echo "run cypress"
+            echo `npx cypress run -s test/actions.spec.js`
 
 
           # openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV} 
