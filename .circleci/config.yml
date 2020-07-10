@@ -39,7 +39,8 @@ jobs:
           name: run cypress
           command: |
             echo "run cypress"
-            npm i cypress
+           
+            npx cypress verify
             echo `npx cypress run -s test/actions.spec.js`
 
 
@@ -70,12 +71,12 @@ jobs:
       #     scratch-alias: circleci
 
 
-      - slack/notify:
-          channel: circlecidevelop
-          color: '#42e2f4'
-          message: "${CIRCLE_BRANCH} \n' ${VERY_IMPORTANT}"
-          webhook: '${SLACK_WEBHOOK}'
-          include_job_number_field: false
+      # - slack/notify:
+      #     channel: circlecidevelop
+      #     color: '#42e2f4'
+      #     message: "${CIRCLE_BRANCH} \n' ${VERY_IMPORTANT}"
+      #     webhook: '${SLACK_WEBHOOK}'
+      #     include_job_number_field: false
 
 ####################################################################################################
 ## JOB:     build-and-test
