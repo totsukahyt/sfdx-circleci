@@ -1,0 +1,25 @@
+{
+  "name": "sfdx-circleci",
+  "version": "1.0.0",
+  "description": "[![CircleCI](https://circleci.com/gh/forcedotcom/sfdx-circleci.svg?style=svg)](https://circleci.com/gh/forcedotcom/sfdx-circleci)",
+  "main": "actions.spec.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/totsukahyt/sfdx-circleci.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/totsukahyt/sfdx-circleci/issues"
+  },
+  "homepage": "https://github.com/totsukahyt/sfdx-circleci#readme",
+  "dependencies": {
+    "cypress": "^4.10.0"
+  }
+}
