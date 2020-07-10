@@ -28,7 +28,7 @@ jobs:
 ## JOB:     create-dev-scratch-org
 ## PURPOSE:
 ####################################################################################################
-  run cypress:
+  run-cypress:
     docker:
       - image: ncino/ci-sfdx
     # machine: true
@@ -145,7 +145,7 @@ workflows:
   version: 2.1
   all_jobs:
     jobs:
-      - create-dev-scratch-org:
+      - run-cypress:
           filters:
             branches:
               only: 
