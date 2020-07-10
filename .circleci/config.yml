@@ -28,7 +28,7 @@ jobs:
 ## JOB:     create-dev-scratch-org
 ## PURPOSE:
 ####################################################################################################
-  create-dev-scratch-org:
+  run cypress:
     docker:
       - image: ncino/ci-sfdx
     # machine: true
@@ -39,6 +39,7 @@ jobs:
           name: run cypress
           command: |
             echo "run cypress"
+            npm i cypress
             echo `npx cypress run -s test/actions.spec.js`
 
 
