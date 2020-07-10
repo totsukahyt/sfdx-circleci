@@ -39,7 +39,7 @@ jobs:
           name: run cypress
           command: |
             echo "run cypress"
-           
+            npm install
             npx cypress verify
             echo `npx cypress run -s test/actions.spec.js`
 
