@@ -203,8 +203,8 @@
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="{!$Label.SB_NCLD_Label_ToDoRegistration}"/>
                     <!-- SV_DEV-1092 リード用の設定を読み込み -->
-                    <!-- <apex:inputCheckbox value="{!registTodo}"/> -->
-                    <apex:inputCheckbox value="{!registTodoL}"/>
+                    <apex:inputCheckbox value="{!registTodo}"/>
+                    <!-- <apex:inputCheckbox value="{!registTodoL}"/> -->
                     <!-- disabled="{!NOT(canEditTodo)}" -->
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
