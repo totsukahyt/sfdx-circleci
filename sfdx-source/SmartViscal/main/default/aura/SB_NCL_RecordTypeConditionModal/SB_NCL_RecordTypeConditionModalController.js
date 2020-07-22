@@ -11,6 +11,7 @@
  *
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  PRODUCT-389 LEX 統合版登録 一括：「設定」の「Cancel」ボタン「×」ボタンを押下した際に変更前の値に戻らない
  *
  **/
 ({
@@ -29,6 +30,10 @@
 	},
   // 閉じる
   close : function(component, event, helper) {
+    var inputV = component.get('v.inputV');
+    var backupV = component.get('v.backupV');
+    inputV = backupV;
+    component.set('v.inputV', inputV);
     component.set('v.show', false);
   },
   // 保存
