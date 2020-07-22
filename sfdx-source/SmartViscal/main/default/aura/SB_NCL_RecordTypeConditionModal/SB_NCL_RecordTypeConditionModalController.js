@@ -39,7 +39,7 @@
   // 保存
   save : function(component, event, helper) {
     var recG = component.get('v.inputV.searchConditionRct.searchConditionRecordTypeOptionGroups');
-    var searchRecordTypesMap =  new Map;
+    var searchRecordTypesMap = {};
     var recs = '';
     for (var i = 0; i < recG.length; i ++) {
       var recordTypeList = new Array;
