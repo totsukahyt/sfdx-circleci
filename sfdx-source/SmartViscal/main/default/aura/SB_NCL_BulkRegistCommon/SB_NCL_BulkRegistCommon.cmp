@@ -12,6 +12,7 @@
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1162 LEX統合一括画面検索条件を変更する際にエラーが発生
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1229 [統合版]一括登録Lex版ではリードの場合、あるいは取引先・取引先責任者選択する場合、レコードタイプの設定ポップアップの内容はずっとリードと取引先・取引先責任者のレコードタイプが表示
  *  @Version 拡張パッケージ：Lead Ex. 2.1  SV_DEV-1866 SLDS CSSクラス名変更対応
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  PRODUCT-389 LEX 統合版登録 一括：「設定」の「Cancel」ボタン「×」ボタンを押下した際に変更前の値に戻らない
  *
  **/ -->
 
@@ -29,6 +30,7 @@
   <aura:attribute name="fromLabel" type="String"/> <!-- パンくず名刺Label -->
   <aura:attribute name="dataCount" type="Integer"/> <!-- 表示名刺数 -->
   <aura:attribute name="showModal" type="Boolean" default="false"/> <!-- レコードタイプ検索条件modalウインドウ表示フラグ -->
+  <aura:attribute name="backupV" type="Sobject" /> <!-- レコードタイプ絞り込みウインドウ 閉じるで設定戻す用 -->
   <aura:attribute name="ownerLookUpObj" type="String" default="User"/> <!-- 所有者タイプ ユーザ OR キュー -->
   <aura:attribute name="isIntegration" type="Boolean" default="false"/> <!-- 統合がどうか -->
   <aura:attribute name="showType" type="String" default="Lead"/> <!-- 表示タイプ    リード,責任者,両方 -->
@@ -326,7 +328,7 @@
       <lightning:button label="{!v.titleV.saveValue}" iconName="utility:check" variant="brand" onclick="{!c.save}" iconPosition="left" />
     <!-- </lightning:layout> -->
   </div>
-  <c:SB_NCL_RecordTypeConditionModal showType="{!v.showType}" inputV="{!v.inputV}" show="{!v.showModal}" searchRecordTypesMap="{!v.inputV.searchRecordTypesMap}"/>
+  <c:SB_NCL_RecordTypeConditionModal showType="{!v.showType}" inputV="{!v.inputV}" backupV="{!v.backupV}" show="{!v.showModal}" searchRecordTypesMap="{!v.inputV.searchRecordTypesMap}"/>
   <aura:renderIf isTrue="{!and(v.showErrorMsg == true, not(empty(v.errorMsg)))}">
     <div class="demo-only" style="z-index: 9999;">
      <div role="dialog" class="slds-modal slds-fade-in-open slds-modal_large">

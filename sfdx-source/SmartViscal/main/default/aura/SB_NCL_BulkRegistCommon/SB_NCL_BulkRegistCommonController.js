@@ -10,6 +10,7 @@
  *
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  PRODUCT-389 LEX 統合版登録 一括：「設定」の「Cancel」ボタン「×」ボタンを押下した際に変更前の値に戻らない
  *
  **/
 ({
@@ -57,6 +58,7 @@
   },
   // レコードタイプ検索条件表示のボタンをクリックする際に実行するJS
   showModal : function(component, event, helper) {
+    component.set('v.backupV', JSON.parse(JSON.stringify(component.get('v.inputV'))));
     component.set('v.showModal', true);
   },
   // 候補登録先変更する際に実行するJS
