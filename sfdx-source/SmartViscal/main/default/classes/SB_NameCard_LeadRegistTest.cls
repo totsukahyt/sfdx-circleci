@@ -1736,6 +1736,9 @@
     SmartViscaf__NameCardBasicSetting__c setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
     setting.SmartViscaf__RegistToDoSubject__c = flage ? '交換true' : '交換false';
     setting.SmartViscaf__RegistNoToDo__c = !flage;
+    // SV_DEV-1092 リード用の設定を読み込み
+    setting.SmartViscaf__RegistLeadToDoSubject__c = flage ? '交換true' : '交換false';
+    setting.SmartViscaf__RegistLeadNoToDo__c = !flage;
     upsert setting;
     SmartViscaf__SmartViscaConfig__c conf = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getUserId());
     if (conf.Id == null) conf = SmartViscaf__SmartViscaConfig__c.getInstance(UserInfo.getProfileId());

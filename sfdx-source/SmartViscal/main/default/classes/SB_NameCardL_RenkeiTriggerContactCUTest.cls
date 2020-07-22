@@ -9,6 +9,7 @@
  *
  *  @author sawano
  *  lx 2.0.3    2020.02.xx
+ *  @Version 2.1    2020.07.xx SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行対応
  *
  **/
 @isTest
@@ -72,6 +73,11 @@ private class SB_NameCardL_RenkeiTriggerContactCUTest {
       bs.SmartViscaf__RenkeiContactMail__c = true;      // コンタクト メールアドレス
       bs.SmartViscaf__RenkeiContactLastName__c = true;  // コンタクト ラストネーム
       bs.SmartViscaf__RenkeiContactFirstName__c = true; // コンタクト ファーストネーム
+      // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+      bs.SmartViscaf__RenkeiCreateContactOnAcountWithoutLead__c = true; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+      bs.SmartViscaf__RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+      bs.SmartViscaf__RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+      bs.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
       listBasicSetting.add(bs);
     }
       //

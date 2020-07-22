@@ -534,8 +534,8 @@ public with sharing class SB_NameCard_LeadBulkRegistController {
       this.hasError = true;
       saveOK = false;
       System.debug(e.getMessage());
+      testError = e.getMessage();
       //SV_DEV-770 コストの高かったaddMessages(e)処理を取り止め、ApexPages.Messageをセットする仕様に変更しました
-      //testError = e.getMessage();
       //ApexPages.addMessages(e);
       ApexPages.Message errMsg = new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage());
       ApexPages.addMessage(errMsg);

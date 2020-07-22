@@ -1,3 +1,15 @@
+/**
+ *
+ *  SB_NameCardL_RegistQueryStrategyTest
+ *  SB_NameCardL_RegistQueryStrategyテストクラス
+ *
+ * Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2018.4.xx
+ *  @Version 2.1    2020.07.xx SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行対応
+ *
+ **/
 @isTest
 private class SB_NameCardL_RegistQueryStrategyTest
 {
@@ -26,6 +38,11 @@ private class SB_NameCardL_RegistQueryStrategyTest
       bs.SmartViscaf__RenkeiAccountOverwrite__c = true;   // 既存の取引先を上書き
       bs.SmartViscaf__RenkeiContactOverwrite__c = true;   // 既存の取引先責任者を上書き
       bs.SmartViscaf__RenkeiLeadOverwrite__c = true;   // 既存のリードを上書き
+      // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+      bs.SmartViscaf__RenkeiCreateContactOnAcountWithoutLead__c = true; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+      bs.SmartViscaf__RenkeiCreateContactOnAcountWithLead__c = true;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+      bs.SmartViscaf__RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+      bs.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
       listBasicSetting.add(bs);
     }
 
