@@ -1,0 +1,28 @@
+{
+    "edition": "Developer",
+    "adminEmail": "sv-tech@sunbridge.com",
+    "hasSampleData": false,
+    "country": "JP",
+    "language": "ja_JP",
+    "features": [],
+    "settings": {
+        "lightningExperienceSettings": {
+            "enableS1DesktopEnabled": true
+        },
+        "languageSettings": {
+            "enableTranslationWorkbench": true,
+            "enableEndUserLanguages": true
+        },
+        "mobileSettings": {
+            "enableS1EncryptedStoragePref2": false
+        },
+        "securitySettings": {
+            "passwordPolicies": {
+                "expiration": "Never"
+            },
+            "sessionSettings": {
+                "sessionTimeout": "TwelveHours"
+            }
+        }
+    }
+}

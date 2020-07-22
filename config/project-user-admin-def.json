@@ -1,0 +1,13 @@
+{
+    "FirstName": "OPs-admin",
+    "LastName": "〇〇",
+    "Email": "sv-tech@sunbridge.com",
+    "Alias": "admin1",
+    "TimeZoneSidKey": "Asia/Tokyo",
+    "LocaleSidKey": "ja_JP",
+    "EmailEncodingKey": "ISO-2022-JP",
+    "LanguageLocaleKey": "ja",
+    "profileName": "システム管理者",
+    "permsets": ["SmartViscaAdminUser","SmartViscaAdvancedUser","SmartViscaUser","SmartViscaRenkeiUser"],
+    "generatePassword": true
+  }
