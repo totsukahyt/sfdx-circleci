@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Conditions displayed in the list of campaigns Maximum number of entries; Specify true only for myself; Comma-separated &quot;&quot;status&quot;&quot;; Comma separated &quot;&quot;types&quot;&quot; Example &quot;&quot;5; true;;&quot;&quot;</help>
+    <label>Campaign List Search Condition</label>
+    <name>SRegistCampaignList__c</name>
+</CustomFieldTranslation>
