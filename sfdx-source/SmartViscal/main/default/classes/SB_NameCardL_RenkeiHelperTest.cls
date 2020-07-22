@@ -62,6 +62,12 @@ private class SB_NameCardL_RenkeiHelperTest
     //    SmartViscaf__RegistDispContactRectype__c = true, // 取引先・取引先任者に登録 取引先責任者レコードタイプ選択を表示する
     //    SmartViscaf__RegistContactNotOverWrite__c = false // 取引先・取引先任者に登録 取引先責任者を名刺情報で上書きしない
     //  );
+      // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+      bs.SmartViscaf__RenkeiCreateContactOnAcountWithoutLead__c = false; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+      bs.SmartViscaf__RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+      bs.SmartViscaf__RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+      bs.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
+    
       listBasicSetting.add(bs);
     }
 
@@ -157,6 +163,13 @@ private class SB_NameCardL_RenkeiHelperTest
       //  SmartViscaf__RegistDispContactRectype__c = true, // 取引先・取引先任者に登録 取引先責任者レコードタイプ選択を表示する
       //  SmartViscaf__RegistContactNotOverWrite__c = false // 取引先・取引先任者に登録 取引先責任者を名刺情報で上書きしない
       //);
+      bs.SmartViscaf__RenkeiAccountOverwrite__c = false;  // 既存の取引先を上書き
+      bs.SmartViscaf__RenkeiContactOverwrite__c = false;   // 既存の取引先責任者を上書き
+      // SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行
+      bs.SmartViscaf__RenkeiCreateContactOnAcountWithoutLead__c = false; // デフォルト false 統合版自動連携:リードなく、取引先既存で取引先責任者を作成する
+      bs.SmartViscaf__RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
+      bs.SmartViscaf__RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
+      bs.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c = false; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
       listBasicSetting.add(bs);
     }
   } // TestDbNoOverwrite
@@ -434,7 +447,7 @@ private class SB_NameCardL_RenkeiHelperTest
     Test.stopTest();
   }
 
-  // 既存のアカウント、コンタクトを更新するテスト
+  // 既存のアカウント、コンタクトがあって、更新しないで、名刺の参照項目をセットするだけのテスト用
   @isTest
   static void test_AccountRenkeiProcessNoOverwrite()
   {
