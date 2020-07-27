@@ -229,6 +229,10 @@
         <name>SB_NCLD_MSG_FlsNotUpdateable</name>
     </customLabels>
     <customLabels>
+        <label><!-- オブジェクトのアクセス権が不足しています。 --></label>
+        <name>SB_NCLD_MSG_INSUFFICIENT_ACCESS</name>
+    </customLabels>
+    <customLabels>
         <label><!-- SB_NCLD_MSG_NameMissing --></label>
         <name>SB_NCLD_MSG_NameMissing</name>
     </customLabels>
