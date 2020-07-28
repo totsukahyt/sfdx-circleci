@@ -8,6 +8,7 @@
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1231 LEX画面「リードまたは取引先・取引先責任者に登録*」一括登録で、ビル情報・英語住所が住所項目に表示されない。
  * @Version 拡張パッケージ：Lead Ex. 2.1   2020.01.xx   SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
+ * @Version 拡張パッケージ：Lead Ex. 2.2   2020.07.27   PRODUCT-388 LEX 統合版登録 一括：参照権限がない場合に登録先候補がでないようにしてほしい。
  *
  */
 public with sharing class SB_NCL_TwowayBulkRgsLcController {
@@ -25,12 +26,20 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
   private static final Integer SEARCHTYPE_NAMECODE  = 7;
   private static SB_NameCardL_RegistCanPickerAbstract picker = new SB_NameCardL_RegistSoqlCountCanPicker();  //
 
+  public class SB_NCL_TwowayBulkRgsLcControllerException extends Exception {}
+
   @RemoteAction
   @AuraEnabled
   // 全てのデータここで取得
    public static String getAllData(String recordIds, String fieldListStr, String searchType, String searchContactType, String recordTypesMapstr) {
     SB_NameCardL_BulkRegistDTO.SaveResult saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
     try{
+      // SV_DEV-1856 LEX 取引先登録 一括：参照権限がない場合に登録先候補がでないようにしてほしい。
+      if (!Account.sObjectType.getDescribe().isAccessible()
+        || !Contact.sObjectType.getDescribe().isAccessible()
+        || !Lead.sObjectType.getDescribe().isAccessible()) {
+        throw new SB_NCL_TwowayBulkRgsLcControllerException(System.Label.SB_NCLD_MSG_INSUFFICIENT_ACCESS);
+      }
       List<SB_NameCardL_BulkRegistDTO.DataTableColumnField> fieldList;
       SmartViscaf__NameCardBasicSetting__c basicSetting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
       Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> fieldMap = (Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> )System.JSON.deserializeStrict(getFieldList(), Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> .Class);

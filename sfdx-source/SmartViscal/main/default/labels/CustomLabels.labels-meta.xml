@@ -400,6 +400,13 @@
         <value>{0} オブジェクトの項目 {1} ({2}) の編集権限がありません。</value>
     </labels>
     <labels>
+        <fullName>SB_NCLD_MSG_INSUFFICIENT_ACCESS</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>オブジェクトのアクセス権が不足しています。</shortDescription>
+        <value>オブジェクトのアクセス権が不足しています。</value>
+    </labels>
+    <labels>
         <fullName>SB_NCLD_MSG_NameMissing</fullName>
         <language>ja</language>
         <protected>true</protected>

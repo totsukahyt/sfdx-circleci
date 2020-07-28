@@ -229,6 +229,10 @@
         <name>SB_NCLD_MSG_FlsNotUpdateable</name>
     </customLabels>
     <customLabels>
+        <label>Insufficient access permissions for the object.</label>
+        <name>SB_NCLD_MSG_INSUFFICIENT_ACCESS</name>
+    </customLabels>
+    <customLabels>
         <label>Enter Last Name</label>
         <name>SB_NCLD_MSG_NameMissing</name>
     </customLabels>
