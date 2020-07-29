@@ -160,17 +160,17 @@ public with sharing class SB_NameCardL_RegistQueryExecutor {
       // URL
       urls.add(card.smartviscaf__web_url1__c);
       // URL2
-      if (String.isNotBlank(card.smartviscaf__web_url2__c)) {
-        urls.add(card.smartviscaf__web_url2__c);
-      }
+      // if (String.isNotBlank(card.smartviscaf__web_url2__c)) {
+      //   urls.add(card.smartviscaf__web_url2__c);
+      // }
       // 電話番号 NULL でも条件にする。
       //if (String.isNotBlank(card.SmartViscaf__tel1__c)) {
         phones.add(card.SmartViscaf__tel1__c);
       //}
       // 電話番号 2 NULLは除外
-      if (String.isNotBlank(card.SmartViscaf__tel2__c)) {
-        phones.add(card.SmartViscaf__tel2__c);
-      }
+      // if (String.isNotBlank(card.SmartViscaf__tel2__c)) {
+      //   phones.add(card.SmartViscaf__tel2__c);
+      // }
       // 携帯番号 NULL でも
       //if (String.isNotBlank(card.SmartViscaf__mobile__c)) {
         mobiles.add(card.SmartViscaf__mobile__c);
