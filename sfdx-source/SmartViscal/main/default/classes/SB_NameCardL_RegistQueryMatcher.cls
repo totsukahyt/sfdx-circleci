@@ -54,12 +54,13 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
           return true;
         }
       }
-      if (String.isNotBlank(card.SmartViscaf__web_url2__c)) {
-        String c = card.SmartViscaf__web_url2__c.toLowerCase().replaceAll('https://|http://|/', '');
-        if ((a.length() >= c.length() && a.startsWith(c)) || (a.length() < c.length() && c.startsWith(a))) {
-          return true;
-        }
-      }
+      // 自動連携で一致条件のURL2は使わない
+      // if (String.isNotBlank(card.SmartViscaf__web_url2__c)) {
+      //   String c = card.SmartViscaf__web_url2__c.toLowerCase().replaceAll('https://|http://|/', '');
+      //   if ((a.length() >= c.length() && a.startsWith(c)) || (a.length() < c.length() && c.startsWith(a))) {
+      //     return true;
+      //   }
+      // }
     }
     return false;
   }
@@ -77,12 +78,13 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
           return true;
         }
       }
-      if (String.isNotBlank(card.SmartViscaf__tel2__c)) {
-        String c = card.SmartViscaf__tel2__c.replaceAll('[()-]+', '');
-        if (a == c) {
-          return true;
-        }
-      }
+      // 自動連携で一致条件の電話番号2は使わない
+      // if (String.isNotBlank(card.SmartViscaf__tel2__c)) {
+      //   String c = card.SmartViscaf__tel2__c.replaceAll('[()-]+', '');
+      //   if (a == c) {
+      //     return true;
+      //   }
+      // }
     }
     return false;
   }
