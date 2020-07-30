@@ -288,7 +288,11 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
       }
       else {
         // 新規作成しない。
-        holder.putMessage('[Contact not create]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
+        if (setting.SmartViscaf__RenkeiAccountNOExistCreateNew__c == false && setting.SmartViscaf__RenkeiContactNOExistCreateNew__c == true && holder.isContactNotExistWithAccount()) {
+          holder.putMessage('[Contact not create:no account match]');   // 2020.07.xx【自動連携】自動連携処理結果の文言変更
+        } else {
+          holder.putMessage('[Contact not create]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
+        }
       }
     } // for
     // 更新処理
