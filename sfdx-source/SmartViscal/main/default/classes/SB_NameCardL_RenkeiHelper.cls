@@ -16,7 +16,7 @@
  *  SB_NameCardL_RenkeiHelper
  *  lx v2.0 (v.1.12) SB_NameCard_RenkeiTriggerHelper + SB_NameCard_RegistProcessor の改造
  *  lx2.1 2020.01.xx SV_DEV-1970 自動連携のリード関連「カスタム設定」項目の移行(リード連携拡張パッケージ側改修
- *  @v2.1 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
+ *  @v2.1 quan 2020.07.xx 【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
  *
  **/
 public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiHelperAbstract {
