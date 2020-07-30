@@ -515,6 +515,7 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
             CampaignMember cm = holder.buildLeadCampaignMember(holder.card.campaign__c, setting.SmartViscaf__RenkeiCampaignStatus__c);
             campIdTargetId2CamMember.put(key, cm);
             leadIds.add(holder.getLeadId());
+            holder.putMessage('[CampaignMember create]');   // 2020.07.xx【自動連携】【要望】自動連携処理情報項目での「OK」処理内容の明記
           }
         }
         // コンタクト？
@@ -531,6 +532,7 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
           CampaignMember cm = holder.buildContactCampaignMember(holder.card.campaign__c, setting.SmartViscaf__RenkeiCampaignStatus__c);
           campIdTargetId2CamMember.put(key, cm);
           contIds.add(holder.getContactId());
+          holder.putMessage('[CampaignMember create]');   // 2020.07.xx【自動連携】【要望】自動連携処理情報項目での「OK」処理内容の明記
         }
         }
       }
