@@ -16,6 +16,7 @@
  *  SB_NameCardL_RenkeiHelper
  *  lx v2.0 (v.1.12) SB_NameCard_RenkeiTriggerHelper + SB_NameCard_RegistProcessor の改造
  *  lx2.1 2020.01.xx SV_DEV-1970 自動連携のリード関連「カスタム設定」項目の移行(リード連携拡張パッケージ側改修
+ *  @v2.1 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
  *
  **/
 public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiHelperAbstract {
@@ -171,12 +172,14 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
             // すでに別の名刺で更新用アカウントを作ってた。
             Account acnt = acntId2UpdAccount.get(acntId);
             holder.putOthers(acnt);
+            holder.putMessage('[Account update: another]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
             // holder.acntProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.ModifyOther;
           }
           else {
             Account acnt = holder.buildUpdAccount();
             acntId2UpdAccount.put(acnt.Id, acnt);
             updAcntProc.addCardHolder(holder);
+            holder.putMessage('[Account update]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
             holder.acntProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Modify;
           }
         }
@@ -184,6 +187,7 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
           // 更新せずリンクのみ
           //holder.bindExistAccount();
           holder.acntProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.ModifySkip;
+          holder.putMessage('[Account link]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
         }
       }
       else if (holder.acntProcess == SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Create &&
@@ -201,8 +205,13 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
           Account acnt = holder.buildNewAccount(recTypeId, null);
           companyId2NewAccount.put(holder.companyId, acnt);
           newAcntProc.addCardHolder(holder);
+          holder.putMessage('[Account create]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
           holder.acntProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Create;
         }
+      }
+      else {
+        // 新規作成しない。
+        holder.putMessage('[Account not create]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
       }
     } // for
     // 更新処理
@@ -241,12 +250,14 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
             // すでに別の名刺で更新用コンタクトを作ってた。
             Contact cont = contId2UpdContact.get(contId);
             holder.putOthers(cont);
+            holder.putMessage('[Contact update: another]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
             // holder.contProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.ModifyOther;
           }
           else {
             Contact cont = holder.buildUpdContact();
             contId2UpdContact.put(contId, cont);
             updContProc.addCardHolder(holder);
+            holder.putMessage('[Contact update]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
             holder.contProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Modify;
           }
         }
@@ -254,6 +265,7 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
           // 更新せずリンクのみ
           //holder.bindExistContact();
           holder.contProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.ModifySkip;
+          holder.putMessage('[Contact link]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
         }
       }
       else if (holder.contProcess == SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Create &&
@@ -270,8 +282,13 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
           Contact cont = holder.buildNewContact(recTypeId, null);
           personId2NewContact.put(holder.personId, cont);
           newContProc.addCardHolder(holder);
+          holder.putMessage('[Contact create]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
           holder.contProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Create;
         }
+      }
+      else {
+        // 新規作成しない。
+        holder.putMessage('[Contact not create]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
       }
     } // for
     // 更新処理
@@ -310,12 +327,14 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
             // すでに別の名刺で更新用コンタクトを作ってた。
             Lead l = leadId2UpdLead.get(leadId);
             holder.putOthers(l);
+            holder.putMessage('[Lead update: another]');    // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
             // holder.contProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.ModifyOther;
           }
           else {
             Lead l = holder.buildUpdLead();
             leadId2UpdLead.put(leadId, l);
             updLeadProc.addCardHolder(holder);
+            holder.putMessage('[Lead update]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
             holder.leadProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Modify;
           }
         }
@@ -348,8 +367,15 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
           Lead l = holder.buildNewLead(recTypeId, null);
           meishiLeadId2NewLead.put(holder.personId, l);
           newLeadProc.addCardHolder(holder);
+          holder.putMessage('[Lead create]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
           holder.leadProcess = SB_NameCardL_RenkeiCardHolder.RenkeiProcess.Create;
         }
+      }
+      else if (holder.leadProcess == SB_NameCardL_RenkeiCardHolder.RenkeiProcess.ModifySkip){
+        holder.putMessage('[Lead link]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
+      }
+      else if (holder.leadProcess == SB_NameCardL_RenkeiCardHolder.RenkeiProcess.CreateSkip){
+        holder.putMessage('[Lead not create]');   // 2020.07.xx【自動連携】設定により取引先を作成せず「未登録」となった場合の自動連携処理情報に記載される文言を変えて欲しい
       }
     } // for
     // 更新処理
