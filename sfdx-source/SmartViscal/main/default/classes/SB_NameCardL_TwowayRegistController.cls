@@ -1214,9 +1214,9 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       this.accountQueryOption.queryDept = (this.searchField == FIELD_NAMESITE);
       // 取引先名 は完全に一致？
       this.accountQueryOption.companyRule = this.queryMatch == QUERY_PERFECT_NO ?
-            SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
+            SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch;
       // 部門の検索は完全一致？
-      this.accountQueryOption.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.FullMatch;
+      this.accountQueryOption.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.ExactMatch;
       queryOptions.add(this.accountQueryOption);
     }
     if (this.contactQueryOption !=null) {

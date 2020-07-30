@@ -16,8 +16,8 @@
 public with sharing class SB_NameCardL_RegistQueryMatcher {
 
   // // 検索オプション
-  // public enum CompanyMatcing { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
-  // public enum DeptMatcing { FullMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+  // public enum CompanyMatcing { PerfectMatch, ExactMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格の正式名称と略称をマッチ、法人格を除いて一致、法人格を除いて部分一致
+  // public enum DeptMatcing { ExactMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
 
   // 郵便番号の一致チェック
   private static Boolean isMatchZip(SmartViscaf__NameCard__c card, List<String> zips) {
@@ -130,6 +130,7 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
     if (card.SmartViscaf__company_name__c == company) {
       return true;
     }
+    SmartViscaf__NameCardBasicSetting__c setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
     if (String.isNotBlank(company) && String.isNotBlank(card.SmartViscaf__company_name__c)) {
       String shamei = SmartViscaf.SB_NameCard_Util.getCompanyName(card.SmartViscaf__company_name__c);
       if (rule == SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch) {
@@ -140,6 +141,11 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
         // 法人格抜きで、完全一致
         String acntShamei = SmartViscaf.SB_NameCard_Util.getCompanyName(company);
         return shamei == acntShamei;
+      }
+      // 完全一致
+      else if (setting.SmartViscaf__HojinkakuEquationLongAndAbbr__c == true) { // （完全一致のとき）法人格は略称・正称を同一視する。 null は false
+        // SV_DEV-1647 法人格の正式名称と略称をマッチさせる（登録・自動連携）
+        return SB_NameCardL_HojinkakuParser.isEqualeKaishamei(card.SmartViscaf__company_name__c, company);
       }
     }
     return false;
@@ -305,8 +311,8 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
     @TestVisible private SB_NameCardL_RegistQueryOption.DeptMatcing deptRule;
 
     public ContactMatcher() {
-      this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
-      this.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.FullMatch;
+      this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch;
+      this.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.ExactMatch;
     }
 
     public ContactMatcher(SB_NameCardL_RegistQueryStrategy.ContactQueryStrategy qs) {

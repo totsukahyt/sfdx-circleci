@@ -251,17 +251,17 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
   }
 
   // 検索オプション
-  // public enum CompanyMatcing { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
-  // public enum DeptMatcing { FullMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+  // public enum CompanyMatcing { PerfectMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+  // public enum DeptMatcing { ExactMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
 
   // private final static Map<SB_NameCardL_RegistQueryOption.CompanyMatcing, SB_NameCardL_RegistQueryMatcher.CompanyMatcing> MAP_COMPANYMATCING = new Map<SB_NameCardL_RegistQueryOption.CompanyMatcing, CompanyMatcing> {
-  //   SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch => SB_NameCardL_RegistQueryMatcher.CompanyMatcing.FullMatch,
+  //   SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch => SB_NameCardL_RegistQueryMatcher.CompanyMatcing.PerfectMatch,
   //   SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch =>  SB_NameCardL_RegistQueryMatcher.CompanyMatcing.CorpMatch,
   //   SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch => SB_NameCardL_RegistQueryMatcher.CompanyMatcing.PartialMatch
   // };
 
   // private final static Map<SB_NameCardL_RegistQueryOption.DeptMatcing, DeptMatcing> MAP_DEPTMATCING = new Map<SB_NameCardL_RegistQueryOption.DeptMatcing, DeptMatcing> {
-  //   SB_NameCardL_RegistQueryOption.DeptMatcing.FullMatch => DeptMatcing.FullMatch,
+  //   SB_NameCardL_RegistQueryOption.DeptMatcing.ExactMatch => DeptMatcing.ExactMatch,
   //   SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch => DeptMatcing.PartialMatch
   // };
 
@@ -302,8 +302,8 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
     // public Boolean queryEMail { get; private set; }
     // public Boolean queryTitle { get; private set; }
     // public Boolean queryMobile { get; private set; }
-    // public SB_NameCardL_RegistQueryOption.CompanyMatcing companyRule { get; private set; } // { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
-    // public SB_NameCardL_RegistQueryOption.DeptMatcing deptRule { get; private set; }// { FullMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+    // public SB_NameCardL_RegistQueryOption.CompanyMatcing companyRule { get; private set; } // { PerfectMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+    // public SB_NameCardL_RegistQueryOption.DeptMatcing deptRule { get; private set; }// { ExactMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
     public String orderBy { get; private set; }
     public Integer max { get; private set; }
     // public Set<Id> rectypeIds { get; private set; } // 検索対称のレコードタイプ
@@ -495,8 +495,11 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       else if (setting.SmartViscaf__RenkeiExcludeHojinkaku__c) {
         this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch; // 法人格抜きで一致
       }
+      else if (setting.SmartViscaf__HojinkakuEquationLongAndAbbr__c == true){
+        this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.ExactMatch; // 法人格の正式名称と略称と一致
+      }
       else {
-        this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch; // 完全一致
+        this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch; // 完全一致
       }
       this.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch;
       //this.rectypeIds = getValidRectypIds(Account.sObjectType, setting.SmartViscaf__RenkeiAccountQueryRecordTypeIds__c);
@@ -525,7 +528,7 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       List<String> items = new List<String>();
       if (this.queryCompany) { // 取引先名 //  && !qexe.fullOrgNames.isEmpty()) {
         String cfield = String.isblank(this.altCompanyField) ? 'Name' : this.altCompanyField;
-        if (this.companyRule == SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch || this.companyRule == SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch) {
+        if (this.companyRule != SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch) {
           items.add(cfield + ' LIKE :orgNameWithParcents');
         }
         else { // 完全一致
@@ -876,7 +879,7 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
   public class LeadQueryStrategy extends QueryStrategy {
     public override SObjectType getSObjectType() { return Lead.sObjectType; }
     //public SB_NameCardL_RegistQueryMatcher.LeadMatcher leadMatcher;
-    //public CompanyMatcing companyRule { get; private set; } // { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+    //public CompanyMatcing companyRule { get; private set; } // { PerfectMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
     public Boolean queryExceptConverted { get; private set; } // TRUE: SOQLで取引開始済みを除く
     public LeadQueryStrategy() {
       super();
@@ -944,8 +947,11 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       else if (setting.SmartViscaf__RenkeiLeadExcludeHojinkaku__c) {
         this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch;
       }
+      else if (setting.SmartViscaf__HojinkakuEquationLongAndAbbr__c == true){
+        this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.ExactMatch; // 法人格の正式名称と略称と一致
+      }
       else {
-        this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
+        this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch; // 完全一致
       }
       this.rectypeIds.addAll(getValidRectypIds(Lead.sObjectType, setting.SmartViscaf__RenkeiLeadQueryRecordTypeIds__c));
       //this.leadMatcher = new SB_NameCardL_RegistQueryMatcher.LeadMatcher(this);
@@ -978,7 +984,7 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       List<String> items = new List<String>();
       if (this.queryCompany) { // 会社名
         String cfield = String.isblank(this.altCompanyField) ? 'Company' : this.altCompanyField;
-        if (this.companyRule == SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch || this.companyRule == SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch) {  //
+        if (this.companyRule != SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch) {  //
           items.add(cfield + ' LIKE :orgNameWithParcents');
         }
         else { // 完全一致

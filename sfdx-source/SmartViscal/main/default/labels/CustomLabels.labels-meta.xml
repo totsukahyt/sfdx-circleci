@@ -716,6 +716,64 @@
         <value>完了</value>
     </labels>
     <labels>
+        <fullName>SB_NCL_HojinKakuPairs</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>法人格の略号との組合せ</shortDescription>
+        <value>株式会社, 株, ㈱
+有限会社, 有, ㈲
+合名会社, 名, ㈴
+合資会社, 資, ㈾
+合同会社, 同, 合同
+学校法人, 学, ㈻
+社団法人, 社, ㈳
+特殊法人, 特, ㈵
+財団法人, 財, ㈶
+監査法人, 監, 監法, ㈼
+企業組合, 企, ㈽
+協同組合, 協, ㈿
+労働組合, 労, ㈸
+一般社団法人, 一社
+一般財団法人, 一財
+公益社団法人, 公社
+公益財団法人, 公財
+独立行政法人, 独
+地方独立行政法人, 地独
+特定非営利活動法人, 特非, 特定
+宗教法人, 宗
+相互会社, 相
+社会福祉法人, 福
+弁護士法人, 弁, 弁法
+行政書士法人, 行
+司法書士法人, 司
+税理士法人, 税, 税法</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_HojinKakuRegex</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>法人格除去に使う正規表現の一部</shortDescription>
+        <value>(?:株式会社|有限会社|合名会社|合資会社|合同会社|学校法人|特殊法人|監査法人|企業組合|協同組合|労働組合|医療法人社団|医療法人財団|社会医療法人|特定医療法人|医療法人|一般社団法人|公益社団法人|社団法人|一般財団法人|公益財団法人|財団法人|社会福祉法人|更生保護法人|独立行政法人|地方独立行政法人|特定非営利活動法人|宗教法人|相互会社|社会福祉法人|弁護士法人|行政書士法人|司法書士法人|税理士法人|国立大学法人|公立大学法人|有限責任中間法人|無限責任中間法人|(?:[(（](?:[株有名資同学社特財監企協労医独宗相福弁行司税大中]|一社|一財|公社|公財|地独|特非|弁法|税法|国法|特定|合同|監法|医社)[）)])|[㈱㈲㈴㈾㈻㈳㈵㈶㈼㈽㈿㈸])</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_HojinKakuRegexFormat</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>法人格除去に使う正規表現のフォーマット</shortDescription>
+        <value>(^{0}[\\\s　]*)(.+$)|(^.+?)({0}$)</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCL_HojinkakuDuplicate</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>複数の正式名称が１つの略称になるもの</shortDescription>
+        <value>医:医療法人, 医療法人社団, 医療法人財団, 社会医療法人, 医社
+医社:医療法人社団, 医
+大:国立大学法人, 公立大学法人, 国法
+国法:国立大学法人, 大
+中:有限責任中間法人, 無限責任中間法人</value>
+    </labels>
+    <labels>
         <fullName>SB_NCL_NotStarted</fullName>
         <language>ja</language>
         <protected>true</protected>

@@ -183,4 +183,26 @@ private class SB_NameCardL_RegistQueryStrategyTest
     Test.stopTest();
   }
 
+  @isTest
+  static void testLeadHojinkakuParse() {
+    
+    TestDb db = new TestDb();
+    db.initialize();
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT Id, SmartViscaf__company_name__c FROM SmartViscaf__NameCard__c');
+    for (SmartViscaf__NameCard__c c : cards) {
+      c.SmartViscaf__company_name__c = '㈱' + c.SmartViscaf__company_name__c.remove('株式会社');
+      c.SmartViscaf__delivery_type__c = '2';
+    }
+
+    Test.startTest();
+    update cards;
+    Test.stopTest();
+
+    System.assertEquals(2, [SELECT Id, Name, SmartViscaf__account__c, SmartViscaf__contact__c, SmartViscaf__lead__c FROM SmartViscaf__NameCard__c
+              WHERE SmartViscaf__account__c != null AND SmartViscaf__contact__c != null AND SmartViscaf__lead__c != null].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Account WHERE SmartViscaf__NameCard__c != null].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Contact WHERE SmartViscaf__NameCard__c != null].size());
+    System.assertEquals(2, [SELECT Id, Name FROM Lead WHERE NameCard__c != null].size());
+
+  }
 }
