@@ -15,7 +15,8 @@
  *  @Version 2.0.1     2018.04.XX SV_DEV-883 【自動連携】過去分名刺を除外できる設定が欲しい
  *  @Version 2.4 sawano 2019.07.xx SV_DEV-956 【例外条件】取引先名「？」で納品され、「姓（ラストネーム）」が入力されている場合に自動連携されてしまう。
  *                                  Checker 見直し。責務を分配、局所化。
- *
+ *  @Version 2.1 全 2020.07.31 PRODUCT-369 【自動連携】自動連携 会社名が「?」の場合は自動連携を行わない対応 基本版のSB_NameCard_RenkeiChecker.clsの移植
+ * 
  **/
 public with sharing class SB_NameCardL_RenkeiChecker {
 
