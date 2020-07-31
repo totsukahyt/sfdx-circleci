@@ -9,6 +9,8 @@
  *     KDDI様向け 管理パッケージ：SmartViscaRgq1 SB_Sv_UiRegistSoqlCountCanCreater がベース
  *
  * Copyright (c) 2017-2018 SunBridge Inc.
+ * 
+ *  @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
  *
  **/
 public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameCardL_RegistCanPickerAbstract {

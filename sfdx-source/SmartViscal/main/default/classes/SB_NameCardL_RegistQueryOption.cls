@@ -9,7 +9,9 @@
  *
  *  @author sawano
  *  @Version 1      2018.4.xx
- *
+ *  @Version 2.1 全 2020.07.31 PRODUCT-357 【自動連携】リード連携拡張：会社名の比較条件「法人格の略称を正称の表記とみなして会社名を比較する」の対応
+ *  @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
+ * 
  **/
 public virtual class SB_NameCardL_RegistQueryOption {
   public class SB_NameCardL_RegistQueryOptionException extends Exception {}

@@ -9,6 +9,8 @@
  *  @Version 1      2018.4.xx
  *  @Version 2.1    2020.07.xx SV_DEV-1970 カスタム設定からSmartVisca基本設定に移行対応
  *
+ *  @Version 2.1 全 2020.07.31 PRODUCT-357 【自動連携】リード連携拡張：会社名の比較条件「法人格の略称を正称の表記とみなして会社名を比較する」の対応
+ * 
  **/
 @isTest
 private class SB_NameCardL_RegistQueryStrategyTest

@@ -2,6 +2,8 @@
  *
  * SB_NameCardL_HojinkakuParser
  *  法人格をパースするクラス
+ * 
+ * @Version 2.1 全 2020.07.31 PRODUCT-357 【自動連携】リード連携拡張：会社名の比較条件「法人格の略称を正称の表記とみなして会社名を比較する」の対応 SB_NameCard_HojinkakuParser.clsの移植
  *  
  **/
 public with sharing class SB_NameCardL_HojinkakuParser {

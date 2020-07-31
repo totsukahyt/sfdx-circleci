@@ -8,10 +8,12 @@
  *
  *  @author sawano
  *  @Version 1      2018.4.xx
- *
- * @Version 2.1 全 2020.07.31 PRODUCT-352 【自動連携】リードの自動連携で電話番号2を使用しないようにする 
- * @Version 2.1 全 2020.07.31 PRODUCT-365 【自動連携】リード連携拡張：自動連携でURL2を使用しないようにする
- * 
+ *  @Version 2.1 全 2020.07.31 PRODUCT-352 【自動連携】リードの自動連携で電話番号2を使用しないようにする 
+ *  @Version 2.1 全 2020.07.31 PRODUCT-365 【自動連携】リード連携拡張：自動連携でURL2を使用しないようにする
+ *  @Version 2.1 全 2020.07.31 PRODUCT-357 【自動連携】リード連携拡張：会社名の比較条件「法人格の略称を正称の表記とみなして会社名を比較する」の対応
+ *  @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
+ *  @Version 2.1 全 2020.08.03 PRODUCT-349 【自動連携】リード登録時の会社名の比較対象をカスタム項目とする
+ *  
  **/
 public with sharing class SB_NameCardL_RegistQueryMatcher {
 
@@ -309,6 +311,7 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
     @TestVisible private Boolean queryNameOrEMail;   // v2.0.3 2020.02.xx
     @TestVisible private SB_NameCardL_RegistQueryOption.CompanyMatcing companyRule;
     @TestVisible private SB_NameCardL_RegistQueryOption.DeptMatcing deptRule;
+    @TestVisible private String altCompanyField;    // PRODUCT-349
 
     public ContactMatcher() {
       this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch;
@@ -325,6 +328,7 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       this.deptRule = qs.deptRule;
       this.queryOnlyEMail = qs.queryOnlyEMail;  // v2.0.3 2020.02.xx
       this.queryNameOrEMail = qs.queryNameOrEMail;   // v2.0.3 2020.02.xx
+      this.altCompanyField = qs.altCompanyField; // PRODUCT-349
     }
 
     public override Boolean isMatch(SmartViscaf__NameCard__c card, SObject target) {
@@ -333,6 +337,7 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(card);
       String last_name = pnMap.get('last_name');
       String first_name = pnMap.get('first_name');
+      String companyName = String.isNotBlank(this.altCompanyField) ? (String)cont.get(this.altCompanyField) : cont.Account.Name; // PRODUCT-349
       return
         cont.Id == card.SmartViscaf__contact__c ||
         // 2020.02.xx v2.0.3 SV_DEV-2527 リード拡張の自動連携で取引先責任者について、不適切なレコードを更新する。または、作成されるべき新規取引先責任者レコードが作成されない。
@@ -343,12 +348,12 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
         ((!this.queryEmail || (card.SmartViscaf__email__c!=null && card.SmartViscaf__email__c == cont.Email)) &&
         (!this.queryFirstName || first_name == cont.FirstName) &&
         (!this.queryLastName || last_name == cont.LastName))) &&
-        (!this.queryCompany || isMatchKaishaMei(card, cont.Account.Name, this.companyRule)) &&
+        (!this.queryCompany || isMatchKaishaMei(card, companyName, this.companyRule)) &&
         (!this.queryDept || isMatchSite(card, cont.Account.Site, this.deptRule) || isMatchSite(card, cont.Department, this.deptRule)));
     }
 
   } // public class ContactMatcher extends Matcher {
-
+ 
   ////////////////
   //  LeadMatcher
   ////////////////
@@ -378,6 +383,7 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       this.queryStreet = qs.queryStreet;
       this.queryCity = qs.queryCity;
       this.queryState = qs.queryState;
+      this.altCompanyField = qs.altCompanyField;
     }
 
     public override Boolean isMatch(SmartViscaf__NameCard__c card, SObject target) {

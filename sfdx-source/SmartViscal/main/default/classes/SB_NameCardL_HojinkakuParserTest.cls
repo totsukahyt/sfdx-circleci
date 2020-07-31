@@ -8,6 +8,8 @@
  *  @author sawano
  *  @Version 2.4      2019.05.xx 
  *
+ *  @Version 2.1 全 2020.07.31 PRODUCT-357 【自動連携】リード連携拡張：会社名の比較条件「法人格の略称を正称の表記とみなして会社名を比較する」の対応 SB_NameCard_HojinkakuParserTest.clsの移植
+ *  
  **/
 @isTest
 private class SB_NameCardL_HojinkakuParserTest {
