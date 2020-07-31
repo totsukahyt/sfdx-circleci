@@ -7,7 +7,7 @@
  *
  * lx2.1 2020.01.xx SV_DEV-1970 自動連携のリード関連「カスタム設定」項目の移行(リード連携拡張パッケージ側改修
  * 
- * PRODUCT-362 【自動連携】リード連携拡張：取引先・リードの検索で取引先名 / 会社名が完全一致のレコードがあればあいまい検索一致の取引先・リードがあっても重複にしないようにする
+ * @Version 2.1 全 2020.07.31 PRODUCT-362 【自動連携】リード連携拡張：取引先・リードの検索で取引先名/会社名が完全一致のレコードがあればあいまい検索一致の取引先・リードがあっても重複にしないようにする
  **/
 public with sharing class SB_NameCardL_RenkeiCardHolder {
 
@@ -189,7 +189,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
       else {
         // 既存取引先が複数あったとき
         Integer index = -1;  // 採用するアカウントのインデックス
-        // PRODUCT-362 【自動連携】リード連携拡張：取引先・リードの検索で取引先名 / 会社名が完全一致のレコードがあればあいまい検索一致の取引先・リードがあっても重複にしないようにする
+        // PRODUCT-362
         SB_NameCardL_HojinkakuParser cardKaisha = new SB_NameCardL_HojinkakuParser(this.card.SmartViscaf__company_name__c);
         // SB_NameCardL_HojinkakuParser のチェックは 完全一致条件のときはいみないけど、その場合も同様に処理する。
         for (Integer n=0; n < this.acntCandidates.size(); n++) {
@@ -538,7 +538,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
       else {
         // 既存取引先が複数あったとき
         Integer index = -1;  // 採用するアカウントのインデックス
-        // PRODUCT-362 【自動連携】リード連携拡張：取引先・リードの検索で取引先名 / 会社名が完全一致のレコードがあればあいまい検索一致の取引先・リードがあっても重複にしないようにする
+        // PRODUCT-362
         SB_NameCardL_HojinkakuParser cardKaisha = new SB_NameCardL_HojinkakuParser(this.card.SmartViscaf__company_name__c);
         // SB_NameCardL_HojinkakuParser のチェックは 完全一致条件のときはいみないけど、その場合も同様に処理する。
         for (Integer n=0; n < this.acntCandidates.size(); n++) {
@@ -653,7 +653,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
         else {
 		  // 既存リードが複数あったとき
 		  Integer index = -1;  // 採用するリードのインデックス
-		// PRODUCT-362 【自動連携】リード連携拡張：取引先・リードの検索で取引先名 / 会社名が完全一致のレコードがあればあいまい検索一致の取引先・リードがあっても重複にしないようにする
+		  // PRODUCT-362
           SB_NameCardL_HojinkakuParser cardKaisha = new SB_NameCardL_HojinkakuParser(this.card.SmartViscaf__company_name__c);
           // SB_NameCard_HojinkakuParser のチェックは 完全一致条件のときはいみないけど、その場合も同様に処理する。
           for (Integer n=0; n < this.leadCandidates.size(); n++) {
