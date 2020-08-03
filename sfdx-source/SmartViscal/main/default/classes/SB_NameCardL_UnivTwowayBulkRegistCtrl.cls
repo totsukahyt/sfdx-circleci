@@ -8,7 +8,8 @@
  * @Version 1.21 2018/09/XX  SV_DEV-1156 LEXかクラシックかの判定がオフィシャルな方法に変更
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
  * @Version 拡張パッケージ：Lead Ex. 2.1   2020.01.xx   SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
- *
+ * @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
+ * 
  */
 
 public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
@@ -494,10 +495,10 @@ public with sharing class SB_NameCardL_UnivTwowayBulkRegistCtrl {
       this.accountQueryOption.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch;
       // // 取引先名 は完全に一致？
       // this.accountQueryOption.companyRule = this.queryMatch == QUERY_PERFECT_NO ?
-      //       SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
+      //       SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch;
       // // 部門の検索は完全一致？
       // this.accountQueryOption.deptRule = this.queryMatch == QUERY_PERFECT_NO ?
-      //       SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.DeptMatcing.FullMatch;
+      //       SB_NameCardL_RegistQueryOption.DeptMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.DeptMatcing.ExactMatch;
       queryOptions.add(this.accountQueryOption);
     }
     if (this.contactQueryOption !=null) {
