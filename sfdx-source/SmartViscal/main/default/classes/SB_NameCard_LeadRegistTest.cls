@@ -469,6 +469,15 @@
       EmailEncodingKey='UTF-8', LastName='Testingtest', LanguageLocaleKey='en_US',
       LocaleSidKey='en_US', ProfileId = prof.Id,
       TimeZoneSidKey='America/Los_Angeles', UserName='newusertesttest@testorgtest.com');
+      insert u1;
+
+      list<PermissionSet> psList = [SELECT Id FROM PermissionSet WHERE Name IN ('SmartViscaAdminUser','SmartViscaAdvancedUser','SmartViscaRenkeiUser','SmartViscaUser','SmartViscaLeadAdminUser')];
+      PermissionSetAssignment psa1 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[0].Id);
+      PermissionSetAssignment psa2 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[1].Id);
+      PermissionSetAssignment psa3 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[2].Id);
+      PermissionSetAssignment psa4 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[3].Id);
+      PermissionSetAssignment psa5 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[4].Id);
+      insert new PermissionSetAssignment[]{psa1,psa2,psa3,psa4,psa5};
 
       SmartViscaf__NameCard__c nc = getNameCard('TestCompany');
       PageReference pageRef = Page.SB_NameCard_LeadRegist;
@@ -1685,6 +1694,14 @@
     LocaleSidKey='en_US', ProfileId = prof.Id,UserPermissionsMarketingUser = true,
     TimeZoneSidKey='America/Los_Angeles', UserName='newusertesttest1@testorgtestB.com');
     insert new User[]{u, u1};
+
+    list<PermissionSet> psList = [SELECT Id FROM PermissionSet WHERE Name IN ('SmartViscaAdminUser','SmartViscaAdvancedUser','SmartViscaRenkeiUser','SmartViscaUser','SmartViscaLeadAdminUser')];
+    PermissionSetAssignment psa1 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[0].Id);
+    PermissionSetAssignment psa2 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[1].Id);
+    PermissionSetAssignment psa3 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[2].Id);
+    PermissionSetAssignment psa4 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[3].Id);
+    PermissionSetAssignment psa5 = new PermissionSetAssignment(AssigneeId = u1.id, PermissionSetId = psList[4].Id);
+    insert new PermissionSetAssignment[]{psa1,psa2,psa3,psa4,psa5};
 
     us.add(u);
     us.add(u1);
