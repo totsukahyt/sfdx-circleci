@@ -34,7 +34,8 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
     public AccountCandidate(SObject obj) {
       super(obj);
       this.childIds = new List<Id>();
-      this.companyName = (String)obj.get('Name'); // PRODUCT-362
+      SmartViscaf__NameCardBasicSetting__c setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+      this.companyName = (String)obj.get(setting.SmartViscaf__RegistAccountCompareCustomize__c && String.isNotBlank(setting.SmartViscaf__RegistAccountCompareField__c) ? setting.SmartViscaf__RegistAccountCompareField__c : 'Name'); // PRODUCT-362
     }
     public void addChild(SObject obj) {
       childIds.add(obj.Id);
@@ -48,7 +49,8 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
   public class LeadCandidate extends Candidate {
     public LeadCandidate(SObject obj) {
       super(obj);
-      this.companyName = (String)obj.get('Company');
+      SmartViscaf__NameCardBasicSetting__c setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+      this.companyName = (String)obj.get(setting.SmartViscaf__RegistLeadCompareCustomize__c && String.isNotBlank(setting.SmartViscaf__RegistLeadCompareField__c) ? setting.SmartViscaf__RegistLeadCompareField__c : 'Company'); // PRODUCT-362
     }
   }
 
