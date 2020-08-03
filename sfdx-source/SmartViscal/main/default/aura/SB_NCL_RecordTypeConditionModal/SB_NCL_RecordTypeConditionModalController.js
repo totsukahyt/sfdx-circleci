@@ -12,6 +12,7 @@
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
  *  @Version 拡張パッケージ：Lead Ex. 2.1  PRODUCT-389 LEX 統合版登録 一括：「設定」の「Cancel」ボタン「×」ボタンを押下した際に変更前の値に戻らない
+ *  @Version 拡張パッケージ：Lead Ex. 2.2  2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
  *
  **/
 ({
@@ -113,5 +114,27 @@
       }
       component.set('v.inputV.searchConditionRct.searchConditionRecordTypeOptionGroups', recG);
     }
-  }
+  },
+  searchConditionAccountCMtcChange : function(component, event, helper) {
+    var sel = "";
+    var opts = document.getElementsByName("searchConditionAccountCompanyMatcing");
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].checked) {
+        sel = opts[i].value;
+        break;
+      }
+    }
+    component.set('v.inputV.selectedConditionAccountCMtc', sel);
+  },
+  searchConditionLeadCMtcChange : function(component, event, helper) {
+    var sel = "";
+    var opts = document.getElementsByName("searchConditionLeadCompanyMatcing");
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].checked) {
+        sel = opts[i].value;
+        break;
+      }
+    }
+    component.set('v.inputV.selectedConditionLeadCMtc', sel);
+  },
 })

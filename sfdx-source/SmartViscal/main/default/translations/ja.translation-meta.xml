@@ -69,6 +69,22 @@
         <name>SB_NCLD_Label_Comment</name>
     </customLabels>
     <customLabels>
+        <label>{0}は法人格を除いて検索</label>
+        <name>SB_NCLD_Label_CompanyMatcingCorpMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}は完全一致</label>
+        <name>SB_NCLD_Label_CompanyMatcingExactMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}は法人格を除いて部分一致検索</label>
+        <name>SB_NCLD_Label_CompanyMatcingPartialMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}の{1}の検索方法</label>
+        <name>SB_NCLD_Label_CompanyMatcingSectionName</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 会社名 --></label>
         <name>SB_NCLD_Label_CompanyName</name>
     </customLabels>

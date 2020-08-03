@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>SB_NCLD_Label_CompanyMatcingSectionName</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>{0}の{1}の検索方法</shortDescription>
+        <value>{0}の{1}の検索方法</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_CompanyMatcingCorpMatch</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>{0}は法人格を除いて検索</shortDescription>
+        <value>{0}は法人格を除いて検索</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_CompanyMatcingExactMatch</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>{0}は完全一致</shortDescription>
+        <value>{0}は完全一致</value>
+    </labels>
+    <labels>
+        <fullName>SB_NCLD_Label_CompanyMatcingPartialMatch</fullName>
+        <language>ja</language>
+        <protected>true</protected>
+        <shortDescription>{0}は法人格を除いて部分一致検索</shortDescription>
+        <value>{0}は法人格を除いて部分一致検索</value>
+    </labels>
+    <labels>
         <fullName>SB_MSG_CrudNotCreateable</fullName>
         <language>ja</language>
         <protected>true</protected>

@@ -21,7 +21,8 @@
         helper.setFieldList(cmp, event, helper);
         helper.setTitleValue(cmp, event, helper);
         helper.setInputValue(cmp, event, helper);
-        helper.searchAllData(cmp, event, helper, targetIds, true);
+        // setInputValueのコールバック時に呼ぶよう変更
+        // helper.searchAllData(cmp, event, helper, targetIds, true);
       }
       else {
         cmp.set('v.working', false);
