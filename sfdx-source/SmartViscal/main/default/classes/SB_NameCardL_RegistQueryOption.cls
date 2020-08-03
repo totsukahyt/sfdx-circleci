@@ -11,6 +11,7 @@
  *  @Version 1      2018.4.xx
  *  @Version 2.1 全 2020.07.31 PRODUCT-357 【自動連携】リード連携拡張：会社名の比較条件「法人格の略称を正称の表記とみなして会社名を比較する」の対応
  *  @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
+ *  @Version 2.1 全 2020.08.03 PRODUCT-349 【自動連携】リード登録時の会社名の比較対象をカスタム項目とする
  * 
  **/
 public virtual class SB_NameCardL_RegistQueryOption {
@@ -99,6 +100,7 @@ public virtual class SB_NameCardL_RegistQueryOption {
     this.companyRule = CompanyMatcing.PartialMatch;  // 法人格を除いて部分一致
     this.deptRule = DeptMatcing.PartialMatch; // 部分一致
     //this.queryFields = new Set<String>();
+    this.altCompanyField = SmartViscaf.SB_NameCard_BasicSetting.getAltCompanyField(target); // PRODUCT-349
   }
 
   //public SB_NameCardL_RegistQueryOption(SObjectType target, SB_NCL_RegistOptionCreater.QueryOption qo) {

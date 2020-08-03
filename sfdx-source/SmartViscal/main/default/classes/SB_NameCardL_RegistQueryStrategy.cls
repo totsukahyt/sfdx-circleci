@@ -14,6 +14,7 @@
  *
  *  @Version 2.1 全 2020.07.31 PRODUCT-357 【自動連携】リード連携拡張：会社名の比較条件「法人格の略称を正称の表記とみなして会社名を比較する」の対応
  *  @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
+ *  @Version 2.1 全 2020.08.03 PRODUCT-349 【自動連携】リード登録時の会社名の比較対象をカスタム項目とする
  * 
  **/
 public with sharing class SB_NameCardL_RegistQueryStrategy {
@@ -482,13 +483,20 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
 
     public AccountQueryStrategy(SmartViscaf__NameCardBasicSetting__c setting) {
       super();
-      this.orderby = 'Name ASC, BillingState ASC NULLS LAST, Site ASC NULLS LAST';
       this.queryState = setting.SmartViscaf__RenkeiAccountAddressPref__c;
       this.queryCity = setting.SmartViscaf__RenkeiAccountCity__c;
       this.queryStreet = setting.SmartViscaf__RenkeiAccount_Street__c;
       this.queryZip = setting.SmartViscaf__RenkeiAccountZipCode__c;
       this.queryPhone = setting.SmartViscaf__RenkeiAccountPhone__c;
       this.queryCompany = true;
+      // PRODUCT-349 【自動連携】リード登録時の会社名の比較対象をカスタム項目とする
+      if (setting.SmartViscaf__RegistAccountCompareCustomize__c && String.isNotBlank(setting.SmartViscaf__RegistAccountCompareField__c)) {
+        this.altCompanyField = setting.SmartViscaf__RegistAccountCompareField__c;
+        addQueryFields(new Set<String> { this.altCompanyField });
+        this.orderby = this.altCompanyField + ' ASC, BillingState ASC NULLS LAST, Site ASC NULLS LAST';
+      } else {
+        this.orderby = 'Name ASC, BillingState ASC NULLS LAST, Site ASC NULLS LAST';
+      }
       this.queryDept = setting.SmartViscaf__RenkeiAccountSite__c;
       this.queryUrl = setting.SmartViscaf__RenkeiAccountURL__c;
       // this.extention = new Comparator(setting);
@@ -513,6 +521,7 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
         this.compareToMemo = setting.SmartViscaf__RenkeiSpecificItems__c;
         addQueryFields(new Set<String> { setting.SmartViscaf__RenkeiSpecificItems__c });
       }
+
     }
     public void setQueryCompany(Boolean b) {
       this.queryCompany = b;
@@ -929,7 +938,6 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
 
     public LeadQueryStrategy(SmartViscaf__NameCardBasicSetting__c setting) {
       super();
-      this.orderby = 'Company ASC NULLS LAST, State ASC NULLS LAST, Title ASC NULLS LAST, Name ASC NULLS LAST, Email ASC NULLS LAST';
       // 住所系
       this.queryState = setting.SmartViscaf__RenkeiLeadAddressPref__c;
       this.queryCity = setting.SmartViscaf__RenkeiLeadCity__c;
@@ -943,6 +951,14 @@ public with sharing class SB_NameCardL_RegistQueryStrategy {
       this.queryTitle = false;
       this.queryMobile = false;
       this.queryCompany = setting.SmartViscaf__RenkeiLeadCompany__c;
+      // PRODUCT-349 【自動連携】リード登録時の会社名の比較対象をカスタム項目とする
+      if (setting.SmartViscaf__RegistLeadCompareCustomize__c && String.isNotBlank(setting.SmartViscaf__RegistLeadCompareField__c)) {
+        this.altCompanyField = setting.SmartViscaf__RegistLeadCompareField__c;
+        this.orderby = this.altCompanyField + ' ASC NULLS LAST, State ASC NULLS LAST, Title ASC NULLS LAST, Name ASC NULLS LAST, Email ASC NULLS LAST';
+        addQueryFields(new Set<String> { this.altCompanyField });
+      } else {
+        this.orderby = 'Company ASC NULLS LAST, State ASC NULLS LAST, Title ASC NULLS LAST, Name ASC NULLS LAST, Email ASC NULLS LAST';
+      }
       this.queryUrl = setting.SmartViscaf__RenkeiLeadURL__c;
       if (setting.SmartViscaf__RenkeiLeadExcludeHojinkakuPartial__c) {
         this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch;
