@@ -599,7 +599,7 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   //      }
   //      else if (SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c &&
   //        !holder.getLeadCandidates().isEmpty()) {
-  //        for (SB_NameCardL_RenkeiCardHolder.Candidate can : holder.getLeadCandidates()) {
+  //        for (SB_NameCardL_RenkeiCardHolder.LeadCandidate can : holder.getLeadCandidates()) {
   //          leadIds.add(can.candidateId);
   //        }
   //      }

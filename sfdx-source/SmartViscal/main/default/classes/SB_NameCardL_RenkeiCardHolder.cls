@@ -6,7 +6,8 @@
  * Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
  *
  * lx2.1 2020.01.xx SV_DEV-1970 自動連携のリード関連「カスタム設定」項目の移行(リード連携拡張パッケージ側改修
- *
+ * 
+ * @Version 2.1 全 2020.07.31 PRODUCT-362 【自動連携】リード連携拡張：取引先・リードの検索で取引先名/会社名が完全一致のレコードがあればあいまい検索一致の取引先・リードがあっても重複にしないようにする
  **/
 public with sharing class SB_NameCardL_RenkeiCardHolder {
 
@@ -18,6 +19,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
   ////////////////////////////////////////
   public virtual class Candidate {
     public Id candidateId { get; private set; }
+    public String companyName { get; private set; }  // PRODUCT-362
     public Candidate(SObject obj) {
       this.candidateId = obj.Id;
     }
@@ -31,12 +33,25 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
     public List<Id> childIds { get; private set; }
     public AccountCandidate(SObject obj) {
       super(obj);
-      childIds = new List<Id>();
+      this.childIds = new List<Id>();
+      SmartViscaf__NameCardBasicSetting__c setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+      this.companyName = (String)obj.get(setting.SmartViscaf__RegistAccountCompareCustomize__c && String.isNotBlank(setting.SmartViscaf__RegistAccountCompareField__c) ? setting.SmartViscaf__RegistAccountCompareField__c : 'Name'); // PRODUCT-362
     }
     public void addChild(SObject obj) {
       childIds.add(obj.Id);
     }
     public Integer getChildCount() { return childIds.size(); }
+  }
+
+  ////////////////////////////////////////
+  // 名刺に対する既存のリード レコードの 情報を保持するようのクラス PRODUCT-362
+  ////////////////////////////////////////
+  public class LeadCandidate extends Candidate {
+    public LeadCandidate(SObject obj) {
+      super(obj);
+      SmartViscaf__NameCardBasicSetting__c setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+      this.companyName = (String)obj.get(setting.SmartViscaf__RegistLeadCompareCustomize__c && String.isNotBlank(setting.SmartViscaf__RegistLeadCompareField__c) ? setting.SmartViscaf__RegistLeadCompareField__c : 'Company'); // PRODUCT-362
+    }
   }
 
   // 処理内容の識別
@@ -173,16 +188,31 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
         // 既存取引先が１つだけのとき
         this.acntWinner = acntCandidates.get(0);
       }
-      else if (RENKEI_USE_1ACCOUNT_CONTACT == true) {
+      else {
         // 既存取引先が複数あったとき
-        Integer index = -1;
+        Integer index = -1;  // 採用するアカウントのインデックス
+        // PRODUCT-362
+        SB_NameCardL_HojinkakuParser cardKaisha = new SB_NameCardL_HojinkakuParser(this.card.SmartViscaf__company_name__c);
+        // SB_NameCardL_HojinkakuParser のチェックは 完全一致条件のときはいみないけど、その場合も同様に処理する。
         for (Integer n=0; n < this.acntCandidates.size(); n++) {
           AccountCandidate t = acntCandidates.get(n);
-          if (t.getChildCount() > 0) {
-            // コンタクトが1つ以上ある。
+          if (cardKaisha.isEqual(t.companyName)) {
+            // 法人格含めて一致
             index = index == -1 ? n : -1;
             if (index == -1) {
               break;      // 2つめがあった
+            }
+          }
+        }
+        if (index == -1 && RENKEI_USE_1ACCOUNT_CONTACT == true) {
+          for (Integer n=0; n < this.acntCandidates.size(); n++) {
+            AccountCandidate t = acntCandidates.get(n);
+            if (t.getChildCount() > 0) {
+              // コンタクトが1つ以上ある。
+              index = index == -1 ? n : -1;
+              if (index == -1) {
+                break;      // 2つめがあった
+              }
             }
           }
         }
@@ -268,10 +298,10 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
   //      SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting().SmartViscaf__RenkeiLeadActive__c == true のときの
   ////////////////////////////////////////
   public class LeadAccountRenkeiHolder extends AccountRenkeiHolder {
-    @TestVisible private List<Candidate> leadCandidates;  // リード登録先候補 取引開始済はない
+    @TestVisible private List<LeadCandidate> leadCandidates;  // リード登録先候補 取引開始済はない
     @TestVisible private Map<Id, AccountCandidate> acntId2AcntCandidate; //
-    public List<Candidate> getLeadCandidates() { return leadCandidates; }
-    private Candidate leadWinner;    // 採用したリードの登録先候補 取引開始済はない
+    public List<LeadCandidate> getLeadCandidates() { return leadCandidates; }
+    private LeadCandidate leadWinner;    // 採用したリードの登録先候補 取引開始済はない
     public RenkeiProcess leadProcess;
     public Boolean haveConvertedLead() { return this.haveConvertedLead; }
     private Boolean haveConvertedLead;    // 取引開始済みのリード があった。
@@ -284,7 +314,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
 
     public LeadAccountRenkeiHolder(SmartViscaf__NameCard__c card) {
       super(card);
-      this.leadCandidates = new List<Candidate>();
+      this.leadCandidates = new List<LeadCandidate>();
       this.acntId2AcntCandidate = new Map<Id, AccountCandidate>();  //
       this.lead = null;
       this.leadWinner = null;
@@ -314,7 +344,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
       }
       else {
         // 取引開始済み でない 登録先候補
-        Candidate can = new Candidate(l);
+        LeadCandidate can = new LeadCandidate(l);
         leadCandidates.add(can);
       }
     }
@@ -507,16 +537,31 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
         // 既存取引先が１つだけのとき
         this.acntWinner = acntCandidates.get(0);
       }
-      else if (RENKEI_USE_1ACCOUNT_CONTACT == true) {
+      else {
         // 既存取引先が複数あったとき
-        Integer index = -1;
+        Integer index = -1;  // 採用するアカウントのインデックス
+        // PRODUCT-362
+        SB_NameCardL_HojinkakuParser cardKaisha = new SB_NameCardL_HojinkakuParser(this.card.SmartViscaf__company_name__c);
+        // SB_NameCardL_HojinkakuParser のチェックは 完全一致条件のときはいみないけど、その場合も同様に処理する。
         for (Integer n=0; n < this.acntCandidates.size(); n++) {
           AccountCandidate t = acntCandidates.get(n);
-          if (t.getChildCount() > 0) {
-            // コンタクトが1つ以上ある。
+          if (cardKaisha.isEqual(t.companyName)) {
+            // 法人格含めて一致
             index = index == -1 ? n : -1;
             if (index == -1) {
               break;      // 2つめがあった
+            }
+          }
+        }
+        if (index == -1 && RENKEI_USE_1ACCOUNT_CONTACT == true) {
+          for (Integer n=0; n < this.acntCandidates.size(); n++) {
+            AccountCandidate t = acntCandidates.get(n);
+            if (t.getChildCount() > 0) {
+              // コンタクトが1つ以上ある。
+              index = index == -1 ? n : -1;
+              if (index == -1) {
+                break;      // 2つめがあった
+              }
             }
           }
         }
@@ -607,10 +652,29 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
         //else if (
         //  // 既存リード沢山
         //  SB_NameCardL_Util.smartViscaConfig.RenkeiUpdateAllLeadsOnCondition__c ) {// 統合版自動連携:条件に合致する既存リードは全て更新する。
-        else if (
-          // 既存リード沢山
-          this.setting.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c ) {// 統合版自動連携:条件に合致する既存リードは全て更新する。
-          this.leadProcess = this.setting.SmartViscaf__RenkeiLeadOverwrite__c ? RenkeiProcess.Modify : RenkeiProcess.ModifySkip;
+        else {
+		  // 既存リードが複数あったとき
+		  Integer index = -1;  // 採用するリードのインデックス
+		  // PRODUCT-362
+          SB_NameCardL_HojinkakuParser cardKaisha = new SB_NameCardL_HojinkakuParser(this.card.SmartViscaf__company_name__c);
+          // SB_NameCard_HojinkakuParser のチェックは 完全一致条件のときはいみないけど、その場合も同様に処理する。
+          for (Integer n=0; n < this.leadCandidates.size(); n++) {
+            LeadCandidate t = leadCandidates.get(n);
+            if (cardKaisha.isEqual(t.companyName)) {
+              // 法人格含めて一致
+              index = index == -1 ? n : -1;
+              if (index == -1) {
+                break;      // 2つめがあった
+              }
+            }
+          }
+          if (index != -1) {
+            this.leadWinner = leadCandidates.get(index);
+            this.leadId = this.leadWinner.candidateId;
+            this.leadProcess = this.setting.SmartViscaf__RenkeiLeadOverwrite__c ? RenkeiProcess.Modify : RenkeiProcess.ModifySkip;
+          } else if (this.setting.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c) {// 統合版自動連携:条件に合致する既存リードは全て更新する。
+            this.leadProcess = this.setting.SmartViscaf__RenkeiLeadOverwrite__c ? RenkeiProcess.Modify : RenkeiProcess.ModifySkip;
+          }
         }
         if (this.acntCandidates.isEmpty()) {
           // アカウント ない
@@ -662,7 +726,7 @@ public with sharing class SB_NameCardL_RenkeiCardHolder {
       // リード用のマッピングレコードから、変換クラスを作成
       // 注意）第２引数 本当は true だけど、基本v2.0.2まで、自動連携のとき用で OWNERID 以外で更新してはいけない 項目マップ  RENKEI_DONOT_UPDATE_FIELDS に LEADのがないので NULL Po 例外になるので 更新できないのないし false にしとく
       SmartViscaf.SB_NameCard_RenkeiMapper mapper = SmartViscaf.SB_NameCard_RenkeiMapper.getInstance('Lead', false);
-      for (Candidate t : this.leadCandidates) {
+      for (LeadCandidate t : this.leadCandidates) {
         if (withoutLeadIds.contains(t.candidateId)) {
           continue; // 他の名刺で更新してたとき
         }
