@@ -9,6 +9,9 @@
  *  @author sawano
  *  @Version 1      2018.4.xx
  *
+ * @Version 2.1 全 2020.07.31 PRODUCT-352 【自動連携】リードの自動連携で電話番号2を使用しないようにする 
+ * @Version 2.1 全 2020.07.31 PRODUCT-365 【自動連携】リード連携拡張：自動連携でURL2を使用しないようにする
+ * 
  **/
 public with sharing class SB_NameCardL_RegistQueryMatcher {
 
@@ -54,12 +57,13 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
           return true;
         }
       }
-      if (String.isNotBlank(card.SmartViscaf__web_url2__c)) {
-        String c = card.SmartViscaf__web_url2__c.toLowerCase().replaceAll('https://|http://|/', '');
-        if ((a.length() >= c.length() && a.startsWith(c)) || (a.length() < c.length() && c.startsWith(a))) {
-          return true;
-        }
-      }
+      // PRODUCT-365
+      // if (String.isNotBlank(card.SmartViscaf__web_url2__c)) {
+      //   String c = card.SmartViscaf__web_url2__c.toLowerCase().replaceAll('https://|http://|/', '');
+      //   if ((a.length() >= c.length() && a.startsWith(c)) || (a.length() < c.length() && c.startsWith(a))) {
+      //     return true;
+      //   }
+      // }
     }
     return false;
   }
@@ -77,12 +81,13 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
           return true;
         }
       }
-      if (String.isNotBlank(card.SmartViscaf__tel2__c)) {
-        String c = card.SmartViscaf__tel2__c.replaceAll('[()-]+', '');
-        if (a == c) {
-          return true;
-        }
-      }
+      // PRODUCT-352
+      // if (String.isNotBlank(card.SmartViscaf__tel2__c)) {
+      //   String c = card.SmartViscaf__tel2__c.replaceAll('[()-]+', '');
+      //   if (a == c) {
+      //     return true;
+      //   }
+      // }
     }
     return false;
   }
