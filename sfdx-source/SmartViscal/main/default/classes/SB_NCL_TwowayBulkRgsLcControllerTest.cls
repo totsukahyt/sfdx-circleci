@@ -319,7 +319,7 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       SB_NCL_TwowayBulkRgsLcController.getInputValue();
 
       // HeadSize用50%超 PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策
-      String tooBig = '*'.repeat(3000000);
+      String tooBig = '*'.repeat(Integer.valueOf(Limits.getLimitHeapSize() * 0.5));
       // searchType                           検索条件（1:メールアドレス / 2:氏名）
       // searchContactType                    取引先責任者検索条件（3:取引先名 / 4:取引先名と部門 / 5:取引先名、部門と都道府県 / 6:取引先名、部門と市区群まで / 7:取引先名、部門と郵便番号）
       String data = SB_NCL_TwowayBulkRgsLcController.searchAllLead(cards[0].Id, '2', '3', null, 'ExactMatchAccount', 'ExactMatchLead');
@@ -438,7 +438,7 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       System.assertEquals(2, lea.size());
 
       // HeadSize用50%超 PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策
-      String tooBig = '*'.repeat(3000000);
+      String tooBig = '*'.repeat(Integer.valueOf(Limits.getLimitHeapSize() * 0.5));
       // searchType                           検索条件（1:メールアドレス / 2:氏名）
       // searchContactType                    取引先責任者検索条件（3:取引先名 / 4:取引先名と部門 / 5:取引先名、部門と都道府県 / 6:取引先名、部門と市区群まで / 7:取引先名、部門と郵便番号）
       String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, '2', '3', null, 'ExactMatchAccount', 'ExactMatchLead');
