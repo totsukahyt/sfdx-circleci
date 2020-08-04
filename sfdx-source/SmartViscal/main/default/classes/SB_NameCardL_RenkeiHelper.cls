@@ -402,23 +402,15 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   private void cardProc() {
     for(SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder holder : this.holders) {
 		SmartViscaf__NameCard__c card = holder.updateCard();
-		// PRODUCT-356
-		if(this.holders instanceOf List<SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder> && card.Id != null){
-			if (card.SmartViscaf__contact__c != null) {
-				putContactLead(card.Id, card.SmartViscaf__contact__c);
-			} else if (card.SmartViscaf__lead__c != null) {
-				putContactLead(card.Id, card.SmartViscaf__lead__c);
-			}
-		} else {
-			if (card.Id != null && card.SmartViscaf__contact__c != null) {
-				putContactLead(card.Id, card.SmartViscaf__contact__c);
-			}
+		// PRODUCT-356 取引先責任者のみセット、リードは活動に関連しない
+		if (card.Id != null && card.SmartViscaf__contact__c != null) {
+			putContactLead(card.Id, card.SmartViscaf__contact__c);
 		}
-		if (setting.SmartViscaf__RenkeiInheritEvent__c && this.cardId2ContactLeadId.size() > 0) {
-			attachTask();
-			attachEvent();
-		}
-    }
+	}
+	if (setting.SmartViscaf__RenkeiInheritEvent__c && !this.cardId2ContactLeadId.isEmpty()) {
+		attachTask();
+		attachEvent();
+	}
   }
   // // 名刺レコードに 名刺に関連付けた アカウント、コンタクト、リードへの参照項目をセットする。
   // //   v1.22 2018.01.xx Beforeトリガでよばれるならレコードはそのまま使うけど、UIでは更新したい項目だけ持ったインスタンスを作るように override する。
@@ -654,12 +646,14 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
 //     // attachTask();
 //     // attachEvent();
 //   }
-  // PRODUCT-356
+  
+// PRODUCT-356 関連付けたコンタクトまたはリードのIdを保持しとく
   private void putContactLead(Id cardId, Id targetId) {
     System.assert(cardId != null && targetId != null);
     this.cardId2ContactLeadId.put(cardId, targetId);
   }
-  // PRODUCT-356
+
+  // PRODUCT-356 対象の名刺が関連先に指定されていて、名前がNULLの ToDo の名前を名刺で作成した コンタクト  or Lead にする。
   private void attachTask() {
     Set<Id> cardIds = new Set<Id>(this.cardId2ContactLeadId.keySet());
     List<Task> tasks = [SELECT Id, WhoId, WhatId FROM Task WHERE WhoId=null AND WhatId IN :cardIds];
@@ -667,15 +661,13 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
       Id contId = this.cardId2ContactLeadId.get(t.WhatId);
       if (contId == null) continue;
 	  t.WhoId = contId;
-	  if(contId.getSObjectType().getDescribe().getName() == 'Lead') {
-		t.WhatId = null;
-	  }
     }
     if (!tasks.isEmpty()) {
 		SmartViscaf.SB_NameCard_CrudFls.supdate(tasks, false);
     }
   }
-  // PRODUCT-356
+
+  // PRODUCT-356 対象の名刺が関連先に指定されていて、名前がNULLの 行動 の名前を名刺で作成した コンタクトor Lead  にする。
   private void attachEvent() {
     Set<Id> cardIds = new Set<Id>(this.cardId2ContactLeadId.keySet());
     List<Event> events = [SELECT Id, WhoId, WhatId FROM Event WHERE WhoId=null AND WhatId IN :cardIds];
@@ -683,12 +675,10 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
       Id contId = this.cardId2ContactLeadId.get(e.WhatId);
       if (contId == null) continue;
 	  e.WhoId = contId;
-	  if(contId.getSObjectType().getDescribe().getName() == 'Lead') {
-		e.WhatId = null;
-	  }
 	}
     if (!events.isEmpty()) {
 	  SmartViscaf.SB_NameCard_CrudFls.supdate(events, false);
     }
   }
+
 } //public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiHelperAbstract {
