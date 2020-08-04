@@ -17,6 +17,7 @@
  *  lx v2.0 (v.1.12) SB_NameCard_RenkeiTriggerHelper + SB_NameCard_RegistProcessor の改造
  *  lx2.1 2020.01.xx SV_DEV-1970 自動連携のリード関連「カスタム設定」項目の移行(リード連携拡張パッケージ側改修
  *  @Version 2.1 全 2020.07.31 PRODUCT-33 PRODUCT-351 PRODUCT-359 自動連携 自動連携処理結果修正
+ *  @Version 2.1 全 2020.07.31 PRODUCT-356 「自動連携処理時に名刺の活動を関連付ける」機能をリード自動連携機能に実装する
  *
  **/
 public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiHelperAbstract {
@@ -104,9 +105,11 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   private static ProcType pType = ProcType.BOTH;
   private List<SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder> holders;
   private SmartViscaf__NameCardBasicSetting__c setting;
+  private Map<Id, Id> cardId2ContactLeadId;
 
   public SB_NameCardL_RenkeiHelper() {
-    this.setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+	this.setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+	this.cardId2ContactLeadId = new Map<Id, Id>();
   }
 
   public override void init(List<SmartViscaf__NameCard__c> cards) {
@@ -138,6 +141,7 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
       // 作成した コンタクトあるいはリードを Campaign Memberにする。
       campaignProc();
     }
+
 
   }
 
@@ -397,7 +401,23 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   // （before）トリガー用、UI用は override する。
   private void cardProc() {
     for(SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder holder : this.holders) {
-      holder.updateCard();
+		SmartViscaf__NameCard__c card = holder.updateCard();
+		// PRODUCT-356
+		if(this.holders instanceOf List<SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder> && card.Id != null){
+			if (card.SmartViscaf__contact__c != null) {
+				putContactLead(card.Id, card.SmartViscaf__contact__c);
+			} else if (card.SmartViscaf__lead__c != null) {
+				putContactLead(card.Id, card.SmartViscaf__lead__c);
+			}
+		} else {
+			if (card.Id != null && card.SmartViscaf__contact__c != null) {
+				putContactLead(card.Id, card.SmartViscaf__contact__c);
+			}
+		}
+		if (setting.SmartViscaf__RenkeiInheritEvent__c && this.cardId2ContactLeadId.size() > 0) {
+			attachTask();
+			attachEvent();
+		}
     }
   }
   // // 名刺レコードに 名刺に関連付けた アカウント、コンタクト、リードへの参照項目をセットする。
@@ -625,4 +645,50 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   //  SmartViscaf.SB_NameCard_CrudFls.screate(cms, true);
   //}
 
+  // 2019.05.xx SV_DEV-893 【自動連携】1次納品段階で登録した活動履歴を取引先・取引先責任者に引き継ぎたい
+  // 名刺に着いてた 活動の WhoId がNULLだったら、 コンタクト、リードのIDをセットする。
+//   private void activityProc() {
+//     if (!setting.SmartViscaf__RenkeiInheritEvent__c || this.cardId2ContactLeadId.isEmpty()) {
+//       return;
+//     }
+//     // attachTask();
+//     // attachEvent();
+//   }
+  // PRODUCT-356
+  private void putContactLead(Id cardId, Id targetId) {
+    System.assert(cardId != null && targetId != null);
+    this.cardId2ContactLeadId.put(cardId, targetId);
+  }
+  // PRODUCT-356
+  private void attachTask() {
+    Set<Id> cardIds = new Set<Id>(this.cardId2ContactLeadId.keySet());
+    List<Task> tasks = [SELECT Id, WhoId, WhatId FROM Task WHERE WhoId=null AND WhatId IN :cardIds];
+    for(Task t : tasks) {
+      Id contId = this.cardId2ContactLeadId.get(t.WhatId);
+      if (contId == null) continue;
+	  t.WhoId = contId;
+	  if(contId.getSObjectType().getDescribe().getName() == 'Lead') {
+		t.WhatId = null;
+	  }
+    }
+    if (!tasks.isEmpty()) {
+		SmartViscaf.SB_NameCard_CrudFls.supdate(tasks, false);
+    }
+  }
+  // PRODUCT-356
+  private void attachEvent() {
+    Set<Id> cardIds = new Set<Id>(this.cardId2ContactLeadId.keySet());
+    List<Event> events = [SELECT Id, WhoId, WhatId FROM Event WHERE WhoId=null AND WhatId IN :cardIds];
+    for(Event e : events) {
+      Id contId = this.cardId2ContactLeadId.get(e.WhatId);
+      if (contId == null) continue;
+	  e.WhoId = contId;
+	  if(contId.getSObjectType().getDescribe().getName() == 'Lead') {
+		e.WhatId = null;
+	  }
+	}
+    if (!events.isEmpty()) {
+	  SmartViscaf.SB_NameCard_CrudFls.supdate(events, false);
+    }
+  }
 } //public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiHelperAbstract {
