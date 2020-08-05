@@ -26,6 +26,14 @@ public class SB_NameCardL_RegistOwenrCheckHelperTest {
     IsActive = true);
     insert new User[]{u, u1};
 
+    list<PermissionSet> psList = [SELECT Id FROM PermissionSet WHERE Name IN ('SmartViscaAdminUser','SmartViscaAdvancedUser','SmartViscaRenkeiUser','SmartViscaUser','SmartViscaLeadAdminUser')];
+    PermissionSetAssignment psa1 = new PermissionSetAssignment(AssigneeId = u.id, PermissionSetId = psList[0].Id);
+    PermissionSetAssignment psa2 = new PermissionSetAssignment(AssigneeId = u.id, PermissionSetId = psList[1].Id);
+    PermissionSetAssignment psa3 = new PermissionSetAssignment(AssigneeId = u.id, PermissionSetId = psList[2].Id);
+    PermissionSetAssignment psa4 = new PermissionSetAssignment(AssigneeId = u.id, PermissionSetId = psList[3].Id);
+    PermissionSetAssignment psa5 = new PermissionSetAssignment(AssigneeId = u.id, PermissionSetId = psList[4].Id);
+    insert new PermissionSetAssignment[]{psa1,psa2,psa3,psa4,psa5};
+
     us.add(u);
     us.add(u1);
     return [SELECT Id, Name From User Where Id in: us];
