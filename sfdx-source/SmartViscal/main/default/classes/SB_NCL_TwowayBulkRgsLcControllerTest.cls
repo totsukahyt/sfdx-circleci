@@ -5,8 +5,8 @@
  *
  * 統合版一括登録Lex コントローラ SB_NCL_TwowayBulkRgsLcControllerのテストクラス
  * @Version リード拡張：Lead Ex. 1.12 2018/08/XX
- * @Version リード拡張：Lead Ex. 2.2  2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
- * @Version リード拡張：Lead Ex. 2.2  2020.08.03   PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策
+ * @Version リード拡張：Lead Ex. 2.1  2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
+ * @Version リード拡張：Lead Ex. 2.1  2020.08.03   PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策
  *
  */
 

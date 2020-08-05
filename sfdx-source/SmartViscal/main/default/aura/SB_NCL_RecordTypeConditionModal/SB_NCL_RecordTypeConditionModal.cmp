@@ -14,7 +14,7 @@
  *  @Version 拡張パッケージ：Lead Ex. 1.12 2018.09.XX SV_DEV-1229 [統合版]一括登録Lex版ではリードの場合、あるいは取引先・取引先責任者選択する場合、レコードタイプの設定ポップアップの内容はずっとリードと取引先・取引先責任者のレコードタイプが表示
  *  @Version 拡張パッケージ：Lead Ex. 2.1  SV_DEV-1866 SLDS CSSクラス名変更対応
  *  @Version 拡張パッケージ：Lead Ex. 2.1  PRODUCT-389 LEX 統合版登録 一括：「設定」の「Cancel」ボタン「×」ボタンを押下した際に変更前の値に戻らない
- *  @Version 拡張パッケージ：Lead Ex. 2.2  2020.08.03  PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  2020.08.03  PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
  *
  **/ -->
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" access="global">
