@@ -108,8 +108,8 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   private Map<Id, Id> cardId2ContactLeadId;
 
   public SB_NameCardL_RenkeiHelper() {
-	this.setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
-	this.cardId2ContactLeadId = new Map<Id, Id>();
+    this.setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+    this.cardId2ContactLeadId = new Map<Id, Id>();
   }
 
   public override void init(List<SmartViscaf__NameCard__c> cards) {
@@ -141,7 +141,6 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
       // 作成した コンタクトあるいはリードを Campaign Memberにする。
       campaignProc();
     }
-
 
   }
 
@@ -401,16 +400,16 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   // （before）トリガー用、UI用は override する。
   private void cardProc() {
     for(SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder holder : this.holders) {
-		SmartViscaf__NameCard__c card = holder.updateCard();
-		// PRODUCT-356 取引先責任者のみセット、リードは活動に関連しない
-		if (card.Id != null && card.SmartViscaf__contact__c != null) {
-			putContactLead(card.Id, card.SmartViscaf__contact__c);
-		}
-	}
-	if (setting.SmartViscaf__RenkeiInheritEvent__c && !this.cardId2ContactLeadId.isEmpty()) {
-		attachTask();
-		attachEvent();
-	}
+      SmartViscaf__NameCard__c card = holder.updateCard();
+      // PRODUCT-356 取引先責任者のみセット、リードは活動に関連しない
+      if (card.Id != null && card.SmartViscaf__contact__c != null) {
+        putContactLead(card.Id, card.SmartViscaf__contact__c);
+      }
+    }
+    if (setting.SmartViscaf__RenkeiInheritEvent__c && !this.cardId2ContactLeadId.isEmpty()) {
+      attachTask();
+      attachEvent();
+    }
   }
   // // 名刺レコードに 名刺に関連付けた アカウント、コンタクト、リードへの参照項目をセットする。
   // //   v1.22 2018.01.xx Beforeトリガでよばれるならレコードはそのまま使うけど、UIでは更新したい項目だけ持ったインスタンスを作るように override する。
@@ -636,18 +635,8 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   //  }
   //  SmartViscaf.SB_NameCard_CrudFls.screate(cms, true);
   //}
-
-  // 2019.05.xx SV_DEV-893 【自動連携】1次納品段階で登録した活動履歴を取引先・取引先責任者に引き継ぎたい
-  // 名刺に着いてた 活動の WhoId がNULLだったら、 コンタクト、リードのIDをセットする。
-//   private void activityProc() {
-//     if (!setting.SmartViscaf__RenkeiInheritEvent__c || this.cardId2ContactLeadId.isEmpty()) {
-//       return;
-//     }
-//     // attachTask();
-//     // attachEvent();
-//   }
   
-// PRODUCT-356 関連付けたコンタクトまたはリードのIdを保持しとく
+  // PRODUCT-356 関連付けたコンタクトまたはリードのIdを保持しとく
   private void putContactLead(Id cardId, Id targetId) {
     System.assert(cardId != null && targetId != null);
     this.cardId2ContactLeadId.put(cardId, targetId);
@@ -660,10 +649,10 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
     for(Task t : tasks) {
       Id contId = this.cardId2ContactLeadId.get(t.WhatId);
       if (contId == null) continue;
-	  t.WhoId = contId;
+      t.WhoId = contId;
     }
     if (!tasks.isEmpty()) {
-		SmartViscaf.SB_NameCard_CrudFls.supdate(tasks, false);
+      SmartViscaf.SB_NameCard_CrudFls.supdate(tasks, false);
     }
   }
 
@@ -674,10 +663,10 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
     for(Event e : events) {
       Id contId = this.cardId2ContactLeadId.get(e.WhatId);
       if (contId == null) continue;
-	  e.WhoId = contId;
-	}
+      e.WhoId = contId;
+    }
     if (!events.isEmpty()) {
-	  SmartViscaf.SB_NameCard_CrudFls.supdate(events, false);
+      SmartViscaf.SB_NameCard_CrudFls.supdate(events, false);
     }
   }
 
