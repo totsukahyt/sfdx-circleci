@@ -10,6 +10,7 @@
  *
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
  *
  **/
 ({
@@ -21,7 +22,8 @@
         helper.setFieldList(cmp, event, helper);
         helper.setTitleValue(cmp, event, helper);
         helper.setInputValue(cmp, event, helper);
-        helper.searchAllData(cmp, event, helper, targetIds, true);
+        // setInputValueのコールバック時に呼ぶよう変更
+        // helper.searchAllData(cmp, event, helper, targetIds, true);
       }
       else {
         cmp.set('v.working', false);

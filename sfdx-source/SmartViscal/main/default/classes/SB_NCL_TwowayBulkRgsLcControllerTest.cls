@@ -5,11 +5,14 @@
  *
  * 統合版一括登録Lex コントローラ SB_NCL_TwowayBulkRgsLcControllerのテストクラス
  * @Version リード拡張：Lead Ex. 1.12 2018/08/XX
+ * @Version リード拡張：Lead Ex. 2.1  2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
+ * @Version リード拡張：Lead Ex. 2.1  2020.08.03   PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策
  *
  */
 
 @isTest
 private class SB_NCL_TwowayBulkRgsLcControllerTest {
+  private enum CompanyMatcing { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
     /**
     * @description 実行ユーザを作成するメソッド
   **/
@@ -39,16 +42,22 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
     us.add(u1);
     return us;
   }
-
   /**
     * @description データー作成用のメソッド
   **/
   private static void setData(Boolean needNameCard, Boolean needAccount, Boolean needContact, Boolean needLead, Boolean needCampaign) {
+    setData(needNameCard, needAccount, needContact, needLead, needCampaign, CompanyMatcing.FullMatch);
+  }
+
+  /**
+    * @description データー作成用のメソッド
+  **/
+  private static void setData(Boolean needNameCard, Boolean needAccount, Boolean needContact, Boolean needLead, Boolean needCampaign, CompanyMatcing match) {
     SmartViscaf__NameCard__c nc = new SmartViscaf__NameCard__c();
     nc.SmartViscaf__zip_code__c = '150-0022';
     // nc.SmartViscaf__address_pref__c = '東京都';
     // nc.SmartViscaf__address__c = '渋谷区恵比寿南';
-    nc.SmartViscaf__company_name__c = 'TestCompany';
+    nc.SmartViscaf__company_name__c = '株式会社TestCompany';
     // nc.SmartViscaf__tel1__c = '03-1111-1111';
     // nc.SmartViscaf__fax1__c = '03-1111-1112';
     // nc.SmartViscaf__title_name__c = 'TestTitle';
@@ -78,9 +87,23 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
     System.assertEquals(0, sr1.getErrors().size(), 'savenamecard error');
 
     System.debug('SB_NameCard_LeadRegistTest nc.Id: '+nc.Id);
+    // 取引先/取引先責任者　マッチング対象
     Account a ;
     if (needAccount) {
-      a = new Account(Name = 'TestCompany');
+      switch on match {
+        when FullMatch {
+          // 法人格含み完全一致
+          a = new Account(Name = '株式会社TestCompany');
+        }
+        when CorpMatch {
+          // 法人格を除いて一致
+          a = new Account(Name = 'TestCompany');
+        }
+        when PartialMatch {
+          // 法人格を除いて部分一致
+          a = new Account(Name = '1TestCompany1');
+        }
+      }
       a.SmartViscaf__NameCard__c = nc.Id;
       // a.Site = 'TestTitle';
       // a.BillingState = 'TestBillingState';
@@ -104,12 +127,66 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       insert cont;
       nc.SmartViscaf__contact__c = cont.Id;
     }
+    // 取引先/取引先責任者　マッチング非対象
+    if (needAccount) {
+      switch on match {
+        when FullMatch {
+          // 法人格含み完全一致
+          a = new Account(Name = '有限会社TestCompany');
+        }
+        when CorpMatch {
+          // 法人格を除いて一致
+          a = new Account(Name = 'TestCompanyNo');
+        }
+        when PartialMatch {
+          // 法人格を除いて部分一致
+          a = new Account(Name = 'TestCompan');
+        }
+      }
+      a.SmartViscaf__NameCard__c = nc.Id;
+      // a.Site = 'TestTitle';
+      // a.BillingState = 'TestBillingState';
+      insert a;
+      // nc.SmartViscaf__account__c = a.Id;
+    }
 
+    if (needContact) {
+      Contact cont = new Contact();
+      if (a != null) {
+        cont.AccountId = a.Id;
+      }
+      cont.LastName = 'TestLastNo';
+      cont.FirstName = 'TestFirstNo';
+      // cont.SmartViscaf__NameCard__c = nc.Id;
+      cont.MailingState = 'TestMailingStateNo';
+      cont.Title = 'TestTitleNo';
+      cont.MobilePhone = '123432100';
+      cont.Email = 'TestNo@test.com';
+      cont.Department = 'TestDepartmentNo';
+      insert cont;
+      // nc.SmartViscaf__contact__c = cont.Id;
+    }
+
+    // リード　マッチング対象
     if (needLead) {
       Lead lea = new Lead();
       lea.LastName = 'TestLast';
       lea.FirstName = 'TestFirst';
-      lea.Company = 'TestCompany';
+      switch on match {
+        when FullMatch {
+          // 法人格含み完全一致
+          lea.Company = '株式会社TestCompany';
+        }
+        when CorpMatch {
+          // 法人格を除いて一致
+          lea.Company = 'TestCompany';
+        }
+        when PartialMatch {
+          // 法人格を除いて部分一致
+          lea.Company = '1TestCompany1';
+        }
+      }
+      
       lea.NameCard__c = nc.Id;
       lea.Email = 'Test@test.com';
       lea.MobilePhone = '123321';
@@ -118,6 +195,36 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       insert lea;
       nc.SmartViscaf__lead__c = lea.Id;
     }
+    // リード　マッチング非対象
+    if (needLead) {
+      Lead lea = new Lead();
+      lea.LastName = 'TestLastNo';
+      lea.FirstName = 'TestFirstNo';
+      switch on match {
+        when FullMatch {
+          // 法人格含み完全一致
+          lea.Company = '有限会社TestCompany';
+        }
+        when CorpMatch {
+          // 法人格を除いて一致
+          lea.Company = 'TestCompanyNo';
+        }
+        when PartialMatch {
+          // 法人格を除いて部分一致
+          lea.Company = '1TestCompan';
+        }
+      }
+      
+      // lea.NameCard__c = nc.Id;
+      lea.Email = 'TestNo@test.com';
+      lea.MobilePhone = '12332100';
+      lea.Title = 'TestTitleNo';
+      lea.State = 'TestStateNo';
+      insert lea;
+      // nc.SmartViscaf__lead__c = lea.Id;
+    }
+
+
     update nc;
   }
 
@@ -208,18 +315,22 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       System.assertEquals(1, cards.size());
       List<Account> acc = [SELECT Id
                              FROM Account];
-      System.assertEquals(1, acc.size());
+      System.assertEquals(2, acc.size());
       List<Contact> con = [SELECT Id
                           FROM Contact];
-      System.assertEquals(1, con.size());
+      System.assertEquals(2, con.size());
       List<Lead> lea = [SELECT Id
                           FROM Lead];
-      System.assertEquals(1, lea.size());
+      System.assertEquals(2, lea.size());
       SB_NCL_TwowayBulkRgsLcController.getTitleValue();
       SB_NCL_TwowayBulkRgsLcController.getFieldList();
       SB_NCL_TwowayBulkRgsLcController.getInputValue();
 
-      String data = SB_NCL_TwowayBulkRgsLcController.searchAllLead(cards[0].Id, '2', '3', null);
+      // HeadSize用50%超 PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策
+      String tooBig = '*'.repeat(Integer.valueOf(Limits.getLimitHeapSize() * 0.5));
+      // searchType                           検索条件（1:メールアドレス / 2:氏名）
+      // searchContactType                    取引先責任者検索条件（3:取引先名 / 4:取引先名と部門 / 5:取引先名、部門と都道府県 / 6:取引先名、部門と市区群まで / 7:取引先名、部門と郵便番号）
+      String data = SB_NCL_TwowayBulkRgsLcController.searchAllLead(cards[0].Id, '2', '3', null, 'ExactMatchAccount', 'ExactMatchLead');
       Map<String, Object> dto = (Map<String, Object>)System.JSON.deserializeUntyped(data);
       System.assertEquals('', dto.get('message'));
       System.assertEquals(true, dto.get('success'));
@@ -255,13 +366,13 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       System.assertEquals(1, cards.size());
       List<Account> acc = [SELECT Id
                              FROM Account];
-      System.assertEquals(1, acc.size());
+      System.assertEquals(2, acc.size());
       List<Contact> con = [SELECT Id
                           FROM Contact];
-      System.assertEquals(1, con.size());
+      System.assertEquals(2, con.size());
       List<Lead> lea = [SELECT Id
                           FROM Lead];
-      System.assertEquals(1, lea.size());
+      System.assertEquals(2, lea.size());
 
       //名刺に関するデータを作成
 
@@ -279,14 +390,13 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       System.assertEquals(3, campaignStatus.plickListOptions.size());
     }
   }
-
   /**
     * @description 検索関するするのテストメソッド
   **/
   static testMethod void testSearch() {
     List<User> us = insertUser();
     System.runAs(us[0]) {
-      setData(true, true, true, true, true);
+      setData(true, true, true, true, true, CompanyMatcing.FullMatch);
       List<SmartViscaf__NameCard__c> cards = [SELECT Id,
                                                      SmartViscaf__company_name__c,
                                                      SmartViscaf__person_name_last__c
@@ -294,22 +404,162 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
       System.assertEquals(1, cards.size());
       List<Account> acc = [SELECT Id
                              FROM Account];
-      System.assertEquals(1, acc.size());
+      System.assertEquals(2, acc.size());
       List<Contact> con = [SELECT Id
                           FROM Contact];
-      System.assertEquals(1, con.size());
+      System.assertEquals(2, con.size());
       List<Lead> lea = [SELECT Id
                           FROM Lead];
-      System.assertEquals(1, lea.size());
-      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null, null);
+      System.assertEquals(2, lea.size());
+      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null, null, 'PartialMatchAccount', 'PartialMatchLead');
       Map<String, Object> dtoMap = (Map<String, Object>)System.JSON.deserializeUntyped(data);
       System.assertEquals(true, dtoMap.get('success'));
       System.assertEquals('', dtoMap.get('message'));
       List<SB_NameCardL_BulkRegistDTO.CustomObject> dto = (List<SB_NameCardL_BulkRegistDTO.CustomObject>)System.JSON.deserializeStrict(JSON.serialize(dtoMap.get('data')), List<SB_NameCardL_BulkRegistDTO.CustomObject> .Class);
       System.assertEquals(1, dto.size());
       System.assertEquals(cards[0].Id, dto[0].id);
+
     }
   }
+
+  /**
+    * @description 検索関するするのテストメソッド
+    * FullMatch 法人格含み完全一致
+  **/
+  static testMethod void testSearchFullMatch() {
+    List<User> us = insertUser();
+    System.runAs(us[0]) {
+      setData(true, true, true, true, true, CompanyMatcing.FullMatch);
+      List<SmartViscaf__NameCard__c> cards = [SELECT Id,
+                                                     SmartViscaf__company_name__c,
+                                                     SmartViscaf__person_name_last__c
+                                                FROM SmartViscaf__NameCard__c];
+      System.assertEquals(1, cards.size());
+      List<Account> acc = [SELECT Id
+                             FROM Account];
+      System.assertEquals(2, acc.size());
+      List<Contact> con = [SELECT Id
+                          FROM Contact];
+      System.assertEquals(2, con.size());
+      List<Lead> lea = [SELECT Id
+                          FROM Lead];
+      System.assertEquals(2, lea.size());
+
+      // HeadSize用50%超 PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策
+      String tooBig = '*'.repeat(Integer.valueOf(Limits.getLimitHeapSize() * 0.5));
+      // searchType                           検索条件（1:メールアドレス / 2:氏名）
+      // searchContactType                    取引先責任者検索条件（3:取引先名 / 4:取引先名と部門 / 5:取引先名、部門と都道府県 / 6:取引先名、部門と市区群まで / 7:取引先名、部門と郵便番号）
+      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, '2', '3', null, 'ExactMatchAccount', 'ExactMatchLead');
+      Map<String, Object> dtoMap = (Map<String, Object>)System.JSON.deserializeUntyped(data);
+      System.assertEquals(true, dtoMap.get('success'));
+      System.assertEquals('', dtoMap.get('message'));
+      List<SB_NameCardL_BulkRegistDTO.CustomObject> dtos = (List<SB_NameCardL_BulkRegistDTO.CustomObject>)System.JSON.deserializeStrict(JSON.serialize(dtoMap.get('data')), List<SB_NameCardL_BulkRegistDTO.CustomObject> .Class);
+      System.assertEquals(1, dtos.size());
+      System.assertEquals(cards[0].Id, dtos[0].id);
+
+      // 選択リストの取得内容確認
+      // 取引先責任者
+      List<SB_NameCardL_BulkRegistDTO.LabelValue> plickListOptions = dtos[0].combobox.get('Contact').plickListOptions;
+      System.assertEquals(4, plickListOptions.size());
+      System.assert(plickListOptions[0].label.contains('株式会社TestCompany'));
+      System.assert(plickListOptions[1].label.contains('株式会社TestCompany'));
+      // リード
+      plickListOptions = dtos[0].combobox.get('Lead').plickListOptions;
+      System.assertEquals(3, plickListOptions.size());
+      System.assert(plickListOptions[0].label.contains('TestFirst TestLast'));
+
+    }
+  }
+
+  /**
+    * @description 検索関するするのテストメソッド
+    * CorpMatch 法人格を除いて一致
+  **/
+  static testMethod void testSearchCorpMatch() {
+    List<User> us = insertUser();
+    System.runAs(us[0]) {
+      setData(true, true, true, true, true, CompanyMatcing.CorpMatch);
+      List<SmartViscaf__NameCard__c> cards = [SELECT Id,
+                                                     SmartViscaf__company_name__c,
+                                                     SmartViscaf__person_name_last__c
+                                                FROM SmartViscaf__NameCard__c];
+      System.assertEquals(1, cards.size());
+      List<Account> acc = [SELECT Id
+                             FROM Account];
+      System.assertEquals(2, acc.size());
+      List<Contact> con = [SELECT Id
+                          FROM Contact];
+      System.assertEquals(2, con.size());
+      List<Lead> lea = [SELECT Id
+                          FROM Lead];
+      System.assertEquals(2, lea.size());
+      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, '2', '3', null, 'CorpMatchAccount', 'CorpMatchLead');
+      Map<String, Object> dtoMap = (Map<String, Object>)System.JSON.deserializeUntyped(data);
+      System.assertEquals(true, dtoMap.get('success'));
+      System.assertEquals('', dtoMap.get('message'));
+      List<SB_NameCardL_BulkRegistDTO.CustomObject> dtos = (List<SB_NameCardL_BulkRegistDTO.CustomObject>)System.JSON.deserializeStrict(JSON.serialize(dtoMap.get('data')), List<SB_NameCardL_BulkRegistDTO.CustomObject> .Class);
+      System.assertEquals(1, dtos.size());
+      System.assertEquals(cards[0].Id, dtos[0].id);
+
+      // 選択リストの取得内容確認
+      // 取引先責任者
+      List<SB_NameCardL_BulkRegistDTO.LabelValue> plickListOptions = dtos[0].combobox.get('Contact').plickListOptions;
+      System.assertEquals(4, plickListOptions.size());
+      System.assert(plickListOptions[0].label.contains('TestCompany'));
+      System.assert(plickListOptions[1].label.contains('TestCompany'));
+      // リード
+      plickListOptions = dtos[0].combobox.get('Lead').plickListOptions;
+      System.assertEquals(3, plickListOptions.size());
+      System.assert(plickListOptions[0].label.contains('TestFirst TestLast'));
+    }
+  }
+
+  /**
+    * @description 検索関するするのテストメソッド
+    * PartialMatch 法人格を除いて部分一致
+  **/
+  static testMethod void testSearchPartialMatch() {
+    List<User> us = insertUser();
+    System.runAs(us[0]) {
+      setData(true, true, true, true, true, CompanyMatcing.PartialMatch);
+      List<SmartViscaf__NameCard__c> cards = [SELECT Id,
+                                                     SmartViscaf__company_name__c,
+                                                     SmartViscaf__person_name_last__c
+                                                FROM SmartViscaf__NameCard__c];
+      System.assertEquals(1, cards.size());
+      List<Account> acc = [SELECT Id
+                             FROM Account];
+      System.assertEquals(2, acc.size());
+      List<Contact> con = [SELECT Id
+                          FROM Contact];
+      System.assertEquals(2, con.size());
+      List<Lead> lea = [SELECT Id
+                          FROM Lead];
+      System.assertEquals(2, lea.size());
+      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, '2', '3', null, 'PartialMatchAccount', 'PartialMatchLead');
+      Map<String, Object> dtoMap = (Map<String, Object>)System.JSON.deserializeUntyped(data);
+      System.assertEquals(true, dtoMap.get('success'));
+      System.assertEquals('', dtoMap.get('message'));
+      List<SB_NameCardL_BulkRegistDTO.CustomObject> dtos = (List<SB_NameCardL_BulkRegistDTO.CustomObject>)System.JSON.deserializeStrict(JSON.serialize(dtoMap.get('data')), List<SB_NameCardL_BulkRegistDTO.CustomObject> .Class);
+      System.assertEquals(1, dtos.size());
+      System.assertEquals(cards[0].Id, dtos[0].id);
+
+      // 選択リストの取得内容確認
+      // 取引先責任者
+      List<SB_NameCardL_BulkRegistDTO.LabelValue> plickListOptions = dtos[0].combobox.get('Contact').plickListOptions;
+      for (SB_NameCardL_BulkRegistDTO.LabelValue lv : plickListOptions) {
+        System.debug('testSearchPartialMatch lv:' + lv);
+      }
+      System.assertEquals(4, plickListOptions.size());
+      System.assert(plickListOptions[0].label.contains('1TestCompany1'));
+      System.assert(plickListOptions[1].label.contains('1TestCompany1'));
+      // リード
+      plickListOptions = dtos[0].combobox.get('Lead').plickListOptions;
+      System.assertEquals(3, plickListOptions.size());
+      System.assert(plickListOptions[0].label.contains('TestFirst TestLast'));
+    }
+  }
+
 
 
   /**
@@ -334,17 +584,17 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
                                                      SmartViscaf__person_name_last__c
                                                 FROM SmartViscaf__NameCard__c];
       System.assertEquals(1, cards.size());
-      System.assertEquals('TestCompany', cards[0].SmartViscaf__company_name__c);
+      System.assertEquals('株式会社TestCompany', cards[0].SmartViscaf__company_name__c);
       List<Account> acc = [SELECT Id
                              FROM Account];
-      System.assertEquals(1, acc.size());
+      System.assertEquals(2, acc.size());
       List<Contact> con = [SELECT Id
                           FROM Contact];
-      System.assertEquals(1, con.size());
+      System.assertEquals(2, con.size());
       List<Lead> lea = [SELECT Id
                           FROM Lead];
-      System.assertEquals(1, lea.size());
-      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null, null);
+      System.assertEquals(2, lea.size());
+      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null, null, 'PartialMatchAccount', 'PartialMatchLead');
       Map<String, Object> dtoMap = (Map<String, Object>)System.JSON.deserializeUntyped(data);
       System.assertEquals(true, dtoMap.get('success'));
       System.assertEquals('', dtoMap.get('message'));
@@ -386,17 +636,17 @@ private class SB_NCL_TwowayBulkRgsLcControllerTest {
                                                      SmartViscaf__person_name_last__c
                                                 FROM SmartViscaf__NameCard__c];
       System.assertEquals(1, cards.size());
-      System.assertEquals('TestCompany', cards[0].SmartViscaf__company_name__c);
+      System.assertEquals('株式会社TestCompany', cards[0].SmartViscaf__company_name__c);
       List<Account> acc = [SELECT Id
                              FROM Account];
-      System.assertEquals(1, acc.size());
+      System.assertEquals(2, acc.size());
       List<Contact> con = [SELECT Id
                           FROM Contact];
-      System.assertEquals(1, con.size());
+      System.assertEquals(2, con.size());
       List<Lead> lea = [SELECT Id
                           FROM Lead];
-      System.assertEquals(1, lea.size());
-      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null, null);
+      System.assertEquals(2, lea.size());
+      String data = SB_NCL_TwowayBulkRgsLcController.getAllData(cards[0].Id, null, null, null, null, 'PartialMatchAccount', 'PartialMatchLead');
       Map<String, Object> dtoMap = (Map<String, Object>)System.JSON.deserializeUntyped(data);
       System.assertEquals(true, dtoMap.get('success'));
       System.assertEquals('', dtoMap.get('message'));

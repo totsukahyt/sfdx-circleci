@@ -10,6 +10,7 @@
  *
  *  @author mao
  *  @Version 拡張パッケージ：Lead Ex. 1.12      2017.05.XX 初版
+ *  @Version 2.1 2020.07.31 PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
  *
  **/
 ({
@@ -23,12 +24,23 @@
       var searchConditionB = JSON.stringify(cmp.get('v.inputVBack.searchConditionValue'));
       var searchConditionContactB = JSON.stringify(cmp.get('v.inputVBack.searchConditionValueContact'));
       var searchConditionRecordTypeB = JSON.stringify(cmp.get('v.inputVBack.searchRecordTypesMap'));
+      // PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
+      var selectedConditionAccountCMtc = JSON.stringify(cmp.get('v.inputV.selectedConditionAccountCMtc'));
+      var selectedConditionAccountCMtcB = JSON.stringify(cmp.get('v.inputVBack.selectedConditionAccountCMtc'));
+      var selectedConditionLeadCMtc = JSON.stringify(cmp.get('v.inputV.selectedConditionLeadCMtc'));
+      var selectedConditionLeadCMtcB = JSON.stringify(cmp.get('v.inputVBack.selectedConditionLeadCMtc'));
       if (searchCondition == searchConditionB
         && searchConditionContact == searchConditionContactB
-        && searchConditionRecordType == searchConditionRecordTypeB) {
+        && searchConditionRecordType == searchConditionRecordTypeB
+        && selectedConditionAccountCMtc == selectedConditionAccountCMtcB
+        && selectedConditionLeadCMtc == selectedConditionLeadCMtcB
+        ) {
         return;
       }
     }
+    console.log('isInit:', isInit);
+    console.log('selectedConditionAccountCMtc:', cmp.get('v.inputV.selectedConditionAccountCMtc'));
+    console.log('selectedConditionLeadCMtc:', cmp.get('v.inputV.selectedConditionLeadCMtc'));
     cmp.set('v.working', true);
     action.setParams(
     {
@@ -36,7 +48,10 @@
       "fieldListStr" : JSON.stringify(cmp.get("v.fieldList")),
       "searchType" : cmp.get('v.inputV.searchConditionValue'),
       "searchContactType" : cmp.get('v.inputV.searchConditionValueContact'),
-      "recordTypesMapstr" : searchConditionRecordType
+      "recordTypesMapstr" : searchConditionRecordType,
+      "searchConditionAccountCompanyMatcing" : cmp.get('v.inputV.selectedConditionAccountCMtc'),
+      "searchConditionLeadCompanyMatcing" : cmp.get('v.inputV.selectedConditionLeadCMtc')
+
     });
     action.setCallback(this,function(response) {
       var state = response.getState();
@@ -215,6 +230,8 @@
           // cmp.set("v.errorMsg", result.error);
           // cmp.set("v.working", false);    //
         // }
+        var targetIds = cmp.get("v.recordId");
+        helper.searchAllData(cmp, event, helper, targetIds, true);
       }else {
         alert(response.getError()[0].message);
       }
@@ -222,46 +239,47 @@
     });
     $A.enqueueAction(action);
   },
+  // 使用していないので削除 2020.07.31
   // 検索
-  searchLead : function(cmp, event, helper, targetIds) {
-    var action = cmp.get('c.searchAllLead');
-    action.setParams(
-    {
-        "nameCardIds" : targetIds,
-        "searchType" : cmp.get('v.inputV.searchConditionValue'),
-        "searchContactType" : cmp.get('v.inputV.searchConditionValueContact'),
-        "searchRecordTypesMap" : cmp.get('v.inputV.searchRecordTypesMap')
-    });
-    if (targetIds == '') {
-      return;
-    }
-    action.setCallback(this,function(response) {
-      var state = response.getState();
-      if (cmp.isValid() && state === "SUCCESS") {
-        var result = JSON.parse(response.getReturnValue());
-        if (result.success) {
-          cmp.set("v.selectMap", result.data);    // 対象の名刺一覧
-          var dl = cmp.get("v.dataList");
-          cmp.set("v.dataList", null);
-          cmp.set("v.dataList", dl);
-        }
-        else {
-          // エラーがあった場合、画面に表示
-          cmp.set("v.errorMsg", result.message)
-          cmp.set("v.showErrorMsg", true);
-          cmp.set("v.working", false);    //
-        }
-        if (cmp.get("v.showPlickListType") == ''
-          || cmp.get("v.showPlickListType") == null) {
-          cmp.set("v.showPlickListType", result.otherMessage.showType); 
-        }
-      }else {
-        alert(response.getError()[0].message);
-      }
-      cmp.set('v.working', false);
-    });
-    $A.enqueueAction(action);
-  },
+  // searchLead : function(cmp, event, helper, targetIds) {
+  //   var action = cmp.get('c.searchAllLead');
+  //   action.setParams(
+  //   {
+  //       "nameCardIds" : targetIds,
+  //       "searchType" : cmp.get('v.inputV.searchConditionValue'),
+  //       "searchContactType" : cmp.get('v.inputV.searchConditionValueContact'),
+  //       "searchRecordTypesMap" : cmp.get('v.inputV.searchRecordTypesMap')
+  //   });
+  //   if (targetIds == '') {
+  //     return;
+  //   }
+  //   action.setCallback(this,function(response) {
+  //     var state = response.getState();
+  //     if (cmp.isValid() && state === "SUCCESS") {
+  //       var result = JSON.parse(response.getReturnValue());
+  //       if (result.success) {
+  //         cmp.set("v.selectMap", result.data);    // 対象の名刺一覧
+  //         var dl = cmp.get("v.dataList");
+  //         cmp.set("v.dataList", null);
+  //         cmp.set("v.dataList", dl);
+  //       }
+  //       else {
+  //         // エラーがあった場合、画面に表示
+  //         cmp.set("v.errorMsg", result.message)
+  //         cmp.set("v.showErrorMsg", true);
+  //         cmp.set("v.working", false);    //
+  //       }
+  //       if (cmp.get("v.showPlickListType") == ''
+  //         || cmp.get("v.showPlickListType") == null) {
+  //         cmp.set("v.showPlickListType", result.otherMessage.showType); 
+  //       }
+  //     }else {
+  //       alert(response.getError()[0].message);
+  //     }
+  //     cmp.set('v.working', false);
+  //   });
+  //   $A.enqueueAction(action);
+  // },
   // 検索条件変更
     changeSearchCondition : function(cmp, event, helper) {
       var action = cmp.get("c.getAllData");
@@ -280,7 +298,9 @@
         "fieldListStr" : JSON.stringify(cmp.get("v.fieldMap")['Both']),
         "searchType" : cmp.get("v.inputV.searchConditionValue"),
         "searchContactType" : cmp.get('v.inputV.searchConditionValueContact'),
-        "recordType" : recordTypes
+        "recordType" : recordTypes,
+        "searchConditionAccountCompanyMatcing" : cmp.get('v.inputV.selectedConditionAccountCMtc'),
+        "searchConditionLeadCompanyMatcing" : cmp.get('v.inputV.selectedConditionLeadCMtc')
       });
       action.setCallback(this,function(response) {
         var state = response.getState();
