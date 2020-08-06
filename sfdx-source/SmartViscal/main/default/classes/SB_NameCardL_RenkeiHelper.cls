@@ -136,6 +136,9 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
     // 名刺の更新 参照項目、処理結果
     cardProc();
 
+    // PRODUCT-356 対象の名刺が関連先に指定されていて、名前がNULLの ToDo の名前を名刺で作成した コンタクト  or Lead にする。
+    activityProc();
+
     if (this.holders instanceOf List<SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder> &&
       setting.SmartViscaf__RenkeiActiveCampaignMember__c) {
       // 作成した コンタクトあるいはリードを Campaign Memberにする。
@@ -406,11 +409,16 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
         putContactLead(card.Id, card.SmartViscaf__contact__c);
       }
     }
+  }
+
+  // PRODUCT-356 対象の名刺が関連先に指定されていて、名前がNULLの ToDo の名前を名刺で作成した コンタクト  or Lead にする。
+  private void activityProc() {
     if (setting.SmartViscaf__RenkeiInheritEvent__c && !this.cardId2ContactLeadId.isEmpty()) {
       attachTask();
       attachEvent();
     }
   }
+
   // // 名刺レコードに 名刺に関連付けた アカウント、コンタクト、リードへの参照項目をセットする。
   // //   v1.22 2018.01.xx Beforeトリガでよばれるならレコードはそのまま使うけど、UIでは更新したい項目だけ持ったインスタンスを作るように override する。
   // private virtual SmartViscaf__NameCard__c updateCard(SB_NameCardL_RegistCardHolder.AccountRenkeiHolder holder) {
