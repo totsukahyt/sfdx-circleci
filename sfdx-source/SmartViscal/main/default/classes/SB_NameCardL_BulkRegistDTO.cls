@@ -4,7 +4,7 @@
  * 統合一括DTOクラス
  * @Version 1 201８/08/XX
 *  @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
- * @Version 拡張パッケージ：Lead Ex. 2.2   2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
+ * @Version 拡張パッケージ：Lead Ex. 2.1   2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
  *
  */
 

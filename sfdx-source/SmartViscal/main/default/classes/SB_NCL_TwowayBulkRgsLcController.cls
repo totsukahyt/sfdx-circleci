@@ -8,8 +8,9 @@
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1231 LEX画面「リードまたは取引先・取引先責任者に登録*」一括登録で、ビル情報・英語住所が住所項目に表示されない。
  * @Version 拡張パッケージ：Lead Ex. 2.1   2020.01.xx   SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
- * @Version 拡張パッケージ：Lead Ex. 2.2   2020.07.27   PRODUCT-388 LEX 統合版登録 一括：参照権限がない場合に登録先候補がでないようにしてほしい。
- * @Version リード拡張：Lead Ex. 2.2  2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
+ * @Version 拡張パッケージ：Lead Ex. 2.1   2020.07.27   PRODUCT-388 LEX 統合版登録 一括：参照権限がない場合に登録先候補がでないようにしてほしい。
+ * @Version 拡張パッケージ：Lead Ex. 2.1   2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
+ * @Version 拡張パッケージ：Lead Ex. 2.1   2020.08.03   PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策
  *
  */
 public with sharing class SB_NCL_TwowayBulkRgsLcController {
@@ -160,7 +161,8 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       saveResult.data = dataList;
       System.debug(Limits.getHeapSize());
       System.debug(Limits.getLimitHeapSize());
-      if (Limits.getHeapSize() > Limits.getLimitHeapSize() * 0.5) {
+      // PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策 50%→90%
+      if (Limits.getHeapSize() > Limits.getLimitHeapSize() * 0.9) {
         saveResult.data = null;
         throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_ChooseLessBusinessCards);
       }
@@ -346,7 +348,8 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
             nameCardObjMap.get(nc.Id).cObjectMap.get('Contact').value = accountId;
             // inputPlickListVMap.put(nc.Id, inputPlickListMap);
             i ++;
-            if (Limits.getHeapSize() > Limits.getLimitHeapSize() * 0.5) {
+            // PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策 50%→90%
+            if (Limits.getHeapSize() > Limits.getLimitHeapSize() * 0.9) {
               saveResult.data = null;
               throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_ChooseLessBusinessCards);
             }
