@@ -10,7 +10,8 @@
  *  @Version 1      2017.02.xx
  *  SB_NameCardL_RenkeiHelperTest
  *  lx 2.0    2018.06.xx
- *
+ *  @Version 2.1 全 2020.07.31 PRODUCT-356 「自動連携処理時に名刺の活動を関連付ける」機能をリード自動連携機能に実装する
+ * 
  **/
 @isTest
 private class SB_NameCardL_RenkeiHelperTest
@@ -67,7 +68,7 @@ private class SB_NameCardL_RenkeiHelperTest
       bs.SmartViscaf__RenkeiCreateContactOnAcountWithLead__c = false;  // デフォルト false 統合版自動連携:リード、取引先既存で取引先責任者を作成する
       bs.SmartViscaf__RenkeiCreateLeadOnTooManyAccounts__c = false;  // デフォルト false 統合版自動連携: 既存取引先が複数あり特定できないとき、リードを作る。
       bs.SmartViscaf__RenkeiUpdateAllLeadsOnCondition__c = true; // デフォルト true 統合版自動連携:条件に合致する既存リードは全て更新する。
-    
+      bs.SmartViscaf__RenkeiInheritEvent__c = true; // 自動連携処理時に名刺の活動を関連付ける
       listBasicSetting.add(bs);
     }
 
@@ -641,6 +642,28 @@ private class SB_NameCardL_RenkeiHelperTest
     Test.stopTest();
   }
 
+  @isTest
+  static void test_RenkeiInheritEvent(){
+    TestDbNoAccount db = new TestDbNoAccount();
+    db.initialize();
+    // 名刺
+    List<SmartViscaf__NameCard__c> cards = Database.query('SELECT ' + NMAECARD_FIELDS + ' FROM SmartViscaf__NameCard__c LIMIT 1');
+    SmartViscaf__NameCard__c card = cards[0];
+    // TODO
+    Task task = new Task(WhatId = card.Id, OwnerId = card.OwnerId);
+    insert task;
+    // 行動
+    Event event = new Event(Subject = 'task',WhatId = card.Id, IsAllDayEvent = true, ActivityDate = System.today(), OwnerId = card.OwnerId);
+    insert event;
 
+    Test.startTest();
+    SB_NameCardL_RenkeiHelper.doRenkei(cards, SB_NameCardL_RenkeiHelper.ProcType.ACCOUNT);
+    Test.stopTest();
+    
+    Task taskCheck = [SELECT Id, WhoId, WhatId FROM Task WHERE WhatId =: card.Id];
+    Event eventCheck = [SELECT Id, WhoId, WhatId FROM Event WHERE WhatId =: card.Id];
+    System.assertEquals(card.SmartViscaf__contact__c, taskCheck.WhoId);
+    System.assertEquals(card.SmartViscaf__contact__c, eventCheck.WhoId);
+  }
 
 }

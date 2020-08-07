@@ -17,6 +17,7 @@
  *  lx v2.0 (v.1.12) SB_NameCard_RenkeiTriggerHelper + SB_NameCard_RegistProcessor の改造
  *  lx2.1 2020.01.xx SV_DEV-1970 自動連携のリード関連「カスタム設定」項目の移行(リード連携拡張パッケージ側改修
  *  @Version 2.1 全 2020.07.31 PRODUCT-33 PRODUCT-351 PRODUCT-359 自動連携 自動連携処理結果修正
+ *  @Version 2.1 全 2020.07.31 PRODUCT-356 「自動連携処理時に名刺の活動を関連付ける」機能をリード自動連携機能に実装する
  *
  **/
 public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiHelperAbstract {
@@ -104,9 +105,11 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   private static ProcType pType = ProcType.BOTH;
   private List<SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder> holders;
   private SmartViscaf__NameCardBasicSetting__c setting;
+  private Map<Id, Id> cardId2ContactLeadId;
 
   public SB_NameCardL_RenkeiHelper() {
     this.setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
+    this.cardId2ContactLeadId = new Map<Id, Id>();
   }
 
   public override void init(List<SmartViscaf__NameCard__c> cards) {
@@ -132,6 +135,9 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
 
     // 名刺の更新 参照項目、処理結果
     cardProc();
+
+    // PRODUCT-356 対象の名刺が関連先に指定されていて、名前がNULLの ToDo の名前を名刺で作成した コンタクト  or Lead にする。
+    activityProc();
 
     if (this.holders instanceOf List<SB_NameCardL_RenkeiCardHolder.LeadAccountRenkeiHolder> &&
       setting.SmartViscaf__RenkeiActiveCampaignMember__c) {
@@ -397,9 +403,22 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   // （before）トリガー用、UI用は override する。
   private void cardProc() {
     for(SB_NameCardL_RenkeiCardHolder.AccountRenkeiHolder holder : this.holders) {
-      holder.updateCard();
+      SmartViscaf__NameCard__c card = holder.updateCard();
+      // PRODUCT-356 取引先責任者のみセット、リードは活動に関連しない
+      if (card.Id != null && card.SmartViscaf__contact__c != null) {
+        putContactLead(card.Id, card.SmartViscaf__contact__c);
+      }
     }
   }
+
+  // PRODUCT-356 対象の名刺が関連先に指定されていて、名前がNULLの ToDo の名前を名刺で作成した コンタクト  or Lead にする。
+  private void activityProc() {
+    if (setting.SmartViscaf__RenkeiInheritEvent__c && !this.cardId2ContactLeadId.isEmpty()) {
+      attachTask();
+      attachEvent();
+    }
+  }
+
   // // 名刺レコードに 名刺に関連付けた アカウント、コンタクト、リードへの参照項目をセットする。
   // //   v1.22 2018.01.xx Beforeトリガでよばれるならレコードはそのまま使うけど、UIでは更新したい項目だけ持ったインスタンスを作るように override する。
   // private virtual SmartViscaf__NameCard__c updateCard(SB_NameCardL_RegistCardHolder.AccountRenkeiHolder holder) {
@@ -624,5 +643,39 @@ public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiH
   //  }
   //  SmartViscaf.SB_NameCard_CrudFls.screate(cms, true);
   //}
+  
+  // PRODUCT-356 関連付けたコンタクトまたはリードのIdを保持しとく
+  private void putContactLead(Id cardId, Id targetId) {
+    System.assert(cardId != null && targetId != null);
+    this.cardId2ContactLeadId.put(cardId, targetId);
+  }
+
+  // PRODUCT-356 対象の名刺が関連先に指定されていて、名前がNULLの ToDo の名前を名刺で作成した コンタクト  or Lead にする。
+  private void attachTask() {
+    Set<Id> cardIds = new Set<Id>(this.cardId2ContactLeadId.keySet());
+    List<Task> tasks = [SELECT Id, WhoId, WhatId FROM Task WHERE WhoId=null AND WhatId IN :cardIds];
+    for(Task t : tasks) {
+      Id contId = this.cardId2ContactLeadId.get(t.WhatId);
+      if (contId == null) continue;
+      t.WhoId = contId;
+    }
+    if (!tasks.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.supdate(tasks, false);
+    }
+  }
+
+  // PRODUCT-356 対象の名刺が関連先に指定されていて、名前がNULLの 行動 の名前を名刺で作成した コンタクトor Lead  にする。
+  private void attachEvent() {
+    Set<Id> cardIds = new Set<Id>(this.cardId2ContactLeadId.keySet());
+    List<Event> events = [SELECT Id, WhoId, WhatId FROM Event WHERE WhoId=null AND WhatId IN :cardIds];
+    for(Event e : events) {
+      Id contId = this.cardId2ContactLeadId.get(e.WhatId);
+      if (contId == null) continue;
+      e.WhoId = contId;
+    }
+    if (!events.isEmpty()) {
+      SmartViscaf.SB_NameCard_CrudFls.supdate(events, false);
+    }
+  }
 
 } //public with sharing class SB_NameCardL_RenkeiHelper extends SB_NameCardL_RenkeiHelperAbstract {
