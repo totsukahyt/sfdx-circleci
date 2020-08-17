@@ -69,22 +69,6 @@
         <name>SB_NCLD_Label_Comment</name>
     </customLabels>
     <customLabels>
-        <label>Exact match for {0} except legal personality</label>
-        <name>SB_NCLD_Label_CompanyMatcingCorpMatch</name>
-    </customLabels>
-    <customLabels>
-        <label>Exact match search for {0}</label>
-        <name>SB_NCLD_Label_CompanyMatcingExactMatch</name>
-    </customLabels>
-    <customLabels>
-        <label>Partial match for {0} except legal personality</label>
-        <name>SB_NCLD_Label_CompanyMatcingPartialMatch</name>
-    </customLabels>
-    <customLabels>
-        <label>Search method of {1} of {0}</label>
-        <name>SB_NCLD_Label_CompanyMatcingSectionName</name>
-    </customLabels>
-    <customLabels>
         <label>Company Name</label>
         <name>SB_NCLD_Label_CompanyName</name>
     </customLabels>
@@ -243,10 +227,6 @@
     <customLabels>
         <label>Object: {0} Field: {1} ({2}) is not updateable.</label>
         <name>SB_NCLD_MSG_FlsNotUpdateable</name>
-    </customLabels>
-    <customLabels>
-        <label>Insufficient access permissions for the object.</label>
-        <name>SB_NCLD_MSG_INSUFFICIENT_ACCESS</name>
     </customLabels>
     <customLabels>
         <label>Enter Last Name</label>

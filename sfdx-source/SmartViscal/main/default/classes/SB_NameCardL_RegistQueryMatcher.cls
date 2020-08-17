@@ -8,18 +8,13 @@
  *
  *  @author sawano
  *  @Version 1      2018.4.xx
- *  @Version 2.1 全 2020.07.31 PRODUCT-352 【自動連携】リードの自動連携で電話番号2を使用しないようにする 
- *  @Version 2.1 全 2020.07.31 PRODUCT-365 【自動連携】リード連携拡張：自動連携でURL2を使用しないようにする
- *  @Version 2.1 全 2020.07.31 PRODUCT-357 【自動連携】リード連携拡張：会社名の比較条件「法人格の略称を正称の表記とみなして会社名を比較する」の対応
- *  @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
- *  @Version 2.1 全 2020.08.03 PRODUCT-349 【自動連携】リード登録時の会社名の比較対象をカスタム項目とする
- *  
+ *
  **/
 public with sharing class SB_NameCardL_RegistQueryMatcher {
 
   // // 検索オプション
-  // public enum CompanyMatcing { PerfectMatch, ExactMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格の正式名称と略称をマッチ、法人格を除いて一致、法人格を除いて部分一致
-  // public enum DeptMatcing { ExactMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+  // public enum CompanyMatcing { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+  // public enum DeptMatcing { FullMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
 
   // 郵便番号の一致チェック
   private static Boolean isMatchZip(SmartViscaf__NameCard__c card, List<String> zips) {
@@ -59,13 +54,12 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
           return true;
         }
       }
-      // PRODUCT-365
-      // if (String.isNotBlank(card.SmartViscaf__web_url2__c)) {
-      //   String c = card.SmartViscaf__web_url2__c.toLowerCase().replaceAll('https://|http://|/', '');
-      //   if ((a.length() >= c.length() && a.startsWith(c)) || (a.length() < c.length() && c.startsWith(a))) {
-      //     return true;
-      //   }
-      // }
+      if (String.isNotBlank(card.SmartViscaf__web_url2__c)) {
+        String c = card.SmartViscaf__web_url2__c.toLowerCase().replaceAll('https://|http://|/', '');
+        if ((a.length() >= c.length() && a.startsWith(c)) || (a.length() < c.length() && c.startsWith(a))) {
+          return true;
+        }
+      }
     }
     return false;
   }
@@ -83,13 +77,12 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
           return true;
         }
       }
-      // PRODUCT-352
-      // if (String.isNotBlank(card.SmartViscaf__tel2__c)) {
-      //   String c = card.SmartViscaf__tel2__c.replaceAll('[()-]+', '');
-      //   if (a == c) {
-      //     return true;
-      //   }
-      // }
+      if (String.isNotBlank(card.SmartViscaf__tel2__c)) {
+        String c = card.SmartViscaf__tel2__c.replaceAll('[()-]+', '');
+        if (a == c) {
+          return true;
+        }
+      }
     }
     return false;
   }
@@ -132,7 +125,6 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
     if (card.SmartViscaf__company_name__c == company) {
       return true;
     }
-    SmartViscaf__NameCardBasicSetting__c setting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
     if (String.isNotBlank(company) && String.isNotBlank(card.SmartViscaf__company_name__c)) {
       String shamei = SmartViscaf.SB_NameCard_Util.getCompanyName(card.SmartViscaf__company_name__c);
       if (rule == SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch) {
@@ -143,11 +135,6 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
         // 法人格抜きで、完全一致
         String acntShamei = SmartViscaf.SB_NameCard_Util.getCompanyName(company);
         return shamei == acntShamei;
-      }
-      // 完全一致
-      else if (setting.SmartViscaf__HojinkakuEquationLongAndAbbr__c == true) { // （完全一致のとき）法人格は略称・正称を同一視する。 null は false
-        // SV_DEV-1647 法人格の正式名称と略称をマッチさせる（登録・自動連携）
-        return SB_NameCardL_HojinkakuParser.isEqualeKaishamei(card.SmartViscaf__company_name__c, company);
       }
     }
     return false;
@@ -311,11 +298,10 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
     @TestVisible private Boolean queryNameOrEMail;   // v2.0.3 2020.02.xx
     @TestVisible private SB_NameCardL_RegistQueryOption.CompanyMatcing companyRule;
     @TestVisible private SB_NameCardL_RegistQueryOption.DeptMatcing deptRule;
-    @TestVisible private String altCompanyField;    // PRODUCT-349
 
     public ContactMatcher() {
-      this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch;
-      this.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.ExactMatch;
+      this.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
+      this.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.FullMatch;
     }
 
     public ContactMatcher(SB_NameCardL_RegistQueryStrategy.ContactQueryStrategy qs) {
@@ -328,7 +314,6 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       this.deptRule = qs.deptRule;
       this.queryOnlyEMail = qs.queryOnlyEMail;  // v2.0.3 2020.02.xx
       this.queryNameOrEMail = qs.queryNameOrEMail;   // v2.0.3 2020.02.xx
-      this.altCompanyField = qs.altCompanyField; // PRODUCT-349
     }
 
     public override Boolean isMatch(SmartViscaf__NameCard__c card, SObject target) {
@@ -337,7 +322,6 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       Map<String, String> pnMap = SmartViscaf.SB_NameCard_Util.getPersonName(card);
       String last_name = pnMap.get('last_name');
       String first_name = pnMap.get('first_name');
-      String companyName = String.isNotBlank(this.altCompanyField) ? (String)cont.get(this.altCompanyField) : cont.Account.Name; // PRODUCT-349
       return
         cont.Id == card.SmartViscaf__contact__c ||
         // 2020.02.xx v2.0.3 SV_DEV-2527 リード拡張の自動連携で取引先責任者について、不適切なレコードを更新する。または、作成されるべき新規取引先責任者レコードが作成されない。
@@ -348,12 +332,12 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
         ((!this.queryEmail || (card.SmartViscaf__email__c!=null && card.SmartViscaf__email__c == cont.Email)) &&
         (!this.queryFirstName || first_name == cont.FirstName) &&
         (!this.queryLastName || last_name == cont.LastName))) &&
-        (!this.queryCompany || isMatchKaishaMei(card, companyName, this.companyRule)) &&
+        (!this.queryCompany || isMatchKaishaMei(card, cont.Account.Name, this.companyRule)) &&
         (!this.queryDept || isMatchSite(card, cont.Account.Site, this.deptRule) || isMatchSite(card, cont.Department, this.deptRule)));
     }
 
   } // public class ContactMatcher extends Matcher {
- 
+
   ////////////////
   //  LeadMatcher
   ////////////////
@@ -383,7 +367,6 @@ public with sharing class SB_NameCardL_RegistQueryMatcher {
       this.queryStreet = qs.queryStreet;
       this.queryCity = qs.queryCity;
       this.queryState = qs.queryState;
-      this.altCompanyField = qs.altCompanyField;
     }
 
     public override Boolean isMatch(SmartViscaf__NameCard__c card, SObject target) {

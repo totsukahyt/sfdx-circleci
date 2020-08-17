@@ -9,23 +9,15 @@
  *
  *  @author sawano
  *  @Version 1      2018.4.xx
- *  @Version 2.1 全 2020.07.31 PRODUCT-357 【自動連携】リード連携拡張：会社名の比較条件「法人格の略称を正称の表記とみなして会社名を比較する」の対応
- *  @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
- *  @Version 2.1 全 2020.08.03 PRODUCT-349 【自動連携】リード登録時の会社名の比較対象をカスタム項目とする
- * 
+ *
  **/
 public virtual class SB_NameCardL_RegistQueryOption {
   public class SB_NameCardL_RegistQueryOptionException extends Exception {}
 
   //public enum QueryTarget { Account, Contact, Lead }
 
-  public enum CompanyMatcing {
-    CorpMatch,      // 法人格を除いて一致
-    PartialMatch,   // 法人格を除いて部分一致
-    ExactMatch,     // 完全一致。ただし法人格の正式・略称同一視設定オンの場合は、部分一致検索したあとに照合 SV_DEV-1647 法人格の正式名称と略称をマッチさせる（登録・自動連携）
-    PerfectMatch    // 完全一致。法人格の正式・略称同一視設定オフの場合、または、個別登録で部分一致で件数が多かった場合にこれで絞る
-  }
-  public enum DeptMatcing { PartialMatch, ExactMatch } //部分一致、完全一致
+  public enum CompanyMatcing { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+  public enum DeptMatcing { FullMatch, PartialMatch } //完全一致、部分一致
 
   //public class SB_NameCardL_RegistQueryOption {
   public SObjectType target;
@@ -44,8 +36,8 @@ public virtual class SB_NameCardL_RegistQueryOption {
   public Boolean queryNameOrEMail;    // v2.0.3 ← 基本 v2.4   姓名 か EMail いずれかが一致してればいい
   public Boolean queryTitle;
   public Boolean queryMobile;
-  public CompanyMatcing companyRule;  // { PerfectMatch, ExactMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格の正式名称と略称をマッチ、法人格を除いて一致、法人格を除いて部分一致
-  public DeptMatcing deptRule; // { PartialMatch, ExactMatch } //部分一致、完全一致
+  public CompanyMatcing companyRule;  // { FullMatch, CorpMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
+  public DeptMatcing deptRule; // { FullMatch, PartialMatch } // 法人格含み完全一致、法人格を除いて一致、法人格を除いて部分一致
   public Set<Id> rectypeIds { get; protected set; }  // 検索対称のレコードタイプを絞るとき
   public Set<Id> parentIds { get; protected set; }  // コンタクトの検索で、親アカウントを絞って検索するとき
   public String altCompanyField { get; protected set; }     // アカウント、リードの 会社名 項目を Name や Company 以外の項目として扱う 2018.05.xx for Future Use
@@ -100,7 +92,6 @@ public virtual class SB_NameCardL_RegistQueryOption {
     this.companyRule = CompanyMatcing.PartialMatch;  // 法人格を除いて部分一致
     this.deptRule = DeptMatcing.PartialMatch; // 部分一致
     //this.queryFields = new Set<String>();
-    this.altCompanyField = SmartViscaf.SB_NameCard_BasicSetting.getAltCompanyField(target); // PRODUCT-349
   }
 
   //public SB_NameCardL_RegistQueryOption(SObjectType target, SB_NCL_RegistOptionCreater.QueryOption qo) {

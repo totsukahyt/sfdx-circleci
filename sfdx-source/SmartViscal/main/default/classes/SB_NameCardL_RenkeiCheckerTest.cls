@@ -15,8 +15,7 @@
  *  @Version 1.21 mao 2017.10.xx No Assert v1.21 for code scan
  *  @Version 1.22 SV_DEV-676 自動連携：連携対象の名刺の条件 同一の項目を使用した設定を複数登録しようとするとエラーが発生する
  *  @Version 2.0.1     2018.04.XX SV_DEV-883 【自動連携】過去分名刺を除外できる設定が欲しい
- *  @Version 2.1 全 2020.07.31 PRODUCT-369 【自動連携】自動連携 会社名が「?」の場合は自動連携を行わない対応 基本版のSB_NameCard_RenkeiCheckerTest.clsの移植
- * 
+ *
  **/
 
 @isTest
@@ -118,11 +117,11 @@ private class SB_NameCardL_RenkeiCheckerTest {
     insert jyouken;
     SB_NameCardL_RenkeiChecker ce =SB_NameCardL_RenkeiChecker.getInstance();
 
-    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c();
     n1.Name = Value1;
     insert n1;
 
-    SmartViscaf__NameCard__c n2 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n2 = new SmartViscaf__NameCard__c();
     n2.Name = Value2;
     insert n2;
     System.assertEquals(ce.isIgnore(n1),ncc1);
@@ -285,12 +284,12 @@ private class SB_NameCardL_RenkeiCheckerTest {
     insert jyouken;
     SB_NameCardL_RenkeiChecker ce =SB_NameCardL_RenkeiChecker.getInstance();
 
-    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c();
     n1.Name = 'test';
     n1.SmartViscaf__card_exchange_date__c = Date.valueOf(Value1);
     insert n1;
 
-    SmartViscaf__NameCard__c n2 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n2 = new SmartViscaf__NameCard__c();
     n2.Name = 'test1';
     n2.SmartViscaf__card_exchange_date__c = Date.valueOf(Value2);
     insert n2;
@@ -312,13 +311,13 @@ private class SB_NameCardL_RenkeiCheckerTest {
     insert jyouken2;
     SB_NameCardL_RenkeiChecker ce2 =SB_NameCardL_RenkeiChecker.getInstance();
 
-    SmartViscaf__NameCard__c n3 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n3 = new SmartViscaf__NameCard__c();
     n3.Name = 'test';
     Date dday = Date.valueOf(Value1);
     n3.SmartViscaf__accountRegDateTime__c =  datetime.newInstance(dday.year(), dday.month(),dday.day());
     insert n3;
 
-    SmartViscaf__NameCard__c n4 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n4 = new SmartViscaf__NameCard__c();
     n4.Name = 'test1';
     Date dday2 = Date.valueOf(Value2);
     n4.SmartViscaf__accountRegDateTime__c =  datetime.newInstance(dday2.year(), dday2.month(),dday2.day());
@@ -402,12 +401,12 @@ private class SB_NameCardL_RenkeiCheckerTest {
     insert jyouken2;
     SB_NameCardL_RenkeiChecker ce2 =SB_NameCardL_RenkeiChecker.getInstance();
 
-    SmartViscaf__NameCard__c n3 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n3 = new SmartViscaf__NameCard__c();
     n3.Name = 'test';
     n3.SmartViscaf__longitude__c = Value1;
     insert n3;
 
-    SmartViscaf__NameCard__c n4 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n4 = new SmartViscaf__NameCard__c();
     n4.Name = 'test1';
     n4.SmartViscaf__longitude__c = Value2;
     insert n4;
@@ -522,17 +521,17 @@ private class SB_NameCardL_RenkeiCheckerTest {
     a2.Name = 'tes1';
     insert a2;
 
-    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c();
     n1.Name = 'test';
     n1.SmartViscaf__account__c = a1.Id;
     insert n1;
 
-    SmartViscaf__NameCard__c n2 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n2 = new SmartViscaf__NameCard__c();
     n2.Name = 'xxx';
     n2.SmartViscaf__account__c = a2.Id;
     insert n2;
-    SmartViscaf__NameCard__c nn1 = [Select Id,Name,SmartViscaf__account__r.Name, SmartViscaf__person_name_last__c, SmartViscaf__last_name__c, SmartViscaf__company_name__c From SmartViscaf__NameCard__c Where Id=:n1.Id];
-    SmartViscaf__NameCard__c nn2 = [Select Id,Name,SmartViscaf__account__r.Name, SmartViscaf__person_name_last__c, SmartViscaf__last_name__c, SmartViscaf__company_name__c From SmartViscaf__NameCard__c Where Id=:n2.Id];
+    SmartViscaf__NameCard__c nn1 = [Select Id,Name,SmartViscaf__account__r.Name From SmartViscaf__NameCard__c Where Id=:n1.Id];
+    SmartViscaf__NameCard__c nn2 = [Select Id,Name,SmartViscaf__account__r.Name From SmartViscaf__NameCard__c Where Id=:n2.Id];
     System.assertEquals(ce.isIgnore(nn1),false);
     System.assertEquals(ce.isIgnore(nn2),false);
   }
@@ -542,7 +541,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     setting.Name = 'BasicSetting';
     insert setting;
     SmartViscaf__NameCardRenkeiJyoken__c jyouken = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken.SmartViscaf__NameCardName__c = 'account__r.aa';
+    jyouken.SmartViscaf__NameCardName__c = 'SmartViscaf__account__r.aa';
     jyouken.SmartViscaf__Operator__c = 'Matches_next_character_string';
     jyouken.SmartViscaf__Value__c = 'test';
     jyouken.SmartViscaf__NameCardDataType__c = 'STRING';
@@ -553,7 +552,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     a1.Name = 'test';
     insert a1;
 
-    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字', SmartViscaf__company_name__c='会社名');
+    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c();
     n1.Name = 'test';
     n1.SmartViscaf__account__c = a1.Id;
     insert n1;
@@ -580,7 +579,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jos.add(jyouken);
 
     SmartViscaf__NameCardRenkeiJyoken__c jyouken1 = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken1.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__company_name__c';
+    jyouken1.SmartViscaf__NameCardName__c = 'SmartViscaf__company_name__c';
     jyouken1.SmartViscaf__Operator__c = 'Matches_the_following_regular_expression';
     //指定文字列含まない
     jyouken1.SmartViscaf__Value__c = '^(?!.*(学校法人|社団法人|特殊法人|財団法人|監査法人|企業組合|協同組合|労働組合|医療法人社団|医療法人財団|社会医療法人|特定医療法人|医療法人|一般社団法人|一般財団法人|公益社団法人|公益財団法人|宗教法人|社会福祉法人|更生保護法人|独立行政法人|地方独立行政法人))(.*)$';
@@ -590,17 +589,17 @@ private class SB_NameCardL_RenkeiCheckerTest {
     insert jos;
     SB_NameCardL_RenkeiChecker ce =SB_NameCardL_RenkeiChecker.getInstance();
     List<SmartViscaf__NameCard__c> ns = new List<SmartViscaf__NameCard__c>();
-    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字');
+    SmartViscaf__NameCard__c n1 = new SmartViscaf__NameCard__c();
     n1.Name = 'AATestBB';
     n1.SmartViscaf__company_name__c = 'Testcompany';
     ns.add(n1);
 
-    SmartViscaf__NameCard__c n2 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字');
+    SmartViscaf__NameCard__c n2 = new SmartViscaf__NameCard__c();
     n2.Name = 'AATestBB';
     n2.SmartViscaf__company_name__c = 'Test社団法人company';
     ns.add(n2);
 
-    SmartViscaf__NameCard__c n3 = new SmartViscaf__NameCard__c(SmartViscaf__person_name_last__c='苗字');
+    SmartViscaf__NameCard__c n3 = new SmartViscaf__NameCard__c();
     n3.Name = 'AABB';
     n3.SmartViscaf__company_name__c = 'Testcompany1';
     ns.add(n3);
@@ -624,7 +623,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
 
     List<SmartViscaf__NameCardRenkeiJyoken__c> jos = new List<SmartViscaf__NameCardRenkeiJyoken__c>();
     SmartViscaf__NameCardRenkeiJyoken__c jyouken = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__person_name_last__c';
+    jyouken.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_last__c';
     //含む
     jyouken.SmartViscaf__Operator__c = 'Start_with_the_following_string';
     jyouken.SmartViscaf__Value__c = 'Test';
@@ -632,7 +631,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jos.add(jyouken);
 
     SmartViscaf__NameCardRenkeiJyoken__c jyouken0 = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken0.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__person_name_first__c';
+    jyouken0.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_first__c';
     //含まない
     jyouken0.SmartViscaf__Operator__c = 'Not_contain_the_following_character_string';
     jyouken0.SmartViscaf__Value__c = 'Test';
@@ -640,7 +639,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jos.add(jyouken0);
 
     SmartViscaf__NameCardRenkeiJyoken__c jyouken1 = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken1.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__company_name__c';
+    jyouken1.SmartViscaf__NameCardName__c = 'SmartViscaf__company_name__c';
     jyouken1.SmartViscaf__Operator__c = 'Matches_the_following_regular_expression';
     //指定文字列含まない
     jyouken1.SmartViscaf__Value__c = '^(?!.*(学校法人|社団法人|特殊法人|財団法人|監査法人|企業組合|協同組合|労働組合|医療法人社団|医療法人財団|社会医療法人|特定医療法人|医療法人|一般社団法人|一般財団法人|公益社団法人|公益財団法人|宗教法人|社会福祉法人|更生保護法人|独立行政法人|地方独立行政法人))(.*)$';
@@ -698,7 +697,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
 
     List<SmartViscaf__NameCardRenkeiJyoken__c> jos = new List<SmartViscaf__NameCardRenkeiJyoken__c>();
     SmartViscaf__NameCardRenkeiJyoken__c jyouken = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__person_name_last__c';
+    jyouken.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_last__c';
     //含む
     jyouken.SmartViscaf__Operator__c = 'Start_with_the_following_string';
     jyouken.SmartViscaf__Value__c = 'Test';
@@ -706,7 +705,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jos.add(jyouken);
 
     SmartViscaf__NameCardRenkeiJyoken__c jyouken0 = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken0.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__person_name_first__c';
+    jyouken0.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_first__c';
     //含まない
     jyouken0.SmartViscaf__Operator__c = 'Not_contain_the_following_character_string';
     jyouken0.SmartViscaf__Value__c = 'Test';
@@ -714,7 +713,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jos.add(jyouken0);
 
     SmartViscaf__NameCardRenkeiJyoken__c jyouken1 = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken1.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__company_name__c';
+    jyouken1.SmartViscaf__NameCardName__c = 'SmartViscaf__company_name__c';
     jyouken1.SmartViscaf__Operator__c = 'Matches_the_following_regular_expression';
     //指定文字列含まない
     jyouken1.SmartViscaf__Value__c = '^(?!(学校法人|社団法人|特殊法人|財団法人|監査法人|企業組合|協同組合|労働組合|医療法人社団|医療法人財団|社会医療法人|特定医療法人|医療法人|一般社団法人|一般財団法人|公益社団法人|公益財団法人|宗教法人|社会福祉法人))(.*)(?<!(学校法人|社団法人|特殊法人|財団法人|監査法人|企業組合|協同組合|労働組合|医療法人社団|医療法人財団|社会医療法人|特定医療法人|医療法人|一般社団法人|一般財団法人|公益社団法人|公益財団法人|宗教法人|社会福祉法人))$';
@@ -788,7 +787,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
 
     List<SmartViscaf__NameCardRenkeiJyoken__c> jos = new List<SmartViscaf__NameCardRenkeiJyoken__c>();
     SmartViscaf__NameCardRenkeiJyoken__c jyouken = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__person_name_last__c';
+    jyouken.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_last__c';
     //含む
     jyouken.SmartViscaf__Operator__c = 'Start_with_the_following_string';
     jyouken.SmartViscaf__Value__c = 'Test';
@@ -796,7 +795,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jos.add(jyouken);
 
     SmartViscaf__NameCardRenkeiJyoken__c jyouken0 = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken0.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__person_name_first__c';
+    jyouken0.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_first__c';
     //含まない
     jyouken0.SmartViscaf__Operator__c = 'Not_contain_the_following_character_string';
     jyouken0.SmartViscaf__Value__c = 'Test';
@@ -804,7 +803,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jos.add(jyouken0);
 
     SmartViscaf__NameCardRenkeiJyoken__c jyouken1 = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken1.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__company_name__c';
+    jyouken1.SmartViscaf__NameCardName__c = 'SmartViscaf__company_name__c';
     jyouken1.SmartViscaf__Operator__c = 'Matches_the_following_regular_expression';
     //指定文字列含まない
     jyouken1.SmartViscaf__Value__c = '^(学校法人|社団法人|特殊法人|財団法人|監査法人|企業組合|協同組合|労働組合|医療法人社団|医療法人財団|社会医療法人|特定医療法人|医療法人|一般社団法人|一般財団法人|公益社団法人|公益財団法人|宗教法人|社会福祉法人|更生保護法人|独立行政法人|地方独立行政法人)(.*)$';
@@ -878,7 +877,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
 
     List<SmartViscaf__NameCardRenkeiJyoken__c> jos = new List<SmartViscaf__NameCardRenkeiJyoken__c>();
     SmartViscaf__NameCardRenkeiJyoken__c jyouken = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__person_name_last__c';
+    jyouken.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_last__c';
     //含む
     jyouken.SmartViscaf__Operator__c = 'Start_with_the_following_string';
     jyouken.SmartViscaf__Value__c = 'Test';
@@ -886,7 +885,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jos.add(jyouken);
 
     SmartViscaf__NameCardRenkeiJyoken__c jyouken0 = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken0.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__person_name_first__c';
+    jyouken0.SmartViscaf__NameCardName__c = 'SmartViscaf__person_name_first__c';
     //含まない
     jyouken0.SmartViscaf__Operator__c = 'Not_contain_the_following_character_string';
     jyouken0.SmartViscaf__Value__c = 'Test';
@@ -894,7 +893,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     jos.add(jyouken0);
 
     SmartViscaf__NameCardRenkeiJyoken__c jyouken1 = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken1.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__company_name__c';
+    jyouken1.SmartViscaf__NameCardName__c = 'SmartViscaf__company_name__c';
     jyouken1.SmartViscaf__Operator__c = 'Matches_the_following_regular_expression';
     //指定文字列含まない
     jyouken1.SmartViscaf__Value__c = '^.*(学校法人|社団法人|特殊法人|財団法人|監査法人|企業組合|協同組合|労働組合|医療法人社団|医療法人財団|社会医療法人|特定医療法人|医療法人|一般社団法人|一般財団法人|公益社団法人|公益財団法人|宗教法人|社会福祉法人|更生保護法人|独立行政法人|地方独立行政法人)$';
@@ -1548,7 +1547,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
 
     List<SmartViscaf__NameCardRenkeiJyoken__c> jos = new List<SmartViscaf__NameCardRenkeiJyoken__c>();
     SmartViscaf__NameCardRenkeiJyoken__c jyouken = new SmartViscaf__NameCardRenkeiJyoken__c();
-    jyouken.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__card_exchange_date__c';
+    jyouken.SmartViscaf__NameCardName__c = 'SmartViscaf__card_exchange_date__c';
     jyouken.SmartViscaf__Operator__c = operator;
     if (date1 != null) {
       jyouken.SmartViscaf__Value__c = date1.format('yyyy-MM-dd');
@@ -1577,7 +1576,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
     n2.SmartViscaf__accountRegDateTime__c = date2;
     insert new SmartViscaf__NameCard__c[]{n1, n2};
     System.assertEquals(ce.isIgnore(n1), assertF);
-    jyouken.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__accountRegDateTime__c';
+    jyouken.SmartViscaf__NameCardName__c = 'SmartViscaf__accountRegDateTime__c';
     jyouken.SmartViscaf__NameCardDataType__c = 'DATETIME';
     update jyouken;
     ce = new SB_NameCardL_RenkeiChecker();
@@ -1816,7 +1815,7 @@ private class SB_NameCardL_RenkeiCheckerTest {
   //   jos.add(jyouken);
 
   //   SmartViscaf__NameCardRenkeiJyoken__c jyouken1 = new SmartViscaf__NameCardRenkeiJyoken__c();
-  //   jyouken1.SmartViscaf__NameCardName__c = SB_NameCardL_Util.getNamespacePrefix_x() + 'SmartViscaf__company_name__c';
+  //   jyouken1.SmartViscaf__NameCardName__c = 'SmartViscaf__company_name__c';
   //   jyouken1.SmartViscaf__Operator__c = 'Matches_the_following_regular_expression';
   //   //指定文字列含まない
   //   jyouken1.SmartViscaf__Value__c = '^(?!(学校法人|社団法人|特殊法人|財団法人|監査法人|企業組合|協同組合|労働組合|医療法人社団|医療法人財団|社会医療法人|特定医療法人|医療法人|一般社団法人|一般財団法人|公益社団法人|公益財団法人|宗教法人|社会福祉法人|更生保護法人|独立行政法人|地方独立行政法人))(.*)(?<!(学校法人|社団法人|特殊法人|財団法人|監査法人|企業組合|協同組合|労働組合|医療法人社団|医療法人財団|社会医療法人|特定医療法人|医療法人|一般社団法人|一般財団法人|公益社団法人|公益財団法人|宗教法人|社会福祉法人|更生保護法人|独立行政法人|地方独立行政法人))$';

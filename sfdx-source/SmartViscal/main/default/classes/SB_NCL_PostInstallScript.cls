@@ -101,7 +101,7 @@ global class SB_NCL_PostInstallScript implements InstallHandler {
   // 名刺基本設定がなかったら作る。
   // 開発コンソールで使えるように Static メソッド
   public void setupBasicSetting(InstallContext context) {
-    if (context.isUpgrade() && context.previousVersion().major() < 2) {
+    if (context!=null && context.isUpgrade() && context.previousVersion().major() < 2) {
       // Lead Ex v1系からのアップデータだったら、Lead Exのカスタム設定の項目を 基本設定に移す
       // Lead Ex v2以降では、基本パッケージの方で移してるので、不要
       SB_NameCard_BasicSettingBuilder builder = new SB_NameCard_BasicSettingBuilder();

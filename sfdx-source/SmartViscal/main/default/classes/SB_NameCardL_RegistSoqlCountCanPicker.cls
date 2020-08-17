@@ -9,8 +9,6 @@
  *     KDDI様向け 管理パッケージ：SmartViscaRgq1 SB_Sv_UiRegistSoqlCountCanCreater がベース
  *
  * Copyright (c) 2017-2018 SunBridge Inc.
- * 
- *  @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
  *
  **/
 public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameCardL_RegistCanPickerAbstract {
@@ -224,7 +222,7 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
     else {
       // 多かったら
       // 3.2. 完全一致するアカウントを収集
-      this.accountQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch); // 完全一致
+      this.accountQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch); // 完全一致
       this.queryProc = QueryProcess.PERFECT;
       acnts = this.qExecutor.getCandidateRecords(this.accountQs);
       if ((acnts.isEmpty() && conts.size() > getAccountTableThreshold()) ||
@@ -305,7 +303,7 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
     else {
       // 多かったら
       // 3.2. 完全一致するアカウントを収集
-      this.accountQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch); // 完全一致
+      this.accountQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch); // 完全一致
       this.queryProc = QueryProcess.PERFECT;
       acnts = this.qExecutor.getCandidateRecords(this.accountQs);
       if (acnts.size() > getAccountTableThreshold()) {
@@ -356,7 +354,7 @@ public with sharing class SB_NameCardL_RegistSoqlCountCanPicker extends SB_NameC
     else {
       // 多かったら
       // 2.2. 完全一致するリードを収集
-      this.leadQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch); // 完全一致
+      this.leadQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch); // 完全一致
       this.queryProc = QueryProcess.PERFECT;
       leads = this.qExecutor.getCandidateRecords(this.leadQs);
       if (leads.size() > getLeadTableThreshold()) {

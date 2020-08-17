@@ -856,17 +856,8 @@ public with sharing class SB_NameCardL_RegistHelper  {
     for(SB_NameCardL_RegistCardHolder.AccountRegistHolder holder : this.holders) {
       SmartViscaf__NameCard__c card = holder.updateCard();
       cards.add(card);
-      if (holder.pType == ProcType.ACCOUNT && card.Id != null && card.SmartViscaf__contact__c != null) {
-        putContactLead(card.Id, card.SmartViscaf__contact__c);
-      }
     }
     SmartViscaf.SB_NameCard_CrudFls.supdate(cards, true);
-  }
-
-  // 関連付けた コンタクトまたはリードの IDを保持しとく
-  private void putContactLead(Id cardId, Id targetId) {
-    System.assert(cardId != null && targetId != null);
-    this.cardId2ContactLeadId.put(cardId, targetId);
   }
 
   //// キャンペーンID+コンタクトorリードID、ステータスを保持して、CampaignMember レコードを作るクラス

@@ -4,7 +4,6 @@
  * 統合一括DTOクラス
  * @Version 1 201８/08/XX
 *  @Version 拡張パッケージ：Lead Ex. 1.12 SV_DEV-1161 統合版の一括登録ではtodo登録の一括選択がない
- * @Version 拡張パッケージ：Lead Ex. 2.1   2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
  *
  */
 
@@ -283,10 +282,6 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
     @AuraEnabled public String overWriteLabel {get; set;} // リードオブジェクト表示ラベル権限
     // ----------------------------  Lead  ----------------------------//
     //@AuraEnabled public List<InputRegistValue> campaign {get; set;} // 登録に関する入力
-    @AuraEnabled public SearchConditionCompanyMatcing searchConditionAccountCMtc {get; set;} // 「取引先の検索方法」条件エリア情報
-    @AuraEnabled public String selectedConditionAccountCMtc {get; set;} // 選択された「取引先の検索方法」
-    @AuraEnabled public SearchConditionCompanyMatcing searchConditionLeadCMtc {get; set;} // 「リードの会社名の検索方法」条件エリア情報
-    @AuraEnabled public String selectedConditionLeadCMtc {get; set;} // 選択された「リードの会社名の検索方法」
 
     /**
       * @description InputValueクラスのコンストラクタ
@@ -329,13 +324,6 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
       this.newSectionLabel = '';
       this.overWriteLabel = '';
       this.showOverWrite = true;
-
-      // PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
-      this.searchConditionAccountCMtc = new SearchConditionCompanyMatcing();
-      this.selectedConditionAccountCMtc = '';
-      this.searchConditionLeadCMtc = new SearchConditionCompanyMatcing();
-      this.selectedConditionLeadCMtc = '';
-
     }
   }
 
@@ -526,37 +514,4 @@ public with sharing class SB_NameCardL_BulkRegistDTO {
 
     }
   }
-  /**
-   * @description 検索条件「取引先名の検索方法」クラス
-   **/
-  public class SearchConditionCompanyMatcing {
-    @AuraEnabled public String title {get; set;}
-    @AuraEnabled public List<LabelValueRadio> searchConditionpickListOptions {get; set;}
-
-
-    public SearchConditionCompanyMatcing() {
-      this.title = '';
-      this.searchConditionpickListOptions = new List<LabelValueRadio>();
-    }
-  }
-
-  /**
-   * @description 検索条件「取引先名の検索方法」Optionクラス
-   **/
-  public class LabelValueRadio {
-    @AuraEnabled public String Id {get; set;}
-    @AuraEnabled public String label {get; set;}
-    @AuraEnabled public String value {get; set;}
-    @AuraEnabled public Boolean disabled {get; set;}
-    @AuraEnabled public Boolean hidden {get; set;}
-
-    public LabelValueRadio() {
-      this.Id = '';
-      this.label = '';
-      this.value = '';
-      this.disabled = false;
-      this.hidden = false;
-    }
-  }
-
 }

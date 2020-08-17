@@ -6,7 +6,6 @@
  *     KDDI様向け 管理パッケージ：SmartViscaRgq1 SB_Sv_UiRegistCanCreaterAbstract がベース
  *
  * Copyright (c) 2017-2018 SunBridge Inc.
- * @Version 拡張パッケージ：Lead Ex. 2.1   2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
  *
  **/
 public abstract class SB_NameCardL_RegistCanPickerAbstract {
@@ -204,8 +203,7 @@ public abstract class SB_NameCardL_RegistCanPickerAbstract {
     }
     this.accountQs = (SB_NameCardL_RegistQueryStrategy.AccountQueryStrategy)SB_NameCardL_RegistQueryStrategy.createQueryStrategy(queryOption);
         //accountQs = (SB_NameCardL_RegistQueryStrategy.AccountQueryStrategy)SB_NameCardL_RegistQueryStrategy.createQueryStrategy(qo);
-    // PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応にて削除（固定にしない。SB_NameCardL_RegistQueryOption生成で初期値設定しているので未設定になることはない）
-    // this.accountQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch); // 法人格除いて部分一致
+    this.accountQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch); // 法人格除いて部分一致
     this.accountQs.setOrderBy('Name ASC, BillingState ASC NULLS LAST, Site ASC NULLS LAST');
     this.accountQs.setMaxLimit(getAccountQueryLimit());
   }
@@ -216,8 +214,7 @@ public abstract class SB_NameCardL_RegistCanPickerAbstract {
       return;
     }
     this.contactQs = (SB_NameCardL_RegistQueryStrategy.ContactQueryStrategy)SB_NameCardL_RegistQueryStrategy.createQueryStrategy(queryOption);
-    // PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応にて削除（固定にしない。SB_NameCardL_RegistQueryOption生成で初期値設定しているので未設定になることはない）
-    // this.contactQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch); // 法人格除いて部分一致
+    this.contactQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch); // 法人格除いて部分一致
     this.contactQs.setQueryLastName(true);
     this.contactQs.setQueryFirstName(true);
     this.contactQs.setQueryEMail(true);
@@ -231,8 +228,7 @@ public abstract class SB_NameCardL_RegistCanPickerAbstract {
       return;
     }
     this.leadQs = (SB_NameCardL_RegistQueryStrategy.LeadQueryStrategy)SB_NameCardL_RegistQueryStrategy.createQueryStrategy(queryOption);
-    // PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応にて削除（固定にしない。SB_NameCardL_RegistQueryOption生成で初期値設定しているので未設定になることはない）
-    // this.leadQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch); // 法人格除いて部分一致
+    this.leadQs.setCompanyRule(SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch); // 法人格除いて部分一致
     this.leadQs.setOrderBy('Company ASC NULLS LAST, State ASC NULLS LAST, Title ASC NULLS LAST, Name ASC NULLS LAST, Email ASC NULLS LAST');
     this.leadQs.setMaxLimit(getLeadQueryLimit());
   }

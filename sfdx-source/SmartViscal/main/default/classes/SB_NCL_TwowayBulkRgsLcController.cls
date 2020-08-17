@@ -8,9 +8,6 @@
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1195 [要望]（LEX用・Classic用「リードまたは取引先・取引先責任者に登録」一括登録画面)候補登録先「両方」の場合、「新規作成時の指定」でのキャンペーン指定をリードだけだとわかるようにしてほしい
  * @Version 拡張パッケージ：Lead Ex. 1.12  2018/09/XX   SV_DEV-1231 LEX画面「リードまたは取引先・取引先責任者に登録*」一括登録で、ビル情報・英語住所が住所項目に表示されない。
  * @Version 拡張パッケージ：Lead Ex. 2.1   2020.01.xx   SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
- * @Version 拡張パッケージ：Lead Ex. 2.1   2020.07.27   PRODUCT-388 LEX 統合版登録 一括：参照権限がない場合に登録先候補がでないようにしてほしい。
- * @Version 拡張パッケージ：Lead Ex. 2.1   2020.08.03   PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
- * @Version 拡張パッケージ：Lead Ex. 2.1   2020.08.03   PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策
  *
  */
 public with sharing class SB_NCL_TwowayBulkRgsLcController {
@@ -21,38 +18,19 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
 
   private static final Integer SEARCHTYPE_EMAIL = 1;
   private static final Integer SEARCHTYPE_NAME  = 2;
-  private static final Integer SEARCHTYPE_ACNAME = 3;           // 取引先名
-  private static final Integer SEARCHTYPE_ACNAMESITE  = 4;      // 取引先名と部門
-  private static final Integer SEARCHTYPE_ACNAMESITESTATE = 5;  // 取引先名、部門と都道府県
-  private static final Integer SEARCHTYPE_NAMECITY  = 6;        // 取引先名、部門と市区群まで
-  private static final Integer SEARCHTYPE_NAMECODE  = 7;        // 取引先名、部門と郵便番号
+  private static final Integer SEARCHTYPE_ACNAME = 3;
+  private static final Integer SEARCHTYPE_ACNAMESITE  = 4;
+  private static final Integer SEARCHTYPE_ACNAMESITESTATE = 5;
+  private static final Integer SEARCHTYPE_NAMECITY  = 6;
+  private static final Integer SEARCHTYPE_NAMECODE  = 7;
   private static SB_NameCardL_RegistCanPickerAbstract picker = new SB_NameCardL_RegistSoqlCountCanPicker();  //
-
-  public class SB_NCL_TwowayBulkRgsLcControllerException extends Exception {}
 
   @RemoteAction
   @AuraEnabled
-  /**
-   * 全てのデータを取得
-   * @param  recordIds                            名刺レコードID
-   * @param  fieldListStr                         (未使用)
-   * @param  searchType                           検索条件（1:メールアドレス / 2:氏名）
-   * @param  searchContactType                    取引先責任者検索条件（3:取引先名 / 4:取引先名と部門 / 5:取引先名、部門と都道府県 / 6:取引先名、部門と市区群まで / 7:取引先名、部門と郵便番号）
-   * @param  recordTypesMapstr                    選択されたレコードタイプマップ文字列
-   * @param  searchConditionAccountCompanyMatcing 取引先の取引先名の検索方法
-   * @param  searchConditionLeadCompanyMatcing    リードの会社名の検索方法
-   * @return   検索したデータ
-   */
-  public static String getAllData(String recordIds, String fieldListStr, String searchType, String searchContactType, String recordTypesMapstr, String searchConditionAccountCompanyMatcing, String searchConditionLeadCompanyMatcing) {
+  // 全てのデータここで取得
+   public static String getAllData(String recordIds, String fieldListStr, String searchType, String searchContactType, String recordTypesMapstr) {
     SB_NameCardL_BulkRegistDTO.SaveResult saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
-    System.debug('getAllData searchConditionAccountCompanyMatcing:' + searchConditionAccountCompanyMatcing + ',searchConditionLeadCompanyMatcing:' + searchConditionLeadCompanyMatcing);
     try{
-      // SV_DEV-1856 LEX 取引先登録 一括：参照権限がない場合に登録先候補がでないようにしてほしい。
-      if (!Account.sObjectType.getDescribe().isAccessible()
-        || !Contact.sObjectType.getDescribe().isAccessible()
-        || !Lead.sObjectType.getDescribe().isAccessible()) {
-        throw new SB_NCL_TwowayBulkRgsLcControllerException(System.Label.SB_NCLD_MSG_INSUFFICIENT_ACCESS);
-      }
       List<SB_NameCardL_BulkRegistDTO.DataTableColumnField> fieldList;
       SmartViscaf__NameCardBasicSetting__c basicSetting = SmartViscaf.SB_NameCard_BasicSetting.getNameCardBasicSetting();
       Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> fieldMap = (Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> )System.JSON.deserializeStrict(getFieldList(), Map<String, List<SB_NameCardL_BulkRegistDTO.DataTableColumnField>> .Class);
@@ -151,7 +129,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       if (String.isNotBlank(recordTypesMapstr) && recordTypesMapstr != 'null') {
         recordTypesMap = (Map<String, List<String>>)System.JSON.deserializeStrict(recordTypesMapstr, Map<String, List<String>> .Class);
       }
-      searchAllLead(saveResult, recordIds, nameCardObjMap, searchType, searchContactType, recordTypesMap, searchConditionAccountCompanyMatcing, searchConditionLeadCompanyMatcing);
+      searchAllLead(saveResult, recordIds, nameCardObjMap, searchType, searchContactType, recordTypesMap);
       if (saveResult.success == false) {
         return JSON.serialize(saveResult);
       }
@@ -161,8 +139,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       saveResult.data = dataList;
       System.debug(Limits.getHeapSize());
       System.debug(Limits.getLimitHeapSize());
-      // PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策 50%→90%
-      if (Limits.getHeapSize() > Limits.getLimitHeapSize() * 0.9) {
+      if (Limits.getHeapSize() > Limits.getLimitHeapSize() * 0.5) {
         saveResult.data = null;
         throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_ChooseLessBusinessCards);
       }
@@ -174,19 +151,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     return JSON.serialize(saveResult);
   }
 
-   /**
-    * 全てのデータを検索する
-    * @param  saveResult                           処理結果
-    * @param  nameCardIds                          名刺ID
-    * @param  nameCardObjMap                       UIデータテーブル表示用のMAP
-    * @param  searchType                           検索条件（1:メールアドレス / 2:氏名）
-    * @param  searchContactType                    取引先責任者検索条件（3:取引先名 / 4:取引先名と部門 / 5:取引先名、部門と都道府県 / 6:取引先名、部門と市区群まで / 7:取引先名、部門と郵便番号）
-    * @param  recordTypesMap                       選択されたレコードタイプマップ
-    * @param  searchConditionAccountCompanyMatcing 取引先の取引先名の検索方法
-    * @param  searchConditionLeadCompanyMatcing    リードの会社名の検索方法
-    * @return                                      検索したデータ
-    */
-   public static String searchAllLead(SB_NameCardL_BulkRegistDTO.SaveResult saveResult, String nameCardIds, Map<Id, SB_NameCardL_BulkRegistDTO.CustomObject> nameCardObjMap, String searchType, String searchContactType, Map<String, List<String>> searchRecordTypesMap, String searchConditionAccountCompanyMatcing, String searchConditionLeadCompanyMatcing) {
+   public static String searchAllLead(SB_NameCardL_BulkRegistDTO.SaveResult saveResult, String nameCardIds, Map<Id, SB_NameCardL_BulkRegistDTO.CustomObject> nameCardObjMap, String searchType, String searchContactType, Map<String, List<String>> searchRecordTypesMap) {
     String message = '';
     if (saveResult == null) {
         saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
@@ -211,7 +176,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
         // Map<String, List<Lead>> emailListMap = new Map<String, List<Lead>>();
         // Map<String, List<Lead>> nameListMap = new Map<String, List<Lead>>();
 
-        Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(nameCardIdSet, nameCards, searchType, searchContactType, searchRecordTypesMap, searchConditionAccountCompanyMatcing, searchConditionLeadCompanyMatcing);
+        Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(nameCardIdSet, nameCards, searchType, searchContactType, searchRecordTypesMap);
         System.debug(sObjectList);
         Map<Schema.SObjectType, Map<Id, SObject>> sObjectTypemap = new Map<Schema.SObjectType, Map<Id, SObject>>();
         sObjectTypemap.put(Lead.sObjectType, new Map<Id, SObject>());
@@ -348,8 +313,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
             nameCardObjMap.get(nc.Id).cObjectMap.get('Contact').value = accountId;
             // inputPlickListVMap.put(nc.Id, inputPlickListMap);
             i ++;
-            // PRODUCT-387 LEX 統合版登録 一括：登録先候補が多すぎるため処理を中断しましたエラー対策 50%→90%
-            if (Limits.getHeapSize() > Limits.getLimitHeapSize() * 0.9) {
+            if (Limits.getHeapSize() > Limits.getLimitHeapSize() * 0.5) {
               saveResult.data = null;
               throw new SB_NameCard_LeadRegist.LeadRegistException(System.Label.SB_NCLD_Msg_ChooseLessBusinessCards);
             }
@@ -521,74 +485,6 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     inv.labelMap.put('campaignAPILabel', Campaign.getSObjectType().getDescribe().getLabel());
     inv.searchConditionRct.description = System.Label.SB_NCLD_Label_SearchRecordTypeExplanation;
 
-    // PRODUCT-379 LEX 統合版登録 一括：会社名の検索方法での検索対応
-    // 取引先名
-    inv.searchConditionAccountCMtc.title = String.format(System.Label.SB_NCLD_Label_CompanyMatcingSectionName, new String[] {Account.sObjecttype.getDescribe().getLabel(), Account.Name.getDescribe().getLabel()});
-    List<SB_NameCardL_BulkRegistDTO.LabelValueRadio> cMtcValueList = new List<SB_NameCardL_BulkRegistDTO.LabelValueRadio>();
-
-    SB_NameCardL_BulkRegistDTO.LabelValueRadio opt0 = new SB_NameCardL_BulkRegistDTO.LabelValueRadio();
-    opt0.Id = opt0.value = 'CorpMatchAccount';
-    opt0.label = String.format(System.Label.SB_NCLD_Label_CompanyMatcingCorpMatch, new String[] {Account.Name.getDescribe().getLabel()});
-    cMtcValueList.add(opt0);
-
-    SB_NameCardL_BulkRegistDTO.LabelValueRadio opt1 = new SB_NameCardL_BulkRegistDTO.LabelValueRadio();
-    opt1.Id = opt1.value = 'PartialMatchAccount';
-    opt1.label = String.format(System.Label.SB_NCLD_Label_CompanyMatcingPartialMatch, new String[] {Account.Name.getDescribe().getLabel()});
-    cMtcValueList.add(opt1);
-
-    SB_NameCardL_BulkRegistDTO.LabelValueRadio opt2 = new SB_NameCardL_BulkRegistDTO.LabelValueRadio();
-    opt2.Id = opt2.value = 'ExactMatchAccount';
-    opt2.label = String.format(System.Label.SB_NCLD_Label_CompanyMatcingExactMatch, new String[] {Account.Name.getDescribe().getLabel()});
-    cMtcValueList.add(opt2);
-    
-    inv.searchConditionAccountCMtc.searchConditionpickListOptions.addAll(cMtcValueList);
-
-    // 取引先ラジオボタンの初期値を設定
-    if (basicSetting.SmartViscaf__RenkeiExcludeHojinkaku__c) {
-      inv.selectedConditionAccountCMtc = 'CorpMatchAccount'; // 法人格抜きで一致
-    }
-    else if (basicSetting.SmartViscaf__RenkeiExcludeHojinkakuPartial__c) {
-      inv.selectedConditionAccountCMtc = 'PartialMatchAccount'; // 会社名 部分一致
-    }
-    else {
-      inv.selectedConditionAccountCMtc = 'ExactMatchAccount'; // 完全一致
-    }
-
-
-    // リードの会社名
-    inv.searchConditionLeadCMtc.title = String.format(System.Label.SB_NCLD_Label_CompanyMatcingSectionName, new String[] {Lead.sObjecttype.getDescribe().getLabel(), Lead.Company.getDescribe().getLabel()});
-    cMtcValueList.clear();
-
-    // リード用にラベルの変更
-    opt0 = new SB_NameCardL_BulkRegistDTO.LabelValueRadio();
-    opt0.Id = opt0.value = 'CorpMatchLead';
-    opt0.label = String.format(System.Label.SB_NCLD_Label_CompanyMatcingCorpMatch, new String[] {Lead.Company.getDescribe().getLabel()});
-    cMtcValueList.add(opt0);
-
-    opt1 = new SB_NameCardL_BulkRegistDTO.LabelValueRadio();
-    opt1.Id = opt1.value = 'PartialMatchLead';
-    opt1.label = String.format(System.Label.SB_NCLD_Label_CompanyMatcingPartialMatch, new String[] {Lead.Company.getDescribe().getLabel()});
-    cMtcValueList.add(opt1);
-
-    opt2 = new SB_NameCardL_BulkRegistDTO.LabelValueRadio();
-    opt2.Id = opt2.value = 'ExactMatchLead';
-    opt2.label = String.format(System.Label.SB_NCLD_Label_CompanyMatcingExactMatch, new String[] {Lead.Company.getDescribe().getLabel()});
-    cMtcValueList.add(opt2);
-
-    inv.searchConditionLeadCMtc.searchConditionpickListOptions.addAll(cMtcValueList);
-
-    // リードのラジオボタンの初期値を設定
-    if (basicSetting.SmartViscaf__RenkeiLeadExcludeHojinkaku__c) {
-      inv.selectedConditionLeadCMtc = 'CorpMatchLead'; // 法人格抜きで一致
-    }
-    else if (basicSetting.SmartViscaf__RenkeiLeadExcludeHojinkakuPartial__c) {
-      inv.selectedConditionLeadCMtc = 'PartialMatchLead'; // 会社名 部分一致
-    }
-    else {
-      inv.selectedConditionLeadCMtc = 'ExactMatchLead'; // 完全一致
-    }
-
-    //レコードタイプ情報
     List<RecordTypeInfo> leadRecordTypes = SB_NCL_TwowayBulkRgsLcController.getRecordType(Lead.sObjecttype);
     SB_NameCardL_BulkRegistDTO.SearchConditionRecordTypeOptionGroup   optionGroup = new SB_NameCardL_BulkRegistDTO.SearchConditionRecordTypeOptionGroup();
     optionGroup.title = String.format(System.Label.SB_NCLD_Label_LeadRecType, new String[] {Lead.sObjecttype.getDescribe().getLabel()});
@@ -685,8 +581,6 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
     //                      WHERE SobjectType = 'Lead'].isEmpty();
     inv.haveQueue = true;
 
-    System.debug('getInputValue inv.selectedConditionAccountCMtc:' + inv.selectedConditionAccountCMtc);
-    System.debug('getInputValue inv.selectedConditionLeadCMtc:' + inv.selectedConditionLeadCMtc);
     return JSON.serialize(inv);
   }
 
@@ -861,19 +755,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
 
 // ********************************************* 検索 *********************************************//
 
-  /**
-   * 全てのデータを検索する
-   * @param  nameCardIds                          名刺ID
-   * @param  searchType                           検索条件（1:メールアドレス / 2:氏名）
-   * @param  searchContactType                    取引先責任者検索条件（3:取引先名 / 4:取引先名と部門 / 5:取引先名、部門と都道府県 / 6:取引先名、部門と市区群まで / 7:取引先名、部門と郵便番号）
-   * @param  searchRecordTypesMap                 選択されたレコードタイプマップ
-   * @param  searchConditionAccountCompanyMatcing 取引先の取引先名の検索方法
-   * @param  searchConditionLeadCompanyMatcing    リードの会社名の検索方法
-   * @return                                      検索したデータ
-   */
+
   @RemoteAction
   @AuraEnabled
-  public static String searchAllLead(String nameCardIds, String searchType, String searchContactType, Map<String, List<String>> searchRecordTypesMap, String searchConditionAccountCompanyMatcing, String searchConditionLeadCompanyMatcing) {
+  public static String searchAllLead(String nameCardIds, String searchType, String searchContactType, Map<String, List<String>> searchRecordTypesMap) {
     String message = '';
     SB_NameCardL_BulkRegistDTO.SaveResult saveResult = new SB_NameCardL_BulkRegistDTO.SaveResult();
     try {
@@ -896,7 +781,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
         // Map<String, List<Lead>> emailListMap = new Map<String, List<Lead>>();
         // Map<String, List<Lead>> nameListMap = new Map<String, List<Lead>>();
 
-        Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(nameCardIdSet, nameCards, searchType, searchContactType, searchRecordTypesMap, searchConditionAccountCompanyMatcing, searchConditionLeadCompanyMatcing);
+        Map<Id,Map<Schema.SObjectType,List<SObject>>> sObjectList = buildCandidateList(nameCardIdSet, nameCards, searchType, searchContactType, searchRecordTypesMap);
         System.debug(sObjectList);
         Map<Schema.SObjectType, Map<Id, SObject>> sObjectTypemap = new Map<Schema.SObjectType, Map<Id, SObject>>();
         sObjectTypemap.put(Lead.sObjectType, new Map<Id, SObject>());
@@ -1052,28 +937,24 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
   }
 
   public static Map<Id,Map<Schema.SObjectType,List<SObject>>> buildCandidateList(Set<Id> ncList, List<SmartViscaf__NameCard__c> nameCardList,
-                                                                                String searchType, String searchContactType,Map<String, List<String>> searchRecordTypesMap,
-                                                                                String searchConditionAccountCompanyMatcing, String searchConditionLeadCompanyMatcing) {
+                                                                                String searchType, String searchContactType,Map<String, List<String>> searchRecordTypesMap) {
     List<SB_NameCardL_RegistQueryOption> queryOptions = new List<SB_NameCardL_RegistQueryOption>();
 
     if (searchRecordTypesMap == null) {
       searchRecordTypesMap = new Map<String, List<String>>();
     }
 
-    SB_NameCardL_RegistQueryOption leadQueryOption = getQueryOption(Lead.sObjecttype);
+    SB_NameCardL_RegistQueryOption queryOption = getQueryOption(Lead.sObjecttype);
     if (searchType == String.valueOf(SEARCHTYPE_NAME)) {
-      leadQueryOption.queryLastName = true;
-      leadQueryOption.queryFirstName = true;
-      leadQueryOption.queryEMail = false;
+      queryOption.queryLastName = true;
+      queryOption.queryFirstName = true;
+      queryOption.queryEMail = false;
     }
     else {
-      leadQueryOption.queryLastName = false;
-      leadQueryOption.queryFirstName = false;
-      leadQueryOption.queryEMail = true;
+      queryOption.queryLastName = false;
+      queryOption.queryFirstName = false;
+      queryOption.queryEMail = true;
     }
-    // 会社を対象に追加
-    leadQueryOption.queryCompany = true;
-
     SB_NameCardL_RegistQueryOption accountQueryOption = getQueryOption(Account.sObjecttype);
     SB_NameCardL_RegistQueryOption contactQueryOption =  getQueryOption(Contact.sObjecttype);
 
@@ -1086,22 +967,10 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
         Set<Id> leadRecord = new Set<Id>();
         leadRecord.addAll(leadRecordTypeList);
         System.debug('leadRecordTypeList = ' + leadRecordTypeList);
-        leadQueryOption.setRectypeIds(leadRecord);
-      }
-    }
-    switch on searchConditionLeadCompanyMatcing {
-      when 'CorpMatchLead' {
-        leadQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch;
-      }
-      when 'PartialMatchLead' {
-        leadQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch;
-      }
-      when 'ExactMatchLead' {
-        leadQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.ExactMatch;
+        queryOption.setRectypeIds(leadRecord);
       }
     }
 
-    // 取引先
     if (searchRecordTypesMap.containsKey('Account')) {
       List<Id> accountRecordTypeList = searchRecordTypesMap.get('Account');
       if (accountRecordTypeList.size() > 0) {
@@ -1112,7 +981,6 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       }
     }
 
-    // 取引先責任者
     if (searchRecordTypesMap.containsKey('Contact')) {
       List<Id> contactRecordTypeList = searchRecordTypesMap.get('Contact');
       if (contactRecordTypeList.size() > 0) {
@@ -1120,21 +988,6 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
         contactRecord.addAll(contactRecordTypeList);
         System.debug('contactRecord = ' + contactRecord);
         contactQueryOption.setRectypeIds(contactRecord);
-      }
-    }
-
-    switch on searchConditionAccountCompanyMatcing {
-      when 'CorpMatchAccount' {
-        accountQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch;
-        contactQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.CorpMatch;
-      }
-      when 'PartialMatchAccount' {
-        accountQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch;
-        contactQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch;
-      }
-      when 'ExactMatchAccount' {
-        accountQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.ExactMatch;
-        contactQueryOption.companyRule = SB_NameCardL_RegistQueryOption.CompanyMatcing.ExactMatch;
       }
     }
 
@@ -1186,7 +1039,7 @@ public with sharing class SB_NCL_TwowayBulkRgsLcController {
       contactQueryOption.queryZip = true;
     }
 
-    queryOptions.add(leadQueryOption);
+    queryOptions.add(queryOption);
     queryOptions.add(accountQueryOption);
     queryOptions.add(contactQueryOption);
     System.assert(!queryOptions.isEmpty());

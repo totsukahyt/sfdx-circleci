@@ -6,7 +6,6 @@
  * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX
  * @Version 拡張パッケージ：Lead Ex. 1.12 2018/08/XX SV_DEV-1151 Classic画面の「リードまたは取引先・取引先責任者に登録」（個別）で「既存取引先レコード」を選択した場合に「取引先レコードタイプ」の選択リストが非表示にならない。
  * @Version 拡張パッケージ：Lead Ex. 2.1  2020.01.xx SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
- * @Version 2.1 全 2020.07.31 PRODUCT-357 CompanyMatcing,DeptMatcingのマッチング名を基本パッケージと合わせる対応
  */
 
 public with sharing class SB_NameCardL_TwowayRegistController {
@@ -1215,9 +1214,9 @@ public with sharing class SB_NameCardL_TwowayRegistController {
       this.accountQueryOption.queryDept = (this.searchField == FIELD_NAMESITE);
       // 取引先名 は完全に一致？
       this.accountQueryOption.companyRule = this.queryMatch == QUERY_PERFECT_NO ?
-            SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.CompanyMatcing.PerfectMatch;
+            SB_NameCardL_RegistQueryOption.CompanyMatcing.PartialMatch : SB_NameCardL_RegistQueryOption.CompanyMatcing.FullMatch;
       // 部門の検索は完全一致？
-      this.accountQueryOption.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.ExactMatch;
+      this.accountQueryOption.deptRule = SB_NameCardL_RegistQueryOption.DeptMatcing.FullMatch;
       queryOptions.add(this.accountQueryOption);
     }
     if (this.contactQueryOption !=null) {
