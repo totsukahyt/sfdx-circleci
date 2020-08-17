@@ -251,14 +251,14 @@ workflows:
   all_jobs:
     jobs:
       - build-and-test:
-          context: org-sbdevhub
+          # context: org-sbdevhub
       - create-feature-scratch:
-          context: org-sbdevhub
+          # context: org-sbdevhub
           filters:
             branches:
               only: /^feature.*/
       - create-beta-package:
-          context: org-sbdevhub
+          # context: org-sbdevhub
           filters:
             tags:
               only: /^beta.*/
