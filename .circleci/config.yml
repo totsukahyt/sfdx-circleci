@@ -247,10 +247,10 @@ jobs:
           failure_message: "名前：$CIRCLE_USERNAME \n タグ：$CIRCLE_TAG \n CIRCLE JOB が失敗しました。確認してください。"
 
 workflows:
-  version: 2.1
+  # version: 2.1
   all_jobs:
     jobs:
-      - build-and-test:
+      - build-and-test
           # context: org-sbdevhub
       - create-feature-scratch:
           # context: org-sbdevhub
