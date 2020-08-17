@@ -28,11 +28,11 @@ jobs:
       - run: 
           name: DEV jwt
           command : | 
-            if [ $CIRCLE_PULL_REQUEST ]; then
+            # if [ $CIRCLE_PULL_REQUEST ]; then
               sfdx force:auth:jwt:grant --clientid ${HUB_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias DEV-${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
-            else
-              exit 0
-            fi
+            # else
+            #   exit 0
+            # fi
       #　DEV環境認証完了
       - run:
           name: Setup Org
