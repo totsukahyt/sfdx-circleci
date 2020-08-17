@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LeadRegist_DefaultShowLeadListNoExsiting__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>リードまたは取引先に登録の際、ともに既存がない場合、リードのリストを表示</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

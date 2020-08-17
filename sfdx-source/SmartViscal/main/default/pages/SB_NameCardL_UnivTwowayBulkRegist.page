@@ -1,0 +1,464 @@
+<!-- /*
+ * (c) 2018 Sunbridge Inc.
+ *
+ * 統合版一括登録Lex&Classic
+ * classicのページを表示、Lex環境の方はlexのページを表示　方針にして、一つボタンに統一すること
+ * @author mao
+ * @Version 1 2018/08/XX  SV_DEV-1109 リード拡張パッケージ[統合版]Classic環境でLexのボタンタップすると、エラー発生するため、 LexとClassicを一つボタンから表示させる
+ * @Version 2.1 yoshida 2020.01 SV_DEV-2113 Classic 統合版登録 一括：キャンペーン選択後に所有者選択エリアが有効化されてしまう
+ *                              SV_DEV-1092 2.0.2アップデート後にカスタム設定のリード関連デフォルト値が変更され、リードのTodo件名のデフォルト「名刺交換」が空白値になる。
+ *
+ */ -->
+<apex:page standardController="SmartViscaf__NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCardL_UnivTwowayBulkRegistCtrl" title="{!windowTitle}" tabStyle="SmartViscaf__NameCard__c" showHeader="true" sidebar="false">
+<apex:pageMessages id="pageMsgs" escape="false"/>
+
+  <apex:form id="All" rendered="{!and($User.UIThemeDisplayed != 'Theme4u', $User.UIThemeDisplayed != 'Theme4d')}">
+    <apex:actionFunction action="{!saveLead}" name="save" reRender="pageMsgs,saveflage,nameCardTable, ncRecList" oncomplete="saveClick();"/>
+    <apex:actionFunction name="changeCampaign" action="{!changeCampaign}" reRender="newBlock" oncomplete="initset();resetOwnerDisable()"/>
+    <apex:actionFunction name="changeOwner" reRender="newBlock" oncomplete="initset();"/>
+    <apex:actionFunction name="submit" action="{!submit}" reRender="ncRecList" oncomplete="endLoading();">
+      <apex:param name="changeIndex" value=""/>
+      <apex:param name="changeType" value=""/>
+    </apex:actionFunction>
+    <apex:inputHidden value="{!saveOK}" id="saveflage"/>
+    <apex:inputHidden value="{!registNoToDo}" id="basicToDo"/>
+    <apex:pageBlock title="{!registerToLeadLabel}" id="blockid">
+      <apex:pageBlockButtons >
+        <apex:commandButton disabled="{!searchError}" onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.SB_NCLD_Label_Save}" id="savebtn"/>
+        <apex:commandButton id="cancelbtn" oncomplete="cancelClick();" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
+      </apex:pageBlockButtons>
+
+      <apex:pageBlockSection columns="2">
+        <apex:selectRadio disabled="{!searchError}" label="{!$Label.SB_NCLD_Label_CandidateRegistration}" onchange="startLoading();" value="{!renkeiType}">
+          <apex:selectOptions value="{!RenkeiTypeList}"/>
+          <apex:actionSupport event="onclick" rerender="pageMsgs, ncRecList, radio, overWrite, newBlock, recordTypeSection, basicToDo" oncomplete="resetOwnerDisable();endLoading();"/>
+        </apex:selectRadio>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection columns="2" id="radio">
+        <apex:selectRadio disabled="{!searchError}" label="{!searchCriteriaLead}" onchange="startLoading();" value="{!searchType}" rendered="{!renkeiType != 'Contact'}">
+          <apex:selectOptions value="{!searchTypeList}"/>
+          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList, basicToDo" oncomplete="endLoading();"/>
+        </apex:selectRadio>
+        <apex:selectRadio disabled="{!searchError}" label="{!searchCriteriaAccount}" onchange="startLoading();" value="{!searchTypeContact}" rendered="{!renkeiType != 'Lead'}">
+          <apex:selectOptions value="{!searchTypeSelectOpts}"/>
+          <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, ncRecList, basicToDo" oncomplete="endLoading();"/>
+        </apex:selectRadio>
+      </apex:pageBlockSection>
+
+      <apex:variable value="{!0}" var="index"/>
+      <apex:pageBlockTable id="ncRecList" value="{!nameCardRecordListDTO}" var="ncRec">
+        <apex:column rendered="{!hasError}">
+          <apex:facet name="header"></apex:facet>
+          <apex:image value="/img/msg_icons/error16.png" rendered="{!ncRec.hasError}"/>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType == 'Contact'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__company_name__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__company_name__c}"/>
+        </apex:column>
+
+
+
+        <apex:column rendered="{!renkeiType != 'Contact'}">
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.Name.Label}</apex:facet>
+          <apex:outputPanel layout="none">
+            <a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
+              <apex:outputText value="{!ncRec.nameCard.Name}"/>
+            </a>
+          </apex:outputPanel>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType != 'Contact'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__email__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__email__c}"/>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType != 'Contact'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__company_name__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__company_name__c}"/>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType != 'Contact'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__address_pref__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__address_pref__c}"/>
+        </apex:column>
+
+        <apex:column >
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__division__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__division__c}"/>
+        </apex:column>
+
+        <apex:column >
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__title_name__c.Label}</apex:facet>
+          <apex:inputHidden value="{!ncRec.leadId}" id="leadSelectValue"/>
+          <apex:inputHidden value="{!ncRec.index}" id="contactSelectValue"/>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType == 'Contact'}">
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.Name.Label}</apex:facet>
+          <apex:outputPanel layout="none">
+            <a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
+              <apex:outputText value="{!ncRec.nameCard.Name}"/>
+            </a>
+          </apex:outputPanel>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType != 'Lead'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__address__c.Label}</apex:facet>
+         <apex:outputText value="{!ncRec.nameCard.SmartViscaf__zip_code__c} {!ncRec.nameCard.SmartViscaf__address_pref__c}{!ncRec.nameCard.SmartViscaf__address__c}{!ncRec.nameCard.SmartViscaf__address_bld__c}{!ncRec.nameCard.SmartViscaf__address_eng__c}"/>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType != 'Lead'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__mobile__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__mobile__c}"/>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType == 'Contact'}">
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__email__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__email__c}"/>
+        </apex:column>
+
+        <apex:column rendered="{!renkeiType != 'Contact'}">
+          <apex:facet name="header">{!$Label.SB_NCLD_Text_Lead}</apex:facet>
+          <apex:selectList value="{!ncRec.leadId}" size="1" Id="leadSelectOp" onchange="setDis('{!ncRec.index}', 'contactSelect');">
+            <apex:selectOptions value="{!inputPlickListVMap[ncRec.nameCard.Id]['Lead']}"/>
+          </apex:selectList>
+        </apex:column>
+
+         <apex:column rendered="{!renkeiType != 'Lead'}">
+          <apex:facet name="header">{!accountAndContact}</apex:facet>
+          <apex:selectList value="{!ncRec.accAndCon}" size="1" Id="contactSelectOp"  onchange="setDis('{!ncRec.index}', 'leadSelect');">
+            <apex:selectOptions value="{!inputPlickListVMap[ncRec.nameCard.Id]['Account']}"/>
+          </apex:selectList>
+        </apex:column>
+
+        <apex:column >
+          <apex:facet name="header"><input type="checkbox" id="allCheckTodo" onclick="changecheck(this);" />{!$Label.SB_NCLD_Label_ToDoRegistration}</apex:facet>
+          <apex:inputCheckbox Id="todoCheckbox" value="{!ncRec.registTodo}"/>
+        </apex:column>
+        <apex:variable var="index" value="{!index + 1}"/>
+
+      </apex:pageBlockTable>
+
+      <apex:pageBlocksection columns="3" id="overWrite">
+        <apex:pageBlockSectionItem rendered="{!AND(showUpdateLead, renkeiType != 'Contact')}">
+          <apex:outputPanel >
+          <apex:inputCheckbox disabled="{!NOT($ObjectType.Lead.updateable)}" value="{!leadOverwrite}"/>
+          <apex:outputLabel style="{!IF($ObjectType.Lead.updateable, '', 'color:#999999;')}" value="{!overwriteLeadInfoLabel}"/>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!AND(showUpdateAccount, renkeiType != 'Lead')}">
+          <apex:outputPanel >
+            <apex:inputCheckbox disabled="{!canNotUpdataAccount}" value="{!accountOverwrite}"/>
+            <apex:outputLabel style="{!canNotUseStyleAcc}" value="{!updateForAccount}"/>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!AND(showUpdateContact, renkeiType != 'Lead')}">
+          <apex:outputPanel >
+            <apex:inputCheckbox disabled="{!canNotUpdataContact}" value="{!contactOverwrite}"/>
+            <apex:outputLabel style="{!JSENCODE(canNotusestylecon)}" value="{!updateForContact}"/>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+
+      </apex:pageBlocksection>
+
+      <apex:pageBlockSection id="newBlock" rendered="{!leadCreateable}"  title="{!if(renkeiType == 'Contact', specifiedWhenCreateNewAccount, if(renkeiType == 'Lead', specifiedWhenCreateNew, specifiedWhenCreateNewBoth))}" columns="2">
+        <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
+        <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}">
+          <apex:outputLabel value="{!$ObjectType.Campaign.Label + if(renkeiType == 'Both', $Label.SB_NCLD_Label_Campaign_ForLead, '')}" style="{!IF(campLookUpDisabled,'color:#999999;','')}"/>
+          <apex:inputField onchange="changeCampaign();" value="{!campaignOption.campaign__c}" rendered="{!Not(campLookUpDisabled)}"/>
+        </apex:pageBlockSectionItem>
+
+<!--         <apex:pageBlockSectionItem rendered="{!showLeadRecType}">
+            <apex:outputText value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/>
+        </apex:pageBlockSectionItem> -->
+
+        <!-- SV_DEV-764 リードの編集権限がない場合にキャンペーンメンバーの追加ができてしまう。 -->
+        <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}">
+            <apex:outputLabel value="{!$Label.SB_NCLD_Label_CampaignStatus + if(renkeiType == 'Both', $Label.SB_NCLD_Label_Campaign_ForLead, '')}" style="{!IF(campDisabled,'color:#999999;','')}"/>
+            <apex:selectList value="{!campStatus}" multiselect="false" size="1" disabled="{!campDisabled}">
+                <apex:selectOptions value="{!CampaignStatus}"/>
+            </apex:selectList>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem rendered="{!renkeiType != 'Contact'}" id="ownerSelectItem">
+          <apex:outputLabel value="{!$ObjectType.Lead.Label + $Label.SB_NCLD_Label_Owner}" id="ownerinputLabel"/>
+          <apex:inputField value="{!ownerlead.OwnerId}" required="false" id="ownerinput"/>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem rendered="{!renkeiType != 'Lead'}" id="ownerSelectItem1">
+          <apex:outputLabel value="{!$ObjectType.Account.Label + $Label.SB_NCLD_Label_Owner}" id="ownerinputLabel"/>
+          <apex:inputField value="{!ownerAccount.OwnerId}" required="false" id="ownerinput"/>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem id="leadUseNameCardOwnerSection" rendered="{!renkeiType != 'Contact'}">
+          <apex:outputLabel value="{!leadOwnerLabel}"/>
+          <apex:inputCheckbox id="leadUseNameCardOwner" onchange="changeUserNameCardOwner(this.checked, '');"  value="{!useNameCardOwner}" required="false"/>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem id="accountUseNameCardOwnerSection" rendered="{!renkeiType != 'Lead'}">
+          <apex:outputLabel value="{!accountOwnerLabel}"/>
+          <apex:inputCheckbox id="accountUseNameCardOwner" onchange="changeUserNameCardOwner(this.checked, '1');"  value="{!useNameCardContactOwner}" required="false"/>
+        </apex:pageBlockSectionItem>
+        
+        </apex:pageBlockSection>
+
+        <apex:pageBlockSection id="recordTypeSection" columns="3">
+
+
+         <!-- SV_DEV-175 リード登録時にキャンペーン内での状況を選択 -->
+        <apex:pageBlockSectionItem rendered="{!AND(showLeadRecType, renkeiType != 'Contact')}">
+            <!-- <apex:outputText value=""/> -->
+                <apex:outputPanel >
+                     <!-- <apex:outputText style="color: #4a4a56;" value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/> -->
+                    <!-- <br/><br/> -->
+                    <apex:outputLabel style="margin-left: 10px; text-align: left; font-weight: bold; white-space: nowrap; color: #4a4a56;" value="{!leadRecType}"/>
+                    <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!leadRecordTypeId}" multiselect="false" size="1" disabled="{!Not(leadRecTypeEdit)}">
+                        <apex:selectOptions value="{!leadRecordTypeOptions}"/>
+                    </apex:selectList>
+                </apex:outputPanel>
+         </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!AND(showAccountRecType, renkeiType != 'Lead')}">
+          <!-- <apex:outputText value=""/> -->
+              <apex:outputPanel >
+                   <!-- <apex:outputText style="color: #4a4a56;" value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/> -->
+                  <!-- <br/><br/> -->
+                  <apex:outputLabel style="text-align: left; font-weight: bold; white-space: nowrap; color: #4a4a56;" value="{!accountRecType}"/>
+                  <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!accountRecTypeId}" multiselect="false" size="1" disabled="{!Not(accountRecTypeEdit)}">
+                      <apex:selectOptions value="{!accountRecordTypeOptions}"/>
+                  </apex:selectList>
+              </apex:outputPanel>
+       </apex:pageBlockSectionItem>
+               <apex:pageBlockSectionItem rendered="{!AND(showContactRecType, renkeiType != 'Lead')}">
+          <!-- <apex:outputText value=""/> -->
+              <apex:outputPanel >
+                   <!-- <apex:outputText style="color: #4a4a56;" value="{!$Label.SB_NCLD_Label_RecordTypeExplain}"/> -->
+                  <!-- <br/><br/> -->
+                  <apex:outputLabel style="text-align: left; font-weight: bold; white-space: nowrap; color: #4a4a56;" value="{!contactRecType}"/>
+                  <apex:selectList style="margin-left: 5pt;" id="lRecordType" value="{!contactRecTypeId}" multiselect="false" size="1" disabled="{!Not(contactRecTypeEdit)}">
+                      <apex:selectOptions value="{!contactRecordTypeOptions}"/>
+                  </apex:selectList>
+              </apex:outputPanel>
+         </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+    </apex:pageBlock>
+    <div id="loadDiv" style="text-align:center;position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 999; vertical-align: center; display: none;">
+      <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.25; z-index: 1000; background-color: black;">
+          &nbsp;
+      </div>
+      <div style="z-index: 1001; position:absolute; left:50%; top:50%; margin-top:-12.5px; margin-left:-70px;">
+          <div style="display: inline-block; padding: 2px; width: 140px; height: 25px;">
+              <img src="/img/loading32.gif" width="23" height="23" />
+              <span style="margin-left: 6px; font-weight: bold; color:white; position: relative; top: -5px;">{!$Label.SB_NCLD_Text_Loading}</span>
+          </div>
+      </div>
+    </div>
+    <script >
+
+            var saveingValue = "{!$Label.SB_NCLD_Label_Saveing}";
+            var saveid1 = "";
+            var cancelid1 = "";
+            var saveid2 = "";
+            var cancelid2 = "";
+
+            function saveChangeValue(strid){
+                document.getElementById(strid).classList.add('btnDisabled');
+                document.getElementById(strid).disabled="true";
+                document.getElementById(strid).value=saveingValue;
+            }
+
+            function saveBackValue(strid,val){
+                document.getElementById(strid).classList.remove('btnDisabled');
+                document.getElementById(strid).disabled="";
+                document.getElementById(strid).value=val;
+            }
+
+            var retUrl = '{!retUrl}';
+           function cancelClick(){
+                rePage();
+            }
+
+            function saveClick(){
+                var saveok = document.getElementById('{!$Component.saveflage}').value;
+                if(saveok == false || saveok == 'false'){
+                    saveBackValue(saveid1,"{!$Label.SB_NCLD_Label_Save}");
+                    saveBackValue(cancelid1,"{!$Label.SB_NCLD_Label_Cancel}");
+                    saveBackValue(saveid2,"{!$Label.SB_NCLD_Label_Save}");
+                    saveBackValue(cancelid2,"{!$Label.SB_NCLD_Label_Cancel}");
+                    return;
+                }
+                rePage();
+            }
+
+            function rePage(){
+                if( (typeof sforce != 'undefined') && (sforce != null) ) {
+                    // S1とか
+                    sforce.one.back();
+                }
+                else {
+                  // クラシック
+                  window.open(retUrl, "_top");
+                }
+            }
+
+
+            function startSave(saveid,cancelid){
+                saveid1 = isContains(saveid,'bottom');
+                saveid2 = saveid;
+                cancelid1 = cancelid;
+                cancelid2 = isContains(cancelid,'bottom');
+                saveChangeValue(saveid1);
+                saveChangeValue(cancelid1);
+                saveChangeValue(saveid2);
+                saveChangeValue(cancelid2);
+                save();
+            }
+
+            function changeUserNameCardOwner(flage, co) {
+                var dis = flage == true ? 'flage' : '';
+                if (co != '1') {
+                  var ownerinput = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_mlktp');
+                  if (ownerinput != null) {
+                    ownerinput.disabled = dis;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_lkwgt').hidden = flage;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}').disabled = dis;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinputLabel}').style = flage == true ? 'color:#999999;' : '';
+                  }
+                }
+                else {
+                  // document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}' + '_mlktp').disabled = dis;
+                  var ownerinput = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}' + '_lkwgt');
+                  if (ownerinput != null) {
+                    ownerinput.hidden = flage;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}').disabled = dis;
+                    document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinputLabel}').style = flage == true ? 'color:#999999;' : '';
+                  }
+                }
+            }
+
+            function isContains(str, substr) {
+                var index = str.indexOf(substr);
+                var changeid = '';
+                if (index >0) {
+                    changeid = str.substring(0,index) + str.substring(index + 7,str.length);
+                }
+                else {
+                    var index1 = str.lastIndexOf(':');
+                    changeid = str.substring(0,index1) + ':bottom' + str.substring(index1,str.length);
+                }
+                return changeid;
+            }
+
+            function initset() {
+                var owner1 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}');
+                if (owner1 != null) {
+                  owner1.style="margin-left:10px;";
+                }
+                var oDiv = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_mlktp');
+                var ow = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}');
+                if (oDiv != null) {
+                  oDiv.onchange = function(){
+                      ow.value = '';
+                      changeOwner();
+                  }
+                }
+                var owner2 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}');
+                if (owner2 != null) {
+                  owner2.style="margin-left:10px;";
+                }
+                var oDiv1 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}' + '_mlktp');
+                var ow1 = document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem1.ownerinput}');
+                if (oDiv1 != null) {
+                  oDiv1.onchange = function(){
+                      ow1.value = '';
+                      changeOwner();
+                  }
+                }
+            }
+
+            function changecheck(e) {
+              var arrs = document.getElementsByTagName("input");
+              for(var i=0;i<arrs.length;i++){
+                    if (arrs[i].id.indexOf("todoCheckbox")!=-1){
+                      arrs[i].checked = e.checked;
+                   }
+              }
+              document.getElementById('{!$Component.basicToDo}').value = e.checked == false;
+            }
+
+            function setDis(index, renkeiType) {
+              startLoading();
+              var data = document.getElementById('{!$Component.All.blockid.ncRecList}' + ':' + index + ':' + renkeiType + 'Op');
+              var data1 = document.getElementById('{!$Component.All.blockid.ncRecList}' + ':' + index + ':' + renkeiType + 'Value');
+              // if (renkeiType == 'leadSelect') {
+              //   data1.value = 'none';
+              // } else {
+              //   data1.value = 0;
+              // }
+              if (data != null) {
+                data.options[0].selected = true;
+              }
+              submit(index, renkeiType);
+            }
+
+            function resetOwnerDisable() {
+              var leadOwnerCheckBox =  document.getElementById('{!$Component.All.blockid.newBlock.leadUseNameCardOwnerSection.leadUseNameCardOwner}');
+              if (leadOwnerCheckBox != null) {
+                changeUserNameCardOwner(leadOwnerCheckBox.checked, '');
+              }
+
+              var leadOwnerCheckBox =  document.getElementById('{!$Component.All.blockid.newBlock.accountUseNameCardOwnerSection.accountUseNameCardOwner}');
+              if (leadOwnerCheckBox != null) {
+                changeUserNameCardOwner(leadOwnerCheckBox.checked, '1');
+              }
+            }
+
+            function startLoading() {
+               document.getElementById('loadDiv').style.display = 'block';
+            }
+
+            function endLoading() {
+               document.getElementById('loadDiv').style.display = 'none';
+               document.getElementById('allCheckTodo').checked = document.getElementById('{!JSENCODE($Component.basicToDo)}').value == 'false';
+            }
+
+            initset();
+            document.getElementById('allCheckTodo').checked = document.getElementById('{!JSENCODE($Component.basicToDo)}').value == 'false';
+            resetOwnerDisable();
+
+          </script>
+  </apex:form>
+
+  <apex:outputPanel rendered="{!or($User.UIThemeDisplayed == 'Theme4u', $User.UIThemeDisplayed == 'Theme4d') }">
+    <apex:pageMessages />
+    <apex:includeLightning />
+
+    <div class="slds" style="height: calc(100% - 50px);">
+      <div id="lt_comp" style="height: 100%;"/>
+    </div>
+
+    <script>
+      document.body.parentElement.style='height:100%';
+      document.body.style='padding:0px;';
+      $Lightning.use("{!JSENCODE(namespace_x)}" + "SB_NCL_CardApp", function() { // sawano 2017.10.xx v1.21 for conde scan
+        $Lightning.createComponent("{!JSENCODE(namespace_x)}" + "{!JSENCODE(component)}",   // sawano 2017.10.xx v1.21 for conde scan
+        {
+          recordId : "{!targetIds}",
+          retUrl: "{!JSENCODE(retUrl)}", // sawano 2017.10.xx v1.21 for conde scan
+          viewId : "{!viewId}",
+          viewLabel : "{!viewLabel}",
+          fromId : "{!fromId}",
+          fromLabel : "{!fromLabel}"
+        },
+        "lt_comp",
+        function(cmp) {
+          // do some stuff
+        });
+      });
+    </script>
+  </apex:outputPanel>
+</apex:page>

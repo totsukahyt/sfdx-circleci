@@ -1,0 +1,42 @@
+<!-- /**
+ *
+ *  SB_NCL_Checkbox
+ *  リード拡張環境 LightningスタイルのCheckBoxコンポネート
+ *  標準Lightning:CheckboxはLightningぽくないので.
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 拡張パッケージ：Lead Ex. 1.12
+ *  @Version 拡張パッケージ：Lead Ex. 2.1  SV_DEV-1866 SLDS CSSクラス名変更対応
+ *
+ **/ -->
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" access="global">
+  <aura:attribute name="boxlabel" type="String"/>
+  <aura:attribute name="cObjectMap" type="Map" />
+  <aura:attribute name="fieldName" type="String" />
+  <aura:attribute name="boxid" type="String"/>
+  <aura:attribute name="dis" type="Boolean"/>
+  <aura:attribute name="checked" type="Boolean"/>
+  <aura:attribute name="leftmargin" type="Integer" default="10"/>
+  <aura:attribute name="eventName" type="String"/>
+  <aura:registerEvent name="leadBulkRegistEvent" type="c:SB_NCL_BulkRegistCommonEvent"/>
+
+  <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+      <aura:renderIf isTrue="{!v.dis == true}">
+        <div style="{!'margin-left:' + v.leftmargin + 'px;'}">
+          <ui:outputCheckbox value="{!v.checked}"/>&nbsp;&nbsp;{!v.boxlabel}
+        </div>
+      </aura:renderIf>
+      <aura:renderIf isTrue="{!v.dis != true}">
+        <label class="slds-checkbox" for="{!v.boxid}">
+          <input name="checkboxtop" type="checkbox" id="{!v.boxid}" checked="{!v.checked}" onclick="{!c.clickbox}"/>
+          <span  class="slds-checkbox_faux checkboxleft"></span>
+          <span class="slds-assistive-text"></span>
+          <span style="margin-left: 10px;" class="slds-form-element__label">{!v.boxlabel}</span>
+        </label>
+      </aura:renderIf>
+</aura:component>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lead Auto Conversion: Create contact when lead exists and corresponding account is unique.</help>
+    <label>L Auto Conv.: newC.whenL. A.exi. [Moved]</label>
+    <name>RenkeiCreateContactOnAcountWithLead__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- 名刺自動連携条件設定 --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- 名刺自動連携条件設定 --></value>
+    </caseValues>
+    <nameFieldLabel><!-- 連携設定 --></nameFieldLabel>
+    <startsWith><!-- Consonant --></startsWith>
+</CustomObjectTranslation>

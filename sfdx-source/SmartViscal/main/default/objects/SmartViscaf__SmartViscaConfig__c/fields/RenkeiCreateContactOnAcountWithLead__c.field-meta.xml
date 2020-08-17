@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RenkeiCreateContactOnAcountWithLead__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>リード用自動連携:リードと取引先が既存で取引先が特定できて取引先責任者レコードがない場合、取引先責任者を作成する。</description>
+    <externalId>false</externalId>
+    <inlineHelpText>リード用自動連携:リードと取引先が既存で取引先が特定できて取引先責任者レコードがない場合、取引先責任者を作成する。</inlineHelpText>
+    <label>リード用自動連携:リード、取引先既存で取引先責任者を作成する【移行済】</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lead Auto Conversion: Create lead when multiple corresponding account exist.</help>
+    <label>L Auto Conv.:newL.whenMul.Acc.exi[Moved]</label>
+    <name>RenkeiCreateLeadOnTooManyAccounts__c</name>
+</CustomFieldTranslation>

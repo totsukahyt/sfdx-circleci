@@ -1,87 +1,266 @@
 version: 2.1
 orbs:
+  sfdx: circleci/salesforce-sfdx@2.0.0
   slack: circleci/slack@3.4.2
 
-general:
-# Uncomment the following to specify only a specific branch
-#   branches:
-#     only:
-#       - dev # specific branch
-#       - /dev-.*/ # or regexes
-
+####################################################################################################
+## JOB:     build-and-test
+## PURPOSE:
+####################################################################################################
 jobs:
-  build:
-    machine: true
-    working_directory: ~/ci_app
-    environment:
-      # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
-      # and https://developer.salesforce.com/media/salesforce-cli/manifest.json
-      - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+  build-and-test:
+    docker:
+      - image: ncino/ci-sfdx
+    # machine: true
+    working_directory: ~/smartvisca-lead-package
     steps:
       - checkout
-      - slack/notify:
-          channel: "circlecidevelop"
-          color: '#42e2f4'
-          author_name: $SLACK_AUTHOR_NAME
-          image_url: "https://cultofthepartyparrot.com/parrots/hd/parrot.gif"
-          include_job_number_field: false
-          message: featureブランチが作成されました。<<pipeline.git.branch>>
-          webhook: ${SLACK_WEBHOOK}
-          
+      - sfdx/install
+      #　DEV環境認証開始
       - run:
-          name: Download CLI
-          command: |
-            mkdir sfdx
-            wget -qO- $DX_CLI_URL | tar xJ -C sfdx --strip-components 1
-      - run:
-          name: Install CLI
-          command: |
-            ./sfdx/install
-            sfdx
-            mkdir tmp
-      - run:
-          name: Create hub key
-          command: |
-            echo 'make hub key'
-            #- mkdir keys
-            #- echo $HUB_SERVER_KEY_HEX | xxd -r -ps >> keys/hub.key
-            openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
-            #- openssl rsa -in keys/hub.key -check -noout
-          ### Uncomment the following if performing deployments
-          #- echo 'make deploy key'
-          #- echo $DEPLOY_SERVER_KEY_HEX | xxd -r -ps >> keys/deploy.key
-          #- openssl rsa -in keys/deploy.key -check -noout
-          #- sfdx force:auth:jwt:grant --clientid $DEPLOY_CONSUMER_KEY --jwtkeyfile keys/deploy.key --username $DEPLOY_SFDC_USER -a deploy
+          name: create DEV org server key
+          command : |
+            if [ $CIRCLE_PULL_REQUEST ]; then
+              openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
+            else
+              exit 0
+            fi
+      - run: 
+          name: DEV jwt
+          command : | 
+            if [ $CIRCLE_PULL_REQUEST ]; then
+              sfdx force:auth:jwt:grant --clientid ${HUB_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias DEV-${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
+            else
+              exit 0
+            fi
+      #　DEV環境認証完了
       - run:
           name: Setup Org
           command: |
-            echo 'Running tests'
-            sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername -a fipoDE
-            createScrach=`sfdx force:org:create -s -f ~/ci_app/config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM --wait 3`
-            resultScrach=${createScrach##*:}
-            echo $resultScrach
-            generatePass=`sfdx force:user:password:generate --targetusername $resultScrach`
-            tempTrimPass=${generatePass#"Successfully set the password"}
-            tempTrimPass=${tempTrimPass%%"for"*}
-            echo tempTrimPass
-            sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM 
+            if [ $CIRCLE_PULL_REQUEST ]; then
+              echo 'Test scratch環境の作成 '
+              sfdx force:limits:api:display -u DEV-${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
+              sfdx force:org:create -f ~/smartvisca-lead-package/config/project-scratch-def.json -a circle_build_test -s -d 1 --wait 5
+              # 下記SmartVscaのバージョン：2.5.2
+              sfdx force:package:install --package 04t10000000jwLWAAY -s AllUsers -u circle_build_test -k sb202006 --publishwait 6 --wait 10
+              sfdx force:source:push -u circle_build_test
+              sfdx force:user:create --setalias ${CIRCLE_WORKFLOW_ID}@test.org --definitionfile config/project-user-admin-def.json
+            else
+              exit 0
+            fi
       - run:
           name: Run Apex Tests
           command: |
-            mkdir -p ~/junit
-            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
+            if [ $CIRCLE_PULL_REQUEST ]; then
+              echo 'Running Apex Tests'
+              mkdir -p ~/junit
+              sfdx force:apex:test:run -c -d ~/junit -r junit -u ${CIRCLE_WORKFLOW_ID}@test.org --wait 5
+              echo 'export TESTMSG_HEAD=$(echo Unit Test が正常に完了しました。)' >> $BASH_ENV
+              source $BASH_ENV
+            else
+              echo 'export TESTMSG_HEAD=$(echo PRを出していない場合、Unit Test が実行しません。)' >> $BASH_ENV
+              source $BASH_ENV
+              exit 0
+            fi
+
       - store_test_results:
           path: ~/junit
+
       - run:
           name: Delete Useless Scratch Org
           command: |
-            sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
+            if [ $CIRCLE_PULL_REQUEST ]; then
+              sfdx force:org:delete -u circle_build_test -p
+            else
+              exit 0
+            fi
 
-### Uncomment the following if performing deployments
-#deployment:
-#  override:
-#    - sfdx force:source:convert -r force-app -d testDeploy
-#    - . cleanupDeploy.sh
-#    - sfdx force:mdapi:deploy -d testDeploy/ -u deploy -w 2
+      - slack/notify:
+          channel: ${SLACK_CHANNEL}
+          color: '#42e2f4'
+          message: "${TESTMSG_HEAD} \n 名前：$CIRCLE_USERNAME \n ブランチ：${CIRCLE_BRANCH}"
+          webhook: '${SLACK_WEBHOOK}'
+          include_job_number_field: false
 
-# sfdx force:user:password:generate --targetusername <username>
+      - slack/status:
+          fail_only: true
+          channel: ${SLACK_CHANNEL}
+          webhook: '${SLACK_WEBHOOK}'
+          failure_message: "名前：$CIRCLE_USERNAME \n ブランチ：$CIRCLE_BRANCH \n CIRCLE JOB が失敗しました。確認してください。"
+
+####################################################################################################
+## JOB:     create-feature-scratch
+## PURPOSE:
+####################################################################################################
+  create-feature-scratch:
+    docker:
+      - image: ncino/ci-sfdx
+    # machine: true
+    working_directory: ~/smartvisca-lead-package
+    steps:
+      - checkout
+      - sfdx/install
+      #　DEV環境認証開始
+      - run: 
+          name: create server key 
+          command: openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
+      - run: 
+          name: DEV jwt
+          command: sfdx force:auth:jwt:grant --clientid ${HUB_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias DEV-${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
+      #　DEV環境認証完了
+
+      - run:
+          name: create-feature-scratch
+          command: |
+            sfdx force:data:soql:query -q "SELECT Name,OrgName,ScratchOrg,Description FROM ScratchOrgInfo WHERE status = 'Active' AND OrgName = '$CIRCLE_BRANCH'" -u DEV-${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH} | wc -l > scratchorg.cnt
+            cat scratchorg.cnt
+            SCRATCH_CNT=$(cat scratchorg.cnt)
+            echo "scratch:count=${SCRATCH_CNT}"
+            echo "'$CIRCLE_BRANCH'"
+            echo "${CIRCLE_BRANCH}"
+            if [ "${SCRATCH_CNT}" = "1" ]; then
+              echo 'Featrue scratch環境の作成 '
+
+              sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_BRANCH} -a ${CIRCLE_BRANCH} -s -d 30  --wait 10
+              # 下記SmartVscaのバージョン：2.5.2
+              sfdx force:package:install --package 04t10000000jwLWAAY -s AllUsers -u ${CIRCLE_BRANCH} -k sb202006 --publishwait 6 --wait 10
+              sfdx force:source:push -u ${CIRCLE_BRANCH}
+              sfdx force:user:create --setalias ${CIRCLE_WORKFLOW_ID}@feature.org --definitionfile config/project-user-admin-def.json
+              sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@feature.org
+              sfdx force:user:display --targetusername ${CIRCLE_WORKFLOW_ID}@feature.org | sed '1,3d' > ./dev_userPassword.txt
+              cat ./dev_userPassword.txt
+              echo 'export VERY_IMPORTANT=$(cat ./dev_userPassword.txt)' >> $BASH_ENV
+              source $BASH_ENV
+            else
+              echo 'すでに環境が作成されています。'
+              echo 'export DEVMSG_HEAD=$(echo 当ブランチで既に環境が作成されています。)' >> $BASH_ENV
+              source $BASH_ENV
+            fi
+
+      - slack/notify:
+          channel: ${SLACK_CHANNEL}
+          color: '#42e2f4'
+          message: "${DEVMSG_HEAD} \n ブランチ：${CIRCLE_BRANCH} \n ${VERY_IMPORTANT}"
+          webhook: '${SLACK_WEBHOOK}'
+          include_job_number_field: false
+      
+      - slack/status:
+          fail_only: true
+          channel: ${SLACK_CHANNEL}
+          webhook: '${SLACK_WEBHOOK}'
+          failure_message: "名前：$CIRCLE_USERNAME \n ブランチ：$CIRCLE_BRANCH \n CIRCLE JOB が失敗しました。確認してください。"
+
+####################################################################################################
+## JOB:     create-beta-package
+## PURPOSE:
+####################################################################################################
+  create-beta-package:
+    executor: sfdx/default
+    steps:
+      - checkout
+      - sfdx/install
+      #　PJT環境認証開始
+      - run: 
+          name: create PKG org server key
+          command: openssl enc -nosalt -aes-256-cbc -d -in assets/server_pkg.key.enc -out assets/server_pkg.key -base64 -K ${PKGORG_DECRYPTION_KEY} -iv ${PKGORG_DECRYPTION_IV}
+      - run: 
+          name: PKG jwt
+          command: sfdx force:auth:jwt:grant --clientid ${PKGORG_CONSUMER_KEY} --jwtkeyfile assets/server_pkg.key --username ${PKGORG_SFDC_USERNAME} --setdefaultdevhubusername --setalias PKG-${CIRCLE_PROJECT_REPONAME}-BETA
+      #　PJT環境認証完了
+      #　DEV環境認証開始
+      - run: 
+          name: create DEV org server key
+          command: openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
+      - run: 
+          name: DEV jwt
+          command: sfdx force:auth:jwt:grant --clientid ${HUB_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias DEV-${CIRCLE_PROJECT_REPONAME}-BETA
+      #　DEV環境認証完了
+      - run:
+          name: Convert SFDX source to MDAPI source
+          command: |
+            sfdx force:source:convert -r "$PACKAGE_DIRECTORY" \
+                                      -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
+                                      -n "$PACKAGE_NAME" \
+                                      --loglevel error
+
+      - run:
+          name: Deploy MDAPI Source to the Packaging Org
+          command: |
+            sfdx force:mdapi:deploy -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
+                                    -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+                                    -w 15 \
+                                    --verbose \
+                                    --loglevel error
+
+      - run:
+          name: List current version history for the first-generation package about to be uploaded
+          command: |
+            sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+                                             -i $METADATA_PACKAGE_ID \
+                                             --loglevel error
+
+      - run:
+          name: Create (upload) a new MANAGED BETA package version
+          command: |
+            sfdx force:package1:version:create -i $METADATA_PACKAGE_ID \
+                                               -n "$PACKAGE_VERSION_NAME" \
+                                               -d "Package version generated by CI process" \
+                                               -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+                                               -w 15 \
+                                               --loglevel error > ./versionId.txt
+            sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+                                             -i $METADATA_PACKAGE_ID \
+                                             --loglevel error
+            VID=$(cat ./versionId.txt)
+            echo 'VID1 : ' ${VID}
+            VID=`echo ${VID#*[}`
+            echo 'VID2 : ' ${VID}
+            VID=`echo ${VID%]*}`
+            echo 'VID3 : ' ${VID}
+            echo 'export VERSIONID_ENV=${VID}' >> $BASH_ENV
+            source $BASH_ENV
+            echo 'QA scratch環境の作成 '
+            sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-${CIRCLE_TAG} -a ${CIRCLE_TAG} -n -s -d 30 --wait 10
+            sfdx force:org:list --all
+            # 下記SmartVscaのバージョン：2.5.2
+            sfdx force:package:install --package 04t10000000jwLWAAY -s AllUsers -u ${CIRCLE_TAG} -k sb202006 --publishwait 6 --wait 10
+            sfdx force:package:install --package $VERSIONID_ENV -u ${CIRCLE_TAG} --publishwait 6 --wait 10
+            sfdx force:user:create --setalias qa-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile config/project-user-admin-def.json
+            sfdx force:user:password:generate -u qa-${CIRCLE_WORKFLOW_ID}@package.org
+            sfdx force:user:display --targetusername qa-${CIRCLE_WORKFLOW_ID}@package.org | sed '1,3d' > ./qa_userPassword.txt
+            cat ./qa_userPassword.txt
+            echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.txt)' >> $BASH_ENV
+            echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
+            source $BASH_ENV
+
+      - slack/notify:
+          channel: ${SLACK_CHANNEL}
+          color: '#42e2f4'
+          message: "${QAMSG_HEAD} \n タグ：${CIRCLE_TAG} \n ${QAVERY_IMPORTANT}"
+          webhook: '${SLACK_WEBHOOK}'
+          include_job_number_field: false
+
+      - slack/status:
+          fail_only: true
+          channel: ${SLACK_CHANNEL}
+          webhook: '${SLACK_WEBHOOK}'
+          failure_message: "名前：$CIRCLE_USERNAME \n タグ：$CIRCLE_TAG \n CIRCLE JOB が失敗しました。確認してください。"
+
+workflows:
+  version: 2.1
+  all_jobs:
+    jobs:
+      - build-and-test:
+          context: org-sbdevhub
+      - create-feature-scratch:
+          context: org-sbdevhub
+          filters:
+            branches:
+              only: /^feature.*/
+      - create-beta-package:
+          context: org-sbdevhub
+          filters:
+            tags:
+              only: /^beta.*/
+            branches:
+              ignore: /.*/

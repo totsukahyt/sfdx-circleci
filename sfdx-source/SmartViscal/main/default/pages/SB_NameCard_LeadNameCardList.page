@@ -1,0 +1,105 @@
+<!--
+/*
+ * (c) 2015 SunBridge Inc.
+ *
+ * リードを更新
+ * @Version 1.11 kou 2018.1.xx SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。
+ *
+ */
+-->
+<apex:page standardController="Lead" extensions="SB_NameCard_LeadNameCardListController" title="{!windowTitle}" tabStyle="Lead" showHeader="true" sidebar="false">
+  <apex:pageMessages id="pageMsgs"/>
+
+  <apex:form >
+    <apex:pageBlock title="{!windowTitle}">
+      <apex:pageBlockButtons >
+        <apex:commandButton action="{!cancel}" value="{!$Label.sb_ncld_label_cancel}" immediate="true"/>
+      </apex:pageBlockButtons>
+
+      <apex:pageBlockSection columns="2">
+        <apex:outputPanel >
+          <apex:inputCheckbox value="{!leadOverwrite}"/>
+          <apex:outputLabel value="{!overwriteLeadInfoLabel}"/>
+        </apex:outputPanel>
+        <!-- <apex:selectRadio label="{!$Label.SB_NCLD_Label_SearchCondition}" value="{!searchType}">
+          <apex:actionSupport event="onclick" action="{!search}" rerender="nameCardTable"/>
+          <apex:selectOptions value="{!searchTypeSelectOpts}"/>
+        </apex:selectRadio> -->
+      </apex:pageBlockSection>
+
+      <apex:pageBlockTable Id="nameCardTable" value="{!nameCardRecordList}" var="ncRec">
+        <apex:column >
+          <apex:facet name="header">{!updateLeadLabel}</apex:facet>
+          <apex:outputLink value="javascript:void(0)">
+            {!$Label.sb_ncld_text_update}
+            <apex:actionSupport event="onclick" action="{!saveLead}" rerender="pageMsgs">
+              <apex:param name="nameCardRecordListIndex" assignto="{!nameCardRecordListIndex}" value="{!ncRec.index}"/>
+            </apex:actionSupport>
+          </apex:outputLink>
+        </apex:column>
+
+        <apex:column rendered="true">
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__card_exchange_date__c.Label}</apex:facet>
+          <apex:outputField value="{!ncRec.nameCard.SmartViscaf__card_exchange_date__c}"/>
+        </apex:column>
+
+        <apex:column >
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__company_name__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__company_name__c}"/>
+        </apex:column>
+
+        <apex:column >
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__address_pref__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__address_pref__c}"/>
+        </apex:column>
+
+        <apex:column >
+        <!-- SV_DEV-575 リード1.11バージョン:リード詳細画面で「名刺で更新」：役職の項目に「氏名」のリンクが表示されている。 -->
+        <!-- SmartViscaf__title_name__c ~~~~~~~ SmartViscaf__division__c -->
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__division__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__division__c}"/>
+        </apex:column>
+
+        <apex:column >
+        <!-- SV_DEV-575 リード1.11バージョン:リード詳細画面で「名刺で更新」：役職の項目に「氏名」のリンクが表示されている。 -->
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__title_name__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__title_name__c}"/>
+        </apex:column>
+
+         <apex:column >
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.Name.Label}</apex:facet>
+          <a href="/{!ncRec.nameCard.Id}" id="ncNm_{!ncRec.nameCard.Id}" onblur="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onfocus="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}').hide();" onmouseover="LookupHoverDetail.getHover('ncNm_{!ncRec.nameCard.Id}', '/{!ncRec.nameCard.Id}/m?isAjaxRequest=1').show();">
+              <apex:outputText value="{!ncRec.nameCard.Name}"/>
+          </a>
+        </apex:column>
+
+        <apex:column >
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.SmartViscaf__email__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nameCard.SmartViscaf__email__c}"/>
+        </apex:column>
+
+        <apex:column >
+          <!-- SV_DEV-741  リード詳細画面で「名刺で更新」での「所属」「役職」「氏名」項目表示の各バージョンでの違い。 -->
+          <apex:facet name="header">{!$ObjectType.SmartViscaf__NameCard__c.Fields.LastModifiedDate.Label}</apex:facet>
+          <apex:outputField value="{!ncRec.nameCard.LastModifiedDate}"/>
+        </apex:column>
+
+        <apex:column >
+          <apex:facet name="header">{!$Label.sb_ncld_label_owner}</apex:facet>
+          <apex:outputPanel layout="none">
+            <a href="/{!ncRec.nameCard.OwnerId}" id="ncOwn_{!ncRec.nameCard.OwnerId}" onblur="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onfocus="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onmouseover="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();">
+              <apex:outputText value="{!ncRec.nameCard.Owner.Name}"/>
+            </a>
+          </apex:outputPanel>
+        </apex:column>
+      </apex:pageBlockTable>
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

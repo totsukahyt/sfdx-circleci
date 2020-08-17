@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lead Auto Conversion: Create campaign member for contact in addtion to lead (when creating or updating), if a campaign ID is specified.</help>
+    <label>L Auto Conv.: Contacts can be camp. mem.</label>
+    <name>RenkeiContactToCampaignMember__c</name>
+</CustomFieldTranslation>
