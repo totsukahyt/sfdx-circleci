@@ -3,7 +3,7 @@
     { "path": "sfdx-source/SmartViscal", "default": true },
     { "path": "sfdx-source/unpackaged"}
   ],
-  "namespace": "SmartViscal",
+  "namespace": "ficuspop",
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "45.0",
   "plugins": {
