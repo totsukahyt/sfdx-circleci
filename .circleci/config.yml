@@ -15,7 +15,8 @@ jobs:
     working_directory: ~/smartvisca-lead-package
     steps:
       - checkout
-      - sfdx/install
+      - sfdx/install:
+          version: "7.69.0"
       #　DEV環境認証開始
       - run:
           name: create DEV org server key
@@ -99,7 +100,8 @@ jobs:
     working_directory: ~/smartvisca-lead-package
     steps:
       - checkout
-      - sfdx/install
+      - sfdx/install:
+          version: "7.69.0"
       #　DEV環境認証開始
       - run: 
           name: create server key 
@@ -158,7 +160,8 @@ jobs:
     executor: sfdx/default
     steps:
       - checkout
-      - sfdx/install
+      - sfdx/install:
+          version: "7.69.0"
       #　PJT環境認証開始
       - run: 
           name: create PKG org server key
