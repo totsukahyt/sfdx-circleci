@@ -7,7 +7,7 @@ const path = require('path')
 var chrome    = require('selenium-webdriver/chrome');
 const fs = require('fs');
 
-var options   = new chrome.Options()//.addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1920x1080');
+var options   = new chrome.Options().addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1920x1080');
 
 
 let driver;
@@ -21,7 +21,7 @@ describe("SeleniumChromeTest", () => {
   });
 
   after(() => {
-    // return driver.quit();
+    return driver.quit();
   });
 
   it("login salesforce", async () => {
