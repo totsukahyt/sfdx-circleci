@@ -236,6 +236,21 @@ jobs:
             echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
             source $BASH_ENV
 
+      - run:
+          name: create login info files and run e2e script
+          command: |
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              grep Access qa_userPassword.txt|awk '{print $3}' > scripts/e2e/qa_token.txt
+              grep Login qa_userPassword.txt|awk '{print $3}' > scripts/e2e/qa_url.txt
+              grep Instance qa_userPassword.txt|awk '{print $3}' > scripts/e2e/qa_inurl.txt
+              grep Username qa_userPassword.txt|awk '{print $2}' > scripts/e2e/qa_un.txt
+              grep Password qa_userPassword.txt|awk '{print $2}' > scripts/e2e/qa_pw.txt
+              npm install
+              npx mocha scripts/e2e/SmartViscaInitialSetting.js --timeout 0
+            else
+              exit 0
+            fi
+
       - slack/notify:
           channel: ${SLACK_CHANNEL}
           color: '#42e2f4'

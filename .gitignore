@@ -24,3 +24,6 @@
 
 # Ignore any file named "anonymous.apex"
 anonymous.apex
+
+# Ignore node_module
+node_modules
