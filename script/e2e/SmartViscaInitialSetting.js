@@ -44,5 +44,11 @@ describe("SeleniumChromeTest", () => {
 
   });
 
+  it("組織の共有設定", async () => {
+    let shareUrl = fs.readFileSync("scripts/e2e/qa_inurl.txt","utf-8").replace(/\r?\n/g,"")
+    　　　　　　　　+ "/lightning/setup/SecuritySharing/home";
+    await driver.wait(until.elementLocated(By.xpath('//*[@value="編集"]')),10)
+  })
+
 });
 
