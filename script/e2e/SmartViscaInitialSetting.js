@@ -1,13 +1,14 @@
 require("chromedriver");
 require("date-utils");
 require("jquery")
+const assert = require('assert');
 const webdriver =  require("selenium-webdriver");
 const { Builder, By, until } = webdriver;
 const path = require('path')
-var chrome    = require('selenium-webdriver/chrome');
+var chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
-
-var options   = new chrome.Options().addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1920x1080');
+var LOGIN_INFO
+var options   = new chrome.Options()//.addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1920x1080');
 
 
 let driver;
@@ -17,37 +18,67 @@ let iframe;
 describe("SeleniumChromeTest", () => {
   before(() => {
     driver = new Builder().forBrowser('chrome').withCapabilities(options).build();
-    
+    LOGIN_INFO = fs.readFileSync("./qa_userPassword.json")
+    LOGIN_INFO = JSON.parse(LOGIN_INFO).result
   });
 
   after(() => {
-    return driver.quit();
+    // return driver.quit();
   });
 
   it("login salesforce", async () => {
-
-    let url = fs.readFileSync("script/e2e/qa_url.txt","utf-8")
-              + "/secur/frontdoor.jsp?sid="
-              + fs.readFileSync("script/e2e/qa_token.txt","utf-8");
-    let un = fs.readFileSync("script/e2e/qa_un.txt","utf-8");
-    let opw = fs.readFileSync("script/e2e/qa_pw.txt","utf-8");
-    let npw = fs.readFileSync("qa_scratch_pw.txt","utf-8");
-    let nwid = fs.readFileSync("network_id.txt","utf-8");
-    // let url = " https://power-energy-6468-dev-ed.cs72.my.salesforce.com/secur/frontdoor.jsp?sid=00D5D0000009gpG!AQcAQC8HGVjEsAQDl4bSn4mUWaky0uQhgZcyB3oThgbq.mApSY6p0sRIkA87DmOBuuXhzc.XnI.BK7tx4x_d1sWt3F7NVmYC"
-    await driver.get(url);
     
-    // 要素を取得
-    await driver.wait(until.elementLocated(By.xpath('//*[@id="username"]')));
-    await driver.findElement(By.id("username")).sendKeys(un)
-    await driver.findElement(By.id("password")).sendKeys(opw)
-    await driver.findElement(By.id("Login")).click();
+    
+    let url = LOGIN_INFO.instanceUrl+"/secur/frontdoor.jsp?sid="+LOGIN_INFO.accessToken
+    await driver.get(url);
+
+    //Login処理がなければ
+    try{
+      await driver.wait(until.elementLocated(By.xpath('//*[@id="username"]')),10);
+      await driver.findElement(By.id("username")).sendKeys(LOGIN_INFO.username)
+      await driver.findElement(By.id("password")).sendKeys(LOGIN_INFO.password)
+      await driver.findElement(By.id("Login")).click();
+    } catch(e){
+    }
 
   });
 
-  it("組織の共有設定", async () => {
-    let shareUrl = fs.readFileSync("scripts/e2e/qa_inurl.txt","utf-8").replace(/\r?\n/g,"")
-    　　　　　　　　+ "/lightning/setup/SecuritySharing/home";
-    await driver.wait(until.elementLocated(By.xpath('//*[@value="編集"]')),10)
+  it("フィード追跡", async () => {
+    let shareUrl = LOGIN_INFO.instanceUrl + "/lightning/setup/FeedTracking/home";
+    await driver.get(shareUrl)
+
+    await driver.wait(until.elementLocated(By.xpath('//*[@id="setupComponent"]/div[2]/div/force-aloha-page/div/iframe')))
+    iframe = await driver.findElement(By.xpath('//*[@id="setupComponent"]/div[2]/div/force-aloha-page/div/iframe'))
+    await driver.switchTo().frame(iframe);
+
+    await driver.wait(until.elementsLocated(By.xpath('//a[@title="NameCard"]')),10000)
+    await driver.findElement(By.xpath('//a[@title="NameCard"]')).click()
+    await driver.wait(until.elementsLocated(By.xpath('//input[@id="j_id0:j_id7:toolbarTop:j_id32:enableTracking"]')),5000)
+    const checkbox = await driver.findElement(By.xpath('//input[@id="j_id0:j_id7:toolbarTop:j_id32:enableTracking"]'))
+    const isCheck = await checkbox.getAttribute("checked")
+    if(!isCheck ||isCheck === null){
+      await checkbox.click()
+      console.log("有効化")
+      await driver.findElement(By.xpath('//input[@value="保存"]')).click()
+    }
+    
+
+
+
+
+
+  //   await driver.findElements(By.tagName('a')).then(result => {
+
+  //   //   for (let i = 0; i < result.length; i++) {
+  //   //     const element = result[i];
+  //   //     element.getText().then(txt =>{
+  //   //       if(txt === '名刺'){
+  //   //         element.click()
+  //   //       }
+  //   //     })
+  //   //   }
+  //   // })
+    
   })
 
 });

@@ -1,0 +1,14 @@
+{
+    "FirstName": "general",
+    "LastName": "SmartViscaLead",
+    "Email": "totsukahyt+qaTest@sohobb.jp",
+    "Alias": "general",
+    "TimeZoneSidKey": "Asia/Tokyo",
+    "LocaleSidKey": "ja_JP",
+    "EmailEncodingKey": "ISO-2022-JP",
+    "LanguageLocaleKey": "ja",
+    "UserPermissionsMarketingUser": true,
+    "profileName": "SV標準ユーザ",
+    "permsets": ["SmartViscaUser"],
+    "generatePassword": true
+  }

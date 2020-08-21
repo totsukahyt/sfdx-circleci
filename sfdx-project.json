@@ -1,7 +1,7 @@
 {
   "packageDirectories": [
-    { "path": "sfdx-source/SmartViscal", "default": true },
-    { "path": "sfdx-source/unpackaged"}
+    { "path": "sfdx-source/SmartViscal" },
+    { "path": "sfdx-source/unpackaged","default": true}
   ],
   "namespace": "ficuspop",
   "sfdcLoginUrl": "https://login.salesforce.com",
@@ -21,8 +21,8 @@
       "schemaVersion"   : "0.0.1",
       "pluginVersion"   : "0.0.93",
       "appxPackage"     : {
-        "namespacePrefix"   : "SmartViscal",
-        "packageName"       : "SmartVisca_Lead",
+        "namespacePrefix"   : "SmartVisca1",
+        "packageName"       : "SmartVisca_Lead1",
         "metadataPackageId" : "03310000000VKOnAAO"
       },
       "appxDemo": {}

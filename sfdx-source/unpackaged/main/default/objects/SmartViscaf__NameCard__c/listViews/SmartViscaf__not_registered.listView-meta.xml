@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SmartViscaf__not_registered</fullName>
+    <columns>SmartViscaf__card_exchange_date__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>NAME</columns>
+    <columns>SmartViscaf__company_name__c</columns>
+    <columns>SmartViscaf__division__c</columns>
+    <columns>SmartViscaf__title_name__c</columns>
+    <columns>SmartViscaf__tel1__c</columns>
+    <columns>SmartViscaf__email__c</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>SmartViscaf__list_name__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>SmartViscaf__account__c</field>
+        <operation>equals</operation>
+    </filters>
+    <filters>
+        <field>SmartViscaf__contact__c</field>
+        <operation>equals</operation>
+    </filters>
+    <filters>
+        <field>SmartViscaf__lead__c</field>
+        <operation>equals</operation>
+    </filters>
+    <label>08 未登録の名刺</label>
+</ListView>
