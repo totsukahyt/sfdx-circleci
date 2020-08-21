@@ -230,7 +230,7 @@ jobs:
             sfdx force:package:install --package $VERSIONID_ENV -u ${CIRCLE_TAG} --publishwait 6 --wait 10
             sfdx force:user:create --setalias qa-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile config/project-user-admin-def.json
             sfdx force:user:password:generate -u qa-${CIRCLE_WORKFLOW_ID}@package.org
-            sfdx force:user:display --targetusername qa-${CIRCLE_WORKFLOW_ID}@package.org  | sed '1,3d' > ./qa_userPassword.txt
+            sfdx force:user:display --targetusername qa-${CIRCLE_WORKFLOW_ID}@package.org --json > qa_userPassword.json
             cat ./qa_userPassword.txt
             echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.txt)' >> $BASH_ENV
             echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
