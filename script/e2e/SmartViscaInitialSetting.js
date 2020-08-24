@@ -89,5 +89,5 @@ async function takeScreenShot(name){
   let base64 = await driver.takeScreenshot();
   let buffer = Buffer.from(base64, 'base64');
 
-  await fs.writeFileSync(name+'.jpg',buffer)
+  await fs.writeFileSync('screenshots/'+name+'.jpg',buffer)
 }

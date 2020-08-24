@@ -252,7 +252,7 @@ jobs:
           command: |
 
               npm install
-              npx mocha scripts/e2e/SmartViscaInitialSetting.js --timeout 2000
+              npx mocha script/e2e/SmartViscaInitialSetting.js --timeout 20000
 
 
       - slack/notify:
