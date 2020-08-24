@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>When checked, the business card editing also becomes the standard screen.</help>
+    <label><!-- S名刺詳細は標準の画面を使う --></label>
+    <name>SmartViscaf__SUseStandardNamecardViewUI__c</name>
+</CustomFieldTranslation>

@@ -8,7 +8,7 @@ const path = require('path')
 var chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 var LOGIN_INFO
-var options   = new chrome.Options()//.addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1920x1080');
+var options   = new chrome.Options().addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1920x1080');
 
 
 let driver;
@@ -23,7 +23,7 @@ describe("SeleniumChromeTest", () => {
   });
 
   after(() => {
-    // return driver.quit();
+    return driver.quit();
   });
 
   it("login salesforce", async () => {
@@ -62,9 +62,10 @@ describe("SeleniumChromeTest", () => {
       await driver.findElement(By.xpath('//input[@value="保存"]')).click()
     }
     
+    takeScreenShot('feed')
 
 
-
+    
 
 
   //   await driver.findElements(By.tagName('a')).then(result => {
@@ -83,3 +84,10 @@ describe("SeleniumChromeTest", () => {
 
 });
 
+
+async function takeScreenShot(name){
+  let base64 = await driver.takeScreenshot();
+  let buffer = Buffer.from(base64, 'base64');
+
+  await fs.writeFileSync(name+'.jpg',buffer)
+}

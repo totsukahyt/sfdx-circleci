@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Set when Sunbridge support instructs.</help>
+    <label><!-- S開発モードで動作する --></label>
+    <name>SmartViscaf__SDevelopment__c</name>
+</CustomFieldTranslation>

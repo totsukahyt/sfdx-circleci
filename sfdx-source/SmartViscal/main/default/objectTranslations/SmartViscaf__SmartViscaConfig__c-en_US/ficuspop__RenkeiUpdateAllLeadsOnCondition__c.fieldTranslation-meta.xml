@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- リード用自動連携:（上書き設定時）該当するリード複数を更新する。オフの場合、該当するリードが複数あったときは更新しない。 --></help>
+    <label><!-- リード用自動連携:条件に合致する既存リードは全て更新する【移行済】 --></label>
+    <name>ficuspop__RenkeiUpdateAllLeadsOnCondition__c</name>
+</CustomFieldTranslation>

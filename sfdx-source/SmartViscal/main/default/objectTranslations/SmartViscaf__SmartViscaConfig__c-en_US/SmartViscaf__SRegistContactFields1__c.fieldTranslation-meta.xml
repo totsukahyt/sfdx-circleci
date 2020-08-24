@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>&lt;Business Card field API Name&gt;:&lt;Contact field API Name&gt; Multiple definitions can be separated by commas. Multiple definitions are required to map a Card field to multiple Contact fields.</help>
+    <label><!-- S取引先責任者登録時の項目マッピング1 --></label>
+    <name>SmartViscaf__SRegistContactFields1__c</name>
+</CustomFieldTranslation>

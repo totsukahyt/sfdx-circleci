@@ -2,7 +2,6 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>RenkeiUpdateAllLeadsOnCondition__c</fullName>
     <defaultValue>false</defaultValue>
-    <deprecated>false</deprecated>
     <description>リード用自動連携:（上書き設定時）該当するリード複数を更新する。オフの場合、該当するリードが複数あったときは更新しない。</description>
     <externalId>false</externalId>
     <inlineHelpText>リード用自動連携:（上書き設定時）該当するリード複数を更新する。オフの場合、該当するリードが複数あったときは更新しない。</inlineHelpText>

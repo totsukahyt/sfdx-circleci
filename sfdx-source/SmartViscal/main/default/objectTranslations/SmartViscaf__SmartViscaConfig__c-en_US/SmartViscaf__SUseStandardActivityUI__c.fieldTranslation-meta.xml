@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Check the action and ToDo if you use the standard page. Custom fields can only be edited on the standard page. Association can not be done on the standard page.</help>
+    <label><!-- S行動やToDoは標準の画面を使う --></label>
+    <name>SmartViscaf__SUseStandardActivityUI__c</name>
+</CustomFieldTranslation>

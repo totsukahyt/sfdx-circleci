@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>On the detail page of Salesforce 1, the results edited on the standard screen are not immediately reflected.</help>
+    <label><!-- S名刺編集は標準の画面を使う --></label>
+    <name>SmartViscaf__SUseStandardNamecardEditUI__c</name>
+</CustomFieldTranslation>

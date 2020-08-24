@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>SRegistCampaignList__c</fullName>
-    <deprecated>false</deprecated>
     <description>キャンペーンのリストに表示する条件
 上限件数; 私のだけなら true を指定 ; 「状況」をカンマ区切り; 「種別」をカンマ区切り
 例 &quot;5;true; ;&quot;</description>

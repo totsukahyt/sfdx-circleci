@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Condition of distance (km) when searching business card in the neighborhood</help>
+    <label><!-- S近所の名刺を検索するときの距離（キロ） --></label>
+    <name>SmartViscaf__SFindNearByQueryDistance__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- S名刺一覧のみんなの名刺は最新の名刺以外も対象にする --></label>
+    <name>SmartViscaf__SListQueryIgnoreLatestCard__c</name>
+</CustomFieldTranslation>

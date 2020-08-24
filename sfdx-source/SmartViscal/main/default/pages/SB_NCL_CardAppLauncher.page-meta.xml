@@ -9,4 +9,9 @@
         <minorNumber>0</minorNumber>
         <namespace>SmartViscaf</namespace>
     </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>0</minorNumber>
+        <namespace>ficuspop</namespace>
+    </packageVersions>
 </ApexPage>

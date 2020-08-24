@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customApplications>
+        <label><!-- SmartVisca --></label>
+        <name>SmartVisca</name>
+    </customApplications>
+    <customApplications>
+        <label><!-- SmartVisca --></label>
+        <name>SmartViscaLightningApplication</name>
+    </customApplications>
+    <customApplications>
+        <label><!-- モバイル名刺 --></label>
+        <name>SmartViscaMobileApplication</name>
+    </customApplications>
     <customLabels>
         <label><!-- オブジェクトの作成権限がありません。 --></label>
         <name>SB_MSG_CrudNotCreateable</name>
@@ -637,12 +649,20 @@
         <name>SmartViscaf__SB_MSG_FlsNotUpdateable</name>
     </customLabels>
     <customLabels>
+        <label><!-- 同じ名刺を持っている社員のレポートがありません。 --></label>
+        <name>SmartViscaf__SB_MSG_HaveSameNameCardReportNotFound</name>
+    </customLabels>
+    <customLabels>
         <label><!-- &apos;idを指定してください&apos; --></label>
         <name>SmartViscaf__SB_MSG_IdMissing</name>
     </customLabels>
     <customLabels>
         <label><!-- 不正な リクエストです。 --></label>
         <name>SmartViscaf__SB_MSG_IllegalRequest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- S!検索ではASCIIは2文字以上必要 --></label>
+        <name>SmartViscaf__SB_MSG_MoreThanOneLetter</name>
     </customLabels>
     <customLabels>
         <label><!-- 最新の名刺が自分自身である名刺を転職後の名刺とすることはできません --></label>
@@ -685,6 +705,10 @@
         <name>SmartViscaf__SB_MSG_ViewRelated</name>
     </customLabels>
     <customLabels>
+        <label><!-- 組織情報Lightning Componentのタイトル --></label>
+        <name>SmartViscaf__SB_NCOTL_AppTitle</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 裏面も撮る --></label>
         <name>SmartViscaf__SB_NCS1C_Label_AlsoBackside</name>
     </customLabels>
@@ -713,6 +737,10 @@
         <name>SmartViscaf__SB_NCS1C_Label_FrontsideOnlyInput</name>
     </customLabels>
     <customLabels>
+        <label><!-- さらにゴミを取る --></label>
+        <name>SmartViscaf__SB_NCS1C_Label_GabageFilter</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 戻る --></label>
         <name>SmartViscaf__SB_NCS1C_Label_GoBack</name>
     </customLabels>
@@ -739,6 +767,10 @@
     <customLabels>
         <label><!-- （メモなし） --></label>
         <name>SmartViscaf__SB_NCS1C_Label_NoMemo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 陰影除去後のゴミを取る --></label>
+        <name>SmartViscaf__SB_NCS1C_Label_NoiseFilter</name>
     </customLabels>
     <customLabels>
         <label><!-- 補正しない --></label>
@@ -775,6 +807,10 @@
     <customLabels>
         <label><!-- 送信 --></label>
         <name>SmartViscaf__SB_NCS1C_Label_Send</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 陰影除去する --></label>
+        <name>SmartViscaf__SB_NCS1C_Label_ShadeFilter</name>
     </customLabels>
     <customLabels>
         <label><!-- メモを引き継ぐ --></label>
@@ -1353,6 +1389,10 @@
         <name>SmartViscaf__SB_NCS1_Text_Required</name>
     </customLabels>
     <customLabels>
+        <label><!-- モバイルのSOSLのときのフィルターする項目 --></label>
+        <name>SmartViscaf__SB_NCS1_Text_SearchFilterFields</name>
+    </customLabels>
+    <customLabels>
         <label><!-- ニュース検索 --></label>
         <name>SmartViscaf__SB_NCS1_Text_SearchNews</name>
     </customLabels>
@@ -1409,7 +1449,11 @@
         <name>SmartViscaf__SB_NCS1_Text_Web</name>
     </customLabels>
     <customLabels>
-        <label><!-- SB_NC_AND --></label>
+        <label><!-- 組同じ人の名刺を持つユーザLightning Componentのタイトル --></label>
+        <name>SmartViscaf__SB_NCSCOWNER_AppTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- と --></label>
         <name>SmartViscaf__SB_NC_AND</name>
     </customLabels>
     <customLabels>
@@ -1451,6 +1495,10 @@
     <customLabels>
         <label><!-- 住所 --></label>
         <name>SmartViscaf__SB_NC_Address</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 0: 国 1: 国コード, 2: 郵便番号, 3: 都道府県, 4: 都道府県コード, 5: 市区郡, 6: 町名・番地 --></label>
+        <name>SmartViscaf__SB_NC_AddressFormat</name>
     </customLabels>
     <customLabels>
         <label><!-- 住所分割時に使う正規表現 --></label>
@@ -1585,6 +1633,18 @@
         <name>SmartViscaf__SB_NC_ExchangedToo4</name>
     </customLabels>
     <customLabels>
+        <label><!-- 取引先登録：一致レコードが多いのでリストしないとき --></label>
+        <name>SmartViscaf__SB_NC_FORM_RegistOverCandidateRecords</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先登録：中間一致で候補が多いので完全一致にしたとき --></label>
+        <name>SmartViscaf__SB_NC_FORM_RegistPerfectMatchCandidate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動連携の検証:個別で該当1000件こえのとき --></label>
+        <name>SmartViscaf__SB_NC_FORM_RenkeiMonitorOver1000</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Google　News のリクエストURL --></label>
         <name>SmartViscaf__SB_NC_GoogleNewsURL</name>
     </customLabels>
@@ -1593,8 +1653,32 @@
         <name>SmartViscaf__SB_NC_GoolgeMapAPIJS</name>
     </customLabels>
     <customLabels>
+        <label><!-- 法人格の略号との組合せ --></label>
+        <name>SmartViscaf__SB_NC_HojinKakuPairs</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 法人格除去に使う正規表現の一部 --></label>
         <name>SmartViscaf__SB_NC_HojinKakuRegex</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 法人格除去に使う正規表現のフォーマット --></label>
+        <name>SmartViscaf__SB_NC_HojinKakuRegexFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 複数の正式名称が１つの略称になるもの --></label>
+        <name>SmartViscaf__SB_NC_HojinkakuDuplicate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- レコードタイプがありません --></label>
+        <name>SmartViscaf__SB_NC_LabelNoRecordType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 検索対象は制限されています。 --></label>
+        <name>SmartViscaf__SB_NC_LabelRestrictedRecordType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- {0}({1})/{2}({3}/{4}) --></label>
+        <name>SmartViscaf__SB_NC_Label_AccountANDContact</name>
     </customLabels>
     <customLabels>
         <label><!-- ログイン試行 --></label>
@@ -1607,6 +1691,30 @@
     <customLabels>
         <label><!-- 閉じる --></label>
         <name>SmartViscaf__SB_NC_Label_Close</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- {0}名は法人格を除いて検索 --></label>
+        <name>SmartViscaf__SB_NC_Label_CompanyMatcingCorpMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- {0}名は完全一致 --></label>
+        <name>SmartViscaf__SB_NC_Label_CompanyMatcingExactMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- {0}名は法人格を除いて部分一致検索 --></label>
+        <name>SmartViscaf__SB_NC_Label_CompanyMatcingPartialMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- {0}名の検索方法 --></label>
+        <name>SmartViscaf__SB_NC_Label_CompanyMatcingSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 件 --></label>
+        <name>SmartViscaf__SB_NC_Label_Count</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- &lt;{0}を新規作成&gt; --></label>
+        <name>SmartViscaf__SB_NC_Label_CreateNewRecordDEV</name>
     </customLabels>
     <customLabels>
         <label><!-- 暗号化 --></label>
@@ -1637,16 +1745,64 @@
         <name>SmartViscaf__SB_NC_Label_OrganizationID</name>
     </customLabels>
     <customLabels>
+        <label><!-- 所有者 --></label>
+        <name>SmartViscaf__SB_NC_Label_Owner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 郵便番号 --></label>
+        <name>SmartViscaf__SB_NC_Label_Postcode</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- {0}レコードタイプ --></label>
+        <name>SmartViscaf__SB_NC_Label_RecordType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 保存 --></label>
+        <name>SmartViscaf__SB_NC_Label_Save</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 入力したキーを設定 --></label>
         <name>SmartViscaf__SB_NC_Label_SaveEnteredKey</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 検索の対象にするレコードタイプを指定します。 --></label>
+        <name>SmartViscaf__SB_NC_Label_SearchRecordTypeExplanation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 設定 --></label>
+        <name>SmartViscaf__SB_NC_Label_Setting</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 部門 --></label>
+        <name>SmartViscaf__SB_NC_Label_Site</name>
     </customLabels>
     <customLabels>
         <label><!-- TO --></label>
         <name>SmartViscaf__SB_NC_Label_To</name>
     </customLabels>
     <customLabels>
+        <label><!-- ToDo登録 --></label>
+        <name>SmartViscaf__SB_NC_Label_ToDoRegistration</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 市区郡まで --></label>
+        <name>SmartViscaf__SB_NC_Label_To_Street</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 確認してください --></label>
+        <name>SmartViscaf__SB_NC_Label_WarningConfirm</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 最終更新日 --></label>
         <name>SmartViscaf__SB_NC_LastModified</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- この名刺が最新 --></label>
+        <name>SmartViscaf__SB_NC_LatestCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リードの所有者 --></label>
+        <name>SmartViscaf__SB_NC_LeadToDoOwner</name>
     </customLabels>
     <customLabels>
         <label><!-- 行目 --></label>
@@ -1657,12 +1813,40 @@
         <name>SmartViscaf__SB_NC_MAPPING_ChangeRecordTypeError</name>
     </customLabels>
     <customLabels>
+        <label><!-- 既存の取引先の検索条件 ヘルプメッセージ --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_ExistingAccountConditionHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動連携処理時に既存の取引先責任者を検索する際の条件を設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_ExistingContact_ConditionHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動連携処理時に既存のリードを検索する際の条件を設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_ExistingLead_ConditionHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_HojinkakuEquationLongAndAbbrMessage --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_HojinkakuEquationLongAndAbbrMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_HojinkakuEquationLongAndAbbrMessageLX21 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_HojinkakuEquationLongAndAbbrMessageLX21</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 連携マッピングの項目が不正 --></label>
         <name>SmartViscaf__SB_NC_MAPPING_InalidField</name>
     </customLabels>
     <customLabels>
         <label><!-- SB_NC_MAPPING_Ingert_ErrorMessage --></label>
         <name>SmartViscaf__SB_NC_MAPPING_Ingert_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_Mapping_ErrorMessage --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_KoteiMappingDeleted_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_Mapping_ErrorMessage --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_KoteiMappingInactivate_ErrorMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- 有効 --></label>
@@ -1697,6 +1881,26 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_CLEAR</name>
     </customLabels>
     <customLabels>
+        <label><!-- 会社名の比較対象 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_CompareTarget</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先名以外での比較機能を有効化 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_CompareTargetAccountCustomize</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 会社名の比較対象(取引先) --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_CompareTargetAccountName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 会社名の比較対象(リード) --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_CompareTargetLeadCompanyName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 会社名以外での比較機能を有効化 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_CompareTargetLeadCustomize</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 「既存の取引先責任者を名刺情報で上書きする」を表示する --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_ContactOverwrite</name>
     </customLabels>
@@ -1727,6 +1931,10 @@
     <customLabels>
         <label><!-- 項目 --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_FIELD</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 会社名の比較条件 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_HojinkakuEquationLongAndAbbr</name>
     </customLabels>
     <customLabels>
         <label><!-- SB_NC_MAPPING_LABEL_LEADRegistrationActive --></label>
@@ -1777,7 +1985,7 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_NOTICE</name>
     </customLabels>
     <customLabels>
-        <label><!-- 演算子 --></label>
+        <label><!-- 判定条件(演算子) --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_OPERATOR</name>
     </customLabels>
     <customLabels>
@@ -1791,6 +1999,18 @@
     <customLabels>
         <label><!-- SB_NC_MAPPING_LABEL_REGISTAANDCANDL --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_REGISTAANDCANDL</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先に登録 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_REGISTACCOUNT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先責任者に登録 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_REGISTCONTACT</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リードに登録 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_REGISTLEAD</name>
     </customLabels>
     <customLabels>
         <label><!-- SB_NC_MAPPING_LABEL_RENKEIACTIVE --></label>
@@ -1837,11 +2057,11 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiAccountCompany</name>
     </customLabels>
     <customLabels>
-        <label><!-- SB_NC_MAPPING_LABEL_RenkeiAccountNOExistCreateNew --></label>
+        <label><!-- 取引先の新規作成処理を有効化する --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiAccountNOExistCreateNew</name>
     </customLabels>
     <customLabels>
-        <label><!-- SB_NC_MAPPING_LABEL_RenkeiAccountOverwrite --></label>
+        <label><!-- 取引先の上書き処理を有効化する --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiAccountOverwrite</name>
     </customLabels>
     <customLabels>
@@ -1877,6 +2097,10 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiActiveCampaignMember</name>
     </customLabels>
     <customLabels>
+        <label><!-- リードの自動連携に関する応用設定 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiAdvancedSetting</name>
+    </customLabels>
+    <customLabels>
         <label><!-- キャンペーンメンバーの状況 --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiCampaignStatus</name>
     </customLabels>
@@ -1893,11 +2117,11 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiContactMail</name>
     </customLabels>
     <customLabels>
-        <label><!-- SB_NC_MAPPING_LABEL_RenkeiContactNOExistCreateNew --></label>
+        <label><!-- 取引先責任者の新規作成処理を有効化する --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiContactNOExistCreateNew</name>
     </customLabels>
     <customLabels>
-        <label><!-- SB_NC_MAPPING_LABEL_RenkeiContactOverwrite --></label>
+        <label><!-- 取引先責任者の上書き処理を有効化する --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiContactOverwrite</name>
     </customLabels>
     <customLabels>
@@ -1907,6 +2131,18 @@
     <customLabels>
         <label><!-- SB_NC_MAPPING_LABEL_RenkeiContactRecordTypes --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiContactRecordTypes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リード、取引先既存で取引先責任者を作成する --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiCreateContactOnAcountWithLead</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リードなく、取引先既存で取引先責任者を作成する --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiCreateContactOnAcountWithoutLead</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 既存取引先が複数あり特定できないとき、リードを作る --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiCreateLeadOnTooManyAccounts</name>
     </customLabels>
     <customLabels>
         <label><!-- SB_NC_MAPPING_LABEL_RenkeiExcludeHojinkaku --></label>
@@ -1921,6 +2157,10 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiExcludeHojinkakuPartial</name>
     </customLabels>
     <customLabels>
+        <label><!-- 自動連携処理時に名刺の活動を関連付ける --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiInheritNCTask</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 会社名は法人格を除いて検索 --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiLeadExcludeHojinkaku</name>
     </customLabels>
@@ -1933,11 +2173,11 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiLeadExcludeHojinkakuPartial</name>
     </customLabels>
     <customLabels>
-        <label><!-- SB_NC_MAPPING_LABEL_RenkeiLeadNOExistCreateNew --></label>
+        <label><!-- リードの新規作成処理を有効化する --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiLeadNOExistCreateNew</name>
     </customLabels>
     <customLabels>
-        <label><!-- SB_NC_MAPPING_LABEL_RenkeiLeadOverwrite --></label>
+        <label><!-- リードの上書き処理を有効化する --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiLeadOverwrite</name>
     </customLabels>
     <customLabels>
@@ -1953,6 +2193,10 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiSpecificItems</name>
     </customLabels>
     <customLabels>
+        <label><!-- 条件に合致する既存リードは全て更新する --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_RenkeiUpdateAllLeadsOnCondition</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 保存 --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_SAVE_BUTTON</name>
     </customLabels>
@@ -1965,6 +2209,10 @@
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_SeachRenkeiNC</name>
     </customLabels>
     <customLabels>
+        <label><!-- ToDoの任命先 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LABEL_ToDoOwner</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 値を入力してください --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_VALUE</name>
     </customLabels>
@@ -1975,6 +2223,10 @@
     <customLabels>
         <label><!-- SB_NC_MAPPING_LABEL_YES --></label>
         <name>SmartViscaf__SB_NC_MAPPING_LABEL_YES</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 法人格の略称を正称の表記とみなして会社名を比較する --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_Label_HojinkakuEquationLandA</name>
     </customLabels>
     <customLabels>
         <label><!-- SB_NC_MAPPING_Label_RegistDispAccountRectype --></label>
@@ -1999,6 +2251,10 @@
     <customLabels>
         <label><!-- SB_NC_MAPPING_Label_SaishinInheritValues --></label>
         <name>SmartViscaf__SB_NC_MAPPING_Label_SaishinInheritValues</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_LeadRadio3HelpMessage --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_LeadRadio3HelpMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- 空白は指定できません --></label>
@@ -2089,12 +2345,24 @@
         <name>SmartViscaf__SB_NC_MAPPING_Mapping_inherit_ErrorMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- 自動連携処理で新規作成・上書きする際の設定をします。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_MultipleExistingProcessingHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SmartVisca ScanAppに追加オプションを表示させるかを設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_NCScanOptionHelpMessage</name>
+    </customLabels>
+    <customLabels>
         <label><!-- SB_NC_MAPPING_NOUPDATE --></label>
         <name>SmartViscaf__SB_NC_MAPPING_NOUPDATE</name>
     </customLabels>
     <customLabels>
         <label><!-- SB_NC_MAPPING_NO_SELECT_RENKEIOBJECT_ERRORMESSAGE --></label>
         <name>SmartViscaf__SB_NC_MAPPING_NO_SELECT_RENKEIOBJECT_ERRORMESSAGE</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺の同一人物の判断条件 {0} は存在しません。保存するとこの項目の設定は削除されます。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_NayoseJyoken_ErrorMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- SB_NC_MAPPING_NoAvailableR_ErrorMessage --></label>
@@ -2109,8 +2377,76 @@
         <name>SmartViscaf__SB_NC_MAPPING_NoObject_ErrorMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- SB_NC_MAPPING_Radio3HelpMessage --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_Radio3HelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先・取引先責任者に登録画面の検索条件や項目の表示・非表示/初期値を設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RegistAandCHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リードまたは取引先・取引先責任者に登録画面の検索条件や項目の表示・非表示/初期値を設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RegistAandCandLHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_RegistAccountCompareCustomizeHelpMessage --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RegistAccountCompareCustomizeHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先・取引先責任者に登録画面で既存の取引先の検索条件として表示するレコードタイプを設定します。設定がない場合、全てのレコードタイプが表示されます。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RegistAccountQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先・取引先責任者に登録画面で既存の取引先責任者の検索条件として表示するレコードタイプを設定します。設定がない場合、全てのレコードタイプが表示されます。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RegistContactQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_RegistLeadCompareCustomizeHelpMessage --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RegistLeadCompareCustomizeHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リードに登録画面で既存のリードの検索条件として表示するレコードタイプを設定します。設定がない場合、全てのレコードタイプが表示されます。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RegistLeadQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動連携処理時に既存の取引先を検索する際のレコードタイプを設定します。設定がない場合、全てのレコードタイプを対象に検索が行われます。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RenkeiAccountQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動連携処理で取引先を新規作成する場合のレコードタイプを設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RenkeiAccountRecordTypesHelpMessage</name>
+    </customLabels>
+    <customLabels>
         <label><!-- SB_NC_MAPPING_RenkeiActiveHelpMessage --></label>
         <name>SmartViscaf__SB_NC_MAPPING_RenkeiActiveHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動連携処理時に既存の取引先責任者を検索する際のレコードタイプを設定します。設定がない場合、全てのレコードタイプを対象に検索が行われます。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RenkeiContactQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動連携処理で取引先責任者を新規作成する場合のレコードタイプを設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RenkeiContactRecordTypesHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_RenkeiLeadAdvancedSettingHelpMessage --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RenkeiLeadAdvancedSettingHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動連携処理時に既存のリードを検索する際のレコードタイプを設定します。設定がない場合、全てのレコードタイプを対象に検索が行われます。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RenkeiLeadQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動連携処理でリードを新規作成する場合のレコードタイプを設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RenkeiLeadRecordTypesHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺の項目から登録する取引先、取引先責任者の項目を設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RenkeiObjectACHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺の項目から登録するリード、取引先、取引先責任者の項目を設定します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_RenkeiObjectLACHelpMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- SB_NC_MAPPING_RenkeiSpecificItemsHelpMessage --></label>
@@ -2121,12 +2457,60 @@
         <name>SmartViscaf__SB_NC_MAPPING_SaishinInheritValuesHelpMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- 自動連携の処理を実行する条件を追加します。 --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_SeachRenkeiNCHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_Trigger_campaignStatus_ErrorMessage --></label>
+        <name>SmartViscaf__SB_NC_MAPPING_Trigger_campaignStatus_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 並び順 --></label>
+        <name>SmartViscaf__SB_NC_MENU_ORDER</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 無効なユーザでは所有者に設定することができません。 --></label>
+        <name>SmartViscaf__SB_NC_MSG_CanNotSetInActiveUserToOwner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ToDoの任命先に無効なユーザ({0})を指定できません。 --></label>
+        <name>SmartViscaf__SB_NC_MSG_CanNotSetInActiveUserToOwnerToDo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 既存の取引先・取引先責任者レコードが多いとき --></label>
+        <name>SmartViscaf__SB_NC_MSG_CandidateRecordTooMuch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- オブジェクトのアクセス権が不足しています。 --></label>
+        <name>SmartViscaf__SB_NC_MSG_INSUFFICIENT_ACCESS</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 名刺の所有者はキューに設定されてます --></label>
         <name>SmartViscaf__SB_NC_MSG_NAMECARD_OWNER_QUEUE</name>
     </customLabels>
     <customLabels>
+        <label><!-- 名刺が選択されていません。 --></label>
+        <name>SmartViscaf__SB_NC_MSG_NotSelectNameCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ToDoの所有者はキューに設定する事ができません --></label>
+        <name>SmartViscaf__SB_NC_MSG_QUEUES_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録エラー --></label>
+        <name>SmartViscaf__SB_NC_MSG_Regist_Error</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 携帯電話 --></label>
         <name>SmartViscaf__SB_NC_Mobile</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 選択された所有者のキューが利用できません。 --></label>
+        <name>SmartViscaf__SB_NC_Msg_CanNotUseInActiveQueue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録先候補が多すぎるため処理を中断しました。選択する名刺を減らしてください --></label>
+        <name>SmartViscaf__SB_NC_Msg_ChooseLessBusinessCards</name>
     </customLabels>
     <customLabels>
         <label><!-- 正しい組織IDを入力してください。 --></label>
@@ -2193,6 +2577,10 @@
         <name>SmartViscaf__SB_NC_NewAccountDEV</name>
     </customLabels>
     <customLabels>
+        <label><!-- 転職先の名刺 : --></label>
+        <name>SmartViscaf__SB_NC_NewCareerCard</name>
+    </customLabels>
+    <customLabels>
         <label><!-- &lt;取引先責任者を新規作成&gt; --></label>
         <name>SmartViscaf__SB_NC_NewContact</name>
     </customLabels>
@@ -2221,7 +2609,7 @@
         <name>SmartViscaf__SB_NC_Person</name>
     </customLabels>
     <customLabels>
-        <label><!-- 電話 --></label>
+        <label><!-- 電話番号 --></label>
         <name>SmartViscaf__SB_NC_Phone</name>
     </customLabels>
     <customLabels>
@@ -2265,11 +2653,15 @@
         <name>SmartViscaf__SB_NC_RegistQueryContactFields</name>
     </customLabels>
     <customLabels>
+        <label><!-- 登録でエラーが発生しました。 --></label>
+        <name>SmartViscaf__SB_NC_Regist_Error_Occured</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 取引先・取引先責任者への一括登録 --></label>
         <name>SmartViscaf__SB_NC_RegisterAllToAccountAndContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- (関連)取引先・取引先責任者への一括登録 --></label>
+        <label><!-- {0}・{1}への一括登録 --></label>
         <name>SmartViscaf__SB_NC_RegisterAllToAccountAndContactDEV</name>
     </customLabels>
     <customLabels>
@@ -2285,6 +2677,78 @@
         <name>SmartViscaf__SB_NC_RegisterToContactDEV</name>
     </customLabels>
     <customLabels>
+        <label><!-- 選択した名刺に対応する取引先ならびに取引先責任者 --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_AcntContMatchToCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺情報 --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_BusinessCardInformation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録先候補 --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_CandidateToBeRegistered</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 項目の値 --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_FieldValue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先新規作成画面を起動 --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_OpenAccoutCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先責任者新規作成画面を起動 --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_OpenContactCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 処理対象 --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_ProcessTarget</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- レコードID --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_RecordId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 処理 --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_Registering</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 処理結果（ロールバックしています。） --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_RegisteringResultNotExe</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 結果 --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_Result</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 結果メッセージ --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_ResultMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 実行中… --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_Running</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 実施時刻: --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_TerminateTime</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録を試す --></label>
+        <name>SmartViscaf__SB_NC_RenkeiMon_TryRegistration</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 他で作成 --></label>
+        <name>SmartViscaf__SB_NC_Renkei_CreateElsewhere</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 他で更新 --></label>
+        <name>SmartViscaf__SB_NC_Renkei_UpdateElsewhere</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 参照の更新 --></label>
+        <name>SmartViscaf__SB_NC_Renkei_UpdateReference</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 重複する --></label>
         <name>SmartViscaf__SB_NC_Repeat</name>
     </customLabels>
@@ -2295,6 +2759,86 @@
     <customLabels>
         <label><!-- (関連)取引先責任者の役職を新職名で更新 --></label>
         <name>SmartViscaf__SB_NC_ReplaceContactTitleDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ01 --></label>
+        <name>SmartViscaf__SB_NC_Reserved01</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ02 --></label>
+        <name>SmartViscaf__SB_NC_Reserved02</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ03 --></label>
+        <name>SmartViscaf__SB_NC_Reserved03</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ04 --></label>
+        <name>SmartViscaf__SB_NC_Reserved04</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ05 --></label>
+        <name>SmartViscaf__SB_NC_Reserved05</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ06 --></label>
+        <name>SmartViscaf__SB_NC_Reserved06</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ07 --></label>
+        <name>SmartViscaf__SB_NC_Reserved07</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ08 --></label>
+        <name>SmartViscaf__SB_NC_Reserved08</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ09 --></label>
+        <name>SmartViscaf__SB_NC_Reserved09</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ10 --></label>
+        <name>SmartViscaf__SB_NC_Reserved10</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ11 --></label>
+        <name>SmartViscaf__SB_NC_Reserved11</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ12 --></label>
+        <name>SmartViscaf__SB_NC_Reserved12</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ13 --></label>
+        <name>SmartViscaf__SB_NC_Reserved13</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ14 --></label>
+        <name>SmartViscaf__SB_NC_Reserved14</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ15 --></label>
+        <name>SmartViscaf__SB_NC_Reserved15</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ16 --></label>
+        <name>SmartViscaf__SB_NC_Reserved16</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ17 --></label>
+        <name>SmartViscaf__SB_NC_Reserved17</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ18 --></label>
+        <name>SmartViscaf__SB_NC_Reserved18</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ19 --></label>
+        <name>SmartViscaf__SB_NC_Reserved19</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ20 --></label>
+        <name>SmartViscaf__SB_NC_Reserved20</name>
     </customLabels>
     <customLabels>
         <label><!-- 戻る --></label>
@@ -2321,6 +2865,14 @@
         <name>SmartViscaf__SB_NC_S1ViewerName</name>
     </customLabels>
     <customLabels>
+        <label><!-- の検索 --></label>
+        <name>SmartViscaf__SB_NC_SEARCH</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 一致するレコードはありません。 --></label>
+        <name>SmartViscaf__SB_NC_SEARCH_ERROR_NO_MATCHING</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 選択された項目 --></label>
         <name>SmartViscaf__SB_NC_SELECTEDFIELD</name>
     </customLabels>
@@ -2331,6 +2883,14 @@
     <customLabels>
         <label><!-- SB_NC_SETTING_ERROR_OtherSection_Saved --></label>
         <name>SmartViscaf__SB_NC_SETTING_ERROR_OtherSection_Saved</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 取引先名以外と比較する場合は比較対象項目をリストから選択してください --></label>
+        <name>SmartViscaf__SB_NC_SETTING_ERROR_Required_RegistAccountCompareField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 会社名以外と比較する場合は比較対象項目をリストから選択してください --></label>
+        <name>SmartViscaf__SB_NC_SETTING_ERROR_Required_RegistLeadCompareField</name>
     </customLabels>
     <customLabels>
         <label><!-- 選択されている 指定項目 {0}が存在しません --></label>
@@ -2385,12 +2945,28 @@
         <name>SmartViscaf__SB_NC_SETTING_LABEL_OP_START_WITH</name>
     </customLabels>
     <customLabels>
+        <label><!-- SB_NC_SETTING_MSG_ConLeadSearchContRequireCheck --></label>
+        <name>SmartViscaf__SB_NC_SETTING_MSG_ConLeadSearchContRequireCheck</name>
+    </customLabels>
+    <customLabels>
         <label><!-- SB_NC_SETTING_NoNCField_ErrorMessage --></label>
         <name>SmartViscaf__SB_NC_SETTING_NoNCField_ErrorMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- SB_NC_SETTING_WrongNCField_ErrorMessage --></label>
         <name>SmartViscaf__SB_NC_SETTING_WrongNCField_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_SImageServerOptions --></label>
+        <name>SmartViscaf__SB_NC_SImageServerOptions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 昇順ソート --></label>
+        <name>SmartViscaf__SB_NC_SORT_ASCENDING</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 降順ソート --></label>
+        <name>SmartViscaf__SB_NC_SORT_DESCENDING</name>
     </customLabels>
     <customLabels>
         <label><!-- 保存 --></label>
@@ -2429,16 +3005,28 @@
         <name>SmartViscaf__SB_NC_Select</name>
     </customLabels>
     <customLabels>
+        <label><!-- 転職先の名刺を選択 --></label>
+        <name>SmartViscaf__SB_NC_SelectNewCareerCard</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 登録先選択 --></label>
         <name>SmartViscaf__SB_NC_SelectRegister</name>
     </customLabels>
     <customLabels>
-        <label><!-- 名刺の転職先を設定 --></label>
+        <label><!-- 転職先を設定 --></label>
         <name>SmartViscaf__SB_NC_SetNewCareer</name>
     </customLabels>
     <customLabels>
         <label><!-- (小文字)レコードタイプ --></label>
         <name>SmartViscaf__SB_NC_SmallRecordType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- この正規表現に当てはまると検索しない --></label>
+        <name>SmartViscaf__SB_NC_SoslInvalidStringRegex</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SOSLの予約後と英数1文字はNG --></label>
+        <name>SmartViscaf__SB_NC_SoslOneCharacterWithReservedCharacters</name>
     </customLabels>
     <customLabels>
         <label><!-- (関連)取引先、取引先責任者を新規作成する場合は「所有者」を指定してください --></label>
@@ -2469,8 +3057,24 @@
         <name>SmartViscaf__SB_NC_TITLE_SaishinInherit</name>
     </customLabels>
     <customLabels>
+        <label><!-- {0}と{1} --></label>
+        <name>SmartViscaf__SB_NC_Text_A_AND_B</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- {0}、{1}と{2} --></label>
+        <name>SmartViscaf__SB_NC_Text_A_AND_B_AND_C</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- {0}・{1} --></label>
+        <name>SmartViscaf__SB_NC_Text_Account_Contact</name>
+    </customLabels>
+    <customLabels>
         <label><!-- 名刺 --></label>
         <name>SmartViscaf__SB_NC_Text_BusinessCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 作成 --></label>
+        <name>SmartViscaf__SB_NC_Text_Create</name>
     </customLabels>
     <customLabels>
         <label><!-- 人事異動情報バッチ --></label>
@@ -2505,8 +3109,24 @@
         <name>SmartViscaf__SB_NC_Text_SpecifiedInPeriod</name>
     </customLabels>
     <customLabels>
+        <label><!-- 新規作成時の指定 --></label>
+        <name>SmartViscaf__SB_NC_Text_SpecifiedWhenCreateNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 上書きの指定 --></label>
+        <name>SmartViscaf__SB_NC_Text_SpecifiedWhenOverWrite</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 更新 --></label>
+        <name>SmartViscaf__SB_NC_Text_Update</name>
+    </customLabels>
+    <customLabels>
         <label><!-- SB_NC_ToDo --></label>
         <name>SmartViscaf__SB_NC_ToDo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 部署 --></label>
+        <name>SmartViscaf__SB_NC_USER_DEPARTMENT</name>
     </customLabels>
     <customLabels>
         <label><!-- 名刺情報で更新 --></label>
@@ -3224,4 +3844,581 @@
         <label><!-- SFDC_SC_WRONG_CONTROLLER_TYPE --></label>
         <name>SmartViscaf__SFDC_SC_WRONG_CONTROLLER_TYPE</name>
     </customLabels>
+    <customLabels>
+        <label><!-- オブジェクトの作成権限がありません。 --></label>
+        <name>ficuspop__SB_MSG_CrudNotCreateable</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 不正な リクエストです。 --></label>
+        <name>ficuspop__SB_MSG_IllegalRequest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録しない(名刺の会社名、姓を設定してください) --></label>
+        <name>ficuspop__SB_NCLD_DontRegister_CompanyNameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_DontRegister_NameRequired --></label>
+        <name>ficuspop__SB_NCLD_DontRegister_NameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_LabelNoRecordType --></label>
+        <name>ficuspop__SB_NCLD_LabelNoRecordType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_AND --></label>
+        <name>ficuspop__SB_NCLD_Label_AND</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_AccountANDContact --></label>
+        <name>ficuspop__SB_NCLD_Label_AccountANDContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 期日 --></label>
+        <name>ficuspop__SB_NCLD_Label_ActivityDate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_Both_display --></label>
+        <name>ficuspop__SB_NCLD_Label_Both_display</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- キャンペーンメンバーの状況 --></label>
+        <name>ficuspop__SB_NCLD_Label_CampaignStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_Campaign_ForLead --></label>
+        <name>ficuspop__SB_NCLD_Label_Campaign_ForLead</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- キャンセル --></label>
+        <name>ficuspop__SB_NCLD_Label_Cancel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_CandidateRegistration --></label>
+        <name>ficuspop__SB_NCLD_Label_CandidateRegistration</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_Close --></label>
+        <name>ficuspop__SB_NCLD_Label_Close</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- コメント --></label>
+        <name>ficuspop__SB_NCLD_Label_Comment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_Count --></label>
+        <name>ficuspop__SB_NCLD_Label_Count</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- &lt;リードを新規作成&gt; --></label>
+        <name>ficuspop__SB_NCLD_Label_CreateNewLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- メールアドレス --></label>
+        <name>ficuspop__SB_NCLD_Label_Email</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- （アラートを無視） --></label>
+        <name>ficuspop__SB_NCLD_Label_IgnoreAlert</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 最終更新日 --></label>
+        <name>ficuspop__SB_NCLD_Label_LastModiedDate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_LeadRecType --></label>
+        <name>ficuspop__SB_NCLD_Label_LeadRecType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 氏名 --></label>
+        <name>ficuspop__SB_NCLD_Label_Name</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺所有者 --></label>
+        <name>ficuspop__SB_NCLD_Label_NameCardOwner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_NameCard_Owner_Queue --></label>
+        <name>ficuspop__SB_NCLD_Label_NameCard_Owner_Queue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- (関連)既存のリードの情報を名刺情報で上書きする --></label>
+        <name>ficuspop__SB_NCLD_Label_OverwriteLeadInfoDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 所有者 --></label>
+        <name>ficuspop__SB_NCLD_Label_Owner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 役職 --></label>
+        <name>ficuspop__SB_NCLD_Label_Position</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_Postcode --></label>
+        <name>ficuspop__SB_NCLD_Label_Postcode</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 都道府県 --></label>
+        <name>ficuspop__SB_NCLD_Label_Prefectures</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_Queue --></label>
+        <name>ficuspop__SB_NCLD_Label_Queue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_RecordTypeExplain --></label>
+        <name>ficuspop__SB_NCLD_Label_RecordTypeExplain</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録先選択 --></label>
+        <name>ficuspop__SB_NCLD_Label_RegisterDestinationSelection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 保存 --></label>
+        <name>ficuspop__SB_NCLD_Label_Save</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 保存中... --></label>
+        <name>ficuspop__SB_NCLD_Label_Saveing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 検索条件 --></label>
+        <name>ficuspop__SB_NCLD_Label_SearchCondition</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_SearchRecordTypeExplanation --></label>
+        <name>ficuspop__SB_NCLD_Label_SearchRecordTypeExplanation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 選択 --></label>
+        <name>ficuspop__SB_NCLD_Label_Select</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_Setting --></label>
+        <name>ficuspop__SB_NCLD_Label_Setting</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_Site --></label>
+        <name>ficuspop__SB_NCLD_Label_Site</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 件名 --></label>
+        <name>ficuspop__SB_NCLD_Label_Subject</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ToDo登録 --></label>
+        <name>ficuspop__SB_NCLD_Label_ToDoRegistration</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_To_Street --></label>
+        <name>ficuspop__SB_NCLD_Label_To_Street</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_UseNameCardOwnerByObject --></label>
+        <name>ficuspop__SB_NCLD_Label_UseNameCardOwnerByObject</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Label_WarningConfirm --></label>
+        <name>ficuspop__SB_NCLD_Label_WarningConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_MSG_CanNotSetInActiveUserToOwner --></label>
+        <name>ficuspop__SB_NCLD_MSG_CanNotSetInActiveUserToOwner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo --></label>
+        <name>ficuspop__SB_NCLD_MSG_CanNotSetInActiveUserToOwnerToDo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 会社名、姓を設定してください --></label>
+        <name>ficuspop__SB_NCLD_MSG_CompanyNameMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- オブジェクトの作成権限がありません。 --></label>
+        <name>ficuspop__SB_NCLD_MSG_CrudNotCreateable</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- オブジェクトの編集権限がありません。 --></label>
+        <name>ficuspop__SB_NCLD_MSG_CrudNotUpdateable</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_MSG_Enter --></label>
+        <name>ficuspop__SB_NCLD_MSG_Enter</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_MSG_NameMissing --></label>
+        <name>ficuspop__SB_NCLD_MSG_NameMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_MSG_NotSelectNameCard --></label>
+        <name>ficuspop__SB_NCLD_MSG_NotSelectNameCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_MSG_QUEUES_ERROR --></label>
+        <name>ficuspop__SB_NCLD_MSG_QUEUES_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_MSG_QUEUES_LEAD_ERROR --></label>
+        <name>ficuspop__SB_NCLD_MSG_QUEUES_LEAD_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録エラー --></label>
+        <name>ficuspop__SB_NCLD_MSG_Regist_Error</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 新規作成 --></label>
+        <name>ficuspop__SB_NCLD_Menu_NewLead</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録しない --></label>
+        <name>ficuspop__SB_NCLD_Menu_NotToRegister</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺がみつかりません --></label>
+        <name>ficuspop__SB_NCLD_Msg_BusinessCardNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Msg_CanNotUseInActiveQueue --></label>
+        <name>ficuspop__SB_NCLD_Msg_CanNotUseInActiveQueue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Msg_ChooseLessBusinessCards --></label>
+        <name>ficuspop__SB_NCLD_Msg_ChooseLessBusinessCards</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- (関連)検索件数が制限を超えたので過去に登録したリードだけに絞って表示します。 --></label>
+        <name>ficuspop__SB_NCLD_Msg_DisplayUnderConditionsDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- (関連)リードを選択してください --></label>
+        <name>ficuspop__SB_NCLD_Msg_SelectLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録先を選択してください --></label>
+        <name>ficuspop__SB_NCLD_Msg_SelectRegisterDestination</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- (関連)リードを新規作成する場合は「所有者」を指定してください --></label>
+        <name>ficuspop__SB_NCLD_Msg_SpecifyOwnerWhenCreateLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_SearchForAccount --></label>
+        <name>ficuspop__SB_NCLD_SearchForAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_SearchForAccountAndDepartment --></label>
+        <name>ficuspop__SB_NCLD_SearchForAccountAndDepartment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_SpecifyOwnerWhenCreateAcCo --></label>
+        <name>ficuspop__SB_NCLD_SpecifyOwnerWhenCreateAcCo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_A_AND_B --></label>
+        <name>ficuspop__SB_NCLD_Text_A_AND_B</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_A_AND_B_AND_C --></label>
+        <name>ficuspop__SB_NCLD_Text_A_AND_B_AND_C</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_Account_Contact --></label>
+        <name>ficuspop__SB_NCLD_Text_Account_Contact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺 --></label>
+        <name>ficuspop__SB_NCLD_Text_BusinessCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺交換 --></label>
+        <name>ficuspop__SB_NCLD_Text_BusinessCardExchange</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺情報 --></label>
+        <name>ficuspop__SB_NCLD_Text_BusinessCardInformation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 名刺で更新 --></label>
+        <name>ficuspop__SB_NCLD_Text_BusinessCardList</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リード --></label>
+        <name>ficuspop__SB_NCLD_Text_Lead</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_Loading --></label>
+        <name>ficuspop__SB_NCLD_Text_Loading</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- (関連)リードに登録 --></label>
+        <name>ficuspop__SB_NCLD_Text_RegisterToLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_RegisterToLeadDEVWindowTitle --></label>
+        <name>ficuspop__SB_NCLD_Text_RegisterToLeadDEVWindowTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_RegisterToLead_OR_Account_Contact --></label>
+        <name>ficuspop__SB_NCLD_Text_RegisterToLead_OR_Account_Contact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle --></label>
+        <name>ficuspop__SB_NCLD_Text_RegisterToLead_OR_Account_Contact_WindowTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リードに一括登録 --></label>
+        <name>ficuspop__SB_NCLD_Text_RegisterToLeadsDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_RegisterToLeadsDEVWindowTitle --></label>
+        <name>ficuspop__SB_NCLD_Text_RegisterToLeadsDEVWindowTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts --></label>
+        <name>ficuspop__SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts_WindowTitle --></label>
+        <name>ficuspop__SB_NCLD_Text_RegisterToLeads_OR_Accounts_Contacts_WindowTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 新規作成時の指定 --></label>
+        <name>ficuspop__SB_NCLD_Text_SpecifiedWhenCreateNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NCLD_Text_SpecifiedWhenOverWrite --></label>
+        <name>ficuspop__SB_NCLD_Text_SpecifiedWhenOverWrite</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ToDo --></label>
+        <name>ficuspop__SB_NCLD_Text_ToDo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 更新 --></label>
+        <name>ficuspop__SB_NCLD_Text_Update</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- (関連)リードを更新 --></label>
+        <name>ficuspop__SB_NCLD_Text_UpdateLeadDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 完了 --></label>
+        <name>ficuspop__SB_NCL_Completed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 未着手 --></label>
+        <name>ficuspop__SB_NCL_NotStarted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録でエラーが発生しました。 --></label>
+        <name>ficuspop__SB_NCL_Regist_Error_Occured</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ01 --></label>
+        <name>ficuspop__SB_NCL_Reserved01</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ02 --></label>
+        <name>ficuspop__SB_NCL_Reserved02</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ03 --></label>
+        <name>ficuspop__SB_NCL_Reserved03</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ04 --></label>
+        <name>ficuspop__SB_NCL_Reserved04</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ05 --></label>
+        <name>ficuspop__SB_NCL_Reserved05</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ06 --></label>
+        <name>ficuspop__SB_NCL_Reserved06</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ07 --></label>
+        <name>ficuspop__SB_NCL_Reserved07</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ08 --></label>
+        <name>ficuspop__SB_NCL_Reserved08</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ09 --></label>
+        <name>ficuspop__SB_NCL_Reserved09</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ10 --></label>
+        <name>ficuspop__SB_NCL_Reserved10</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ11 --></label>
+        <name>ficuspop__SB_NCL_Reserved11</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ12 --></label>
+        <name>ficuspop__SB_NCL_Reserved12</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ13 --></label>
+        <name>ficuspop__SB_NCL_Reserved13</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ14 --></label>
+        <name>ficuspop__SB_NCL_Reserved14</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ15 --></label>
+        <name>ficuspop__SB_NCL_Reserved15</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ16 --></label>
+        <name>ficuspop__SB_NCL_Reserved16</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ17 --></label>
+        <name>ficuspop__SB_NCL_Reserved17</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ18 --></label>
+        <name>ficuspop__SB_NCL_Reserved18</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ19 --></label>
+        <name>ficuspop__SB_NCL_Reserved19</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ20 --></label>
+        <name>ficuspop__SB_NCL_Reserved20</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 新規作成する --></label>
+        <name>ficuspop__SB_NCS1R_Text_CreateNewRecord</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 新規作成の概要 --></label>
+        <name>ficuspop__SB_NCS1R_Text_CreateNewRecordDiscription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- キャンペーンメンバーに追加しない。 --></label>
+        <name>ficuspop__SB_NCS1R_Text_NoCampaignMember</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- キャンペーンメンバーに追加しない。 --></label>
+        <name>ficuspop__SB_NCS1R_Text_NoCampaignMemberDiscription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動選択以外を選択 --></label>
+        <name>ficuspop__SB_NCS1R_Text_SelectOther</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 自動選択以外を選択することの概要 --></label>
+        <name>ficuspop__SB_NCS1R_Text_SelectOtherDiscription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録しない --></label>
+        <name>ficuspop__SB_NC_DontRegister</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 登録しない(名刺の会社名、姓を設定してください) --></label>
+        <name>ficuspop__SB_NC_DontRegister_CompanyNameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_Line --></label>
+        <name>ficuspop__SB_NC_Line</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 検索条件 --></label>
+        <name>ficuspop__SB_NC_SearchCriteria</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 選択した名刺の数が制限を超過してる --></label>
+        <name>ficuspop__SB_NC_TEXT_SELECTEDCARDOVER</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_X_SearchCriteria --></label>
+        <name>ficuspop__SB_NC_X_SearchCriteria</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Trident/7.0 以外の Windows IE 11用の識別子 なければ、none --></label>
+        <name>ficuspop__SB_Text_IE11Identity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Edge 以外の Windows Edge用の識別子 なければ、none --></label>
+        <name>ficuspop__SB_Text_WindowsEdgeIdentity</name>
+    </customLabels>
+    <customTabs>
+        <label><!-- SmartVisca --></label>
+        <name>SB_NameCard</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- SmartViscaカメラ --></label>
+        <name>SmartViscaCamera</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- SmartVisca設定 --></label>
+        <name>SmartViscaSettings</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- SmartVisca設定* --></label>
+        <name>SmartViscaSettingsLex</name>
+    </customTabs>
+    <quickActions>
+        <label><!-- LogACall --></label>
+        <name>LogACall</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewAccount --></label>
+        <name>NewAccount</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewCase --></label>
+        <name>NewCase</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewContact --></label>
+        <name>NewContact</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewEvent --></label>
+        <name>NewEvent</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewGroup --></label>
+        <name>NewGroup</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewLead --></label>
+        <name>NewLead</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewNote --></label>
+        <name>NewNote</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewOpportunity --></label>
+        <name>NewOpportunity</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewTask --></label>
+        <name>NewTask</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- SendEmail --></label>
+        <name>SendEmail</name>
+    </quickActions>
+    <reportTypes>
+        <description><!-- Screen Flows --></description>
+        <label><!-- Screen Flows --></label>
+        <name>screen_flows_prebuilt_crt</name>
+        <sections>
+            <label><!-- Flow Interview Log Entries --></label>
+            <name>Flow Interview Log Entries</name>
+        </sections>
+        <sections>
+            <label><!-- Flow Interview Logs --></label>
+            <name>Flow Interview Logs</name>
+        </sections>
+    </reportTypes>
 </Translations>
