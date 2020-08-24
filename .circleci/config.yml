@@ -240,12 +240,12 @@ jobs:
           name: initial setting in Lead-package
           command: |
               sfdx force:source:deploy -p "sfdx-source/unpackaged" \
-                                      -u ${CIRCLE_WORKFLOW_ID}-${CIRCLE_TAG} \
+                                      -u qa-${CIRCLE_WORKFLOW_ID}@package.org \
                                       -w 15 \
                                       --verbose \
                                       --loglevel error
 
-              sfdx force:apex:execute -u ${CIRCLE_WORKFLOW_ID}-${CIRCLE_TAG} -f script/apex/SB_AutomaticcCooperationSetting.apex
+              sfdx force:apex:execute -u qa-${CIRCLE_WORKFLOW_ID}@package.org -f script/apex/SB_AutomaticcCooperationSetting.apex
 
       - run:
           name: create login info files and run e2e script

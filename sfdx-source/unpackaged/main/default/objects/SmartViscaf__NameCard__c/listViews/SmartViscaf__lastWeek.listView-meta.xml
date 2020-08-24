@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SmartViscaf__lastWeek</fullName>
+    <booleanFilter>1 OR 2</booleanFilter>
+    <columns>NAME</columns>
+    <columns>SmartViscaf__company_name__c</columns>
+    <columns>SmartViscaf__division__c</columns>
+    <columns>SmartViscaf__title_name__c</columns>
+    <columns>SmartViscaf__tel1__c</columns>
+    <columns>SmartViscaf__email__c</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>SmartViscaf__card_exchange_date__c</columns>
+    <columns>SmartViscaf__list_name__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>SmartViscaf__card_exchange_date__c</field>
+        <operation>equals</operation>
+        <value>LAST_WEEK</value>
+    </filters>
+    <filters>
+        <field>CREATED_DATE</field>
+        <operation>equals</operation>
+        <value>LAST_WEEK</value>
+    </filters>
+    <label>04 先週の名刺</label>
+</ListView>

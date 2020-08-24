@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SmartViscaf__Parent__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>氏名とメールアドレスが同じ名刺の内、最新のものへのリンク。最新のものは、この項目は null になる。最新かどうかの判断は「日付」(date__c)で行う。このリンクの設定は最終納品のときだけ行う。</description>
+    <externalId>false</externalId>
+    <label>最新名刺</label>
+    <referenceTo>SmartViscaf__NameCard__c</referenceTo>
+    <relationshipLabel>古い名刺</relationshipLabel>
+    <relationshipName>nc_parent</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
