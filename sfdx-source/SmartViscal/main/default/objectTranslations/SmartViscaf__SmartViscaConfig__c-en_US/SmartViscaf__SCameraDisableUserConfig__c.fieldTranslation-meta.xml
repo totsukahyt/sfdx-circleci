@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Values in &quot;SmartVisca User Setting&quot; are effective.</help>
-    <label><!-- SSmartViscaカメラでユーザによる設定変更を不可にする --></label>
-    <name>SmartViscaf__SCameraDisableUserConfig__c</name>
-</CustomFieldTranslation>

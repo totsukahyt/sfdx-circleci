@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- キャンペーンのリストに表示する条件
-上限件数; 私のだけなら true を指定 ; 「状況」をカンマ区切り; 「種別」をカンマ区切り
-例 &quot;5;true; ;&quot; --></help>
-    <label><!-- Sキャンペーンリストの候補条件 --></label>
-    <name>ficuspop__SRegistCampaignList__c</name>
-</CustomFieldTranslation>

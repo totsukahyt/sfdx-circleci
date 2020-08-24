@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>RenkeiUpdateToCampaignMember__c</fullName>
     <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
     <description>リード用自動連携:キャンペーンIDが指定されていたとき、作成に加え更新でもキャンペーンメンバーにする。</description>
     <externalId>false</externalId>
     <inlineHelpText>リード用自動連携:キャンペーンIDが指定されていたとき、作成に加え更新でもキャンペーンメンバーにする。</inlineHelpText>

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label><!-- S検索結果を特定の項目値で絞り込む --></label>
-    <name>SmartViscaf__SFilterSearchResult__c</name>
-</CustomFieldTranslation>

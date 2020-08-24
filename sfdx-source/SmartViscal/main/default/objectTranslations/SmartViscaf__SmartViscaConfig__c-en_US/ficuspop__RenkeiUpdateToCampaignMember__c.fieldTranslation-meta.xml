@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- リード用自動連携:キャンペーンIDが指定されていたとき、作成に加え更新でもキャンペーンメンバーにする。 --></help>
-    <label><!-- リード用自動連携:更新でもキャンペーンメンバーにする --></label>
-    <name>ficuspop__RenkeiUpdateToCampaignMember__c</name>
-</CustomFieldTranslation>

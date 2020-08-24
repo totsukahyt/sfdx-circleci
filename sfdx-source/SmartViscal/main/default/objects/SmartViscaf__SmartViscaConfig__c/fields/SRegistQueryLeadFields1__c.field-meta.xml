@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>SRegistQueryLeadFields1__c</fullName>
     <defaultValue>&quot;Company:2, Title:2, Email:2, PostalCode, State, City, Street&quot;</defaultValue>
+    <deprecated>false</deprecated>
     <description>Id,Name以外の画面に表示するリード項目の API名:数値 をカンマ区切りで指定してください。 
 数値 は、 
 ・1はリストにのみ表示 

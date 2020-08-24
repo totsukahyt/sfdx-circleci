@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>The upper limit value of the number of business card records to be acquired by building the organization hierarchy of business card details</help>
-    <label><!-- S組織階層を作るときに取得する名刺の上限値 --></label>
-    <name>SmartViscaf__SMAXOrgTreeNameCards__c</name>
-</CustomFieldTranslation>

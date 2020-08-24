@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label><!-- SSmartViscaサーバ プロキシフラグ【移行済】 --></label>
-    <name>SmartViscaf__SSmartViscaServerProxyFlag__c</name>
-</CustomFieldTranslation>

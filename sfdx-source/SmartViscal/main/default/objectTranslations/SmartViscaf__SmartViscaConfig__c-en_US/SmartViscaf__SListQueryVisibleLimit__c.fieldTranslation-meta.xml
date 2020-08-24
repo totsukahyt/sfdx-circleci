@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>The upper limit of the number of cases when searching for everyone&apos;s business card in the business card list</help>
-    <label><!-- S名刺一覧でみんなの名刺を検索するときの件数の上限値 --></label>
-    <name>SmartViscaf__SListQueryVisibleLimit__c</name>
-</CustomFieldTranslation>

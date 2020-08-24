@@ -8,12 +8,4 @@
         <label><!-- NameCardListLex --></label>
         <name>NameCardListLex</name>
     </webLinks>
-    <webLinks>
-        <label><!-- LeadNameCardList --></label>
-        <name>ficuspop__LeadNameCardList</name>
-    </webLinks>
-    <webLinks>
-        <label><!-- NameCardListLex --></label>
-        <name>ficuspop__NameCardListLex</name>
-    </webLinks>
 </CustomObjectTranslation>

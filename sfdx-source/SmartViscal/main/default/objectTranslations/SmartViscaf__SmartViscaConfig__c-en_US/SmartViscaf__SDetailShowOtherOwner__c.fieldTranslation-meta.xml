@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Check if you want to display owners with business cards other than own ownership.</help>
-    <label><!-- S名刺詳細：所有者を表示する --></label>
-    <name>SmartViscaf__SDetailShowOtherOwner__c</name>
-</CustomFieldTranslation>

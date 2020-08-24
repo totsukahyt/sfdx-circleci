@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>LeadRegist_Overwrite__c</fullName>
     <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
     <externalId>false</externalId>
     <label>リードに登録 名刺情報で上書きする【移行済】</label>
     <trackTrending>false</trackTrending>

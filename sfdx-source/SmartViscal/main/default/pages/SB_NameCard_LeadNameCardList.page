@@ -13,7 +13,7 @@
   <apex:form >
     <apex:pageBlock title="{!windowTitle}">
       <apex:pageBlockButtons >
-        <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCLD_Label_Cancel}" immediate="true"/>
+        <apex:commandButton action="{!cancel}" value="{!$Label.sb_ncld_label_cancel}" immediate="true"/>
       </apex:pageBlockButtons>
 
       <apex:pageBlockSection columns="2">
@@ -31,7 +31,7 @@
         <apex:column >
           <apex:facet name="header">{!updateLeadLabel}</apex:facet>
           <apex:outputLink value="javascript:void(0)">
-            {!$Label.SB_NCLD_Text_Update}
+            {!$Label.sb_ncld_text_update}
             <apex:actionSupport event="onclick" action="{!saveLead}" rerender="pageMsgs">
               <apex:param name="nameCardRecordListIndex" assignto="{!nameCardRecordListIndex}" value="{!ncRec.index}"/>
             </apex:actionSupport>
@@ -92,7 +92,7 @@
         </apex:column>
 
         <apex:column >
-          <apex:facet name="header">{!$Label.SB_NCLD_Label_Owner}</apex:facet>
+          <apex:facet name="header">{!$Label.sb_ncld_label_owner}</apex:facet>
           <apex:outputPanel layout="none">
             <a href="/{!ncRec.nameCard.OwnerId}" id="ncOwn_{!ncRec.nameCard.OwnerId}" onblur="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onfocus="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}').hide();" onmouseover="LookupHoverDetail.getHover('ncOwn_{!ncRec.nameCard.OwnerId}', '/{!ncRec.nameCard.OwnerId}/m?isAjaxRequest=1').show();">
               <apex:outputText value="{!ncRec.nameCard.Owner.Name}"/>

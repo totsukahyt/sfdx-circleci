@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label><!-- Sみんなの名刺でも2次納品以外も検索の対象にする --></label>
-    <name>SmartViscaf__SSearchAllIgnoreDeliveryType__c</name>
-</CustomFieldTranslation>
