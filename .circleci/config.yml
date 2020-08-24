@@ -231,17 +231,28 @@ jobs:
             sfdx force:user:create --setalias qa-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile config/project-user-admin-def.json
             sfdx force:user:password:generate -u qa-${CIRCLE_WORKFLOW_ID}@package.org
             sfdx force:user:display --targetusername qa-${CIRCLE_WORKFLOW_ID}@package.org --json > qa_userPassword.json
-            cat ./qa_userPassword.txt
-            echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.txt)' >> $BASH_ENV
-            echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
-            source $BASH_ENV
+            # cat ./qa_userPassword.txt
+            # echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.txt)' >> $BASH_ENV
+            # echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
+            # source $BASH_ENV
+
+      - run:
+          name: initial setting in Lead-package
+          command: |
+              sfdx force:source:deploy -p "sfdx-source/unpackaged" \
+                                      -u qa-${CIRCLE_WORKFLOW_ID}@package.org \
+                                      -w 15 \
+                                      --verbose \
+                                      --loglevel error
+              
+              sfdx force:apex:execute -u qa-${CIRCLE_WORKFLOW_ID}@package.org -f script/apex/SB_AutomaticcCooperationSetting.apex
 
       - run:
           name: create login info files and run e2e script
           command: |
 
               npm install
-              npx mocha scripts/e2e/SmartViscaInitialSetting.js --timeout 0
+              npx mocha scripts/e2e/SmartViscaInitialSetting.js --timeout 2000
 
 
       - slack/notify:

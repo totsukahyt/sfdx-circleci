@@ -1,7 +1,7 @@
 {
   "packageDirectories": [
     { "path": "sfdx-source/SmartViscal" },
-    { "path": "sfdx-source/SVLunpackaged" , "default": true}
+    { "path": "sfdx-source/unpackaged" , "default": true}
   ],
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
