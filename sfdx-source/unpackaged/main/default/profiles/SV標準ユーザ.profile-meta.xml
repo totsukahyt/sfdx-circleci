@@ -1,295 +1,295 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
     <classAccesses>
-        <apexClass>SB_NCL_CardAppLauncherController</apexClass>
+        <apexClass>ficuspop__SB_NCL_CardAppLauncherController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_CardAppLauncherControllerTest</apexClass>
+        <apexClass>ficuspop__SB_NCL_CardAppLauncherControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_ListViewConfig</apexClass>
+        <apexClass>ficuspop__SB_NCL_ListViewConfig</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_NameCardDTO</apexClass>
+        <apexClass>ficuspop__SB_NCL_NameCardDTO</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_NameCardDTOTest</apexClass>
+        <apexClass>ficuspop__SB_NCL_NameCardDTOTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_PageDispacherController</apexClass>
+        <apexClass>ficuspop__SB_NCL_PageDispacherController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_PostInstallScript</apexClass>
+        <apexClass>ficuspop__SB_NCL_PostInstallScript</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_PostInstallScriptTest</apexClass>
+        <apexClass>ficuspop__SB_NCL_PostInstallScriptTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_RegistCampaignOptionCreater</apexClass>
+        <apexClass>ficuspop__SB_NCL_RegistCampaignOptionCreater</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_RegistOptionCreater</apexClass>
+        <apexClass>ficuspop__SB_NCL_RegistOptionCreater</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_ReservedTest</apexClass>
+        <apexClass>ficuspop__SB_NCL_ReservedTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_TestDB</apexClass>
+        <apexClass>ficuspop__SB_NCL_TestDB</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_TwowayBulkRgsLcController</apexClass>
+        <apexClass>ficuspop__SB_NCL_TwowayBulkRgsLcController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_TwowayBulkRgsLcControllerTest</apexClass>
+        <apexClass>ficuspop__SB_NCL_TwowayBulkRgsLcControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_TwowayRegistController</apexClass>
+        <apexClass>ficuspop__SB_NCL_TwowayRegistController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_TwowayRegistControllerTest</apexClass>
+        <apexClass>ficuspop__SB_NCL_TwowayRegistControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_TwowayRegistControllerTest2</apexClass>
+        <apexClass>ficuspop__SB_NCL_TwowayRegistControllerTest2</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_UpdateByCardDTO</apexClass>
+        <apexClass>ficuspop__SB_NCL_UpdateByCardDTO</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_UpdateByCardDTOTest</apexClass>
+        <apexClass>ficuspop__SB_NCL_UpdateByCardDTOTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_UpdateByCardLcController</apexClass>
+        <apexClass>ficuspop__SB_NCL_UpdateByCardLcController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_UpdateByCardLcControllerTest</apexClass>
+        <apexClass>ficuspop__SB_NCL_UpdateByCardLcControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_UpdateByCardLcDTO</apexClass>
+        <apexClass>ficuspop__SB_NCL_UpdateByCardLcDTO</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NCL_UpdateByCardLcDTOTest</apexClass>
+        <apexClass>ficuspop__SB_NCL_UpdateByCardLcDTOTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_BulkRegistDTO</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_BulkRegistDTO</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_BulkRegistDTOTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_BulkRegistDTOTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_DMLProcessor</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_DMLProcessor</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistCanPickerAbstract</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistCanPickerAbstract</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistCardHolder</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistCardHolder</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistCardHolderBuilder</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistCardHolderBuilder</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistHelper</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistHelper</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistHelperTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistHelperTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistOwenrCheckHelper</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistOwenrCheckHelper</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistOwenrCheckHelperTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistOwenrCheckHelperTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistQueryExecutor</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistQueryExecutor</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistQueryExecutorTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistQueryExecutorTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistQueryMatcher</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistQueryMatcher</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistQueryMatcherTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistQueryMatcherTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistQueryOption</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistQueryOption</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistQueryStrategy</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistQueryStrategy</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistQueryStrategyTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistQueryStrategyTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RegistSoqlCountCanPicker</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RegistSoqlCountCanPicker</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiCardHolder</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiCardHolder</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiCardHolderBuilder</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiCardHolderBuilder</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiChecker</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiChecker</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiCheckerTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiCheckerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiHelper</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiHelper</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiHelperAbstract</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiHelperAbstract</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiHelperTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiHelperTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiHelperTest2</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiHelperTest2</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiTriggerContactCUTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiTriggerContactCUTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiTriggerHandler</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiTriggerHandler</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiTriggerHandlerTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiTriggerHandlerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiTriggerHelper</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiTriggerHelper</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_RenkeiTriggerHelperTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_RenkeiTriggerHelperTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_TwowayRegistController</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_TwowayRegistController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_TwowayRegistControllerTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_TwowayRegistControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_UnivTwowayBulkRegistCtrl</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_UnivTwowayBulkRegistCtrl</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_Util</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_Util</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCardL_UtilTest</apexClass>
+        <apexClass>ficuspop__SB_NameCardL_UtilTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_LeadBulkRegistController</apexClass>
+        <apexClass>ficuspop__SB_NameCard_LeadBulkRegistController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_LeadCrudFls</apexClass>
+        <apexClass>ficuspop__SB_NameCard_LeadCrudFls</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_LeadCrudFlsTest</apexClass>
+        <apexClass>ficuspop__SB_NameCard_LeadCrudFlsTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_LeadNameCardListController</apexClass>
+        <apexClass>ficuspop__SB_NameCard_LeadNameCardListController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_LeadRegist</apexClass>
+        <apexClass>ficuspop__SB_NameCard_LeadRegist</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_LeadRegistController</apexClass>
+        <apexClass>ficuspop__SB_NameCard_LeadRegistController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_LeadRegistTest</apexClass>
+        <apexClass>ficuspop__SB_NameCard_LeadRegistTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_LeadSaveResult</apexClass>
+        <apexClass>ficuspop__SB_NameCard_LeadSaveResult</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_LeadSaveResultTest</apexClass>
+        <apexClass>ficuspop__SB_NameCard_LeadSaveResultTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_NameCard_MojiWidthUtil</apexClass>
+        <apexClass>ficuspop__SB_NameCard_MojiWidthUtil</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_Strike_LookupController</apexClass>
+        <apexClass>ficuspop__SB_Strike_LookupController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_Strike_LookupControllerTest</apexClass>
+        <apexClass>ficuspop__SB_Strike_LookupControllerTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_Strike_ResponseData</apexClass>
+        <apexClass>ficuspop__SB_Strike_ResponseData</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>SB_Strike_Utilities</apexClass>
+        <apexClass>ficuspop__SB_Strike_Utilities</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <custom>true</custom>
@@ -372,21 +372,6 @@
         <editable>true</editable>
         <field>Lead.MobilePhone</field>
         <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Lead.NameCardListName__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Lead.NameCardMemo__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Lead.NameCard__c</field>
-        <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
@@ -1450,11 +1435,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>SmartViscaf__NameCard__c.campaign__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>SmartViscaf__NameCard__c.ficuspop__campaign__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -1483,39 +1463,39 @@
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <pageAccesses>
-        <apexPage>SB_NCL_CardAppLauncher</apexPage>
+        <apexPage>ficuspop__SB_NCL_CardAppLauncher</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SB_NCL_PageDispacher</apexPage>
+        <apexPage>ficuspop__SB_NCL_PageDispacher</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SB_NCL_TwowayRegist</apexPage>
+        <apexPage>ficuspop__SB_NCL_TwowayRegist</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SB_NCL_TwowayRegistEdge</apexPage>
+        <apexPage>ficuspop__SB_NCL_TwowayRegistEdge</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SB_NameCardL_TwowayRegist</apexPage>
+        <apexPage>ficuspop__SB_NameCardL_TwowayRegist</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SB_NameCardL_UnivTwowayBulkRegist</apexPage>
+        <apexPage>ficuspop__SB_NameCardL_UnivTwowayBulkRegist</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SB_NameCard_LeadBulkRegist</apexPage>
+        <apexPage>ficuspop__SB_NameCard_LeadBulkRegist</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SB_NameCard_LeadNameCardList</apexPage>
+        <apexPage>ficuspop__SB_NameCard_LeadNameCardList</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <pageAccesses>
-        <apexPage>SB_NameCard_LeadRegist</apexPage>
+        <apexPage>ficuspop__SB_NameCard_LeadRegist</apexPage>
         <enabled>false</enabled>
     </pageAccesses>
     <recordTypeVisibilities>
