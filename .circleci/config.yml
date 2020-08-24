@@ -246,11 +246,6 @@ jobs:
                                       --loglevel error
 
               sfdx force:apex:execute -u qa-${CIRCLE_WORKFLOW_ID}@package.org -f script/apex/SB_AutomaticcCooperationSetting.apex
-
-      - run:
-          name: create login info files and run e2e script
-          command: |
-
               npm install
               npx mocha script/e2e/SmartViscaInitialSetting.js --timeout 20000
 
