@@ -375,11 +375,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Lead.NameCardFreehandmemo__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Lead.NameCardListName__c</field>
         <readable>false</readable>
     </fieldPermissions>
