@@ -158,6 +158,8 @@ jobs:
 ####################################################################################################
   create-beta-package:
     executor: sfdx/default
+    docker:
+      - image: circleci/node:current-browsers
     steps:
       - checkout
       - sfdx/install:
