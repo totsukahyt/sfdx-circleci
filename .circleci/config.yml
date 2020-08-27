@@ -9,6 +9,7 @@ orbs:
 ####################################################################################################
 jobs:
   build-and-test:
+    executor: sfdx/default
     docker:
       - image: circleci/node:current-browsers
     # machine: true
@@ -95,7 +96,7 @@ jobs:
 ####################################################################################################
   create-feature-scratch:
     docker:
-      - image: circleci/node:current-browsers
+      - image: ncino/ci-sfdx
     # machine: true
     working_directory: ~/smartvisca-lead-package
     steps:
@@ -158,8 +159,6 @@ jobs:
 ####################################################################################################
   create-beta-package:
     executor: sfdx/default
-    docker:
-      - image: circleci/node:current-browsers
     steps:
       - checkout
       - sfdx/install:
