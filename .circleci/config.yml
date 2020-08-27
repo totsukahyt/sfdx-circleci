@@ -382,7 +382,7 @@ workflows:
   version: 2.1
   commit-workflow:
     jobs:
-      - build-and-test:
+      - build-and-test
           # context: org-sbdevhub
       - create-feature-scratch:
           # context: org-sbdevhub
