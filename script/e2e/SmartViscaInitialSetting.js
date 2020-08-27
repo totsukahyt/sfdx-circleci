@@ -15,9 +15,13 @@ const npw = "sohoTest1"
 
 describe("SeleniumChromeTest", () => {
   before(() => {
+    console.log("###")
     driver = new Builder().forBrowser('chrome').withCapabilities(options).build();
+    console.log("###")
     LOGIN_INFO = fs.readFileSync(path.join(process.cwd(), "qa_userPassword.json"))
+    console.log("###")
     LOGIN_INFO = JSON.parse(LOGIN_INFO).result
+    console.log("###")
   });
 
   after(() => {
