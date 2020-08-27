@@ -7,8 +7,7 @@
     "LocaleSidKey": "ja_JP",
     "EmailEncodingKey": "ISO-2022-JP",
     "LanguageLocaleKey": "ja",
-    "UserPermissionsMarketingUser": true,
-    "profileName": "SV標準ユーザ",
-    "permsets": ["SmartViscaUser"],
+    "profileName": "標準 Platform ユーザ",
+    "permsets": ["SmartViscaUser", "SmartViscaTestUser"],
     "generatePassword": true
   }

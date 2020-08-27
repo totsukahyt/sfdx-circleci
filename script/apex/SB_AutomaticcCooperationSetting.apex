@@ -1,8 +1,9 @@
 //自動連携の有効化
 
-List<SmartViscaf__NameCardBasicSetting__c> basicSetting = [SELECT id, SmartViscaf__RenkeiActive__c FROM SmartViscaf__NameCardBasicSetting__c];
+List<SmartViscaf__NameCardBasicSetting__c> basicSetting = [SELECT id, SmartViscaf__RenkeiActive__c,SmartViscaf__RenkeiActiveCampaignMember__c FROM SmartViscaf__NameCardBasicSetting__c];
 basicSetting[0].SmartViscaf__RenkeiActive__c     = true;
 basicSetting[0].SmartViscaf__RenkeiLeadActive__c = true;
+basicSetting[0].SmartViscaf__RenkeiActiveCampaignMember__c = true;
 update basicSetting;
 
  

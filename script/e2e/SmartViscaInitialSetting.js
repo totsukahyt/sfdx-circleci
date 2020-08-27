@@ -8,12 +8,12 @@ const path = require('path')
 var chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 var LOGIN_INFO
-var options   = new chrome.Options().addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1920x1080');
+var options   = new chrome.Options()//.addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1920x1080');
 
 
 let driver;
 let iframe;
-
+const npw = "sohoTest1"
 
 describe("SeleniumChromeTest", () => {
   before(() => {
@@ -23,7 +23,7 @@ describe("SeleniumChromeTest", () => {
   });
 
   after(() => {
-    return driver.quit();
+    // return driver.quit();
   });
 
   it("login salesforce", async () => {
@@ -32,14 +32,17 @@ describe("SeleniumChromeTest", () => {
     let url = LOGIN_INFO.instanceUrl+"/secur/frontdoor.jsp?sid="+LOGIN_INFO.accessToken
     await driver.get(url);
 
-    //Login処理がなければ
-    try{
       await driver.wait(until.elementLocated(By.xpath('//*[@id="username"]')),10);
       await driver.findElement(By.id("username")).sendKeys(LOGIN_INFO.username)
       await driver.findElement(By.id("password")).sendKeys(LOGIN_INFO.password)
       await driver.findElement(By.id("Login")).click();
-    } catch(e){
-    }
+
+      await driver.wait(until.elementLocated(By.id("currentpassword")),10000);
+      await driver.findElement(By.id("currentpassword")).sendKeys(LOGIN_INFO.password);
+      await driver.findElement(By.id("newpassword")).sendKeys(npw);
+      await driver.findElement(By.id("confirmpassword")).sendKeys(npw);
+      await driver.findElement(By.id("answer")).sendKeys('東京');
+      await driver.findElement(By.id("password-button")).click();
 
   });
 
@@ -63,23 +66,6 @@ describe("SeleniumChromeTest", () => {
     }
     
     takeScreenShot('feed')
-
-
-    
-
-
-  //   await driver.findElements(By.tagName('a')).then(result => {
-
-  //   //   for (let i = 0; i < result.length; i++) {
-  //   //     const element = result[i];
-  //   //     element.getText().then(txt =>{
-  //   //       if(txt === '名刺'){
-  //   //         element.click()
-  //   //       }
-  //   //     })
-  //   //   }
-  //   // })
-    
   })
 
 });
