@@ -12,7 +12,6 @@
         "mocha": "^8.0.1",
         "prettier": "^2.0.5",
         "prettier-plugin-apex": "^1.4.0",
-        "selenium-webdriver": "^4.0.0-alpha.7",
-        "jquery": "^3.5.1"
+        "selenium-webdriver": "^4.0.0-alpha.7"
       }
 }

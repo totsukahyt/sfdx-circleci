@@ -1,6 +1,5 @@
 require("chromedriver");
 require("date-utils");
-require("jquery")
 const webdriver =  require("selenium-webdriver");
 const { Builder, By, until } = webdriver;
 var chrome = require('selenium-webdriver/chrome');
