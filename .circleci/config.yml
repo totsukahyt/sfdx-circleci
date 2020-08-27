@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  sfdx: circleci/salesforce-sfdx@2.0.0
+  sfdx: circleci/salesforce-sfdx@2.1.0
   slack: circleci/slack@3.4.2
 
 ####################################################################################################
@@ -165,8 +165,6 @@ jobs:
       - checkout
       - sfdx/install:
           version: "7.69.0"
-      
-
       - run:
           name: test
           command: |
