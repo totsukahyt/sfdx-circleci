@@ -242,23 +242,19 @@ jobs:
           name: initial setting in Lead-package
           command: |
               sfdx force:source:deploy -p "sfdx-source/unpackaged" \
-                                      -u qa-${CIRCLE_WORKFLOW_ID}@package.org \
+                                      -u  ${CIRCLE_TAG} \
                                       -w 15 \
                                       --verbose \
                                       --loglevel error
 
-              sfdx force:apex:execute -u qa-${CIRCLE_WORKFLOW_ID}@package.org -f script/apex/SB_AutomaticcCooperationSetting.apex
+              sfdx force:apex:execute -u  ${CIRCLE_TAG} -f script/apex/SB_AutomaticcCooperationSetting.apex
               npm install
               npx mocha script/e2e/SmartViscaInitialSetting.js --timeout 20000
               # テストユーザの作成
               sfdx force:user:create --setalias qa-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile config/project-user-general-def.json
               sfdx force:user:password:generate -u qa-${CIRCLE_WORKFLOW_ID}@package.org
 
-              sfdx force:user:display --targetusername qa-${CIRCLE_WORKFLOW_ID}@package.org --json > qa_userPassword.json
-              cat ./qa_userPassword.json
-              echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.json)' >> $BASH_ENV
-              echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
-              source $BASH_ENV
+              sfdx force:user:display --targetusername qa-${CIRCLE_WORKFLOW_ID}@package.org
 
 
       - slack/notify:
