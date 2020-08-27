@@ -6,7 +6,7 @@ const { Builder, By, until } = webdriver;
 var chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 var LOGIN_INFO
-var options   = new chrome.Options()//.addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1024x768');
+var options   = new chrome.Options().addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1024x768');
 
 
 let driver;
