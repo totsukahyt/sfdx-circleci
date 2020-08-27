@@ -383,9 +383,9 @@ workflows:
   commit-workflow:
     jobs:
       - build-and-test:
-          context: org-sbdevhub
+          # context: org-sbdevhub
       - create-feature-scratch:
-          context: org-sbdevhub
+          # context: org-sbdevhub
           filters:
             branches:
               only: /^feature.*/
@@ -397,5 +397,5 @@ workflows:
             branches:
               only: pre-production
     jobs:
-      - create-beta-package:
-          context: org-sbdevhub
+      - create-beta-package
+          # context: org-sbdevhub
