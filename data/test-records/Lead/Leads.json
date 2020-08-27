@@ -1,0 +1,253 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Lead",
+                "referenceId": "LeadRef1"
+            },
+            "Website": "www.cloudmktg.jp",
+            "Email": "sasaki@cloudmktg.jp",
+            "Status": "New",
+            "Company": "クラウドマーケティング株式会社",
+            "SmartViscal__NameCardListName__c": "ニュービジネスフェア2019",
+            "Name": "佐々木 健太郎",
+            "Title": "コンサルタント",
+            "Phone": "03-5488-6010",
+            "DoNotCall": false,
+            "SmartViscal__NameCard__r": {
+                "attributes": {
+                    "type": "SmartViscaf__NameCard__c",
+                    "url": "/services/data/v49.0/sobjects/SmartViscaf__NameCard__c/a082x000000BqMdAAK"
+                },
+                "SmartViscaf__card_id__c": "200000108709090007"
+            },
+            "Owner": {
+                "attributes": {
+                    "type": "Name",
+                    "url": "/services/data/v49.0/sobjects/User/0052x000002qGAtAAM"
+                },
+                "Name": "水原 美咲",
+                "Username": "svdemo_mktg2019.xltvyt2mceva.uo598j4fqxu8@sv.com"
+            }
+        },
+        {
+            "attributes": {
+                "type": "Lead",
+                "referenceId": "LeadRef2"
+            },
+            "Fax": "03-1111-1222",
+            "Website": "www.meishiprinting.jp",
+            "Email": "kunimatsu@meishiprinting.jp",
+            "Status": "New",
+            "Company": "名刺印刷株式会社",
+            "SmartViscal__NameCardMemo__c": "会社紹介制作打ち合わせ",
+            "Name": "國松 伸二",
+            "Title": "課長",
+            "MobilePhone": "090-1111-1118",
+            "Phone": "03-1111-1111",
+            "DoNotCall": false,
+            "SmartViscal__NameCard__r": {
+                "attributes": {
+                    "type": "SmartViscaf__NameCard__c",
+                    "url": "/services/data/v49.0/sobjects/SmartViscaf__NameCard__c/a082x000000BqMgAAK"
+                },
+                "SmartViscaf__card_id__c": "200000108709120002"
+            },
+            "Owner": {
+                "attributes": {
+                    "type": "Name",
+                    "url": "/services/data/v49.0/sobjects/User/0052x000002qGAtAAM"
+                },
+                "Name": "水原 美咲",
+                "Username": "svdemo_mktg2019.xltvyt2mceva.uo598j4fqxu8@sv.com"
+            }
+        },
+        {
+            "attributes": {
+                "type": "Lead",
+                "referenceId": "LeadRef3"
+            },
+            "Fax": "03-1111-1222",
+            "Website": "www.meishiprinting.jp",
+            "Email": "kato@meishiprinting.jp",
+            "Status": "New",
+            "Company": "名刺印刷株式会社",
+            "SmartViscal__NameCardListName__c": "異業種交流会",
+            "Name": "加藤 雄太",
+            "Title": "部長",
+            "MobilePhone": "090-1111-1111",
+            "Phone": "03-1111-1111",
+            "DoNotCall": false,
+            "SmartViscal__NameCard__r": {
+                "attributes": {
+                    "type": "SmartViscaf__NameCard__c",
+                    "url": "/services/data/v49.0/sobjects/SmartViscaf__NameCard__c/a082x000000BqMiAAK"
+                },
+                "SmartViscaf__card_id__c": "200000108709300001"
+            },
+            "Owner": {
+                "attributes": {
+                    "type": "Name",
+                    "url": "/services/data/v49.0/sobjects/User/0052x000002MjzDAAS"
+                },
+                "Name": "管理 ユーザ",
+                "Username": "sv202007demo@sv.com"
+            }
+        },
+        {
+            "attributes": {
+                "type": "Lead",
+                "referenceId": "LeadRef4"
+            },
+            "Website": "www.cloudmktg.jp",
+            "Email": "kobayashi@cloudmktg.jp",
+            "Status": "New",
+            "Company": "クラウドマーケティング株式会社",
+            "SmartViscal__NameCardListName__c": "異業種交流会",
+            "Name": "小林 優子",
+            "Title": "取締役 CMO",
+            "Phone": "03-5488-6010",
+            "DoNotCall": false,
+            "SmartViscal__NameCard__r": {
+                "attributes": {
+                    "type": "SmartViscaf__NameCard__c",
+                    "url": "/services/data/v49.0/sobjects/SmartViscaf__NameCard__c/a082x000000BqMkAAK"
+                },
+                "SmartViscaf__card_id__c": "200000108709300003"
+            },
+            "Owner": {
+                "attributes": {
+                    "type": "Name",
+                    "url": "/services/data/v49.0/sobjects/User/0052x000002qGAvAAM"
+                },
+                "Name": "安田 紘一",
+                "Username": "svdemo_cxo2019.qlz4law5ydzk.bkmfhh1acnzi@sv.com"
+            }
+        },
+        {
+            "attributes": {
+                "type": "Lead",
+                "referenceId": "LeadRef5"
+            },
+            "Email": "info@salesforce.com",
+            "Status": "Contacted",
+            "LeadSource": "Employee Referral",
+            "Company": "ｱﾌﾞﾛｲｱﾑ･ｵｲﾙ & ｶﾞｽ",
+            "Name": "田中 真理子",
+            "AnnualRevenue": 33147,
+            "Title": "システム管理者",
+            "NumberOfEmployees": 48500,
+            "Industry": "Insurance",
+            "Phone": "03-4589-6531",
+            "DoNotCall": false,
+            "Owner": {
+                "attributes": {
+                    "type": "Name",
+                    "url": "/services/data/v49.0/sobjects/User/0052x000002MjzDAAS"
+                },
+                "Name": "管理 ユーザ",
+                "Username": "sv202007demo@sv.com"
+            }
+        },
+        {
+            "attributes": {
+                "type": "Lead",
+                "referenceId": "LeadRef6"
+            },
+            "Email": "info@salesforce.com",
+            "Status": "New",
+            "LeadSource": "Other",
+            "Company": "株式会社ﾃｸﾆｶﾙｻｰﾋﾞｽ",
+            "Name": "加古 浩",
+            "AnnualRevenue": 16867,
+            "Title": "部長",
+            "NumberOfEmployees": 87200,
+            "Industry": "Aerospace & Defense",
+            "Phone": "03-4589-6531",
+            "DoNotCall": false,
+            "Owner": {
+                "attributes": {
+                    "type": "Name",
+                    "url": "/services/data/v49.0/sobjects/User/0052x000002MjzDAAS"
+                },
+                "Name": "管理 ユーザ",
+                "Username": "sv202007demo@sv.com"
+            }
+        },
+        {
+            "attributes": {
+                "type": "Lead",
+                "referenceId": "LeadRef7"
+            },
+            "Email": "info@salesforce.com",
+            "Status": "New",
+            "LeadSource": "Advertisement",
+            "Company": "ﾃｸﾛﾝｸﾞﾛｰﾊﾞﾙ･ｼﾞｬﾊﾟﾝ株式会社",
+            "Name": "岡本 正彦",
+            "AnnualRevenue": 28212,
+            "Title": "部長",
+            "NumberOfEmployees": 155000,
+            "Industry": "Aerospace & Defense",
+            "Phone": "03-4589-6531",
+            "DoNotCall": false,
+            "Owner": {
+                "attributes": {
+                    "type": "Name",
+                    "url": "/services/data/v49.0/sobjects/User/0052x000002MjzDAAS"
+                },
+                "Name": "管理 ユーザ",
+                "Username": "sv202007demo@sv.com"
+            }
+        },
+        {
+            "attributes": {
+                "type": "Lead",
+                "referenceId": "LeadRef8"
+            },
+            "Email": "info@salesforce.com",
+            "Status": "New",
+            "LeadSource": "Employee Referral",
+            "Company": "ﾕﾅｲﾃｯﾄﾞﾋﾞｼﾞﾈｽ･ｿﾘｭｰｼｮﾝ",
+            "Name": "伊藤 武士",
+            "AnnualRevenue": 19879,
+            "Title": "部長",
+            "NumberOfEmployees": 28000,
+            "Industry": "Insurance",
+            "Phone": "03-4589-6531",
+            "DoNotCall": false,
+            "Owner": {
+                "attributes": {
+                    "type": "Name",
+                    "url": "/services/data/v49.0/sobjects/User/0052x000002MjzDAAS"
+                },
+                "Name": "管理 ユーザ",
+                "Username": "sv202007demo@sv.com"
+            }
+        },
+        {
+            "attributes": {
+                "type": "Lead",
+                "referenceId": "LeadRef9"
+            },
+            "Email": "info@salesforce.com",
+            "Status": "Contacted",
+            "LeadSource": "Employee Referral",
+            "Company": "ｱﾌﾞﾛｲｱﾑ･ｵｲﾙ & ｶﾞｽ",
+            "Name": "田中 真理子",
+            "AnnualRevenue": 33147,
+            "Title": "システム管理者",
+            "NumberOfEmployees": 48500,
+            "Industry": "Insurance",
+            "Phone": "03-4589-6531",
+            "DoNotCall": false,
+            "Owner": {
+                "attributes": {
+                    "type": "Name",
+                    "url": "/services/data/v49.0/sobjects/User/0052x000002MjzDAAS"
+                },
+                "Name": "管理 ユーザ",
+                "Username": "sv202007demo@sv.com"
+            }
+        }
+    ]
+}

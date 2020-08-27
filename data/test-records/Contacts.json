@@ -1,0 +1,76 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Contact",
+                "referenceId": "ContactRef1"
+            },
+            "HasOptedOutOfFax": false,
+            "Email": "nonaka@cloudmktg.jp",
+            "LastName": "野中",
+            "FirstName": "美和",
+            "Title": "コンサルタント",
+            "Department": "コンサルティング部 マーケティング",
+            "Phone": "03-5488-6010",
+            "AccountId": "@AccountRef1",
+            "OtherCity": "渋谷区",
+            "OtherPostalCode": "150-0022",
+            "OtherState": "東京都",
+            "OtherStreet": "恵比寿南1-5-5JR恵比寿ビル11F",
+            "MailingCity": "渋谷区",
+            "MailingPostalCode": "150-0022",
+            "MailingState": "東京都",
+            "MailingStreet": "恵比寿南1-5-5JR恵比寿ビル11F"
+            
+        },
+        {
+            "attributes": {
+                "type": "Contact",
+                "referenceId": "ContactRef2"
+            },
+            "Fax": "03-1111-1222",
+            "HasOptedOutOfFax": false,
+            "Email": "iwata@meishiprinting.jp",
+            "LastName": "岩田",
+            "FirstName": "隆三",
+            "Title": "次長",
+            "MobilePhone": "090-1111-1117",
+            "Department": "第三営業部",
+            "Phone": "03-1111-1111",
+            "AccountId": "@AccountRef2",
+            "OtherCity": "新宿区",
+            "OtherPostalCode": "123-4567",
+            "OtherState": "東京都",
+            "OtherStreet": "新宿1-2-3名刺ビル1F",
+            "MailingCity": "新宿区",
+            "MailingPostalCode": "123-4567",
+            "MailingState": "東京都",
+            "MailingStreet": "新宿1-2-3名刺ビル1F"
+            
+        },
+        {
+            "attributes": {
+                "type": "Contact",
+                "referenceId": "ContactRef3"
+            },
+            "Fax": "03-0001-1000",
+            "HasOptedOutOfFax": false,
+            "Email": "miyazaki@ebisuworks.jp",
+            "LastName": "宮崎",
+            "FirstName": "公平",
+            "Title": "部長",
+            "Department": "人事部",
+            "Phone": "03-0001-1234",
+            "AccountId": "@AccountRef3",
+            "OtherCity": "渋谷区",
+            "OtherPostalCode": "150-6018",
+            "OtherState": "東京都",
+            "OtherStreet": "恵比寿4-20",
+            "MailingCity": "渋谷区",
+            "MailingPostalCode": "150-6018",
+            "MailingState": "東京都",
+            "MailingStreet": "恵比寿4-20"
+            
+        }
+    ]
+}
