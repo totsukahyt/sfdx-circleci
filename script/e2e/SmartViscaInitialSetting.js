@@ -1,10 +1,8 @@
 require("chromedriver");
 require("date-utils");
 require("jquery")
-const assert = require('assert');
 const webdriver =  require("selenium-webdriver");
 const { Builder, By, until } = webdriver;
-const path = require('path')
 var chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 var LOGIN_INFO
