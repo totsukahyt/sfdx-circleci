@@ -3,7 +3,7 @@
         "test": "mocha test/test.js --timeout 0"
     },
     "dependencies": {
-        "chromedriver": "^83.0.1",
+        "chromedriver": "^84.0.1",
         "date-utils": "^1.2.21",
         "jquery": "^3.5.1",
         "mocha": "^8.0.1",

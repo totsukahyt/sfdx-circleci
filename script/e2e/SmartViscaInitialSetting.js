@@ -8,7 +8,7 @@ const path = require('path')
 var chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 var LOGIN_INFO
-var options   = new chrome.Options().addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1920x1080');
+var options   = new chrome.Options().addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1024x768');
 
 
 let driver;
@@ -23,7 +23,7 @@ describe("SeleniumChromeTest", () => {
   });
 
   after(() => {
-    // return driver.quit();
+    return driver.quit();
   });
 
   it("login salesforce", async () => {
@@ -32,11 +32,12 @@ describe("SeleniumChromeTest", () => {
     let url = LOGIN_INFO.instanceUrl+"/secur/frontdoor.jsp?sid="+LOGIN_INFO.accessToken
     await driver.get(url);
 
-      await driver.wait(until.elementLocated(By.xpath('//*[@id="username"]')),10);
+      await driver.wait(until.elementLocated(By.xpath('//*[@id="username"]')),10000);
       await driver.findElement(By.id("username")).sendKeys(LOGIN_INFO.username)
       await driver.findElement(By.id("password")).sendKeys(LOGIN_INFO.password)
       await driver.findElement(By.id("Login")).click();
 
+      // パスワードを変更
       await driver.wait(until.elementLocated(By.id("currentpassword")),10000);
       await driver.findElement(By.id("currentpassword")).sendKeys(LOGIN_INFO.password);
       await driver.findElement(By.id("newpassword")).sendKeys(npw);
