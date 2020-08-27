@@ -1,11 +1,12 @@
 require("chromedriver");
 require("date-utils");
+const path = require("path")
 const webdriver =  require("selenium-webdriver");
 const { Builder, By, until } = webdriver;
 var chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 var LOGIN_INFO
-var options   = new chrome.Options().addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1024x768');
+var options   = new chrome.Options()//.addArguments('--headless').addArguments('--disable-gpu').addArguments('--no-sandbox').addArguments('--window-size=1024x768');
 
 
 let driver;
@@ -15,7 +16,7 @@ const npw = "sohoTest1"
 describe("SeleniumChromeTest", () => {
   before(() => {
     driver = new Builder().forBrowser('chrome').withCapabilities(options).build();
-    LOGIN_INFO = fs.readFileSync("./qa_userPassword.json")
+    LOGIN_INFO = fs.readFileSync(path.join(process.cwd(), "qa_userPassword.json"))
     LOGIN_INFO = JSON.parse(LOGIN_INFO).result
   });
 
