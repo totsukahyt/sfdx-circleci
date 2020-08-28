@@ -4,8 +4,8 @@
     <customButtons>SmartViscaf__registTenshokusaki</customButtons>
     <customButtons>SmartViscaf__SBhaveSameNameCard</customButtons>
     <customButtons>SmartViscaf__SBOrganizationList</customButtons>
-    <customButtons>ficuspop__LeadRegist</customButtons>
-    <customButtons>ficuspop__LeadAccountContactRegist</customButtons>
+    <customButtons>SmartViscal__LeadRegist</customButtons>
+    <customButtons>SmartViscal__LeadAccountContactRegist</customButtons>
     <excludeButtons>Share</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
@@ -224,7 +224,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__campaign__c</field>
+                <field>SmartViscal__campaign__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -308,12 +308,12 @@
             <sortOrder>7</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>ficuspop__LeadRegist</actionName>
+            <actionName>SmartViscal__LeadRegist</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>8</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>ficuspop__LeadAccountContactRegistLex</actionName>
+            <actionName>SmartViscal__LeadAccountContactRegistLex</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>9</sortOrder>
         </platformActionListItems>

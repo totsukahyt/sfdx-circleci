@@ -1007,22 +1007,22 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Lead.ficuspop__NameCardFreehandmemo__c</field>
+        <field>Lead.SmartViscal__NameCardFreehandmemo__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Lead.ficuspop__NameCardListName__c</field>
+        <field>Lead.SmartViscal__NameCardListName__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Lead.ficuspop__NameCardMemo__c</field>
+        <field>Lead.SmartViscal__NameCardMemo__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Lead.ficuspop__NameCard__c</field>
+        <field>Lead.SmartViscal__NameCard__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -2042,7 +2042,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>SmartViscaf__NameCard__c.ficuspop__campaign__c</field>
+        <field>SmartViscaf__NameCard__c.SmartViscal__campaign__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>

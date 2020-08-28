@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>ficuspop__LeadNameCardList</customButtons>
+    <customButtons>SmartViscal__LeadNameCardList</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -99,19 +99,19 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__NameCard__c</field>
+                <field>SmartViscal__NameCard__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__NameCardMemo__c</field>
+                <field>SmartViscal__NameCardMemo__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__NameCardListName__c</field>
+                <field>SmartViscal__NameCardListName__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__NameCardFreehandmemo__c</field>
+                <field>SmartViscal__NameCardFreehandmemo__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
@@ -202,7 +202,7 @@
             <sortOrder>28</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>ficuspop__NameCardListLex</actionName>
+            <actionName>SmartViscal__NameCardListLex</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>29</sortOrder>
         </platformActionListItems>

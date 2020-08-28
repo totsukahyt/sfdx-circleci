@@ -179,7 +179,7 @@
         <fields>SmartViscaf__card_exchange_date__c</fields>
         <fields>SmartViscaf__list_name__c</fields>
         <fields>SmartViscaf__delivery_type__c</fields>
-        <relatedList>SmartViscaf__NameCard__c.ficuspop__campaign__c</relatedList>
+        <relatedList>SmartViscaf__NameCard__c.SmartViscal__campaign__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>CAMPAIGN.NAME</fields>

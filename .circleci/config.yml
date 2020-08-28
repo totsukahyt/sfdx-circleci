@@ -279,7 +279,6 @@ jobs:
               # 下記SmartVscaのバージョン：2.5.2
               sfdx force:package:install --package 04t10000000jwLWAAY -s AllUsers -u ${CIRCLE_TAG} -k sb202006 --publishwait 6 --wait 10
               sfdx force:package:install --package $VERSIONID_ENV -u ${CIRCLE_TAG} --publishwait 6 --wait 10
-
               sfdx force:user:password:generate -u ${CIRCLE_TAG}
               sfdx force:user:display --targetusername ${CIRCLE_TAG} --json > qa_userPassword.json
               cat ./qa_userPassword.json
@@ -289,22 +288,26 @@ jobs:
             else
               exit 0
             fi
-          
+
       - run:
           name: create and push beta tag
           command: |
-            # betaパッケージパージョン名
-            VERSION_NAME=$(cat version_name.txt)
-            # betaタグを作成　例：beta_1.0.0_20200819
-            PKG_INFO=$(cat pkg_info.txt)
-            if [[ $PKG_INFO =~ [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} ]]; then
-              PKG_VERSION=${BASH_REMATCH[0]}
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              # betaパッケージパージョン名
+              VERSION_NAME=$(cat version_name.txt)
+              # betaタグを作成　例：beta_1.0.0_20200819
+              PKG_INFO=$(cat pkg_info.txt)
+              if [[ $PKG_INFO =~ [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} ]]; then
+                PKG_VERSION=${BASH_REMATCH[0]}
+              fi
+              TAG_HEAD=$(echo beta_)
+              UB=$(echo _)
+              BETA_TAG=$(echo $TAG_HEAD$PKG_VERSION$UB${VERSION_NAME})
+              git tag $BETA_TAG
+              git push origin $BETA_TAG
+            else
+              exit 0
             fi
-            TAG_HEAD=$(echo beta_)
-            UB=$(echo _)
-            BETA_TAG=$(echo $TAG_HEAD$PKG_VERSION$UB${VERSION_NAME})
-            git tag $BETA_TAG
-            git push origin $BETA_TAG
 
       - run:
           name: initial setting in Lead-package
@@ -335,7 +338,6 @@ jobs:
               exit 0
             fi
 
-
       - slack/notify:
           channel: ${SLACK_CHANNEL}
           color: '#42e2f4'
@@ -349,24 +351,6 @@ jobs:
           webhook: '${SLACK_WEBHOOK}'
           failure_message: "名前：$CIRCLE_USERNAME \n タグ：$CIRCLE_TAG \n CIRCLE JOB が失敗しました。確認してください。"
 
-# workflows:
-#   # version: 2.1
-#   all_jobs:
-#     jobs:
-#       - build-and-test
-#           # context: org-sbdevhub
-#       - create-feature-scratch:
-#           # context: org-sbdevhub
-#           filters:
-#             branches:
-#               only: /^feature.*/
-#       - create-beta-package:
-#           # context: org-sbdevhub
-#           filters:
-#             tags:
-#               only: /^beta.*/
-#             branches:
-#               ignore: /.*/
 
 ####################################################################################################
 ## workflows
@@ -382,10 +366,10 @@ workflows:
   version: 2.1
   commit-workflow:
     jobs:
-      - build-and-test
-          # context: org-sbdevhub
+      - build-and-test:
+          context: org-sbdevhub
       - create-feature-scratch:
-          # context: org-sbdevhub
+          context: org-sbdevhub
           filters:
             branches:
               only: /^feature.*/
@@ -397,5 +381,5 @@ workflows:
             branches:
               only: pre-production
     jobs:
-      - create-beta-package
-          # context: org-sbdevhub
+      - create-beta-package:
+          context: org-sbdevhub

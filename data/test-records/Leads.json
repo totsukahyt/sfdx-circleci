@@ -9,13 +9,13 @@
             "Email": "sasaki@cloudmktg.jp",
             "Status": "New",
             "Company": "クラウドマーケティング株式会社",
-            "ficuspop__NameCardListName__c": "ニュービジネスフェア2019",
+            "SmartViscal__NameCardListName__c": "ニュービジネスフェア2019",
             "LastName": "佐々木",
             "FirstName": "健太郎",
             "Title": "コンサルタント",
             "Phone": "03-5488-6010",
             "DoNotCall": false,
-            "ficuspop__NameCard__c": "@SmartViscaf__NameCard__cRef15"
+            "SmartViscal__NameCard__c": "@SmartViscaf__NameCard__cRef15"
         },
         {
             "attributes": {
@@ -27,14 +27,14 @@
             "Email": "kunimatsu@meishiprinting.jp",
             "Status": "New",
             "Company": "名刺印刷株式会社",
-            "ficuspop__NameCardMemo__c": "会社紹介制作打ち合わせ",
+            "SmartViscal__NameCardMemo__c": "会社紹介制作打ち合わせ",
             "LastName": "國松",
             "FirstName": "伸二",
             "Title": "課長",
             "MobilePhone": "090-1111-1118",
             "Phone": "03-1111-1111",
             "DoNotCall": false,
-            "ficuspop__NameCard__c": "@SmartViscaf__NameCard__cRef18"
+            "SmartViscal__NameCard__c": "@SmartViscaf__NameCard__cRef18"
         },
         {
             "attributes": {
@@ -46,14 +46,14 @@
             "Email": "kato@meishiprinting.jp",
             "Status": "New",
             "Company": "名刺印刷株式会社",
-            "ficuspop__NameCardListName__c": "異業種交流会",
+            "SmartViscal__NameCardListName__c": "異業種交流会",
             "LastName": "加藤",
             "FirstName": "雄太",
             "Title": "部長",
             "MobilePhone": "090-1111-1111",
             "Phone": "03-1111-1111",
             "DoNotCall": false,
-            "ficuspop__NameCard__c": "@SmartViscaf__NameCard__cRef20"
+            "SmartViscal__NameCard__c": "@SmartViscaf__NameCard__cRef20"
         },
         {
             "attributes": {
@@ -64,13 +64,13 @@
             "Email": "kobayashi@cloudmktg.jp",
             "Status": "New",
             "Company": "クラウドマーケティング株式会社",
-            "ficuspop__NameCardListName__c": "異業種交流会",
+            "SmartViscal__NameCardListName__c": "異業種交流会",
             "LastName": "小林",
             "FirstName": "優子",
             "Title": "取締役 CMO",
             "Phone": "03-5488-6010",
             "DoNotCall": false,
-            "ficuspop__NameCard__c": "@SmartViscaf__NameCard__cRef22"
+            "SmartViscal__NameCard__c": "@SmartViscaf__NameCard__cRef22"
         },
         {
             "attributes": {
