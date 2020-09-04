@@ -2,7 +2,7 @@
   "packageDirectories": [
     { "path": "sfdx-source/SmartViscal",
       "default": true,
-      "postInstallScript": "SB_NCL_PostInstallScript"
+      "postInstallScript": "ficuspop__SB_NCL_PostInstallScript"
     },
     { "path": "sfdx-source/unpackaged"  }
   ],

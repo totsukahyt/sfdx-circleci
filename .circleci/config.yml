@@ -274,19 +274,19 @@ jobs:
               echo 'export VERSIONID_ENV=${VID}' >> $BASH_ENV
               source $BASH_ENV
               echo 'QA scratch環境の作成 '
-              sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-qa-test -a qa-test -n -s -d 30 --wait 10
-              sfdx force:org:list --all
-              sfdx force:user:password:generate -u qa-test
-              sfdx force:user:display --targetusername qa-test --json > qa_userPassword.json
-              cat ./qa_userPassword.json
-              echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.json)' >> $BASH_ENV
-              echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
-              source $BASH_ENV
+              # sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-qa-test -a qa-test -n -s -d 30 --wait 10
+              # sfdx force:org:list --all
+              # sfdx force:user:password:generate -u qa-test
+              # sfdx force:user:display --targetusername qa-test --json > qa_userPassword.json
+              # cat ./qa_userPassword.json
+              # echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.json)' >> $BASH_ENV
+              # echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
+              # source $BASH_ENV
 
-              # 下記SmartVscaのバージョン：2.5.2
-              sfdx force:package:install --package 04t10000000jweM -s AllUsers -u qa-test -k sb202008 --publishwait 6 --wait 10
-              sfdx force:package:install --package $VERSIONID_ENV -u qa-test --publishwait 6 --wait 10
-              sfdx force:user:password:generate -u qa-test
+              # # 下記SmartVscaのバージョン：2.5.2
+              # sfdx force:package:install --package 04t10000000jweM -s AllUsers -u qa-test -k sb202008 --publishwait 6 --wait 10
+              # sfdx force:package:install --package $VERSIONID_ENV -u qa-test --publishwait 6 --wait 10
+              # sfdx force:user:password:generate -u qa-test
               
             # else
             #   exit 0
