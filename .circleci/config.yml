@@ -274,19 +274,19 @@ jobs:
               echo 'export VERSIONID_ENV=${VID}' >> $BASH_ENV
               source $BASH_ENV
               echo 'QA scratch環境の作成 '
-              sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-${CIRCLE_TAG} -a ${CIRCLE_TAG} -n -s -d 30 --wait 10
+              sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-qa-test -a qa-test -n -s -d 30 --wait 10
               sfdx force:org:list --all
-              sfdx force:user:password:generate -u ${CIRCLE_TAG}
-              sfdx force:user:display --targetusername ${CIRCLE_TAG} --json > qa_userPassword.json
+              sfdx force:user:password:generate -u qa-test
+              sfdx force:user:display --targetusername qa-test --json > qa_userPassword.json
               cat ./qa_userPassword.json
               echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.json)' >> $BASH_ENV
               echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
               source $BASH_ENV
 
               # 下記SmartVscaのバージョン：2.5.2
-              sfdx force:package:install --package 04t10000000jweM -s AllUsers -u ${CIRCLE_TAG} -k sb202008 --publishwait 6 --wait 10
-              sfdx force:package:install --package $VERSIONID_ENV -u ${CIRCLE_TAG} --publishwait 6 --wait 10
-              sfdx force:user:password:generate -u ${CIRCLE_TAG}
+              sfdx force:package:install --package 04t10000000jweM -s AllUsers -u qa-test -k sb202008 --publishwait 6 --wait 10
+              sfdx force:package:install --package $VERSIONID_ENV -u qa-test --publishwait 6 --wait 10
+              sfdx force:user:password:generate -u qa-test
               
             # else
             #   exit 0
@@ -317,12 +317,12 @@ jobs:
           command: |
             #if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
               sfdx force:source:deploy -p "sfdx-source/unpackaged" \
-                                      -u  ${CIRCLE_TAG} \
+                                      -u  qa-test \
                                       -w 15 \
                                       --verbose \
                                       --loglevel error
 
-              sfdx force:apex:execute -u  ${CIRCLE_TAG} -f script/apex/SB_AutomaticcCooperationSetting.apex
+              sfdx force:apex:execute -u  qa-test -f script/apex/SB_AutomaticcCooperationSetting.apex
               npm install
               npx mocha script/e2e/SmartViscaInitialSetting.js --timeout 20000
               #テストレコードの挿入
@@ -330,7 +330,7 @@ jobs:
               sfdx force:user:create --setalias test2-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_mktg2019.xltvyt2mceva.uo598j4fqxu8@sv.com.json
               sfdx force:user:create --setalias test1-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_sales2019.qmwtyalmpjol.o9x6vrua3tos@sv.com.json
               sfdx force:user:create --setalias test1-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_salesmgr2019.shqp9lpwtmwl.n4al68ywrcoq@sv.com.json
-              sfdx force:data:tree:import -p data/test-records/SmartViscaf__NameCard__c-Account-Contact-plan.json -u  ${CIRCLE_TAG}
+              sfdx force:data:tree:import -p data/test-records/SmartViscaf__NameCard__c-Account-Contact-plan.json -u  qa-test
 
               # テストユーザの作成
               sfdx force:user:create --setalias qa-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile config/project-user-general-def.json
@@ -344,7 +344,7 @@ jobs:
       - slack/notify:
           channel: ${SLACK_CHANNEL}
           color: '#42e2f4'
-          message: "${QAMSG_HEAD} \n タグ：${CIRCLE_TAG} \n ${QAVERY_IMPORTANT}"
+          message: "${QAMSG_HEAD} \n タグ：qa-test \n ${QAVERY_IMPORTANT}"
           webhook: '${SLACK_WEBHOOK}'
           include_job_number_field: false
 
