@@ -277,7 +277,7 @@ jobs:
               sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-${CIRCLE_TAG} -a ${CIRCLE_TAG} -n -s -d 30 --wait 10
               sfdx force:org:list --all
               # 下記SmartVscaのバージョン：2.5.2
-              sfdx force:package:install --package 04t10000000jwLWAAY -s AllUsers -u ${CIRCLE_TAG} -k sb202006 --publishwait 6 --wait 10
+              sfdx force:package:install --package 04t10000000jweM -s AllUsers -u ${CIRCLE_TAG} -k sb202008 --publishwait 6 --wait 10
               sfdx force:package:install --package $VERSIONID_ENV -u ${CIRCLE_TAG} --publishwait 6 --wait 10
               sfdx force:user:password:generate -u ${CIRCLE_TAG}
               sfdx force:user:display --targetusername ${CIRCLE_TAG} --json > qa_userPassword.json
