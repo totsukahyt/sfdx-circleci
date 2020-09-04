@@ -1,7 +1,10 @@
 {
   "packageDirectories": [
-    { "path": "sfdx-source/SmartViscal"},
-    { "path": "sfdx-source/unpackaged","default": true  }
+    { "path": "sfdx-source/SmartViscal",
+      "default": true,
+      "postInstallScript": "SB_NCL_PostInstallScript"
+    },
+    { "path": "sfdx-source/unpackaged"  }
   ],
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",

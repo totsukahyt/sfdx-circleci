@@ -64,6 +64,7 @@ Business Card: Stores digitized business card information.</description>
         <trackFeedHistory>true</trackFeedHistory>
         <type>Text</type>
     </nameField>
+    <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
     <searchLayouts>
         <customTabListAdditionalFields>SmartViscaf__company_name__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>SmartViscaf__division__c</customTabListAdditionalFields>
@@ -96,9 +97,8 @@ Business Card: Stores digitized business card information.</description>
         <searchResultsAdditionalFields>OWNER.ALIAS</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>SmartViscaf__card_exchange_date__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>SmartViscaf__list_name__c</searchResultsAdditionalFields>
-        <searchResultsCustomButtons>SmartViscal__LeadBulkRegist</searchResultsCustomButtons>
         <searchResultsCustomButtons>SmartViscaf__AccountBulkRegist</searchResultsCustomButtons>
     </searchLayouts>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>Private</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>
