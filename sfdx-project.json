@@ -2,7 +2,7 @@
   "packageDirectories": [
     { "path": "sfdx-source/SmartViscal",
       "default": true,
-      "postInstallScript": "SB_NC_PostInstallScript",
+      "postInstallScript": "SB_NCL_PostInstallScript",
       "versionNumber": "0.1.0.LATEST",
       "package": "winter2020"
     },
