@@ -224,6 +224,9 @@ jobs:
                                         -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
                                         -n "$PACKAGE_NAME" \
                                         --loglevel error
+              # package.xmlにインストール後スクリプトの記載
+              sed -i 's|</Package>|<postInstallClass>SB_NCL_PostInstallScript</postInstallClass></Package>|' ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
+              cat ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
             # else
             #   exit 0
             # fi
@@ -237,9 +240,6 @@ jobs:
                                       -w 15 \
                                       --verbose \
                                       --loglevel error
-              # package.xmlにインストール後スクリプトの記載
-              sed -i 's|</Package>|<postInstallClass>SB_NCL_PostInstallScript</postInstallClass></Package>|' ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
-              cat ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
             # else
             #   exit 0
             # fi
