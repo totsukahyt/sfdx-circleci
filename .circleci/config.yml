@@ -120,7 +120,7 @@ jobs:
             echo "scratch:count=${SCRATCH_CNT}"
             echo "'$CIRCLE_BRANCH'"
             echo "${CIRCLE_BRANCH}"
-            if [ "${SCRATCH_CNT}" = "1" ]; then
+            # if [ "${SCRATCH_CNT}" = "1" ]; then
               echo 'Featrue scratch環境の作成 '
 
               sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_BRANCH} -a ${CIRCLE_BRANCH} -s -d 30  --wait 10
@@ -133,11 +133,11 @@ jobs:
               cat ./dev_userPassword.txt
               echo 'export VERY_IMPORTANT=$(cat ./dev_userPassword.txt)' >> $BASH_ENV
               source $BASH_ENV
-            else
-              echo 'すでに環境が作成されています。'
-              echo 'export DEVMSG_HEAD=$(echo 当ブランチで既に環境が作成されています。)' >> $BASH_ENV
-              source $BASH_ENV
-            fi
+            # else
+            #   echo 'すでに環境が作成されています。'
+            #   echo 'export DEVMSG_HEAD=$(echo 当ブランチで既に環境が作成されています。)' >> $BASH_ENV
+            #   source $BASH_ENV
+            # fi
 
       - slack/notify:
           channel: ${SLACK_CHANNEL}
