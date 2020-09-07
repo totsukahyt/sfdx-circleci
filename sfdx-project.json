@@ -1,12 +1,9 @@
 {
   "packageDirectories": [
     { "path": "sfdx-source/SmartViscal",
-      "default": true,
-      "postInstallScript": "SB_NCL_PostInstallScript",
-      "versionNumber": "0.1.0.LATEST",
-      "package": "winter2020"
+      "default": true
     },
-    { "path": "sfdx-source/unpackaged"  }
+    { "path": "sfdx-source/unpackaged/dev-config"  }
   ],
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
