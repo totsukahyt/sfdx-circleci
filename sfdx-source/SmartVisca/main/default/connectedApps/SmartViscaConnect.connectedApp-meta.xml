@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConnectedApp xmlns="http://soap.sforce.com/2006/04/metadata">
     <contactEmail>sv-tech@sunbridge.com</contactEmail>
-    <label>SmartVisca connect</label>
+    <label>SmartVisca connect1</label>
     <oauthConfig>
         <callbackUrl>svconnect://callback/done</callbackUrl>
         <isAdminApproved>false</isAdminApproved>
