@@ -328,15 +328,15 @@ jobs:
             if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
               sfdx force:org:list --all
               # 環境設定
-              sfdx force:source:deploy -u QA-${CIRCLE_PROJECT_REPONAME}-BETA -p sfdx-source/unpackaged/qa-config
-              sfdx force:apex:execute -u  QA-${CIRCLE_PROJECT_REPONAME}-BETA -f script/apex/SB_AutomaticcCooperationSetting.apex
+              # sfdx force:source:deploy -u QA-${CIRCLE_PROJECT_REPONAME}-BETA -p sfdx-source/unpackaged/qa-config
+              # sfdx force:apex:execute -u  QA-${CIRCLE_PROJECT_REPONAME}-BETA -f script/apex/SB_AutomaticcCooperationSetting.apex
 
-              sfdx force:user:permset:assign --permsetname "permset" --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA
-              sfdx force:user:permset:assign --permsetname "SmartViscaAdminUser" --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA
+              # sfdx force:user:permset:assign --permsetname "permset" --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA
+              # sfdx force:user:permset:assign --permsetname "SmartViscaAdminUser" --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA
 
-              sfdx force:user:create --setalias test2-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_mktg2019.xltvyt2mceva.uo598j4fqxu8@sv.com.json username=svdemo_mktg${CIRCLE_WORKFLOW_ID}@sv.com
-              sfdx force:user:create --setalias test3-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_sales2019.qmwtyalmpjol.o9x6vrua3tos@sv.com.json username=svdemo_sales${CIRCLE_WORKFLOW_ID}@sv.com
-              sfdx force:user:create --setalias test4-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_salesmgr2019.shqp9lpwtmwl.n4al68ywrcoq@sv.com.json username=svdemo_salesmgr${CIRCLE_WORKFLOW_ID}@sv.com
+              # sfdx force:user:create --setalias test2-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_mktg2019.xltvyt2mceva.uo598j4fqxu8@sv.com.json username=svdemo_mktg${CIRCLE_WORKFLOW_ID}@sv.com
+              # sfdx force:user:create --setalias test3-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_sales2019.qmwtyalmpjol.o9x6vrua3tos@sv.com.json username=svdemo_sales${CIRCLE_WORKFLOW_ID}@sv.com
+              # sfdx force:user:create --setalias test4-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_salesmgr2019.shqp9lpwtmwl.n4al68ywrcoq@sv.com.json username=svdemo_salesmgr${CIRCLE_WORKFLOW_ID}@sv.com
               sfdx force:data:tree:import -p data/test-records/SmartViscaf__NameCard__c-Account-Contact-plan.json -u  QA-${CIRCLE_PROJECT_REPONAME}-BETA
               sfdx force:apex:execute -u  QA-${CIRCLE_PROJECT_REPONAME}-BETA -f script/apex/updateNameCardReferAttachment.apex
 
