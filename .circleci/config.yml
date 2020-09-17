@@ -292,7 +292,7 @@ jobs:
               echo 'QA scratch環境の作成 '
               sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-QA-${CIRCLE_PROJECT_REPONAME}-BETA -a QA-${CIRCLE_PROJECT_REPONAME}-BETA -n -s -d 30 --wait 10
               sfdx force:org:list --all
-              sfdx force:package:install --package $VERSIONID_ENV -u QA-${CIRCLE_PROJECT_REPONAME}-BETA --publishwait 15 --wait 15
+              sfdx force:package:install --package 04t2x000004KPYQAA4 -u QA-${CIRCLE_PROJECT_REPONAME}-BETA --publishwait 15 --wait 15
               sfdx force:user:password:generate -u QA-${CIRCLE_PROJECT_REPONAME}-BETA
               sfdx force:user:display --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA --json > ./qa_userPassword.json
               cat ./qa_userPassword.json
