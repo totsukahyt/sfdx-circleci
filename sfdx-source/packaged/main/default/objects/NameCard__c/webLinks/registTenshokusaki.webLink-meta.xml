@@ -8,5 +8,5 @@
     <masterLabel>転職先を設定</masterLabel>
     <openType>replace</openType>
     <protected>false</protected>
-    <url>{!URLFOR( &quot;/apex/SmartViscaf__SB_NameCard_Tenshoku&quot;, null, [id=NameCard__c.Id] ) }</url>
+    <url>{!URLFOR( &quot;/apex/ficuspop__SB_NameCard_Tenshoku&quot;, null, [id=NameCard__c.Id] ) }</url>
 </WebLink>

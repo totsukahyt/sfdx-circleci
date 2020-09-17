@@ -9,5 +9,5 @@
     <masterLabel>名刺で更新*</masterLabel>
     <openType>noSidebar</openType>
     <protected>false</protected>
-    <url>/apex/SmartViscaf__SB_NC_CardAppLauncher?id={!Contact.Id}&amp;app=updbycard</url>
+    <url>/apex/ficuspop__SB_NC_CardAppLauncher?id={!Contact.Id}&amp;app=updbycard</url>
 </WebLink>

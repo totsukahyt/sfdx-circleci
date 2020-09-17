@@ -16,19 +16,19 @@
         ]
     },
     {
-        "sobject": "SmartViscaf__NameCard__c",
+        "sobject": "ficuspop__NameCard__c",
         "saveRefs": true,
         "resolveRefs": true,
         "files": [
-            "SmartViscaf__NameCard__cs.json"
+            "ficuspop__NameCard__cs.json"
         ]
     },
     {
-        "sobject": "SmartViscaf__NameCard__c",
+        "sobject": "ficuspop__NameCard__c",
         "saveRefs": true,
         "resolveRefs": true,
         "files": [
-            "SmartViscaf__NameCard__old.json"
+            "ficuspop__NameCard__old.json"
         ]
     },
     {

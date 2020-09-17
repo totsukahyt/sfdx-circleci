@@ -9,5 +9,5 @@
     <masterLabel>組織情報*</masterLabel>
     <openType>noSidebar</openType>
     <protected>false</protected>
-    <url>/apex/SmartViscaf__SB_NameCard_CompanyTree#/detail/{!NameCard__c.Id}</url>
+    <url>/apex/ficuspop__SB_NameCard_CompanyTree#/detail/{!NameCard__c.Id}</url>
 </WebLink>

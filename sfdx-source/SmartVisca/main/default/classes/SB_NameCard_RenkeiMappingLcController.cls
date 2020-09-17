@@ -371,7 +371,7 @@ public with sharing class SB_NameCard_RenkeiMappingLcController {
       this.mappingList = new List<SB_NameCard_NameCardRenkeiMappingDTO>();
       for (Integer i =0;i<metas.size();i++) {
         SB_NameCard_NameCardRenkeiMappingDTO dto = new SB_NameCard_NameCardRenkeiMappingDTO();
-        //if (metas[i].recordtype__c == 'Contact' && ((metas[i].NameCardName__c == 'account__c' || metas[i].NameCardName__c == 'SmartViscaf__account__c') && metas[i].TargetName__c == 'AccountId')) {
+        //if (metas[i].recordtype__c == 'Contact' && ((metas[i].NameCardName__c == 'account__c' || metas[i].NameCardName__c == 'ficuspop__account__c') && metas[i].TargetName__c == 'AccountId')) {
             //continue;
         //}
         DefaultRenkeiMapping__mdt meta = metas[i];

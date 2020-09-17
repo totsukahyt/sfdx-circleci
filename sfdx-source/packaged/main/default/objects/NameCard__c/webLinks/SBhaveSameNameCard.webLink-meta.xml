@@ -9,5 +9,5 @@
     <masterLabel>同じ名刺の検索</masterLabel>
     <openType>replace</openType>
     <protected>false</protected>
-    <url>{!URLFOR( &quot;/apex/SmartViscaf__SB_NameCard_ShowSameNameCard&quot;, null, [pv0=NameCard__c.Name] ) }</url>
+    <url>{!URLFOR( &quot;/apex/ficuspop__SB_NameCard_ShowSameNameCard&quot;, null, [pv0=NameCard__c.Name] ) }</url>
 </WebLink>

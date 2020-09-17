@@ -53,7 +53,7 @@ public with sharing class SB_NC_CardAppLauncherController {
       }else if (app == 'updbycard'){
         this.windowTitle = System.Label.SB_NC_BusinessCard + '：' + System.Label.SB_NC_CardList;
       }else if (app == 'orgtree'){
-        //「組織情報*」の定義が『/apex/SmartViscaf__SB_NameCard_CompanyTree#/detail/{!SmartViscaf__NameCard__c.Id}』なので、
+        //「組織情報*」の定義が『/apex/ficuspop__SB_NameCard_CompanyTree#/detail/{!ficuspop__NameCard__c.Id}』なので、
         // このelse if文が実行されることは現時点ではないですが、一応ロジックは書いておきます
         this.windowTitle = System.Label.SB_NC_BusinessCard + '：' + System.Label.SB_NCOTL_AppTitle;
       }else if (app == 'edgetest'){

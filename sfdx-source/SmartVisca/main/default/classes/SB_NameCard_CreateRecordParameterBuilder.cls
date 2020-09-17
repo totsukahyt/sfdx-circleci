@@ -56,10 +56,10 @@ public with sharing class SB_NameCard_CreateRecordParameterBuilder {
     'Email' => 'con15',
     'Department' => 'con6',
     'Title' => 'con5',
-    //'SmartViscaf__NameCard__c' => '',
-    //'SmartViscaf__NameCardListName__c' => '',
-    //'SmartViscaf__NameCardMemo__c' => '',
-    //'SmartViscaf__NameCardFreehandmemo__c' => '',
+    //'ficuspop__NameCard__c' => '',
+    //'ficuspop__NameCardListName__c' => '',
+    //'ficuspop__NameCardMemo__c' => '',
+    //'ficuspop__NameCardFreehandmemo__c' => '',
     //'OwnerId' => ''
     'Description' => 'con20'
   };
@@ -77,10 +77,10 @@ public with sharing class SB_NameCard_CreateRecordParameterBuilder {
     'MobilePhone' => 'lea9',
     'Email' => 'lea11',
     'Title' => 'lea4',
-    //'SmartViscaf__NameCard__c' => '',
-    //'SmartViscaf__NameCardListName__c' => '',
-    //'SmartViscaf__NameCardMemo__c' => '',
-    //'SmartViscaf__NameCardFreehandmemo__c' => '',
+    //'ficuspop__NameCard__c' => '',
+    //'ficuspop__NameCardListName__c' => '',
+    //'ficuspop__NameCardMemo__c' => '',
+    //'ficuspop__NameCardFreehandmemo__c' => '',
     //'OwnerId' => ''
     'Description' => 'lea17'
   };
