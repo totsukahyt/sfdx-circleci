@@ -20,7 +20,7 @@
         "saveRefs": true,
         "resolveRefs": true,
         "files": [
-            "smvTest__NameCard__cs.json"
+            "SmartViscaf__NameCard__cs.json"
         ]
     },
     {
@@ -28,7 +28,7 @@
         "saveRefs": true,
         "resolveRefs": true,
         "files": [
-            "smvTest__NameCard__old.json"
+            "SmartViscaf__NameCard__old.json"
         ]
     },
     {
