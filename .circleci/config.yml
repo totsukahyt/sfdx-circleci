@@ -326,7 +326,7 @@ jobs:
           name: initial setting in  SmartVisca-package
           command: |
             if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
-              sfdx force:org:display --all
+              sfdx force:org:list --all
               # 環境設定
               sfdx force:source:deploy -u QA-${CIRCLE_PROJECT_REPONAME}-BETA -p sfdx-source/unpackaged/qa-config
               sfdx force:apex:execute -u  QA-${CIRCLE_PROJECT_REPONAME}-BETA -f script/apex/SB_AutomaticcCooperationSetting.apex
