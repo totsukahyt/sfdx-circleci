@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SBhaveSameNameCard</fullName>
+    <availability>online</availability>
+    <description>同じ取引先責任者と名刺交換した社員を表示する</description>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <linkType>url</linkType>
+    <masterLabel>同じ名刺の検索</masterLabel>
+    <openType>replace</openType>
+    <protected>false</protected>
+    <url>{!URLFOR( &quot;/apex/SB_NameCard_ShowSameNameCard&quot;, null, [pv0=NameCard__c.Name] ) }</url>
+</WebLink>

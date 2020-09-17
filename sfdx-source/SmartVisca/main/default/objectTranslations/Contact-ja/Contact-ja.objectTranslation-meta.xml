@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <recordTypes>
+        <label><!-- レコタイ１ --></label>
+        <name>Rec1</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- レコタイ２ --></label>
+        <name>Rec2</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- レコタイ３ --></label>
+        <name>Rec3</name>
+    </recordTypes>
+    <webLinks>
+        <label><!-- NameCardList --></label>
+        <name>NameCardList</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- NameCardListLC --></label>
+        <name>NameCardListLC</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- NameCardListLex --></label>
+        <name>NameCardListLex</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- test --></label>
+        <name>test</name>
+    </webLinks>
+</CustomObjectTranslation>

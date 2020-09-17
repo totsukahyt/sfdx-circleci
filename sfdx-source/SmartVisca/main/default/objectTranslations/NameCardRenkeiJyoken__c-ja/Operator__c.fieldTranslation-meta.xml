@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- 演算子 --></label>
+    <name>Operator__c</name>
+    <picklistValues>
+        <masterLabel>Contains_the_following_character_string</masterLabel>
+        <translation><!-- Contains_the_following_character_string --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Does_not_match_next_character_string</masterLabel>
+        <translation><!-- Does_not_match_next_character_string --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Matches_next_character_string</masterLabel>
+        <translation><!-- Matches_next_character_string --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Matches_the_following_regular_expression</masterLabel>
+        <translation><!-- Matches_the_following_regular_expression --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>None</masterLabel>
+        <translation><!-- None --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not_contain_the_following_character_string</masterLabel>
+        <translation><!-- Not_contain_the_following_character_string --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Start_with_the_following_string</masterLabel>
+        <translation><!-- Start_with_the_following_string --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>＜</masterLabel>
+        <translation><!-- ＜ --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>＜＝</masterLabel>
+        <translation><!-- ＜＝ --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>＞</masterLabel>
+        <translation><!-- ＞ --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>＞＝</masterLabel>
+        <translation><!-- ＞＝ --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

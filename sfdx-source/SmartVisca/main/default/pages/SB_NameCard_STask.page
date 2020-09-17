@@ -1,0 +1,89 @@
+<!-- SB_NameCard_STask
+/**
+ *
+ * Salesforce1対応 ToDo 編集ビュー
+ *
+ * Copyright (C) 2014 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.6.xx
+ *  @Version 2      2016.9.xx 英語対応
+ *  @Version 3      2018.03.xx v1.22 SV_DEV-823 Salesforce1 のToDoの詳細画面で期日がnullで表示されている。 → Safari 系 で発生  → 日時を unix time で受け渡す 変数名変更
+ *
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+  <title>{!$Label.SB_NCS1_Text_ToDoEdit}</title>
+  <style type="text/css">
+    .required {
+      transition:0.5s linear all;
+      background: white;
+    }
+    .required.ng-invalid {
+      border-color: #ff4500;
+      color:white;
+    }
+  </style>
+  <script type="text/javascript"></script>
+</head>
+
+<div class="container">
+  <div class="page-header">
+    <h2 ng-show="config.sUserLanguage!='en_US'"><i class="glyphicon glyphicon-tasks"/>&nbsp;{!$Label.SB_NCS1_Text_ToDos}{{mode==1 ? '{!$Label.SB_NCS1_Text_Details}' : (mode==2 ? '{!$Label.SB_NCS1_Text_Edit}' : '{!$Label.SB_NCS1_Text_Add}')}}<small></small></h2>
+    <h2 ng-show="config.sUserLanguage=='en_US'"><i class="glyphicon glyphicon-time"/>&nbsp;{{mode==3 ? '{!$Label.SB_NCS1_Text_Add}&nbsp;' : ''}}{!$Label.SB_NCS1_Text_ToDos}&nbsp;{{mode==1 ? '{!$Label.SB_NCS1_Text_Details}' : ''}}{{mode==2 ? '{!$Label.SB_NCS1_Text_Edit}' : ''}}</h2>
+  </div>
+
+  <div class="span4 well " ng-show="{{mode == 1}}">
+    <div class="content">
+      <table class="CardData">
+        <tr><td>{!$ObjectType.Task.fields.subject.Label} :</td><td>{{activity.subject}}</td></tr>
+        <tr><td>{!$Label.SB_NCS1_Text_Deadline} :</td><td>{{activity.activityDateL | date : '{!$Label.SB_NC_NGDateFormat}'}}</td></tr>
+        <tr><td>{!$ObjectType.Task.fields.Description.Label} :</td><td ng-bind-html="activity.description"></td></tr>
+        <tr><td>{!$ObjectType.Task.fields.Status.Label} :</td><td>{{activity.status}}</td></tr>
+      </table>
+    </div>
+    <p style='text-align: center'>
+      <button class="btn btn-primary" ng-disabled="treeLoading" role="button" ng-click="openEdit()"><i class="glyphicon glyphicon-edit"/>&nbsp;{!$Label.SB_NCS1_Text_Edit}</button>
+      <button class="btn btn-default" ng-disabled="treeLoading" role="button" ng-click="cancel()">{!$Label.SB_NCS1_Label_GoBack}</button>
+    </p>
+  </div>
+
+  <div ng-show="{{mode != 1}}" >
+    <form class="well" name="myForm" >
+      <!-- 件名 -->
+      <div class="form-group">
+        <label>{!$ObjectType.Task.fields.Subject.Label}&lowast;&nbsp;:</label>
+        <input type="text" name="subject"  style="width: 100%;" ng-model="activity.subject"
+        uib-typeahead="subject for subject in subjects | filter:$viewValue | limitTo:6" ng-required="true"
+        ng-maxlength="{!$ObjectType.Task.fields.Subject.length}"/>
+      </div>
+        <!--<span ng-show="myForm.subject.$error.required" class="help-inline">必須</span>-->
+        <!--        <label>{!$ObjectType.Task.fields.ActivityDate.Label} :</label>-->
+      <!-- 期日 -->
+      <div class="form-group">
+        <label>{!$Label.SB_NCS1_Text_Deadline}&nbsp;:</label>
+        <input type="date" name="datetimeStart" style="width: 100%;" ng-model="activity.activityDateL" ng-min="minDate"/><br/>
+      </div>
+      <!-- 説明 -->
+      <div class="form-group">
+        <label>{!$ObjectType.Task.fields.Description.Label}&nbsp;:</label>
+        <textarea name="description" style="width: 100%;" ng-model="activity.description"
+        ng-maxlength="{!$ObjectType.Task.fields.Description.length}"/>
+      </div>
+      <!-- 状況 -->
+      <div class="form-group">
+        <label>{!$ObjectType.Task.fields.Status.Label}&lowast;&nbsp;:</label>
+        <select name="status" style="width: 100%;" ng-required="true" ng-model="selStatus" ng-options="status.name for status in statusOptions"/>
+      </div>
+      <hr/>
+      <p style='text-align: center'>
+        <button ng-click="save()" ng-disabled="!myForm.$valid" class="btn btn-primary" role="button" ><i class="glyphicon glyphicon-ok-circle"/>&nbsp;{!$Label.SB_NCS1_Label_Save}</button>
+        <button ng-click="remove()" ng-show="activity.taskId" class="btn btn-danger" role="button" ><i class="glyphicon glyphicon-remove-circle"/>&nbsp;{!$Label.SB_NCS1_Label_Remove}</button>
+        <button ng-click="cancel()" class="btn" role="button" >{!$Label.SB_NCS1_Label_Cancel}</button>
+      </p>
+
+      </form>
+    </div>
+  </div>
+</apex:page>

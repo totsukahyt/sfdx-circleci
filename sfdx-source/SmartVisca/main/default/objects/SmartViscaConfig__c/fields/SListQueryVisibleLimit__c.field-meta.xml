@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SListQueryVisibleLimit__c</fullName>
+    <defaultValue>200</defaultValue>
+    <description>名刺一覧でみんなの名刺を検索するときの件数の上限値です。100程度から2000までの数値をしていしてください。</description>
+    <externalId>false</externalId>
+    <inlineHelpText>名刺一覧でみんなの名刺を検索するときの件数の上限値</inlineHelpText>
+    <label>S名刺一覧でみんなの名刺を検索するときの件数の上限値</label>
+    <precision>6</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

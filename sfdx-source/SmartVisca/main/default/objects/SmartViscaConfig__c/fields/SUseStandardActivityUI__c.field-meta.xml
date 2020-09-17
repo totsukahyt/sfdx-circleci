@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SUseStandardActivityUI__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>行動やToDoは標準の画面を使う</description>
+    <externalId>false</externalId>
+    <inlineHelpText>行動やToDoは標準の画面を使う場合はチェックします。カスタム項目は、標準の画面でのみ編集可能です。関連付けは標準画面では出来ません。</inlineHelpText>
+    <label>S行動やToDoは標準の画面を使う</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

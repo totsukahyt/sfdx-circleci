@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SIgnoreJobChanged__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>転職済み にチェックがある名刺は検索の対象にしません</description>
+    <externalId>false</externalId>
+    <label>S転職済みの名刺は表示しない</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

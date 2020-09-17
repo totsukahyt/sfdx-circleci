@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- 他の条件に加え、取込時にセットしたメモ（手書きメモではありません）の内容と、『指定項目』の文字列が一致した場合に同一の取引先とみなします。 --></help>
+    <label><!-- 自動連携:指定項目 --></label>
+    <name>RenkeiSpecificItems__c</name>
+</CustomFieldTranslation>

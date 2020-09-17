@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>image__c</fullName>
+    <externalId>false</externalId>
+    <formula>if( isblank(image_id__c) , null , image(&quot;/servlet/servlet.FileDownload?file=&quot; &amp;  image_id__c , &quot;表面&quot;) )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>表面</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

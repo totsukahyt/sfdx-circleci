@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OrgTreeUseRegex__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>組織情報を作るとき正規表現（カスタム表示ラベルのSB_NC_DivisionRegex）を使う</description>
+    <externalId>false</externalId>
+    <inlineHelpText>サンブリッジサポートの指示があった場合のみ設定します。</inlineHelpText>
+    <label>組織情報は正規表現を使う</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

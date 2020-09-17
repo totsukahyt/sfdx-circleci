@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RegistDispLeadOverWriteCheckbox__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>オンの場合、「既存のリードを名刺情報で上書きする」チェックボックスを表示します。</description>
+    <externalId>false</externalId>
+    <label>取引先登録:「既存のリードを名刺情報で上書きする」を表示する</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

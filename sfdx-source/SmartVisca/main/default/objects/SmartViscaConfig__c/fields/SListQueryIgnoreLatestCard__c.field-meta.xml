@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SListQueryIgnoreLatestCard__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>S1で、みんなの名刺で 最新の名刺のみを対象にします。
+最新の名刺の判定は、最新名刺 Parent__c が NULL であることです。</description>
+    <externalId>false</externalId>
+    <label>S名刺一覧のみんなの名刺は最新の名刺以外も対象にする</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,82 @@
+<!-- SB_NameCard_SImageConfirm
+/**
+ *
+ * SmartVisca カメラ 名刺画像確認 画面
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2016.03.xx  //
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+    <title>{!$Label.SB_NCS1C_Text_ConfirmNCImg}</title>
+<style type="text/css">
+.modalFrame {
+  width: 100%; height: calc(100% - 42px); padding: 0;
+}
+.modalBody {
+  padding: 0px; width: 100%; height: 100%;
+}
+</style>
+</head>
+
+<!-- 名刺画像 -->
+<p class="text-warning" ng-show="faltTran"><i class="fa fa-exclamation-circle">&nbsp;{!$Label.SB_NCS1C_Msg_FailedToTransformNCImg}</i></p>
+<div class="row">
+  <div class="col-md-2"/>
+  <div class="col-xs-12, col-md-8">
+    <div class="thumbnail" >
+      <img ng-show="!back" ng-src="{{card.front.useTran ? card.front.tData : card.front.data}}" class="img-responsive"/>
+      <img ng-show="back" ng-src="{{card.back.useTran ? card.back.tData : card.back.data}}" class="img-responsive"/>
+    </div>
+  </div>
+</div>
+
+<!-- ボタン -->
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div style="padding:6px; text-align: center;">
+      <!-- 破棄 ボタン -->
+      <div class="btn btn-default pull-left" role="button" ng-click="remove()">
+        <i class="fa fa-trash"></i>&nbsp;{!$Label.SB_NCS1C_Label_Discard}
+      </div>
+      <!-- 画像補正 有無 切り替え -->
+      <div class="btn btn-default" role="button" ng-click="toggleTran()" ng-hide="faltTran">
+        <i class="fa fa-ban" ng-show="!back ? card.front.useTran : card.back.useTran">&nbsp;{!$Label.SB_NCS1C_Label_NotToTransform}</i>
+        <i class="fa fa-crop" ng-show="!back ? !card.front.useTran : !card.back.useTran">&nbsp;{!$Label.SB_NCS1C_Label_ToTransform}</i>
+      </div>
+      <!-- 確認ボタン -->
+       <div class="btn btn-default pull-right" role="button" ng-click="confirm()">
+        <i class="fa fa-check-circle-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_OK}
+      </div>
+    </div>
+</nav>
+
+<!-- 名刺画像のモーダル  -->
+<script id="imageWindow.html" type="text/ng-template">
+<div class="modalFrame">
+    <div class="modal-body modalBody">
+      <div style="position:relative; overflow:scroll; " >
+        <div hm-pinch="pinched" hm-tap="tapped" hm-pan="paned" hm-swipeleft="reverse" hm-swiperight="reverse"
+          style="
+          width:{{(front ? card.front.width : card.back.width)}}px; height:{{(front ? card.front.height : card.back.height)}}px; background: url('{{(front ? card.front.data : card.back.data)}}') no-repeat;
+          background-position-x: {{posX}}px;
+          background-position-y: {{posY}}px;
+          transform-origin: left top;
+          -webkit-transform-origin: left top;
+          -moz-transform-origin: left top;
+          -o-transform-origin: left top;
+          -ms-transform-origin: left top;
+          transform: scale({{scaleFactor}});
+          -webkit-transform: scale({{scaleFactor}});
+          -moz-transform: scale({{scaleFactor}});
+          -o-transform: scale({{scaleFactor}});
+          -ms-transform: scale({{scaleFactor}});"></div>
+      </div>
+    </div>
+</div>
+</script>
+
+</apex:page>

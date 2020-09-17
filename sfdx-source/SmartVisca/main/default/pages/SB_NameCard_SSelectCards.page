@@ -1,0 +1,61 @@
+<!-- SB_NameCard_SSelectCards
+/**
+ *
+ * Salesforce1対応 名刺リスト 複数選択用の
+ *
+ * Copyright (C) 2014 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.5.xx
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+    <title>{!$Label.SB_NCS1_Text_NamecardsSelection}</title>
+<style type="text/css"></style>
+<script type="text/javascript"></script>
+</head>
+
+<div class="container" style="padding-top: 10pt;">
+<div ng-show="working">
+    <div class="sv-loading">
+        <img ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+    </div>
+</div>
+
+<div ng-show="!working">
+<p class="text-warning" ng-show="cards.length == 0">{!$Label.SB_NCS1_Text_NoNCCanBeAdded}</p>
+<p class="text-success" ng-show="cards.length > 0 && tagIsTag" >{!$Label.SB_NCS1_Text_Tag}<font style="font-weight: bold;">&nbsp;{{label}}&nbsp;</font>{!$Label.SB_NCS1_Text_AddNamecardTo}</p>
+<p class="text-success" ng-show="cards.length > 0 && !tagIsTag" >{!$Label.SB_NCS1_Text_NamecardList}<font style="font-weight: bold;">&nbsp;{{label}}&nbsp;</font>{!$Label.SB_NCS1_Text_AddNamecardTo}</p>
+
+    <div style="float: left;">
+        <div style="margin-bottom: 10px;">
+        <input type="text" ng-model="nameFilter" placeholder="{!$Label.SB_NCS1_Label_Filter}..." class="size-full plm prx pvm input input--default input--ph-1 input--focus-1" style="width:80%;"/>
+        </div>
+    </div>
+    <div style="float: right;">
+        <button type="button" class="btn btn-primary" ng-click="return()">{!$Label.SB_NCS1_Label_GoBack}</button>
+    </div>
+
+    <table class="table">
+    <thead>
+    </thead>
+    <tbody>
+        <tr ng-click=""  ng-repeat="card in cards | filter: searchFilter">
+            <td>
+                <div class="thumbs">
+                    <span class="thumbnail" style="background-image: url('/servlet/servlet.FileDownload?file={{card.image_id__c}}')"/>
+                </div><!-- .thumbs -->
+            </td>
+            <td>
+                <a ng-click="doDetail(card.Id)"><b class="fullname">{{card.Name}}</b></a> <br />
+                <div><small class="metadata">{{card.company_name__c}}</small> </div>
+                <div><small class="metadata">{{card.title_name__c}}</small></div>
+            </td>
+            <td><a ng-click="addCardToTag(card)" class="btn btn-default" role="button"><i class="glyphicon glyphicon-tag"></i>&nbsp;{!$Label.SB_NCS1_Text_Add}</a></td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+</div>
+</apex:page>

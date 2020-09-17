@@ -1,0 +1,132 @@
+<!--
+/**
+ *
+ *  SmartVisca
+ *    SB_NC_LookupModal.cmp
+ *  何か特定のオブジェクトをルックアップするためのモーダルダイアログ
+ *
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2016.10.xx
+ *  @Version 2      2017.3.xx  DTO にした
+ *
+ * 注意！  パッケージにするとき、イベントに名前空間名をつける必要がある！ c: を SmartViscaf: に変える
+ *
+ **/
+-->
+<aura:component controller="SB_NC_LookupModalLcController" >
+  <aura:attribute name="label" type="String" default="ルックアップ" description="button label" />
+  <aura:attribute name="sobjName" type="String" required="true" description="The API name of the SObject to search" />
+  <aura:attribute name="sobjLabel" type="String" description="" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="working" type="Boolean" default="true"/>
+  <aura:attribute name="searchString" type="String" />
+  <aura:attribute name="items" type="Object[]" />
+  <!-- <aura:attribute name="showNoMatch" type="Boolean" default="false"/> -->
+  <aura:attribute name="errorMsg" type="String" />
+  <aura:attribute name="severity" type="String"/>
+  <!-- Events -->
+  <aura:registerEvent name="selSObjEvent" type="c:SB_NC_SelectSObjectEvent"/>
+
+
+<div class="wk_static">
+  <!-- Modal Dialog -->
+  <div role="dialog" tabindex="-1" aura:id="Modalbox" aria-labelledby="header43" class="slds-modal slds-modal_large">
+    <div class="slds-modal__container">
+      <!-- Header -->
+      <div class="slds-modal__header">
+        <button class="slds-button slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.closeModal}">
+          <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="close_icon"/>
+          <span class="slds-assistive-text">Close</span>
+        </button>
+        <h2 class="slds-text-heading_medium" id="prompt-heading-id">{!v.sobjLabel}&nbsp;{!$Label.c.SB_NC_SEARCH}</h2>
+      </div>
+
+      <!-- Content -->
+      <div class="slds-modal__content slds-p-around_medium" style="height: 300px;">
+
+        <!-- SOSLの条件 -->
+        <form>
+          <div class="slds-grid slds-wrap slds-grid_pull-padded slds-grid_vertical-align-center">
+            <div class="slds-p-horizontal_small slds-size_7-of-8">
+              <ui:inputText aura:id="searchString" value="{!v.searchString}" class="slds-input" change="{!c.changeSearhString}"/>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-8">
+              <!-- <lightning:buttonIcon iconName="utility:search" variant="bare" onclick="{! c.doSearch }" alternativeText="Search " /> -->
+
+            <button class="slds-button slds-button_neutral" onclick="{!c.doSearch}">
+              <lightning:icon iconName="utility:search" size="small"  alternativeText="Search "/>
+            </button>
+
+              <!-- <lightning:button label=" " iconName="utility:search" iconPosition="center" variant="base" onclick="{! c.doSearch }"/> -->
+            </div>
+          </div>
+        </form>
+
+        <!-- 　検索結果 0件 または エラー -->
+        <aura:if isTrue="{!not(empty(v.errorMsg))}">
+          <ui:message severity="{!v.severity}" closable="true">
+            {!v.errorMsg}
+          </ui:message>
+        </aura:if>
+
+        <aura:if isTrue="{!and(v.items!=null, v.items.length > 0)}">
+          <table class="slds-m-vertical_small slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout slds-max-medium-table_stacked slds-max-medium-table_stacked-horizontal"  role="grid">
+            <thead>
+              <!-- <tr class="slds-text-title-caps"> -->
+              <tr class="slds-text-heading_label">
+                <!-- <th scope="col"><div class="slds-truncate" title="icon"></div></th> -->
+                <th class="slds-cell-shrink" scope="col"><div class="slds-resizable" title="Select">{!$Label.c.SB_NC_Select}</div></th>
+                <th class="slds-is-resizable" scope="col"><div class="slds-resizable" title="Name">{!$Label.c.SB_NC_Name}</div></th>
+                <th class="slds-is-resizable" scope="col"><div class="slds-resizable" title="Company">{!$Label.c.SB_NC_AccountName}</div></th>
+                <th class="slds-is-resizable" scope="col"><div class="slds-resizable" title="Division">{!$Label.c.SB_NC_Department}</div></th>
+                <th class="slds-is-resizable" scope="col"><div class="slds-resizable" title="Email">{!$Label.c.SB_NC_EmailAddress}</div></th>
+                <th class="slds-is-resizable" scope="col"><div class="slds-resizable" title="Date">{!$Label.c.SB_NC_ExchangeDate}</div></th>
+                <th class="slds-is-resizable" scope="col"><div class="slds-resizable" title="Owner">{!$Label.c.SB_NC_Label_Owner}</div></th>
+                <th class="slds-is-resizable" scope="col"><div class="slds-resizable" title="List Name">{!$Label.c.SB_NCS1_Text_ListName}</div></th>
+              </tr>
+            </thead>
+            <tbody>
+              <aura:iteration items="{!v.items}" var="item" >
+                <tr class="slds-hint-parent" onclick="{!c.touchItem}" >
+                  <!-- <td><lightning:icon iconName="standard:scan_card" size="small" alternativeText="Business Card"/></td> -->
+                  <td role="gridcell" class="slds-cell-shrink" data-label="選択">
+                    <span class="slds-radio">
+                      <input type="radio" id="{!item.Id}" name="options" checked="" />
+                      <label class="slds-radio__label" for="{!item.Id}">
+                        <span class="slds-radio_faux"></span>
+                        <span class="slds-assistive-text">Select</span>
+                      </label>
+                    </span>
+                  </td>
+                  <td role="gridcell"><div class="slds-cell-wrap" title="{!item.name}">{!item.name}</div></td>
+                  <td role="gridcell"><div class="slds-cell-wrap" title="{!item.company_name}">{!item.company_name}</div></td>
+                  <td role="gridcell"><div class="slds-cell-wrap" title="{!item.division}">{!item.division}</div></td>
+                  <td role="gridcell"><div class="slds-cell-wrap" title="{!item.email}">{!item.email}</div></td>
+                  <td role="gridcell"><div class="slds-cell-wrap" title="{!item.card_exchange_date}">{!item.card_exchange_date}</div></td>
+                  <td role="gridcell"><div class="slds-cell-wrap" title="{!item.ownerName}">{!item.ownerName}</div></td>
+                  <td role="gridcell"><div class="slds-cell-wrap" title="{!item.list_name}">{!item.list_name}</div></td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+        </aura:if>
+        </div>
+        <div class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" onclick="{!c.closeModal}">{!$Label.c.SB_NC_Cancel}</button>
+            <button class="slds-button slds-button_neutral slds-button_brand" onclick="{!c.selectItem}">{!$Label.c.SB_NCS1C_Label_OK}</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-backdrop " aura:id="MB-Back"></div>
+
+    <button class="slds-button slds-button_neutral" onclick="{!c.openModal}">
+      <!-- <lightning:icon iconName="utility:search" size="small"/> -->
+      {!v.label}
+    </button>
+  </div>
+
+</aura:component>

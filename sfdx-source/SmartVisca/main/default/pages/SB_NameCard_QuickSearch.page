@@ -1,0 +1,35 @@
+<!--
+/**
+ * SB_NameCard_QuickSearch.page
+ * サイドバーの名刺検索
+ *
+ * Copyright (C) 2014 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.8.xx
+ *
+ **/
+-->
+<apex:page showHeader="false" sidebar="false">
+<head>
+<style type="text/css">
+*{
+margin:2;
+}
+
+body{
+ background:#CFEEF8;
+}
+</style>
+</head>
+<body>
+<div>
+<form id="phSearchForm" onsubmit="if (window.ffInAlert) { return false; }"
+    name="sbsearch" target="_top" method="GET" action="/_ui/search/ui/UnifiedSearchResults">
+    <input name="sen" value="{!$ObjectType.NameCard__c.keyPrefix}" type="hidden"/>
+    <input name="str" length="42" style="width:130px;box-sizing:border-box;" type="text"/>
+    <input value="go!" style="box-sizing:border-box;" type="submit" />
+</form>
+</div>
+</body>
+</apex:page>

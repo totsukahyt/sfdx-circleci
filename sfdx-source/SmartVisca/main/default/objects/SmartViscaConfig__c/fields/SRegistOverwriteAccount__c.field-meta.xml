@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SRegistOverwriteAccount__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>S1取引先登録のときの初期値
+TRUE:取引先の所定の項目を上書きします。
+FALSE:取引先の所定の項目は上書きせず、名刺の取引先参照項目をセットするのみ
+※Version2.1で名刺基本設定を参照するようにしました。</description>
+    <externalId>false</externalId>
+    <label>S取引先情報を名刺情報で上書きする【移行済】</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

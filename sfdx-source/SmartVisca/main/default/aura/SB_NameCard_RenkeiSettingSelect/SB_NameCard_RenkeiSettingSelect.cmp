@@ -1,0 +1,26 @@
+<!-- /**
+ *
+ *  SB_NameCard_RenkeiSettingSelect
+ *   Selectコンポーネント
+
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.20      2017.02.XX
+ *  @Version 2.4       2019.05.XX  SV_DEV-1630と合わせてリファクタリングを実施
+ *
+ **/ -->
+<aura:component implements="force:appHostable"  access="global">
+  <aura:attribute name="selectbody" type="String"/>
+  <aura:attribute name="selectlist" type="List"/>
+  <aura:attribute name="dis" type="Boolean"/>
+  <aura:attribute name="ischange" type="Boolean"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit1}"/>
+  <div class="slds-form-element__control">
+    <ui:inputSelect class="slds-select" change="{!c.selectb}" disabled="{!v.dis == true}">
+      <aura:iteration items="{!v.selectlist }" var="va">
+        <ui:inputSelectOption text="{!va.value}" label="{!va.label}" value="{!v.selectbody == va.value}"/>
+      </aura:iteration>
+    </ui:inputSelect>
+  </div>
+</aura:component>

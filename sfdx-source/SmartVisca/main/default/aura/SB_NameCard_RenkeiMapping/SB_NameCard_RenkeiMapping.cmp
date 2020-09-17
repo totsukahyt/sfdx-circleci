@@ -1,0 +1,300 @@
+<!-- /**
+*
+*  SB_NameCard_RenkeiMapping
+*   連携マッピングを設定する画面
+*
+*   選択された連携先のオブジェクトに応じてマッピング可能な選択肢を表示させます
+*
+*
+*
+*  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+*
+*  @author mao
+*  @Version 1.22      2017.07.XX SV_DEV-527 SmartVisca 基本設定の リード対応
+*  @Version 1.22      2018.02.XX SV_DEV-735 基本設定レコードが二つ作成される
+*  @Version 2.0.3     2018.09.XX SV_DEV-1209 [要望]（LEX用・Classic用「SmartVisca設定」SmartVisca連携マッピング画面)連携先オブジェクトの選択プルダウンで一番上をリードにしてほしい
+*  @Version 2.4       2019.05.XX SV_DEV-1630と合わせてリファクタリングを実施
+*                     2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+*
+**/ -->
+
+<aura:component controller="SB_NameCard_RenkeiMappingLcController"  implements="force:appHostable">
+  <!-- 保存フラグ変更 -->
+  <aura:handler name="changese" event="c:SB_NameCard_RenkeiEvent" action="{!c.changese}"/>
+  <!-- 基本設定コンポーネントをリフレッシュ(最終更新者および更新日) -->
+  <aura:registerEvent name="ref" type="c:SB_NameCard_RefreshLastTimeEvent"/>
+  <!-- タブロード停止メソッド -->
+  <aura:registerEvent name="loadingEnd" type="c:SB_NameCard_LoadingEnd"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <!-- タブロード開始メソッド -->
+  <aura:method name="loadingStart" action="{!c.loadingStart}" access="PUBLIC"/>
+  <!-- タブロード停止メソッド -->
+  <aura:method name="loadingEnd1" action="{!c.loadingEnd1}" access="PUBLIC"/>
+  <!-- クリアメソッド -->
+  <aura:method name="clean" action="{!c.clean1}" access="PUBLIC"/>
+   <!-- 表示メッセージを隠す -->
+  <aura:method name="hiddenMsg" action="{!c.hiddenMsg}" access="PUBLIC"/>
+  <!-- メッセージ削除メソッド -->
+  <aura:method name="clearMsg" action="{!c.clearMsg}"/>
+  <!-- 画面変更あるチェック -->
+  <aura:method name="checkChange" action="{!c.checkChange}" access="PUBLIC"/>
+  <!-- lex Classic判定フラグ -->
+  <aura:attribute name="showStyle" type="String"/>
+  <!-- #Todo 使わないため削除べき?名刺表示ラベル -->
+  <aura:attribute name="lastid" type="String"/>
+  <aura:attribute name="lastname" type="String"/>
+  <aura:attribute name="lasttime" type="Date"/>
+
+  <aura:attribute name="namecardLabel" type="String"/>
+  <aura:attribute name="obj2Label" type="String"/>
+  <!-- このコンポーネントのloadフラグ -->
+  <aura:attribute name="login" type="Boolean" />
+  <!-- alert表示フラグ -->
+  <aura:attribute name="showAlert" type="Boolean" />
+  <aura:attribute name="showSave" type="Boolean" />
+  <aura:attribute name="issave" type="Boolean" />
+  <!-- 連携マッピングレコードタイプ -->
+  <aura:attribute name="recordTypes" type="List"/>
+  <aura:attribute name="namecards" type="List"/>
+  <aura:attribute name="haveRecordTypes" type="Boolean"/>
+  <aura:attribute name="currentRecordType" type="String"/>
+  <!-- マッピング内容 -->
+  <aura:attribute name="mpp" type="List"/>
+  <!-- マッピング内容 BackUp -->
+  <aura:attribute name="mppBackUp" type="String"/>
+  <!-- 取引先責任者必須 -->
+  <aura:attribute name="requiredConMappingList" type="List"/>
+  <!-- 取引先必須 -->
+  <aura:attribute name="requiredAccMappingList" type="List"/>
+  <!-- リード必須 -->
+  <aura:attribute name="requiredLeadMappingList" type="List"/>
+  <!-- 現在の必須 -->
+  <aura:attribute name="requiredMappingList" type="List"/>
+  <aura:attribute name="nameCardTypeList1" type="List"/>
+  <!-- 名刺全ての選択し -->
+  <aura:attribute name="nameCardSelects" type="List"/>
+  <!-- マッピング先の全て選択肢 -->
+  <aura:attribute name="obj2SelectList" type="List"/>
+  <!-- 削除フラグ -->
+  <!-- 2019.05.XX 恐らく不使用
+  <aura:attribute name="removeFlag" type="Boolean"/>
+  -->
+  <aura:attribute name="recordLabel" type="String"/>
+  <!-- マッピング先のラベルMAP -->
+  <aura:attribute name="obj2LabelNameMap" type="Map"/>
+  <!-- 連携先のオブジェクト -->
+  <aura:attribute name="renkeiTargetObj" type="String"/>
+  <!-- 成功メッセージ -->
+  <aura:attribute name="okMsg" type="String"/>
+  <!-- ウォーニングメッセージ -->
+  <aura:attribute name="warningMsg" type="String"/>
+  <!-- 項目エラーメッセージ -->
+  <aura:attribute name="namecardMsgList" type="List"/>
+  <!-- レコードタイプに関するメッセージ -->
+  <aura:attribute name="objectMsg" type="List"/>
+  <!-- マッピング先オブジェクトエラーメッセージ -->
+  <aura:attribute name="obj2MsgList" type="List"/>
+  <!-- エラーメッセージ -->
+  <aura:attribute name="errorMsg" type="String"/>
+  <!-- ウォーニングメッセージ(改行付き) -->
+  <aura:attribute name="avMessage" type="List"/>
+  <!-- 保存失敗メッセージ -->
+  <aura:attribute name="saveerrorMsg" type="String"/>
+  <!-- 恐らく不使用！！
+  <aura:attribute name="sereLabel" type="String"/>
+  -->
+  <!-- alert表示内容 -->
+  <aura:attribute name="message" type="String"/>
+  <aura:attribute name="none" type="String"/>
+  <!-- alert表示タイプ -->
+  <aura:attribute name="type" type="String"/>
+  <!-- ラベルマップ -->
+  <aura:attribute name="labMap" type="Map"/>
+  <!-- 最終更新者表示タイプクラス(更新者あるの場合リンクあり)現在使っていません -->
+  <aura:attribute name="urlHidden" type="String"/>
+  <!-- 最終更新者表示タイプクラス(未更新の場合リンクなし)現在使っていません -->
+  <aura:attribute name="textHidden" type="String"/>
+  <!-- このページ変更あるかフラグ -->
+  <aura:attribute name="needSave" type="Boolean"/>
+  <!-- このページ変更あるかフラグ(クリア用) -->
+  <aura:attribute name="needSaveSelf" type="Boolean"/>
+  <!-- 親コンポーネントのloadフラグ -->
+  <aura:attribute name="isLoading" type="Boolean"/>
+  <aura:attribute name="saveing" type="Boolean"/>
+  <!-- ネームスペース -->
+  <aura:attribute name="nameSpace" type="String"/>
+  <!-- leadパッケージ存在フラグ -->
+  <aura:attribute name="isEnableLeadExtention" type="Boolean" default="false"/>
+
+  <!--ウォーニングメッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.warningMsg))}">
+    <div>
+      <ui:message title="" severity="warning" closable="false">
+        {!v.warningMsg}
+      </ui:message>
+    </div>
+  </aura:renderIf>
+
+  <c:SB_NameCard_RenkeiMsg Msgs="{!v.objectMsg}" style="warning"/>
+  <c:SB_NameCard_RenkeiMsg Msgs="{!v.avMessage}" style="warning"/>
+  <c:SB_NameCard_RenkeiMsg Msgs="{!v.namecardMsgList}" style="warning"/>
+  <c:SB_NameCard_RenkeiMsg Msgs="{!v.obj2MsgList}" style="warning"/>
+
+  <!--エラーメッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.errorMsg))}">
+    <div>
+      <ui:message title="" severity="error" closable="false">
+        {!v.errorMsg}
+      </ui:message>
+    </div>
+  </aura:renderIf>
+
+  <aura:renderIf isTrue="{!not(empty(v.saveerrorMsg))}">
+    <div>
+      <ui:message title="" severity="error" closable="false">
+        {!$Label.c.SB_NC_MAPPING_MSG_SAVEERROR}<br/>{!v.saveerrorMsg}
+      </ui:message>
+    </div>
+  </aura:renderIf>
+
+  <!--成功メッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.okMsg))}">
+    <div>
+      <ui:message title="" severity="confirm" closable="false">
+        {!v.okMsg}
+      </ui:message>
+    </div>
+  </aura:renderIf>
+
+  <!--連携オブジェクト設定-->
+  <div style="padding: 20px;">
+    <div class="slds-box slds-theme_shade">
+      <h3 class="slds-section__title">{!$Label.c.SB_NC_MAPPING_LABEL_RENKEIOBJECT}</h3>
+      <aura:renderIf isTrue="{!v.isEnableLeadExtention}">
+        <h4>{!$Label.c.SB_NC_MAPPING_RenkeiObjectLACHelpMessage}</h4>
+      <aura:set attribute="else">
+        <h4>{!$Label.c.SB_NC_MAPPING_RenkeiObjectACHelpMessage}</h4>
+      </aura:set></aura:renderIf>
+      <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+          <div style="margin-left:20px;" class="slds-form-element">
+            <div class="slds-form-element__control">
+              <ui:inputSelect aura:id="recordTypeSelect" class="slds-select" change="{!c.changeRecord}">
+                <aura:iteration items="{!v.recordTypes }" var="va">
+                  <ui:inputSelectOption text="{!va.value}" label="{!va.label}"/>
+                </aura:iteration>
+              </ui:inputSelect>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--table-->
+  <div style="padding: 20px 20px 60px 20px;">
+    <div class="slds-box slds-theme_shade scx">
+
+      <!-- 条件を追加 -->
+      <button disabled="{!v.haveRecordTypes == false}" onclick="{!c.addItem}"  aria-haspopup="false" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_ADD_BUTTON}</button>
+       <!-- 条件を削除 -->
+      <button disabled="{!v.haveRecordTypes == false}" onclick="{!c.remove}"  aria-haspopup="false" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_DELETE_BUTTON}</button>
+
+      <button disabled="{!v.haveRecordTypes == false}" onclick="{!c.default}"  aria-haspopup="false" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_DEFAULTE_BUTTON}</button>
+
+      <button disabled="{!v.haveRecordTypes == false}" onclick="{!c.clean}"  aria-haspopup="false" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_CLEAR}</button>
+      <!-- ACCOUNT LIST TABLE -->
+      <table  class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover tablesize" style="min-width:600px;margin-top:20px;">
+        <thead>
+          <tr class="slds-text-heading_label"><th scope="col" style="width:10%;"></th>
+            <th scope="col" style="width:40%;">{!v.namecardLabel}</th>
+            <th scope="col" style="width:40%;">{!v.obj2Label}</th>
+            <th style="width:10%;" scope="col">
+              <aura:renderIf isTrue="{!v.haveRecordTypes == true}">
+                {!$Label.c.SB_NC_MAPPING_LABEL_ACTIVE}
+              </aura:renderIf>
+            </th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div style="overflow-y:scroll;max-height:410px;min-width:600px;overflow-x:hidden;" class="tablesize">
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover tablesize" >
+          <tbody>
+            <aura:iteration var="va" items="{!v.requiredMappingList}" >
+              <c:SB_NameCard_RenkeimappingCell nameSpace="{!v.nameSpace}" labMap="{!v.labMap}" dis="true" iserror="false" removeFlag="false" nameCardTypeList2="{!v.nameCardTypeList1}"  leftselects="{!v.nameCardSelects}" rightAllSelects="{!v.obj2SelectList}" mapp="{!va}"/>
+            </aura:iteration>
+            <aura:iteration var="var" items="{!v.mpp}" indexVar="index">
+              <c:SB_NameCard_RenkeimappingCell nameSpace="{!v.nameSpace}" labMap="{!v.labMap}" ermsg="{!var.ermsg}" dis="false" iserror="{!var.iserror}" indexs="{!index}" index="{!var.index}" removeFlag="{!var.removeFlag}" nameCardTypeList2="{!v.nameCardTypeList1}"  leftselects="{!v.nameCardSelects}" rightAllSelects="{!v.obj2SelectList}" mapp="{!var.map}"/>
+            </aura:iteration>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+  <aura:renderIf isTrue="{!v.showStyle == 'LEX'}">
+    <div>
+      <div class="slds-docked-form-footer">
+      <!-- 保存 -->
+          <button disabled="{!v.haveRecordTypes == false}" id = 'save' onclick="{!c.save}"  aria-haspopup="false" class="slds-button slds-button_brand">{!$Label.c.SB_NC_MAPPING_LABEL_SAVE_BUTTON}</button>
+      </div>
+    </div>
+  </aura:renderIf>
+
+  <aura:renderIf isTrue="{!v.showStyle == 'Classic'}">
+    <div>
+      <div class="csmfoot" style="margin-top:-20px;">
+        <!-- 保存 -->
+        <button disabled="{!v.haveRecordTypes == false}"   id = 'save' onclick="{!c.save}"  aria-haspopup="false" class="slds-button slds-button_brand">{!$Label.c.SB_NC_MAPPING_LABEL_SAVE_BUTTON}</button>
+      </div>
+    </div>
+  </aura:renderIf>
+
+  <aura:renderIf isTrue="{!v.showAlert}">
+    <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+      <div class="slds-modal__container">
+        <div class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture">
+          <button class="slds-button slds-modal__close slds-button_icon-inverse" title="Close">
+            <div class="slds-assistive-text">Close</div>
+          </button>
+          <h2 class="slds-text-heading_medium" id="prompt-heading-id">{!$Label.c.SB_NC_MAPPING_LABEL_NOTICE}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around_medium">
+        <!-- <p>{!$Label.SmartViscaf.SB_NC_MAPPING_MSG_DEFAULT}</p> -->
+          <p>{!v.message}</p>
+        </div>
+        <div class="slds-modal__footer slds-theme_default">
+          <button onclick="{!c.yes}" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_YES}</button>
+          <button onclick="{!c.no}" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_NO}</button>
+        </div>
+      </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:renderIf>
+
+   <!--ロード中...-->
+  <aura:renderIf isTrue="{!v.login}">
+   <div class="slds-spinner_container" style="background-color:white">
+    <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
+      <div class="slds-assistive-text">Loading</div>
+      <div class="slds-spinner__dot-a"></div>
+      <div class="slds-spinner__dot-b"></div>
+    </div>
+   </div>
+  </aura:renderIf>
+
+  <aura:renderIf isTrue="{!v.isLoading}">
+    <div class="slds-spinner_container" style="background-color:white">
+      <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
+        <div class="slds-assistive-text">Loading</div>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+  </aura:renderIf>
+
+</aura:component>

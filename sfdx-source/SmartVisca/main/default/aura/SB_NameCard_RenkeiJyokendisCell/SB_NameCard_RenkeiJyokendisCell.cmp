@@ -1,0 +1,47 @@
+<!-- /**
+ *
+ *  SB_NameCard_RenkeiJyokendisCell
+ *  名刺連携連携条件の列(変更不可)
+ *
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.20      2017.02.XX
+ *
+ **/ -->
+<aura:component >
+  <aura:attribute name="dis" type="Sobject"/>
+  <tr class="minwidth">
+    <td style="width:6%;">
+      <div class="slds-media">
+        <div class="slds-media__figure"></div>
+      </div>
+    </td>
+    <td style="width:28%;">
+      <div style="width:70%" class="slds-form-element">
+        <div class="slds-form-element__control">
+          <ui:outputtext value="{!v.dis.NameCardName}" />
+        </div>
+      </div>
+    </td>
+    <td style="width:26%;">
+      <div style="width:70%" class="slds-form-element">
+        <div class="slds-form-element__control">
+          <ui:outputtext value="{!v.dis.Operator}" />
+        </div>
+      </div>
+    </td>
+    <td style="width:30%;">
+      <div style="width:70%" class="slds-form-element">
+      <!-- <lightning:input label="aa" value="{!v.baseset.Value__c}" name="blue" /> -->
+        <div class="slds-form-element">
+          <div class="slds-form-element__control">
+            <!-- タイプがDateの場合 -->
+            <ui:outputtext value="{!v.dis.Value}" />
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</aura:component>

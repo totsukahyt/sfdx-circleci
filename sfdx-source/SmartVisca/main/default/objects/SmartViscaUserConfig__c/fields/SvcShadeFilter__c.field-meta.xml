@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SvcShadeFilter__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>画像補正で矩形抽出に加えて、陰影の除去を行う。</description>
+    <externalId>false</externalId>
+    <label>SmartViscaカメラ:陰影を除去する</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

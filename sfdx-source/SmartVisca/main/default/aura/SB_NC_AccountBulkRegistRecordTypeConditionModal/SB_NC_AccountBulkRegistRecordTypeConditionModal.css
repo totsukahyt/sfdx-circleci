@@ -1,0 +1,17 @@
+/**
+ *
+ *  SB_NC_AccountBulkRegistRecordTypeConditionModal
+ *  レコードタイプ選択用モーダルウィンドウ用コンポネート CSS
+ *
+ *  Copyright (C) 2019 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author K.Yoshida
+ *  @Version 2.2      2019.02.XX SV_DEV-1558 LEX 取引先登録 一括画面をLXパッケージ同様のLC化で追加
+ *  @Version 2.4      2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *
+ **/
+.THIS {
+}
+.THIS .slds-form_compound {
+  width:auto !important;
+}

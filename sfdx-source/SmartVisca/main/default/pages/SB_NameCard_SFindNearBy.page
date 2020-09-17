@@ -1,0 +1,64 @@
+<!-- SB_NameCard_SFindNearBy
+/**
+ *
+ * Salesforce1対応 近所の名刺
+ *
+ * Copyright (C) 2014 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.5.xx
+ **/
+-->
+<apex:page docType="html-5.0" sidebar="false" showheader="false" standardStylesheets="false" title="{!$Label.sb_ncs1_text_findnamecardsnearby}">
+<style>
+@media screen and (max-width:480px) {
+    .angular-google-map-container {
+        height: 500px;
+    }
+}
+@media screen and (min-width:481px) {
+    .angular-google-map-container {
+        height: 900px;
+    }
+}
+hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.others {
+    font-size: 9px;
+    text-align: right;
+}
+
+</style>
+<script>
+</script>
+<div class="dv_map">
+    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true">
+        <!-- 自分の場所　-->
+        <ui-gmap-marker ng-model="currentPositon" idKey='1' coords='currentPositon' icon='currentPositon.icon' ></ui-gmap-marker>
+        <!-- 緯度経度ごとのMarker -->
+         <ui-gmap-markers models="markers" coords="'self'" icon="'icon'" click="'onClick'" >
+            <ui-gmap-windows show="show">
+                <div >
+                    <label ng-non-bindable="ng-non-bindable">{{address}}</label>
+                    <div data-ng-repeat="co in companies">
+                        <h4 style="text-align: left;">{{co.companyName}}</h4>
+                        <div ng-repeat="card in co.cards">
+                            <a href="#/detail/{{card.Id}}" >{{card.name}}</a><br/>
+                            <div ng-repeat="text in card.texts track by $index">{{text}}</div>
+                        </div>
+                        <Hr Align="center" Width="75%" Size="1" ng-show="{{co.other>0}}" />
+                        <div class="others" ng-show="{{co.other>0}}" >{!$Label.SB_NCS1_Label_Others}:{{co.other}}{!$Label.SB_NCS1_Label_Persons} </div>
+                    </div>
+                    <div ng-show="{{other>0}}">
+                        <Hr Align="center" Width="90%"  Size="3"/>
+                        <div class="others" ng-non-bindable="ng-non-bindable">{!$Label.SB_NCS1_Label_Others}:{{other}}{!$Label.SB_NCS1_Label_Organization} </div>
+                    </div>
+                </div>
+            </ui-gmap-windows>
+        </ui-gmap-markers>
+    </ui-gmap-google-map>
+</div>
+</apex:page>

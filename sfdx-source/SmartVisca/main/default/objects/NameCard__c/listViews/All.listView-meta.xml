@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>delivery_icon__c</columns>
+    <columns>card_exchange_date__c</columns>
+    <columns>NAME</columns>
+    <columns>contactLink__c</columns>
+    <columns>company_name__c</columns>
+    <columns>division__c</columns>
+    <columns>title_name__c</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>tel1__c</columns>
+    <columns>email__c</columns>
+    <columns>accountLink__c</columns>
+    <columns>delivery_type__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>すべて選択</label>
+</ListView>

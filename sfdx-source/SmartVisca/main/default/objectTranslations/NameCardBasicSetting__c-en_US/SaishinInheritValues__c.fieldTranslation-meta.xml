@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>When there&apos;re two or more cards of the same per. at second delivery time, the latest card is judged on exchange date. it can take over value of the custom field to card object on newest card. This feature can not be selected without custom field added.</help>
+    <label>Latest Card takes over val. Feat.:Enable</label>
+    <name>SaishinInheritValues__c</name>
+</CustomFieldTranslation>

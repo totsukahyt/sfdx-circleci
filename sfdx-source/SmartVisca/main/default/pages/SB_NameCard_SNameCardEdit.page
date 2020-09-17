@@ -1,0 +1,73 @@
+<!-- SB_NameCard_SNameCardEdit
+/**
+ *
+ * Salesforce1対応 名刺編集ビュー
+ *
+ * Copyright (C) 2014 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.5.xx
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+    <title>{!$Label.SB_NCS1_Text_NamecardEdit}</title>
+<style type="text/css"></style>
+<script type="text/javascript"></script>
+</head>
+
+<div class="container">
+<div class="page-header">
+  <h2><i class="glyphicon glyphicon-user"/>&nbsp;{!$Label.SB_NCS1_Text_NamecardEdit2}<small></small></h2>
+</div>
+<form class="well" name="myForm">
+    <div class="control-group" ng-class="{error: myForm.Name.$invalid}">
+        <label>{!$ObjectType.NameCard__c.fields.person_name_last__c.Label} :</label>
+        <input type="text" name="LastName" style="width: 100%;" ng-model="card.person_name_last" required="true" 
+                ng-maxlength="{!$ObjectType.NameCard__c.fields.person_name_last__c.length}"/>
+        <span ng-show="myForm.LastName.$error.required" class="help-inline">{!$Label.SB_NCS1_Text_Required}</span>
+        <br/>
+
+        <label>{!$ObjectType.NameCard__c.fields.person_name_first__c.Label} :</label>
+        <input type="text" name="FirstName" style="width: 100%;" ng-model="card.person_name_first" 
+                ng-maxlength="{!$ObjectType.NameCard__c.fields.person_name_first__c.length}"/>
+        <br/>
+
+        <label>{!$ObjectType.NameCard__c.fields.division__c.Label} :</label>
+        <input type="text" name="Division" style="width: 100%;" ng-model="card.division" 
+                ng-maxlength="{!$ObjectType.NameCard__c.fields.division__c.length}"/>
+        <br/>
+
+        <label>{!$ObjectType.NameCard__c.fields.title_name__c.Label} :</label>
+        <input type="text" name="Title" style="width: 100%;" ng-model="card.title_name" 
+                ng-maxlength="{!$ObjectType.NameCard__c.fields.title_name__c.length}"/>
+        <span ng-show="myForm.Title.$error.required" class="help-inline">{!$Label.SB_NCS1_Text_Required}</span>
+        <br/>
+
+        <label>{!$ObjectType.NameCard__c.fields.email__c.Label} :</label>
+        <input type="email" name="Email" style="width: 100%;" ng-model="card.email"
+                ng-maxlength="{!$ObjectType.NameCard__c.fields.email__c.length}"/>
+        <br/>
+
+        <label>{!$ObjectType.NameCard__c.fields.tel1__c.Label} :</label>
+        <input type="text" name="Phone" style="width: 100%;" ng-model="card.tel1" ng-pattern="telPattern"/>
+        <br/>
+<!--
+        <label>{!$ObjectType.NameCard__c.fields.list_name__c.Label} :</label>
+        <input type="text" name="ListName" style="width: 100%;" ng-model="card.list_name"
+            typeahead="cardlist.label for cardlist in cardlists | filter:$viewValue | limitTo:6" />
+        <br/>
+-->
+        <input disabled="disabled" type="hidden" name="Id" ng-model ="card.Id" />
+    </div>
+    <hr/>
+    <p style='text-align: center'>
+        <button ng-click="save()" ng-disabled="isClean() || myForm.$invalid" class="btn btn-primary" role="button" ><i class="glyphicon glyphicon-ok-circle"/>&nbsp;{!$Label.SB_NCS1_Label_Save}</button>
+        <button ng-click="delete()" ng-show="fasle" class="btn btn-danger" role="button" ><i class="glyphicon glyphicon-remove-circle"/>&nbsp;{!$Label.SB_NCS1_Label_Remove}</button>
+        <button ng-click="cancel()" class="btn" role="button" >{!$Label.SB_NCS1_Label_Cancel}</button>
+    </p>
+
+</form>
+
+</div>
+</apex:page>

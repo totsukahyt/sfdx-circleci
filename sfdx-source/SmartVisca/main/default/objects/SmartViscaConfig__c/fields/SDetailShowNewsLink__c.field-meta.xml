@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SDetailShowNewsLink__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>名刺詳細画面（SmartVisca専用のカスタマイズ画面）にGoogle Newsの検索リンクを表示します。</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Google News の検索リンクを表示します。</inlineHelpText>
+    <label>S名刺詳細：ニュースリンクを表示する</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

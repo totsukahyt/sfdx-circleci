@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TriggerMergeNameCards__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>名刺を追加、更新、削除、復活したとき、名刺を名寄します。</description>
+    <externalId>false</externalId>
+    <label>トリガで名刺データを名寄せする</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

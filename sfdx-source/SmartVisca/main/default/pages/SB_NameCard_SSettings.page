@@ -1,0 +1,15 @@
+<!-- SB_NameCard_SSettings
+/**
+ *
+ *  未使用
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2015.06.xx
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+
+
+</apex:page>

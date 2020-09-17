@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RenkeiSpecificItems__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>他の条件に加え、取込時にセットしたメモ（手書きメモではありません）の内容と、『指定項目』の文字列が一致した場合に同一の取引先とみなします。</inlineHelpText>
+    <label>自動連携:指定項目</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

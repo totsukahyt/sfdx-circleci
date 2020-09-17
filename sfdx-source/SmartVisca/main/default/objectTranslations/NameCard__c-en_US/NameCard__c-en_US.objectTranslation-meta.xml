@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Business Card</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Business Cards</value>
+    </caseValues>
+    <layouts>
+        <layout>名刺レイアウト（一般用）</layout>
+        <sections>
+            <label>Image</label>
+            <section>イメージ</section>
+        </sections>
+        <sections>
+            <label>Custom Link</label>
+            <section>カスタムリンク</section>
+        </sections>
+        <sections>
+            <label>Notes</label>
+            <section>メモ</section>
+        </sections>
+        <sections>
+            <label>Notes 2</label>
+            <section>メモ２</section>
+        </sections>
+        <sections>
+            <label>Import To</label>
+            <section>取込先</section>
+        </sections>
+        <sections>
+            <label>Business Card Status</label>
+            <section>名刺の状態</section>
+        </sections>
+        <sections>
+            <label>English</label>
+            <section>英文</section>
+        </sections>
+        <sections>
+            <label>Contact info</label>
+            <section>連絡先</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>名刺レイアウト（管理者用）</layout>
+        <sections>
+            <label>Image</label>
+            <section>イメージ</section>
+        </sections>
+        <sections>
+            <label>Error</label>
+            <section>エラー情報</section>
+        </sections>
+        <sections>
+            <label>Custom Link</label>
+            <section>カスタムリンク</section>
+        </sections>
+        <sections>
+            <label>Scan Info</label>
+            <section>スキャン情報</section>
+        </sections>
+        <sections>
+            <label>Notes</label>
+            <section>メモ</section>
+        </sections>
+        <sections>
+            <label>Import To</label>
+            <section>取込先</section>
+        </sections>
+        <sections>
+            <label>Management</label>
+            <section>取込情報</section>
+        </sections>
+        <sections>
+            <label>Business Card Status</label>
+            <section>名刺の状態</section>
+        </sections>
+        <sections>
+            <label>Name</label>
+            <section>氏名</section>
+        </sections>
+        <sections>
+            <label>Image Info</label>
+            <section>管理情報</section>
+        </sections>
+        <sections>
+            <label>English</label>
+            <section>英文</section>
+        </sections>
+        <sections>
+            <label>Contact Info</label>
+            <section>連絡先</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Name</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label>Register to Accounts &amp; Contacts</label>
+        <name>AccountBulkRegist</name>
+    </webLinks>
+    <webLinks>
+        <label>Register to Accounts &amp; Contacts*</label>
+        <name>AccountBulkRegistLex</name>
+    </webLinks>
+    <webLinks>
+        <label>Register to Account &amp; Contact</label>
+        <name>AccountRegist</name>
+    </webLinks>
+    <webLinks>
+        <label>Register to Account &amp; Contact*</label>
+        <name>AccountRegistLex</name>
+    </webLinks>
+    <webLinks>
+        <label>Monitor of Auto.Conversion</label>
+        <name>MonitorAutoRenkei</name>
+    </webLinks>
+    <webLinks>
+        <label>Monitor of Auto.Conversion Bulk</label>
+        <name>MonitorAutoRenkeiBulk</name>
+    </webLinks>
+    <webLinks>
+        <label>Set New Career*</label>
+        <name>RegistTenshokusakiLex</name>
+    </webLinks>
+    <webLinks>
+        <label>Organization Information</label>
+        <name>SBOrganizationList</name>
+    </webLinks>
+    <webLinks>
+        <label>Organization Information*</label>
+        <name>SBOrganizationListUrl</name>
+    </webLinks>
+    <webLinks>
+        <label>Search for same Business Card</label>
+        <name>SBhaveSameNameCard</name>
+    </webLinks>
+    <webLinks>
+        <label>Ullet Search</label>
+        <name>Ullet</name>
+    </webLinks>
+    <webLinks>
+        <label>Search for Company Name and Contact Name</label>
+        <name>account_contact</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- google_map --></label>
+        <name>google_map</name>
+    </webLinks>
+    <webLinks>
+        <label>Google News</label>
+        <name>google_news</name>
+    </webLinks>
+    <webLinks>
+        <label>Path Search</label>
+        <name>path</name>
+    </webLinks>
+    <webLinks>
+        <label>Set New Career</label>
+        <name>registTenshokusaki</name>
+    </webLinks>
+    <webLinks>
+        <label>Weather</label>
+        <name>weather</name>
+    </webLinks>
+</CustomObjectTranslation>

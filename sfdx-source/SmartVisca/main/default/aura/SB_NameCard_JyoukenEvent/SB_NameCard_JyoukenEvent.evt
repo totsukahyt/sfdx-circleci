@@ -1,0 +1,16 @@
+<!-- /**
+ *
+ *  SB_NameCard_JyoukenEvent
+ *  名刺連携条件変更する時、親コンポーネントに変更フラグ(保存Alertを表示)変更ためのイベント
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.20      2017.02.XX
+ *  @Version 2.4       2019.05.XX  SV_DEV-1630と合わせてリファクタリングを実施
+ *
+ **/ -->
+<aura:event type="APPLICATION" description="Event template" />

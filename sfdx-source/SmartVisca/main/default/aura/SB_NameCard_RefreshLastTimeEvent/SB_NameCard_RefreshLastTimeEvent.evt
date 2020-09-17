@@ -1,0 +1,16 @@
+<!-- /**
+ *
+ *  SB_NameCard_RefreshLastTimeEvent
+ *  基本設定タブ表示しているの最終更新日を更新イベンド
+
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.20      2017.02.XX
+ *
+ **/ -->
+<aura:event type="APPLICATION" description="Event template" >
+    <aura:attribute name="lastModefDate" type="String"/>
+    <aura:attribute name="lastModifiedByName" type="String"/>
+    <aura:attribute name="lastModifiedById" type="String"/>
+</aura:event>

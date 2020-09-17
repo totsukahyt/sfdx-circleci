@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SUseImageLocalStrage__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>SmartViscaカメラでローカルストレージへの画像の保存を許可する</description>
+    <externalId>false</externalId>
+    <label>S画像データにローカルストレージを使う</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

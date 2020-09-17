@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>myNameCard</fullName>
+    <columns>NAME</columns>
+    <columns>person_name_last_kana__c</columns>
+    <columns>company_name__c</columns>
+    <columns>division__c</columns>
+    <columns>title_name__c</columns>
+    <columns>tel1__c</columns>
+    <columns>email__c</columns>
+    <columns>card_exchange_date__c</columns>
+    <columns>list_name__c</columns>
+    <filterScope>Mine</filterScope>
+    <label>07 私の名刺</label>
+</ListView>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- SmartViscaカメラ:裏面も撮る --></label>
+    <name>SvcDoubleSide__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,76 @@
+/**
+*
+*  SB_NameCard_RenkeiSetting
+*   連携基本設定及び更新条件を表示ためのコンポーネント
+*   TODO: (DateTimeのチェックはフォーマット属性使い方わからない) CSS
+*
+*
+*  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+*
+*  @author mao
+*  @Version 1.22      2017.07.XX SV_DEV-527 SmartVisca 基本設定の リード対応
+*  @Version 1.22      2018.02.XX SV_DEV-735 基本設定レコードが二つ作成される
+*  @Version 2.0.2      2018.07.XX SV_DEV-1106 SmartVisca基本設定レコードの一部項目の値が反転して表示される。
+*  @Version 2.4       2019.05.XX  SV_DEV-1630と合わせてリファクタリングを実施
+*
+**/
+.THIS .checkboxleft{
+  margin-left:10px;
+}
+
+.THIS .checkboxtitletop{
+  margin-top:10px;
+}
+
+.THIS .checkboxdivleft{
+  margin-left:20px;
+  display:block;
+}
+.THIS .seheight{
+  height:60px;
+  font-size: 10px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(22, 50, 92);
+  border: 1px solid rgb(216, 221, 230);
+  border-radius: .25rem;
+  width: 100%;
+  /*-webkit-transition: border .1s linear,background-color .1s linear;*/
+  transition: border .1s linear,background-color .1s linear;
+  /*height: calc(1.875rem + (1px * 2));*/
+}
+.THIS .ishidden{
+  display:none;
+}
+.THIS.csmfoot{
+  position:relative;
+  margin-top:50px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgb(244, 246, 249);
+  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.16);
+  z-index: 8000;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: .5rem 0;
+}
+@media (max-width: 600px) {
+  .THIS .tablesize {
+    width:1000px;
+  }
+}
+
+@media (max-width: 600px) {
+  .THIS .scx {
+    overflow-x:scroll;
+  }
+}
+.THIS h4{
+  font-size:10px;
+}

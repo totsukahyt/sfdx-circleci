@@ -1,0 +1,20 @@
+<!--
+/**
+ *
+ *  SmartVisca
+ *    SB_NC_SelectSObjectEvent.evt
+ *    ルックアップ用LC SB_NC_LookupModal で 選択したときのイベント
+ *
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2016.10.xx
+ *
+ **/
+-->
+<aura:event type="COMPONENT" description="Select SObject" >
+  <aura:attribute name="sobjId" type="Id" required="true" description="" />
+  <aura:attribute name="sobjName" type="String" required="" description="" />
+  <aura:attribute name="sobj" type="SObject" required="true" description="" />
+</aura:event>

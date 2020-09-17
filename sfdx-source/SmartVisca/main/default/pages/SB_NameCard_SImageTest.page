@@ -1,0 +1,17 @@
+<!-- SB_NameCard_SImageTest
+/**
+ *
+ * SmartVisca カメラ about
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2015.06.xx  // IONIC版
+ *  @Version 2    2015.8.xx   // Boootstrap版
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false"
+    controller="SB_NameCard_SController">
+
+</apex:page>

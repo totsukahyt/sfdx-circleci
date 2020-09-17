@@ -1,0 +1,20 @@
+<!-- Copyright (c) 2015 SunBridge Inc. -->
+
+<apex:page controller="SB_NameCard_JinjiIdoSetKeyController" title="{!$Label.sb_nc_text_businesscard} - {!$Label.sb_nc_text_personnelreshuffleinfokeyconfigurations}">
+	<!-- <apex:pageMessages />
+	<apex:form >
+		<apex:pageBlock title="{!$Label.sb_nc_text_personnelreshuffleinfokeyconfigurations}">
+			<apex:pageBlockButtons >
+				<apex:commandButton action="{!save}" value="{!$Label.sb_nc_label_saveenteredkey}"/>
+				<apex:commandButton action="{!login}" value="{!$Label.sb_nc_label_attemptologinwithconfiguredkey}"/>
+			</apex:pageBlockButtons>
+
+			<apex:pageBlockSection columns="1">
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="{!$Label.sb_nc_label_key}"/>
+					<apex:inputText value="{!encKey}" size="100" style="ime-mode:disabled;"/>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form> -->
+</apex:page>

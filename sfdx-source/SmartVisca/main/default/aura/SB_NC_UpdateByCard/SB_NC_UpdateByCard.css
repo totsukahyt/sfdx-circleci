@@ -1,0 +1,9 @@
+.THIS {
+}
+.THIS.hide {
+  display: none;
+}
+
+.THIS .slds-truncate {
+  /*white-space: normal;*/
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>SmartVisca Basic Setting</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>SmartVisca Basic Settings</value>
+    </caseValues>
+    <layouts>
+        <layout>名刺基本設定レイアウト</layout>
+        <sections>
+            <label><!-- カスタムリンク --></label>
+            <section>カスタムリンク</section>
+        </sections>
+        <sections>
+            <label><!-- リード登録画面設定 --></label>
+            <section>リード登録画面設定</section>
+        </sections>
+        <sections>
+            <label><!-- 会社名の比較対象 --></label>
+            <section>会社名の比較対象</section>
+        </sections>
+        <sections>
+            <label><!-- 取引先登録画面設定 --></label>
+            <section>取引先登録画面設定</section>
+        </sections>
+        <sections>
+            <label><!-- 名刺スキャンオプション --></label>
+            <section>名刺スキャンオプション</section>
+        </sections>
+        <sections>
+            <label><!-- 最新の名刺が値を引継ぐ機能 --></label>
+            <section>最新の名刺が値を引継ぐ機能</section>
+        </sections>
+        <sections>
+            <label><!-- 自動連携:リードの自動連携に関する応用設定 --></label>
+            <section>自動連携:リードの自動連携に関する応用設定</section>
+        </sections>
+        <sections>
+            <label><!-- 自動連携:会社名の比較条件 --></label>
+            <section>自動連携:会社名の比較条件</section>
+        </sections>
+        <sections>
+            <label><!-- 自動連携:新規作成・上書き処理の設定 --></label>
+            <section>自動連携:新規作成・上書き処理の設定</section>
+        </sections>
+        <sections>
+            <label><!-- 自動連携:既存リードの検索条件 --></label>
+            <section>自動連携:既存リードの検索条件</section>
+        </sections>
+        <sections>
+            <label><!-- 自動連携:既存取引先の検索条件 --></label>
+            <section>自動連携:既存取引先の検索条件</section>
+        </sections>
+        <sections>
+            <label><!-- 自動連携:既存取引先責任者の検索条件 --></label>
+            <section>自動連携:既存取引先責任者の検索条件</section>
+        </sections>
+        <sections>
+            <label><!-- 自動連携機能 --></label>
+            <section>自動連携機能</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- 基本設定 --></nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

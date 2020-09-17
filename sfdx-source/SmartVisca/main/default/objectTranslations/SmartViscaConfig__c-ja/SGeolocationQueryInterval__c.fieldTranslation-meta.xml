@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Google へ問い合わせる間隔（ミリ秒） --></help>
+    <label><!-- S地理位置情報を取得する間隔 --></label>
+    <name>SGeolocationQueryInterval__c</name>
+</CustomFieldTranslation>

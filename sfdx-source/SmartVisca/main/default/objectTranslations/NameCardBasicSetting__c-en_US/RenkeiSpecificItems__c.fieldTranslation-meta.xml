@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>In addition to other conditions, if the contents of the memo (not handwritten memo) set at the time of acquisition matches the character string of &quot;specified field&quot;, it is regarded as the same Account.</help>
+    <label>Auto.: Specified field</label>
+    <name>RenkeiSpecificItems__c</name>
+</CustomFieldTranslation>

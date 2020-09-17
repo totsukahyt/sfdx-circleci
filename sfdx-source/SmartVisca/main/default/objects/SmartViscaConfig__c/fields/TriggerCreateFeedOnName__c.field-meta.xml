@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TriggerCreateFeedOnName__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>名刺の追加時、既存の名刺の最新名刺を更新するので、そのとき、既存名刺の所有者にフィードで、通知します。</description>
+    <externalId>false</externalId>
+    <label>トリガで同じ人と名刺交換したらフィードで知らせる</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

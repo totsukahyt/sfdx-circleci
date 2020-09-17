@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SOrgTreeShowTitle__c</fullName>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+    <label>S組織情報に役職を表示する</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

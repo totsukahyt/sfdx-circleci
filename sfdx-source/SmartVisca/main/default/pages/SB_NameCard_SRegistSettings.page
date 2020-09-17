@@ -1,0 +1,128 @@
+<!-- SB_NameCard_SRegistSettings
+/**
+ *
+ * Salesforce1対応 取引先・取引先責任者へ登録 設定画面
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2016.04.xx  //
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+  <title>{!$Label.SB_NCS1R_Label_Settings}</title>
+<style type="text/css">
+.panel-title {
+    font-size: 14px;
+}
+.list-group-item {
+    padding: 5px 15px;
+}
+</style>
+</head>
+
+<div class="container">
+
+<h4><i class="fa fa-cog"  style="color:#696969;">&nbsp;{!$Label.SB_NCS1R_Label_Settings}</i></h4>
+
+
+<section>
+
+<form  name="settingsForm" role="form">
+
+<div class="panel panel-default" style="margin-left: -15pt; margin-right: -15pt;">
+  <!--  -->
+  <div class="panel-heading">
+    <p class="panel-title">{{labels.queryAbout}}:</p>
+  </div>
+
+  <ul class="list-group">
+    <!-- 検索の仕方  -->
+    <!-- 取引先の検索条件に所属を使う -->
+    <li  class="list-group-item">
+      <div class="form-group checkbox checkbox-success checkbox-circle">
+        <input id="cbQueryDept" type="checkbox"  ng-model="settings.queryAccountWithDept"/>
+        <label for="cbQueryDept"><i class="fa fa-sitemap"></i>&nbsp;{{labels.queryDept}}</label>
+      </div>
+    </li>
+    <!-- 取引先の検索条件に都道府県を使う -->
+    <li  class="list-group-item">
+      <div class="form-group checkbox checkbox-success checkbox-circle">
+        <input id="cbQueryState" type="checkbox"  ng-model="settings.queryAccountWithState"/>
+        <label for="cbQueryState"><i class="fa fa-map-signs"></i>&nbsp;{{labels.queryState}}</label>
+      </div>
+    </li>
+    <!-- 取引先の検索条件に市区郡を使う -->
+    <li  class="list-group-item">
+      <div class="form-group checkbox checkbox-success checkbox-circle">
+        <input id="cbQueryCity" type="checkbox"  ng-model="settings.queryAccountWithCity"/>
+        <label for="cbQueryCity"><i class="fa fa-location-arrow"></i>&nbsp;{{labels.queryCity}}</label>
+      </div>
+    </li>
+    <!-- 取引先の検索条件に郵便番号を使う -->
+    <li  class="list-group-item">
+      <div class="form-group checkbox checkbox-success checkbox-circle">
+        <input id="cbQueryZip" type="checkbox"  ng-model="settings.queryAccountWithZip"/>
+        <label for="cbQueryZip"><i class="fa fa-envelope-o"></i>&nbsp;{{labels.queryZip}}</label>
+      </div>
+    </li>
+
+    <!-- 取引先の検索対象のレコードタイプ -->
+    <li class="list-group-item" ng-show="recTypeInfo.account.length > 1">
+      <div class="form-group">
+        <!-- レコードタイプを絞る？ -->
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cbQueryAcntRecType" type="checkbox"  ng-model="settings.queryAcntRecType"/>
+          <label for="cbQueryAcntRecType"><i class="fa fa-building-o"></i>&nbsp;{{labels.queryAcntRecType}}</label>
+        </div>
+        <select id="slAccountRecTypes" class="form-control" ng-disabled="!settings.queryAcntRecType" ng-model="settings.accountRecTypes"
+             multiple="true" ng-change="changedSettings()">
+          <option ng-repeat="r in recTypeInfo.account" value="{{r.id}}">{{r.label}}</option>
+        </select>
+      </div>
+    </li>
+    <!-- 取引先責任者の検索対象のレコードタイプ -->
+    <li class="list-group-item" ng-show="recTypeInfo.contact.length > 1">
+      <div class="form-group">
+        <!-- レコードタイプを絞る？ -->
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cbQueryContRecType" type="checkbox"  ng-model="settings.queryContRecType"/>
+          <label for="cbQueryContRecType"><i class="fa fa-users"></i>&nbsp;{{labels.queryContRecType}}</label>
+        </div>
+        <select id="slContactRecType" class="form-control" ng-disabled="!settings.queryContRecType" ng-model="settings.contactRecTypes"
+             multiple="true" ng-change="changedSettings()">
+          <option ng-repeat="r in recTypeInfo.contact" value="{{r.id}}">{{r.label}}</option>
+        </select>
+      </div>
+    </li>
+  </ul>
+
+<!--   <div class="panel-heading">
+    <p class="panel-title">{!$ObjectType.Account.label}、{!$ObjectType.Contact.label}{!$Label.SB_NCS1R_Text_AboutRegistration}:</p>
+  </div>
+  <ul class="list-group">
+    既存の取引先の情報を名刺情報で上書きする
+    <li  class="list-group-item">
+      <div class="form-group checkbox checkbox-success checkbox-circle">
+        <input id="cbOverwriteAccount" type="checkbox"  ng-model="settings.overwriteAccount"/>
+        <label for="cbOverwriteAccount"><i class="fa fa-building"></i>&nbsp;{!$Label.SB_NCS1R_Text_Existing}{!$ObjectType.Account.label}{!$Label.SB_NCS1R_Text_OverwriteNCInfo}</label>
+      </div>
+    </li>
+    既存の取引先責任者の情報を名刺情報で上書きする
+    <li  class="list-group-item">
+      <div class="form-group checkbox checkbox-success checkbox-circle">
+        <input id="cbOverwriteContact" type="checkbox"  ng-model="settings.overwriteContact"/>
+        <label for="cbOverwriteContact"><i class="fa fa-user"></i>&nbsp;{!$Label.SB_NCS1R_Text_Existing}{!$ObjectType.Contact.label}{!$Label.SB_NCS1R_Text_OverwriteNCInfo}</label>
+      </div>
+    </li>
+  </ul>
+ -->
+
+</div>
+</form>
+</section>
+</div>
+
+</apex:page>

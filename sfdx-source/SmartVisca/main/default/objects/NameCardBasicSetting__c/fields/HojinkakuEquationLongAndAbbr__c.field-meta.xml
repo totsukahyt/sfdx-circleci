@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>HojinkakuEquationLongAndAbbr__c</fullName>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+    <label>法人格の略称を正称の表記とみなして会社名を比較する</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0070D2</headerColor>
+        <logo>smartvisca_header_logo</logo>
+        <logoVersion>1</logoVersion>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <description>SmartViscaで名刺管理・SmartViscaカメラで名刺データの取り込みが行えます</description>
+    <formFactors>Small</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <label>モバイル名刺</label>
+    <navType>Standard</navType>
+    <setupExperience>all</setupExperience>
+    <tabs>SB_NameCard</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>SmartVisca_UtilityBar</utilityBar>
+</CustomApplication>

@@ -1,0 +1,18 @@
+<!-- /**
+ *
+ *  SB_NameCard_CheckCckboxEvent
+ *  チェックボックスのチェック状態変更の時に親コンポーネントの保存フラグを変更するためのイベント
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.20      2017.02.XX
+ *  @Version 2.4       2019.06.XX  選択されたチェックボックスのIDの返却に対応
+ *
+ **/ -->
+<aura:event type="APPLICATION" description="Event template">
+  <aura:attribute name="boxid" type="String"/>
+</aura:event>

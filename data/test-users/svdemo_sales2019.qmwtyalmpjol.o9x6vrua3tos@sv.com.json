@@ -1,0 +1,15 @@
+
+      {
+        "Username": "svdemo_sales2019.qmwtyalmpjol.o9x6vrua3tos@sv.com",
+        "FirstName": "大地",
+        "LastName": "村野",
+        "Alias": "営業",
+        "Email": "hmiyamot@example.com",
+        "TimeZoneSidKey": "Asia/Tokyo",
+        "LocaleSidKey": "ja_JP",
+        "EmailEncodingKey": "ISO-2022-JP",
+        "LanguageLocaleKey": "ja",
+        "profileName": "標準ユーザ",
+        "permsets": ["SmartViscaTestUser","SmartViscaUser"]
+      }
+    

@@ -1,0 +1,72 @@
+<!-- SB_NameCard_SUserDetail
+/**
+ *
+ * Salesforce1対応 ユーザ詳細画面
+ *
+ * Copyright (C) 2014 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.8.xx
+ *
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+    <title>{!$Label.SB_NCS1_Text_UserDetail}</title>
+<style type="text/css">
+img {
+    height: auto;
+}
+div .profile-caption {
+    color: whitesmoke;
+}
+
+</style>
+</head>
+
+<div class="jumbotron" style="height: 110px; background-color: rgb(9, 63, 94); padding-top: 0px; padding-left: 0px; margin-bottom: 6px;" >
+    <div class="container">
+        <div class="profile-caption" align="center">
+            <img  style="margin:auto;" ng-src="{{userProf.SmallPhotoUrl}}" alt="{{userProf.Name}}"  ng-cloak="true"/>
+            <h4 class="fullname" ng-cloak="true">{{userProf.Name}}</h4>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="span4 well">
+        <div class="sv-loading" ng-show="working">
+            <img ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+        </div>
+        <div class="content" ng-show="!working">
+            <table class="CardData" ng-cloak="true">
+                <tr ng-show="userProf.Title!=null"><td>{{userProf.Title}}</td></tr>
+                <tr ng-show="userProf.CompanyName!=null"><td>{{userProf.CompanyName}}</td></tr>
+                <tr ng-show="userProf.PostalCode!=null"><td>〒&nbsp;{{userProf.PostalCode}}</td></tr>
+                <tr ng-show="userProf.State != null || userProf.City!=null || userProf.Street != null ">
+                    <td>
+                        <a href="" ng-click="openMap($event)" style="color: blue; text-decoration: underline;"> {{userProf.State}} &nbsp;{{userProf.City}} &nbsp;{{userProf.Street}}</a>
+                    </td>
+                </tr>
+                <tr ng-show=""><td>{{userProf.address_bld}}</td></tr>
+                <tr ng-show="" class="title"><td>{!$Label.SB_NCS1_Text_Telephone}&nbsp;<i class="glyphicon glyphicon-phone-alt"/></td></tr>
+                <tr ng-show="" ><td class="value"><a href="tel:{{userProf.Phone}}" style="color: blue; text-decoration: underline;">{{userProf.Phone   }}</a></td></tr>
+                <tr ng-show="" class="title"><td>{!$Label.SB_NCS1_Text_Fax}&nbsp;</td></tr>
+                <tr ng-show=""><td class="value">{{userProf.Fax}}</td></tr>
+                <tr ng-show="" class="title"><td>{!$Label.SB_NCS1_Text_Email}&nbsp;<i class="glyphicon glyphicon-envelope"/></td></tr>
+                <tr ng-show=""><td class="value"> <a href="mailto:{{userProf.Email}}" style="color: blue; text-decoration: underline;">{{userProf.Email}}</a></td></tr>
+                <tr ng-show="" class="title"><td>{!$Label.SB_NCS1_Text_Manager}&nbsp;<i class="glyphicon glyphicon-user"/></td></tr>
+                <tr ng-show=""><td class="value"><a ng-click="openUser(userProf.ManagerId)" style="color: blue; text-decoration: underline;">{{userProf.Manager.Name}}</a></td></tr>
+                <tr ng-show="" class="title"><td>{!$Label.SB_NCS1_Text_SelfIntroduction}&nbsp;<i class="glyphicon glyphicon-comment"/></td></tr>
+                <tr ng-show=""><td class="value">{{userProf.AboutMe}}</td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<p style="text-align: center; margin: 0 0 0px 10px;" >
+    <button class="btn btn-default" ng-disabled="treeLoading || working" role="button" ng-click="cancel()">{!$Label.SB_NCS1_Label_GoBack}</button>
+</p>
+
+</apex:page>

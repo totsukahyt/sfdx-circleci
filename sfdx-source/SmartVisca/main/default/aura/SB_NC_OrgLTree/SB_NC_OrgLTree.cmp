@@ -1,0 +1,62 @@
+<!--
+/**
+ *
+ *  SmartVisca
+ *    SB_NC_OrgLTree.cmp
+ *    Lightning Component による 組織ツリー
+ *
+ *
+ * Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2017.11.xx
+ *
+ **/
+ -->
+<aura:component controller="SB_NC_OrgLTreeLcController" implements="force:hasRecordId,flexipage:availableForRecordHome" access="global">
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="recordId" type="Id"/>
+  <aura:attribute name="working" type="Boolean" default="true"/>
+  <aura:attribute name="cssloaded" type="Boolean" default="false"/>
+  <aura:attribute name="namecard" type="Object" />
+  <aura:attribute name="errorMsg" type="String" />
+  <aura:attribute name="showTitle" type="Boolean" default="true" access="global"/>
+  <aura:attribute name="maxRecs" type="Integer" default="200" access="global"/>
+  <aura:attribute name="clickToRecord" type="Boolean" default="true" access="global"/>
+<!-- <aura:attribute name="myText" type="String" default="{!$Label.c.SB_NCS1_Text_OnlyLatestNC}"/> -->
+
+  <!-- <ltng:require styles="/resource/SB_NC_Lib/res/slick.css, /resource/SB_NC_Lib/res/sv_slick.css" scripts='/resource/SB_NC_Lib/res/jquery.min.js,/resource/SB_NC_Lib/res/slick.min.js' afterScriptsLoaded="{!c.jsLoaded}" /> -->
+  <aura:attribute name="items" type="Object"/>
+  <aura:attribute name="rootLabel" type="String"/>
+
+<!-- <lightning:badge label="Label" />
+  <lightning:avatar src="/images/codey.jpg" alternativeText="Codey Bear"/>
+ -->
+  <lightning:card iconName="utility:company" title="{!$Label.c.SB_NCOTL_AppTitle}">
+      <aura:if isTrue="{!v.working}">
+      <!-- ローディング中 -->
+          <div style="position: relative; height: 80px;">
+            <lightning:spinner alternativeText="Loading" size="small" />
+          </div>
+      <aura:set attribute="else">
+      <!-- ローディング終了 -->
+        <!-- ツリー -->
+        <lightning:tree items="{!v.items }" header="{!v.rootLabel}" onselect="{!c.onSelect}"/>
+        <aura:if isTrue="{!empty(v.errorMsg)}">
+          <p style="font-size: 10px; margin-left: 10px;">{!$Label.c.SB_NCS1_Text_OnlyLatestNC}</p>
+          <p style="font-size: 10px; margin-left: 10px;">★&nbsp;:&nbsp;{!$Label.c.SB_NCS1_Text_OwnedNamecard}</p>
+        <aura:set attribute="else">
+          <!-- エラー -->
+          <p style="font-size: 10px; margin-left: 10px; color: #cd5c5c;">{!v.errorMsg}</p>
+        </aura:set>
+        </aura:if>
+      </aura:set>
+    </aura:if>
+
+
+  </lightning:card>
+<!--     <ui:outputText value="{!$Label.c.SB_NCS1_Text_OnlyLatestNC}"/>
+    <ui:outputText value="{!$Label.c.SB_NCS1_Text_OwnedNamecard}"/>
+ -->
+</aura:component>

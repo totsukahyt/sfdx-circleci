@@ -1,0 +1,34 @@
+<!--
+/**
+ *  sb_nc_ownerListItem.html
+ *
+ *  @author sawano
+ *  @Version1 2019.06.xx v2.4 SV_DEV-1593 LEX画面の名刺詳細から「同じ人の名刺を持つユーザ」を確認できるようにしてほしい
+ *
+ */
+-->
+<template>
+  <lightning-layout vertical-align="center">
+    <lightning-layout-item>
+      <a href="#" onclick={handleClick}><img src={user.photoUrl} alt={user.alias} /></a>
+    </lightning-layout-item>
+    <lightning-layout-item padding="around-small">
+        <a href="#" onclick={handleClick}><p style="font-size: 1.1em;">{user.name}</p></a>
+        <p>{user.deptTitle}</p>
+        <template for:each={user.items} for:item="item">
+          <template if:true={item.email}>
+            <p key={item.value}><lightning-formatted-email value={item.value}></lightning-formatted-email></p>
+          </template>
+          <template if:true={item.phone}>
+            <p key={item.value}><lightning-formatted-phone value={item.value}></lightning-formatted-phone></p>
+          </template>
+          <template if:true={item.other}>
+            <p key={item.value}>{item.value}</p>
+          </template>
+        </template>
+        <template if:true={showdate}>
+          <p >{label.exchangedate}:&nbsp;<a href="#" onclick={handleDateClick} title={user.cardLabel}>{user.exchangeDate}</a></p>
+        </template>
+      </lightning-layout-item>
+    </lightning-layout>
+</template>

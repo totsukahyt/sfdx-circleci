@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DispRenkeiSetting__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>SmartVisca設定画面に自動連携に関する設定を表示します。</description>
+    <externalId>false</externalId>
+    <label>自動連携に関する設定を表示</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

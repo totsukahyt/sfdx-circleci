@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>yesterday</fullName>
+    <booleanFilter>1 OR 2</booleanFilter>
+    <columns>delivery_icon__c</columns>
+    <columns>NAME</columns>
+    <columns>company_name__c</columns>
+    <columns>division__c</columns>
+    <columns>title_name__c</columns>
+    <columns>tel1__c</columns>
+    <columns>email__c</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>card_exchange_date__c</columns>
+    <columns>list_name__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>card_exchange_date__c</field>
+        <operation>equals</operation>
+        <value>YESTERDAY</value>
+    </filters>
+    <filters>
+        <field>CREATED_DATE</field>
+        <operation>equals</operation>
+        <value>YESTERDAY</value>
+    </filters>
+    <label>02 昨日の名刺</label>
+</ListView>

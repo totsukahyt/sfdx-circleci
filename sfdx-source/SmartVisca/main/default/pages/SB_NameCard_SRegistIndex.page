@@ -1,0 +1,135 @@
+<!-- SB_NameCard_SRegistIndex
+/**
+ *
+ * Salesforce1対応 取引先・取引先責任者へ登録
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2016.4.xx
+ *
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false"
+    standardController="NameCard__c" extensions="SB_NameCard_SRegistController">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width"/>
+  <title>{!$Label.SB_NC_S1AccountRegistPage}</title>
+<!--   <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/bootstrap.min.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/bootstrap-theme.min.css')}"/>
+ -->
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/bootstrap.min.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'bootswatch/bootstrap_cerulean.min.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'font-awesome/css/font-awesome.min.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/awesome-bootstrap-checkbox.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/rzslider.css')}"/>
+  <!-- 本番 -->
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_App, 'css/SB_NameCard_Css.min.css')}"/>
+<!-- 開発中
+    <c:SB_NameCard_Css />
+-->
+  <script type="text/javascript">
+    var configFromEnv = {};
+    configFromEnv.sessionId = "{!$Api.session_Id}";
+    configFromEnv.sfdcEndPoint = "{!$Api.Partner_Server_URL_330}";
+    configFromEnv.orgId = "{!$Organization.Id}";
+    configFromEnv.userName = "{!$User.Username}";
+    configFromEnv.userId = "{!$User.Id}";
+    var namespace = "{!JSENCODE(namespace)}";
+    var namespace_x = namespace === "" ? "" : namespace +"__";
+    var targetId = "{!targetId}";   // 対象の名刺レコードID
+    var uiType = "{!uiType}"        // 起動パラメータの uitype v2.1 2018.11.xx 
+    var retUrl = "{!retUrl}";       // 遷移元 = 戻り先
+  </script>
+
+  <style type="text/css">
+  div.container {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  </style>
+
+  <script>
+    // Visualforce page goes blank in the Salesforce1 iOS app
+    // https://success.salesforce.com/issues_view?id=a1p300000008Y6nAAE
+    (function(){try{var a=navigator.userAgent;
+    if((a.indexOf('Salesforce')!=-1)&&(a.indexOf('iPhone')!=-1||a.indexOf('iPad')!=-1)&&(a.indexOf('OS/')!=-1||a.indexOf('OS ')!=-1)&&(a.indexOf('Safari')==-1)){
+    var s=document.createElement('style');
+    s.innerHTML="html,html body{overflow: auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}";
+    document.getElementsByTagName('head')[0].appendChild(s);}}catch(e){}})();
+  </script>
+</head>
+
+<body ng-app="SB_NameCard_SRegistApp"  ng-controller="TopCtrl"  style="padding-top: 60px; ">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+<!-- ブランド付き メニュー付き ヘッダー -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-branded" role="navigation">
+  <!-- スマホ用ヘッダ -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"
+        ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-brand visible-xs"><i class="fa fa-building" style="color:#000080">&nbsp;{!$ObjectType.Account.Label}&nbsp;{!$Label.SB_NC_S1AccountRegistPage}</i></div>
+  </div>
+  <!-- タブレット用ヘッダ -->
+  <div class="navbar-brand visible-sm text-center"><i class="fa fa-building" style="color:#000080">&nbsp;{!$ObjectType.Account.Label}&nbsp;{!$Label.SB_NC_S1AccountRegistPage}</i></div>
+  <!-- PC用ヘッダ -->
+  <div class="navbar-brand navbar-center hidden-xs hidden-sm"><i class="fa fa-building" style="color:#000080">&nbsp;{!$ObjectType.Account.Label}&nbsp;{!$Label.SB_NC_S1AccountRegistPage}</i></div>
+
+  <!-- スマホ用ドロップダウン メニュー -->
+  <nav class="navbar-collapse collapse"  role="navigation" uib-collapse="isCollapsed">
+    <ul class="nav navbar-nav navbar-right" style="padding-right:10px;">
+      <li><a ng-click="isCollapsed = !isCollapsed" ui-sref="menu.regist.account"><i class="fa fa-pencil">&nbsp;{!$ObjectType.Account.Label}{!$Label.SB_NCS1R_Label_Regist}</i></a></li>
+      <!-- <li><a ng-click="isCollapsed = !isCollapsed" ui-sref="menu.history"><i class="fa fa-history">&nbsp;{!$ObjectType.Account.Label}{!$Label.SB_NCS1R_Label_Settings}</i></a></li> -->
+      <li><a ng-click="isCollapsed = !isCollapsed" ui-sref="menu.settings"><i class="fa fa-cog">&nbsp;{!$Label.SB_NCS1R_Label_Settings}</i></a></li>
+      <!-- <li><a ng-click="isCollapsed = !isCollapsed" ui-sref="menu.test"><i class="fa fa-cog">&nbsp;{!$Label.SB_NCS1R_Label_Test}</i></a></li> -->
+      <!-- <li><a ng-click="isCollapsed = !isCollapsed" ui-sref="menu.about"><i class="fa fa-users">&nbsp;サンブリッジ</i></a></li> -->
+    </ul>
+  </nav>
+</nav>
+
+<div autoscroll="false" class="ui-view container" ></div>
+
+  <!-- build:js(.) scripts/vendor.js -->
+  <!-- bower:js -->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/jquery.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/bootstrap.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-animate.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-touch.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-cookies.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-resource.min.js')}"/>
+  <!-- <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-route.min.js')}"/> -->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-sanitize.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-locale_ja-jp.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-translate.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-ui-router.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/ui-bootstrap-tpls.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/hammer.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular.hammer.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/ng-FitText.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/ngprogress.min.js')}"/>
+
+<!-- 本番 -->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appr, 'js/SB_NameCard_RegistApp.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appr, 'js/SB_NameCard_RegistCtrls.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appr, 'js/SB_NameCard_RegistService.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appr, 'js/SB_NameCard_Filters.min.js')}"/>
+
+<!-- 開発中
+  <c:SB_NameCard_RegistApp />
+  <c:SB_NameCard_RegistCtrls />
+  <c:SB_NameCard_RegistService />
+  <c:SB_NameCard_Filters />
+-->
+</body>
+
+</apex:page>

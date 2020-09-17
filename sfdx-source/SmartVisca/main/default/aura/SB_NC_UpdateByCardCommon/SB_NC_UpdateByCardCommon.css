@@ -1,0 +1,18 @@
+/**
+ *
+ *  SB_NC_UpdateByCardCommon
+ *  基本パッケージ Lightning名刺で更新画面表示入力用コンポネート Css
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 基本パッケージ： V2.1(1.23)      2018.11.XX 初版
+ *
+ **/
+.THIS .slds-scrollable_y {min-height: 150px}
+.THIS.mleft{
+  margin-left: 30px;
+}

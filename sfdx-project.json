@@ -1,17 +1,18 @@
 {
   "packageDirectories": [
-    { "path": "sfdx-source/SmartViscal", "default": true },
-    { "path": "sfdx-source/unpackaged"}
+    { "path": "sfdx-source/SmartVisca", "default": true },
+    { "path": "sfdx-source/unpackaged/dev-config"},
+    { "path": "sfdx-source/unpackaged/qa-config"}
   ],
-  "namespace": "SmartViscal",
+  "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "45.0",
+  "sourceApiVersion": "46.0",
   "plugins": {
     "sfdxFalcon": {
       "developerAlias"  : "ao",
       "developerName"   : "aohno",
-      "projectAlias"    : "svl",
-      "projectName"     : "SmartVisca_Lead",
+      "projectAlias"    : "sv",
+      "projectName"     : "SmartVisca",
       "projectFamily"   : "APK",
       "projectType"     : "1GP:managed",
       "defaultRecipe"   : "build-scratch-org.json",
@@ -21,8 +22,8 @@
       "schemaVersion"   : "0.0.1",
       "pluginVersion"   : "0.0.93",
       "appxPackage"     : {
-        "namespacePrefix"   : "SmartViscal",
-        "packageName"       : "SmartVisca_Lead",
+        "namespacePrefix"   : "SmartVisca",
+        "packageName"       : "SmartVisca",
         "metadataPackageId" : "03310000000VKOnAAO"
       },
       "appxDemo": {}

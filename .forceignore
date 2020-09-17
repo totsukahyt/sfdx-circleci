@@ -25,8 +25,8 @@
 .gitignore
 
 # Ignore the following directories (relative to the project root).
-sfdx-source/SmartViscal/test/javascript
-sfdx-source/SmartViscal/test/selenium
+sfdx-source/SmartVisca/test/javascript
+sfdx-source/SmartVisca/test/selenium
 
 # Ignore all .md files (like README.md)
 **/README.md

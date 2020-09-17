@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- サンブリッジサポートの指示があった場合のみ設定します。 --></help>
+    <label><!-- 組織情報は正規表現を使う --></label>
+    <name>OrgTreeUseRegex__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,194 @@
+<!--
+/**
+ *
+ *  SmartVisca
+ *    SB_NC_CardDetail.cmp
+ *  名刺詳細
+ *
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2016.10.xx
+ *  @Version 2      2017.3.xx  DTO にした
+ *  @Version 2.4    2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *
+ **/
+-->
+<aura:component controller="SB_NC_CardDetailLcController" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="recordId" type="Id"/>
+  <aura:attribute name="working" type="Boolean" default="true"/>
+  <aura:attribute name="cssloaded" type="Boolean" default="false"/>
+  <aura:attribute name="namecard" type="Object" />
+  <aura:attribute name="errorMsg" type="String" />
+  <!-- <ltng:require styles="/resource/SB_NC_Lib/res/slick.css, /resource/SB_NC_Lib/res/sv_slick.css" scripts='/resource/SB_NC_Lib/res/jquery.min.js,/resource/SB_NC_Lib/res/slick.min.js' afterScriptsLoaded="{!c.jsLoaded}" /> -->
+  <ltng:require scripts='/resource/SB_NC_Lib/res/jquery.min.js,/resource/SB_NC_Lib/res/slick.min.js' afterScriptsLoaded="{!c.jsLoaded}" />
+  <aura:renderIf isTrue="{!not(empty(v.errorMsg))}">
+    <ui:message title="" severity="error" closable="true">
+      {!v.errorMsg}
+    </ui:message>
+  </aura:renderIf>
+
+
+  <div class="slds-grid slds-wrap slds-grid_pull-padded-medium" style="border-bottom: 1px solid rgb(216, 221, 230);">
+    <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2">
+      <div class="slds-col">
+        <div class="slds-box_small  slds-text-align_left">
+          <dl>
+            <dt><p class="slds-text-heading_label slds-truncate">{!$Label.c.SB_NC_Name}&nbsp;:</p></dt>
+            <dd><p class="slds-text-body_regular slds-truncate"><ui:outputText value="{!v.namecard.name}"/></p></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2">
+      <div class="slds-col">
+        <div class="slds-box_small  slds-text-align_left">
+          <dl>
+            <dt><p class="slds-text-heading_label slds-truncate">{!$Label.c.SB_NC_AccountName}&nbsp;:</p></dt>
+            <dd><p class="slds-text-body_regular slds-truncate"><ui:outputText value="{!v.namecard.company_name}" /></p></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2">
+      <div class="slds-col">
+        <div class="slds-box_small  slds-text-align_left">
+          <dl>
+            <dt><p class="slds-text-heading_label slds-truncate">{!$Label.c.SB_NC_Department}&nbsp;:</p></dt>
+            <dd><p class="slds-text-body_regular slds-truncate"><ui:outputText value="{!v.namecard.division}" /></p></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2">
+      <div class="slds-col">
+        <div class="slds-box_small  slds-text-align_left">
+          <dl>
+            <dt><p class="slds-text-heading_label slds-truncate">{!$Label.c.SB_NC_Position}&nbsp;:</p></dt>
+            <dd><p class="slds-text-body_regular slds-truncate"><ui:outputText value="{!v.namecard.title_name}" /></p></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2">
+      <div class="slds-col">
+        <div class="slds-box_small  slds-text-align_left">
+          <dl>
+            <dt><p class="slds-text-heading_label slds-truncate">{!$Label.c.SB_NC_EmailAddress}&nbsp;:</p></dt>
+            <dd><p class="slds-text-body_regular slds-truncate"><ui:outputText value="{!v.namecard.email}"/></p></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2">
+      <div class="slds-col">
+        <div class="slds-box_small  slds-text-align_left">
+          <dl>
+            <dt><p class="slds-text-heading_label slds-truncate">{!$Label.c.SB_NC_LatestCard}&nbsp;:</p></dt>
+            <dd><p class="slds-text-body_regular slds-truncate"><ui:outputCheckbox value="{!v.namecard.saishin}"/></p></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2">
+      <div class="slds-col">
+        <div class="slds-box_small  slds-text-align_left">
+          <dl>
+            <dt><p class="slds-text-heading_label slds-truncate">{!$Label.c.SB_NC_ExchangeDate}&nbsp;:</p></dt>
+            <dd><p class="slds-text-body_regular slds-truncate"><ui:outputDate value="{!v.namecard.card_exchange_date}" format="yyyy/MM/dd"/></p></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- <aura:renderif isTrue="{!v.cssloaded}"> -->
+  <aura:renderif isTrue="false">
+    <div class="smartvisca">
+      <div class="div-carusel">
+        <!-- 名刺画像 -->
+        <div>
+          <img class="img-card" src="{!'/servlet/servlet.FileDownload?file='+v.namecard.image_id}" style="margin:auto;"/>
+        </div>
+        <!-- 裏 -->
+        <div>
+          <img class="img-card" src="{!'/servlet/servlet.FileDownload?file='+v.namecard.bk_image_id}" style="margin:auto;"/>
+        </div>
+              <!-- 名刺のテキスト情報 -->
+              <div >
+                <h3>&nbsp;{!v.namecard.Name</h3>
+                  <!-- 会社名 -->
+                  <div class="slds-grid">
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!$ObjectType.NameCard.fields.company_name.Label}</div>
+                    </div>
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!v.namecard.company_name}</div>
+                    </div>
+                  </div>
+                  <!-- 所属 -->
+                  <div class="slds-grid">
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!$ObjectType.NameCard.fields.division.Label}</div>
+                    </div>
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!v.namecard.division}</div>
+                    </div>
+                  </div>
+                  <!-- 役職 -->
+                  <div class="slds-grid">
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!$ObjectType.NameCard.fields.title_name.Label}</div>
+                    </div>
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!v.namecard.title_name}</div>
+                    </div>
+                  </div>
+                  <!-- 都道府県 -->
+                  <div class="slds-grid">
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!$ObjectType.NameCard.fields.address_pref.Label}</div>
+                    </div>
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!v.namecard.address_pref}</div>
+                    </div>
+                  </div>
+                  <!-- メールアドレス -->
+                  <div class="slds-grid">
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!$ObjectType.NameCard.fields.email.Label}</div>
+                    </div>
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!v.namecard.email}</div>
+                    </div>
+                  </div>
+                  <!-- 携帯電話 -->
+                  <div class="slds-grid">
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!$ObjectType.NameCard.fields.mobile.Label}</div>
+                    </div>
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!v.namecard.mobile}</div>
+                    </div>
+                  </div>
+                  <!-- 所有者 -->
+                  <div class="slds-grid">
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">所有者</div>
+                    </div>
+                    <div class="slds-col">
+                      <div class="slds-box slds-box_small slds-theme_shade slds-text-align_center">{!v.namecard.ownerName}</div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+  </aura:renderif>
+
+</aura:component>

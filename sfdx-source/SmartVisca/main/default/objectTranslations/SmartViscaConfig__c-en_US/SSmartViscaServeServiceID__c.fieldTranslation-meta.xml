@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Specify to use a non-standard Service ID</help>
+    <label>S SmartVisca Server Service ID</label>
+    <name>SSmartViscaServeServiceID__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TriggerHistoryIsActive__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>トリガで名刺の履歴オブジェクトに1次納品、2次納品の履歴を保存します。</description>
+    <externalId>false</externalId>
+    <label>トリガで名刺履歴を保存する</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

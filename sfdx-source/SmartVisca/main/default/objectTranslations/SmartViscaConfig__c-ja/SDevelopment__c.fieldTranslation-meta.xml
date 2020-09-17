@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- サンブリッジサポートの指示があった場合のみ設定します。 --></help>
+    <label><!-- S開発モードで動作する --></label>
+    <name>SDevelopment__c</name>
+</CustomFieldTranslation>

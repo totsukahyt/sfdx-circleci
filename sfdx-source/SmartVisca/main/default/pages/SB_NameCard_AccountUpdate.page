@@ -1,0 +1,9 @@
+<!-- $Id: SB_NameCard_AccountUpdate.page 1 2011-10-16 11:51:01Z ume $ -->
+<!-- Copyright (c) 2011 SunBridge Corp. -->
+<!--
+  @author gao
+  @Version 1.20以前
+-->
+<apex:page controller="SB_NameCard_AccountUpdateController" showHeader="false" sidebar="false" action="{!save}">
+    <apex:pageMessages escape="false"/>
+</apex:page>

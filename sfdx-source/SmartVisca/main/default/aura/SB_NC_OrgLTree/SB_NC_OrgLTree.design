@@ -1,0 +1,20 @@
+<design:component label="名刺:組織情報">
+<!--
+  v2.2 2019.03.xx
+Known Issues · レビュー中
+Custom labels referenced from Design resource of LC doesn't work on Lightning App Builder
+https://success.salesforce.com/issues_view?id=a1p3A000000IXaBQAW
+なので、
+    なおったら {!$Label.c.SB_NCOTL_AppBulderTitle}
+  <design:attribute name="showTitle" label="{!$Label.c.SB_NCOTL_DisplayTitle}" description="{!$Label.c.SB_NCOTL_DisplayNameTitle}" />
+  <design:attribute name="clickToRecord" label="{!$Label.c.SB_NCOTL_ClickNameToRecord}" description="{!$Label.c.SB_NCOTL_ClickNameToRecordDescription}" />
+  <design:attribute name="maxRecs" label="{!$Label.c.SB_NCOTL_MaxNumberOfRecord}" description="{!$Label.c.SB_NCOTL_ClickNameToRecordDescription}" />
+  にします。 -->
+  <design:attribute name="showTitle" label="役職を表示" description="氏名と役職を表示する" />
+  <design:attribute name="clickToRecord" label="氏名クリックで名刺に遷移" description="氏名をクリックしたら該当の名刺レコード詳細画面に遷移する" />
+  <design:attribute name="maxRecs" label="対象レコード数の制限" description="検索する名刺レコード数の上限値" />
+
+  <sfdc:objects >
+    <sfdc:object >NameCard__c</sfdc:object>
+  </sfdc:objects>
+</design:component>

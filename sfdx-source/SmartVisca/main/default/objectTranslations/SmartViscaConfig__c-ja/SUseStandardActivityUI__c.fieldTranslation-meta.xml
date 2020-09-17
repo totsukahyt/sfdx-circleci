@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- 行動やToDoは標準の画面を使う場合はチェックします。カスタム項目は、標準の画面でのみ編集可能です。関連付けは標準画面では出来ません。 --></help>
+    <label><!-- S行動やToDoは標準の画面を使う --></label>
+    <name>SUseStandardActivityUI__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,145 @@
+<!-- /**
+ *
+ *  SB_NameCard_Settings
+ *   コンポーネントを表示するタブ付きコンポーネント
+ *
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.20      2017.02.XX
+ *  @Version 1.20      2017.09.XX SV_DEV-1219 salesforce最新環境での「SmartVisca設定」内タブがまた大文字で表示される
+ *  @Version 2.4       2019.05.XX SV_DEV-1630と合わせてリファクタリングを実施
+ *                     2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *                     2019.06.XX SV_DEV-1634 SmartVisca設定タブの自動連携に関する設定の表示/非表示を切り替えるカスタム設定を作る
+ *
+ **/ -->
+<aura:component controller="SB_NameCard_SettingsLcController" implements="force:appHostable" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInitf}"/>
+  <!-- 基本設定コンポーネントをリフレッシュ(最終更新者および更新日) -->
+  <aura:handler name="ref" event="c:SB_NameCard_RefreshLastTimeEvent" action="{!c.ref}"/>
+  <!-- 子コンポーネントクリア終了フラグ -->
+  <aura:handler name="loadingEnd" event="c:SB_NameCard_LoadingEnd" action="{!c.loadEnd}"/>
+  <aura:attribute name="map1" type="Boolean"/>
+  <!-- lex Classic判定フラグ -->
+  <aura:attribute name="showStyle" type="String" default="LEX"/>
+  <!-- 選択したタブID -->
+  <aura:attribute name="selectTab" type="String"/>
+  <!-- タブ表示メッセージ -->
+  <aura:attribute name="tabMsg" type="String"/>
+  <!-- タブ１表示名 -->
+  <aura:attribute name="tab1" type="String" default="{!$Label.c.SB_NC_MAPPING_LABEL_BASESET}"/>
+  <!-- タブ２表示名 -->
+  <aura:attribute name="tab2" type="String" default="{!$Label.c.SB_NC_MAPPING_LABEL_NCRENKEISET}"/>
+  <!-- タブ３表示名 -->
+  <aura:attribute name="tab3" type="String" default="{!$Label.c.SB_NC_MAPPING_LABEL_SBRENKEIMAPPING}"/>
+  <!-- エラーページ -->
+  <aura:attribute name="showPage1" type="Boolean" default="false"/>
+  <!-- 設定ページ -->
+  <aura:attribute name="showPage2" type="Boolean" default="false"/>
+  <!-- alert表示内容 -->
+  <aura:attribute name="message" type="String"/>
+  <!-- 変更フラグタブ -->
+  <aura:attribute name="ischange" type="Boolean" default="false"/>
+  <!-- 変更フラグタブ１ -->
+  <aura:attribute name="ischange1" type="Boolean" default="false"/>
+  <!-- 変更フラグタブ２ -->
+  <aura:attribute name="ischange2" type="Boolean" default="false"/>
+  <!-- 変更フラグタブ３ -->
+  <aura:attribute name="ischange3" type="Boolean" default="false"/>
+  <!-- 現在のタブID -->
+  <aura:attribute name="nowId" type="String"/>
+  <!-- 次のタブID -->
+  <aura:attribute name="nextId" type="String"/>
+  <!--Alert表示フーラグ-->
+  <aura:attribute name="showAlert" type="Boolean" default="false"/>
+  <!-- loadフラグ -->
+  <aura:attribute name="loading" type="Boolean" default="false"/>
+  <!-- 保存中 -->
+  <aura:attribute name="saveing" type="Boolean"/>
+  <!-- 自動連携表示/非表示 -->
+  <aura:attribute name="dispRenkeiSetting" type="Boolean"/>
+    <aura:renderIf isTrue="{!v.showAlert}">
+      <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+        <div class="slds-modal__container">
+          <div class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture">
+            <button class="slds-button slds-modal__close slds-button_icon-inverse" title="Close">
+              <div class="slds-assistive-text">Close</div>
+            </button>
+            <h2 class="slds-text-heading_medium" id="prompt-heading-id">{!$Label.c.SB_NC_MAPPING_LABEL_NOTICE}</h2>
+          </div>
+          <div class="slds-modal__content slds-p-around_medium">
+            <p>{!$Label.c.SB_NC_MAPPING_MSG_CLEANMESSAGE}</p>
+            <!--  <p>{!v.message}</p> -->
+          </div>
+          <div class="slds-modal__footer slds-theme_default">
+            <button onclick="{!c.yes}" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_YES}</button>
+            <button onclick="{!c.no}" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_NO}</button>
+          </div>
+        </div>
+      </div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:renderIf>
+
+   <!--ロード中...-->
+  <aura:renderIf isTrue="{!v.loading}">
+    <div class="slds-spinner_container" style="background-color:white;">
+      <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
+        <div class="slds-assistive-text">Loading</div>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+  </aura:renderIf>
+
+  <aura:renderIf isTrue="{!v.saveing}">
+    <div class="slds-spinner_container" style="z-index:9999;position:fixed;">
+      <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
+        <div class="slds-assistive-text">Loading</div>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+  </aura:renderIf>
+
+  <div class="slds-col slds-has-flexi-truncate">
+    <div class="slds-page-header_object-home slds-page-header_joined slds-page-header_bleed slds-page-header  slds-media slds-no-space slds-grow">
+      <div class="slds-media__figure">
+        <lightning:icon iconName="standard:account" size="large" alternativeText="Account"/>&nbsp;
+      </div>
+      <div class="slds-media__body">
+        <!-- SmartVisca 名刺連携 SB_NC_MAPPING_LABEL_SBRENKEI-->
+        {!v.tabMsg}
+        <p class="slds-text-title_caps slds-line-height_reset"></p>
+        <h1 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate" title="this should match the Record Title">SmartVisca</h1>
+      </div>
+    </div>
+  </div>
+  <aura:renderIf isTrue="{!v.showPage1}">
+    <div style="margin-top:30px;margin-left:30px;font-size:30px;">
+      <ui:outputtext value="{!$Label.c.SB_NC_MAPPING_LABEL_CANNOTPAGE}"/>
+    </div>
+    <div style="margin-top:20px;margin-left:30px;">
+      <ui:outputtext value="{!v.message}"/>
+    </div>
+  </aura:renderIf>
+  <!-- SmartVisca 名刺連携 SB_NC_MAPPING_LABEL_SBRENKEI-->
+  <!-- {!$Label.SmartViscaf.SB_NC_MAPPING_LABEL_SBRENKEI} -->
+  <!-- SmartVisca 名刺連携設定 -->
+  <!-- {!$Label.SmartViscaf.SB_NC_MAPPING_LABEL_SBRENKEI} -->
+  <aura:renderIf isTrue="{!v.showPage2}">
+    <lightning:tabset selectedTabId="{!v.selectTab}" onselect="{!c.changeTab}" class="padd" >
+      <lightning:tab id="tabcustom" class="transformnone" label="{!$Label.c.SB_NC_MAPPING_LABEL_BASESET}" >
+        <c:SB_NameCard_BasicSetting saveing="{!v.saveing}" needSaveSelf="{!v.ischange1}" needSave="{!v.ischange}" aura:id="basicsetting" showStyle="{!v.showStyle}"/>
+      </lightning:tab>
+      <aura:renderIf isTrue="{!v.dispRenkeiSetting}">
+        <lightning:tab id="renkeiset" class="transformnone" label="{!$Label.c.SB_NC_MAPPING_LABEL_NCRENKEISET}">
+          <c:SB_NameCard_RenkeiSetting saveing="{!v.saveing}" aura:id="renkeisetting" needSaveSelf="{!v.ischange2}" needSave="{!v.ischange}" showStyle="{!v.showStyle}"/>
+        </lightning:tab>
+      </aura:renderIf>
+      <lightning:tab id="renkeimapping" class="transformnone" label="{!$Label.c.SB_NC_MAPPING_LABEL_SBRENKEIMAPPING}">
+        <c:SB_NameCard_RenkeiMapping saveing="{!v.saveing}" aura:id="renkeimappingc" needSaveSelf="{!v.ischange3}" needSave="{!v.ischange}" showStyle="{!v.showStyle}"/>
+      </lightning:tab>
+    </lightning:tabset>
+  </aura:renderIf>
+</aura:component>

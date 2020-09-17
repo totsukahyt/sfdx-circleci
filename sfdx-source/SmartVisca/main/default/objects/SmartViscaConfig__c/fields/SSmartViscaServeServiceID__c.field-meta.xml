@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SSmartViscaServeServiceID__c</fullName>
+    <description>SmartViscaサーバに非標準のサービスIDを使うときに指定します。</description>
+    <externalId>false</externalId>
+    <inlineHelpText>SmartViscaサーバに非標準のサービスIDを使うときに指定します。</inlineHelpText>
+    <label>SSmartViscaサーバ サービスID</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

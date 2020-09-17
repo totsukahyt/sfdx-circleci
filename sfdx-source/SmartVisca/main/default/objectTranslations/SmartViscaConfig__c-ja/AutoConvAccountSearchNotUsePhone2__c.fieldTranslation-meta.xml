@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- 自動連携: 電話番号2 は取引先候補の条件に使わない --></label>
+    <name>AutoConvAccountSearchNotUsePhone2__c</name>
+</CustomFieldTranslation>

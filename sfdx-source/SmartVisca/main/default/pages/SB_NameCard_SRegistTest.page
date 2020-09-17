@@ -1,0 +1,348 @@
+<!-- SB_NameCard_SRegistTest
+/**
+ *
+ * Salesforce1対応 取引先・取引先責任者へ登録 テスト画面
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2016.04.xx  //
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+    <title>取引先・取引先責任者へ登録</title>
+<style type="text/css">
+.modalFrame {
+  width: 100%; height: calc(100% - 42px); padding: 0;
+}
+.modalBody {
+  padding: 0px; width: 100%; height: 100%;
+}
+div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+h4 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/*.jumbotron {
+  margin-bottom: 0px;
+  height: 350px;
+  color: white;
+  text-shadow: black 0.3em 0.3em 0.3em;
+  background:transparent;
+}
+.bg {
+  position: fixed;
+  width: 100%;
+  height: 350px;
+  top:0;
+  left:0;
+  z-index: -1;
+}
+*/
+</style>
+</head>
+<style type="text/css">
+#demo1  { min-width: 900px; }
+#demo1:hover  { background: #EEE; }
+#demo1 p  { background: #999; padding: 20px 10px; width: 100px; -webkit-transition-duration: 3s; }
+#demo1:hover p {
+  -webkit-border-radius: 10px;
+  -webkit-transform: translate(800px,0);
+  cursor: pointer;
+}
+.default  { -webkit-transition-timing-function: default; -moz-transition-timing-function: default; }
+.linear { -webkit-transition-timing-function: linear; }
+.ease-in  { -webkit-transition-timing-function: ease-in; }
+.ease-out { -webkit-transition-timing-function: ease-out; }
+.ease-in-out  { -webkit-transition-timing-function: ease-in-out; }
+.cubic-bezier { -webkit-transition-timing-function: cubic-bezier(0,1,1,0); }
+
+</style>
+
+<div id="demo1">
+
+<p class="default">default &raquo;</p>
+<p class="linear">linear &raquo;</p>
+<p class="ease-in">ease-in &raquo;</p>
+<p class="ease-out">ease-out &raquo;</p>
+<p class="ease-in-out">ease-in-out &raquo;</p>
+<p class="cubic-bezier">cubic-bezier &raquo;</p>
+
+</div>
+
+<!-- <div class="jumbotron" style="background: url('/servlet/servlet.FileDownload?file={{card.image_id}}') no-repeat center center;">
+  <h1>{{card.name}}</h1>
+  <p>...</p>
+  <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+</div>
+
+ -->
+<div class="row">
+  <div class="col-md-2"/>
+  <div class="col-xs-12, col-md-8">
+    <div class="thumbnail" ng-click="">
+      <img ng-show="!back" ng-src="/servlet/servlet.FileDownload?file={{card.image_id}}" class="img-responsive" />
+      <img ng-show="back" ng-src="/servlet/servlet.FileDownload?file={{card.bk_image_id}}" class="img-responsive"/>
+    </div>
+  </div>
+</div>
+
+<!--  <div class="list-group">
+  <div class="row list-group-item  active" ng-repeat="account in accounts">
+    <div class="col-sm-9">
+      <h4><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;{{account.accountName}}</h4>
+      <div class="row">
+        <div class="col-xs-4 col-sm-2">
+          {!$ObjectType.Account.fields.BillingState.Label}
+        </div>
+        <div class="col-xs-8 col-sm-10">
+          {{account.state}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4 col-sm-2">
+          {!$ObjectType.Contact.fields.Department.Label}
+        </div>
+        <div class="col-xs-8 col-sm-10">
+          {{account.division}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4 col-sm-2">
+          {!$ObjectType.Contact.fields.Name.Label}
+        </div>
+        <div class="col-xs-8 col-sm-10">
+          {{account.contactName}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ -->
+
+<!--   <a href="#" class="list-group-item" ng-repeat="account in accounts">
+    <h4 class="list-group-item-heading">{{account.accountName}}</h4>
+    <p class="list-group-item-text">{{account.division}}</p>
+    <p class="list-group-item-text">{{account.state}}</p>
+    <p class="list-group-item-text">{{account.contactName}}</p>
+  </a>
+ -->
+
+<!-- <p class="text-warning" ng-show="cards.length == 0">追加できる名刺はありません。</p>
+<p class="text-success" ng-show="cards.length > 0 && tagIsTag" >タグ<font style="font-weight: bold;">&nbsp;{{label}}&nbsp;</font>に名刺を追加します。</p>
+<p class="text-success" ng-show="cards.length > 0 && !tagIsTag" >名刺リスト<font style="font-weight: bold;">&nbsp;{{label}}&nbsp;</font>に名刺を追加します。</p>
+ -->
+
+<!-- <div ng-show="!working">
+    <div style="float: left;">
+        <div style="margin-bottom: 10px;">
+        <input type="text" ng-model="nameFilter" placeholder="絞込む..." class="size-full plm prx pvm input input--default input--ph-1 input--focus-1" style="width:80%;"/>
+        </div>
+    </div>
+    <div style="float: right;">
+      <button type="button" class="btn btn-primary" ng-click="return()">検索</button>
+    </div>
+
+    <table class="table">
+    <thead>
+    </thead>
+    <tbody>
+        <tr ng-click=""  ng-repeat="account in accounts | filter: searchFilter">
+            <td>
+                <div class="thumbs">
+                <span class="thumbnail" ><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </td>
+            <td>
+                <a ng-click="doDetail(card.Id)"><b class="fullname">{{account.accountName}}</b></a> <br />
+                <div><small class="metadata">{{account.state}}</small></div>
+                <div><small class="metadata">{{account.division}}</small> </div>
+                <div><small class="metadata">{{account.contactName}}</small></div>
+            </td>
+            <td><a ng-click="addCardToTag(card)" class="btn btn-default" role="button"><i class="glyphicon glyphicon-tag"></i>&nbsp;追加</a></td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+ -->
+<!--
+  Breadcrumbs
+  http://bootsnipp.com/snippets/4O9nR
+-->
+
+<div class="container">
+    <div class="row">
+        <!-- <h2>Breadcrumb Rainbow</h2> -->
+        <div class="btn-group btn-breadcrumb-xs">
+            <a href="#" class="btn btn-info"><i class="glyphicon glyphicon-home"></i></a>
+            <a href="#" class="btn btn-info">{!$ObjectType.Account.Label}登録方法</a>
+            <a href="#" class="btn btn-success">{!$ObjectType.Account.Label}選択</a>
+            <a href="#" class="btn btn-warning">{!$ObjectType.Contact.Label}登録方法</a>
+            <a href="#" class="btn btn-default">{!$ObjectType.Contact.Label}選択</a>
+        </div>
+  </div>
+</div>
+<br/>
+<hr/>
+<div class="container">
+    <div class="row">
+        <div class="btn-group btn-breadcrumb">
+            <a href="#" class="btn btn-info"><i class="glyphicon glyphicon-home"></i></a>
+            <a href="#" class="btn btn-info">{!$ObjectType.Account.Label}登録方法</a>
+            <a href="#" class="btn btn-success">{!$ObjectType.Account.Label}選択</a>
+            <a href="#" class="btn btn-warning">{!$ObjectType.Contact.Label}登録方法</a>
+            <a href="#" class="btn btn-default">{!$ObjectType.Contact.Label}選択</a>
+        </div>
+  </div>
+</div>
+<br/>
+<hr/>
+<div class="container">
+    <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">{!$ObjectType.Account.Label}登録方法</a></li>
+    <li><a href="#">{!$ObjectType.Account.Label}選択</a></li>
+    <li class="active"><span>{!$ObjectType.Contact.Label}登録方法</span></li>
+    <li ><span>{!$ObjectType.Contact.Label}選択</span></li>
+  </ol>
+</div>
+
+<ul class="list-group media-list">
+  <li class="list-group-item media" ng-class="account.selected ? 'active' : ''" ng-repeat="account in accounts | filter: searchFilter">
+
+  <div class="media-left media-middle" ng-click="toggleSelect(account)">
+    <i ng-show="account.selected" class="fa fa-check-square-o" aria-hidden="true"></i>
+    <i ng-hide="account.selected" class="fa fa-square-o" aria-hidden="true"></i>
+  </div>
+  <div class="media-body">
+      <h4 data-fittext=".9" data-fittext-min="10" data-fittext-max="inherit" ng-click="openAccount(account)"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;{{account.accountName}}</h4>
+      <!-- <h4 data-fittext=".9" ng-click="openAccount(account)">{{account.accountName}}</h4> -->
+      <div class="row" ng-click="openAccount(account)">
+        <div class="col-xs-4 col-sm-2">
+          {!$ObjectType.Account.fields.BillingState.Label}
+        </div>
+        <div class="col-xs-8 col-sm-10">
+          {{account.state}}
+        </div>
+      </div>
+      <div class="row" ng-click="openAccount(account)">
+        <div class="col-xs-4 col-sm-2">
+          {!$ObjectType.Contact.fields.Department.Label}
+        </div>
+        <div class="col-xs-8 col-sm-10">
+          {{account.division}}
+        </div>
+      </div>
+      <div class="row" ng-click="openContact(account)">
+        <div class="col-xs-4 col-sm-2">
+          {!$ObjectType.Contact.fields.Name.Label}
+        </div>
+        <div class="col-xs-8 col-sm-10">
+          {{account.contactName}}
+        </div>
+      </div>
+  </div>
+  </li>
+</ul>
+
+
+
+<!-- ボタン -->
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div style="padding:6px; text-align: center;">
+    <!-- 戻る ボタン -->
+    <div class="btn btn-default pull-left" role="button" ng-disabled="editMode" ng-click="goBack()">
+      <i class="fa fa-arrow-left" aria-hidden="true">&nbsp;戻る</i>
+    </div>
+      <!-- 表裏入替え -->
+<!--       <div class="btn btn-default" role="button" ng-click="reverse()" ng-hide="card.back==null">
+        <i class="fa fa-arrows-h"></i>
+      </div>
+ -->
+      <!-- 次へボタン -->
+    <div class="btn btn-default pull-right" role="button" ng-disabled="!isSelected()" ng-click="save()">
+      <i class="fa fa-pencil" aria-hidden="true">&nbsp;登録</i>
+    </div>
+  </div>
+</nav>
+
+<!-- 名刺画像のモーダル  -->
+<script id="imageWindow.html" type="text/ng-template">
+<div class="modalFrame">
+    <div class="modal-body modalBody">
+      <div style="position:relative; overflow:scroll; " >
+        <div hm-pinch="pinched" hm-tap="tapped" hm-pan="paned" hm-swipeleft="reverse" hm-swiperight="reverse"
+          style="
+          width:{{(front ? card.front.width : card.back.width)}}px; height:{{(front ? card.front.height : card.back.height)}}px; background: url('{{(front ? card.front.data : card.back.data)}}') no-repeat;
+          background-position-x: {{posX}}px;
+          background-position-y: {{posY}}px;
+          transform-origin: left top;
+          -webkit-transform-origin: left top;
+          -moz-transform-origin: left top;
+          -o-transform-origin: left top;
+          -ms-transform-origin: left top;
+          transform: scale({{scaleFactor}});
+          -webkit-transform: scale({{scaleFactor}});
+          -moz-transform: scale({{scaleFactor}});
+          -o-transform: scale({{scaleFactor}});
+          -ms-transform: scale({{scaleFactor}});"></div>
+      </div>
+    </div>
+</div>
+</script>
+
+<!-- 名刺画像削除の確認のモーダル -->
+<script id="confirmDelete.html" type="text/ng-template">
+  <div class="modal-header text-center" style="background-color :#f8f8ff">
+    <h4 class="modal-title">画像削除の確認</h4>
+  </div>
+  <div class="modal-body">
+    <h5><i class="fa fa-exclamation-circle fa-2x"></i>&nbsp;{{delete.msg}}</h5>
+  </div>
+  <div class="modal-footer" style="background-color :#f8f8ff">
+    <div class="col-xs-offset-1 col-xs-11">
+      <button class="btn btn-default col-xs-4" ng-click="$dismiss()">Cancel</button>
+      <div class="col-xs-1"></div>
+      <button class="btn btn-danger col-xs-4" ng-click="$close()">OK</button>
+    </div>
+  </div>
+</script>
+
+<!-- 名刺画像削除の確認 表 ? 裏 ? 両面 ? のモーダル-->
+<script id="confirmDeleteSide.html" type="text/ng-template">
+  <div class="modal-header text-center" style="background-color :#f8f8ff">
+    <h4 class="modal-title">画像削除の確認</h4>
+  </div>
+  <div class="modal-body">
+    <h5>名刺画像を削除します。</h5>
+    <form name="myForm" role="form">
+      <div class="radio radio-danger" ng-show="card.back">
+        <input type="radio" name="optionsRadios" id="optionsRadios1" ng-model="delete.side" value="1"/>
+        <label for="optionsRadios1">表面を削除</label>
+      </div>
+      <div class="radio radio-danger" ng-show="card.back">
+          <input type="radio" name="optionsRadios" id="optionsRadios2" ng-model="delete.side" value="2" checked/>
+          <label for="optionsRadios2">裏面を削除</label>
+      </div>
+      <div class="radio radio-danger" ng-show="card.back">
+          <input type="radio" name="optionsRadios" id="optionsRadios3" ng-model="delete.side" value="0"/>
+          <label for="optionsRadios3">両面を削除</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer" style="background-color :#f8f8ff">
+    <div class="col-xs-offset-1 col-xs-11">
+      <button class="btn btn-default col-xs-4" ng-click="$dismiss()">Cancel</button>
+      <div class="col-xs-1"></div>
+      <button class="btn btn-primary col-xs-4" ng-click="$close()">OK</button>
+    </div>
+  </div>
+</script>
+
+</apex:page>

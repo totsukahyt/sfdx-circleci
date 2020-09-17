@@ -1,0 +1,4 @@
+<apex:page controller="SB_NameCard_ShowSameNameCardController" action="{!showReport}">
+<apex:pageMessages showDetail="false"/>
+<button onclick="history.back()">{!$Label.sb_nc_return}</button>
+</apex:page>

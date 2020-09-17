@@ -1,0 +1,42 @@
+[
+    {
+        "sobject": "Account",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": [
+            "Accounts.json"
+        ]
+    },
+    {
+        "sobject": "Contact",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": [
+            "Contacts.json"
+        ]
+    },
+    {
+        "sobject": "SmartViscaf__NameCard__c",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": [
+            "SmartViscaf__NameCard__cs.json"
+        ]
+    },
+    {
+        "sobject": "SmartViscaf__NameCard__c",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": [
+            "SmartViscaf__NameCard__old.json"
+        ]
+    },
+    {
+        "sobject": "Attachment",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": [
+            "Attachment.json"
+        ]
+    }
+]

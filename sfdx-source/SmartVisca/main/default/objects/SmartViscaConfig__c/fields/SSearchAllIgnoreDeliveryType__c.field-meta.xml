@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SSearchAllIgnoreDeliveryType__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>みんなの名刺、ユーザ指定の名刺一覧で、自分の名刺と最近見たい名刺と同様に、すべての名刺を検索対象にします。オフの場合、2次納品で最新の名刺だけが対象です。</description>
+    <externalId>false</externalId>
+    <label>Sみんなの名刺でも2次納品以外も検索の対象にする</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- 1: 一次納品
+2: 最終納品 --></help>
+    <label><!-- 納品タイプ --></label>
+    <name>delivery_type__c</name>
+</CustomFieldTranslation>

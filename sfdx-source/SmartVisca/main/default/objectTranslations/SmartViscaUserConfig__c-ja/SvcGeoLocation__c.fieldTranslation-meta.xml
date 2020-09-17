@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- SmartViscaカメラ:位置情報を送信履歴に残す --></label>
+    <name>SvcGeoLocation__c</name>
+</CustomFieldTranslation>

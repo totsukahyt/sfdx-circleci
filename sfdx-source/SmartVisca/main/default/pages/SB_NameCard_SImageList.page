@@ -1,0 +1,139 @@
+<!-- SB_NameCard_SImageList
+/**
+ *
+ * SmartVisca カメラ 撮影・選択、画像一覧
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2015.06.xx  // IONIC版
+ *  @Version 2    2015.8.xx   // Boootstrap版
+ *
+ **/
+ -->
+ <apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+  <head>
+      <title>{!$Label.SB_NCS1C_Menu_NCImgRegistration}</title>
+  <style type="text/css">
+  .uploadButton {
+      display:inline-block;
+      position:relative;
+      overflow:hidden;
+      border-radius:25px;
+      border-color: #0c63ee;
+      background-color: #387ef5;
+      color:#fff;
+      text-align:center;
+      padding:10px;
+      line-height:30px;
+      width:180px;
+      cursor:pointer;
+      font-weight: 400;
+      font-size: 16px;
+  }
+/*
+  .uploadButton:hover {
+      border-color: #204d74;
+      background-color:#286090;
+  }
+*/
+  /* active タッチした一瞬だけ変わる。でもiPhone S1 では効かない。PCではhoverと同じ効果
+   .uploadButton:active {
+      border-color: #204d74;
+      background-color:#286090;
+  } */
+
+  .uploadButton input[type=file] {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      cursor:pointer;
+      opacity:0;
+  }
+  </style>
+  </head>
+
+  <!-- 撮影ボタン  -->
+  <div class="header row" ng-hide="sfdcErr" style="margin-left: 2px; margin-right: 2px;" >
+    <!-- カメラが起動できないのがあるようなので、form に入れてみる 2016.06.xx -->
+    <form>
+      <div class="uploadButton">{!$Label.SB_NCS1C_Label_CameraSelect}...&nbsp;<i class="fa fa-camera" style="font-size: 20px;"></i>
+        <!-- <input type="file" file-model="imageFile"  accept="image/*;capture=camera" class="" /> -->
+        <input type="file" file-model="imageFile" accept="image/*" capture="camera" class="" />
+      </div>
+      <div class="checkbox checkbox-primary checkbox-circle" style="display: inline-block; float: right;">
+        <input id="cb_doubleSide" type="checkbox"  ng-model="settings.svcDoubleSide"/>
+        <label for="cb_doubleSide">{!$Label.SB_NCS1C_Label_AlsoBackside}</label>
+      </div>
+    </form>
+
+  </div>
+
+  <!-- 名刺画像一覧 -->
+  <div class="media" ng-repeat="c in cards" style="margin-left:-10px; margin-right:-10px; max-height: 80px; min-height: 80px;">
+    <div ng-swipe-left="showDeleteBtn(true)" ng-swipe-right="showDeleteBtn(false)" ng-click="opneDetail($index, $event)">
+      <div class="media-left media-middle" >
+          <img class="media-object" ng-src="{{c.front.data}}" style="max-width: 120px; max-height: 80px;" />
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading" style="color: lightgrey;" ng-show="!c.memo">{!$Label.SB_NCS1C_Label_NoMemo}</h4>
+        <h4 class="media-heading" ng-show="c.memo">{{c.memo}}</h4>
+        <p>{{c.date | date : '{!$Label.SB_NC_NGDateFormat}'}}</p>
+        <i class="fa {{(c.back==null ? 'fa-file-o' : 'fa-files-o')}}"></i>
+      </div>
+      <div class="media-right" style="vertical-align: middle;">
+        <a ng-show="showDelete" ng-animate=" 'delete' " class="btn btn-danger pull-right" ng-click="deleteCard($index, $event)">{!$Label.SB_NCS1C_Label_Remove}</a>
+        <i ng-hide="showDelete" class="fa fa-angle-right fa-lg pull-left"></i>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 55px;"></div>
+
+  <!-- ボタン -->
+  <nav class="navbar navbar-default navbar-fixed-bottom">
+    <div style="padding:6px; text-align: center;">
+        <button class="btn btn-default pull-right" role="button" ui-sref="menu.upload" ng-disabled="cards.length== 0">
+          {!$Label.SB_NCS1C_Label_Next}&nbsp;<i class="fa fa-arrow-circle-o-right"></i>
+        </button>
+    </div>
+  </nav>
+
+  <!-- 画層ファイル読み込み中モーダル -->
+  <script id="loadingWindow.html" type="text/ng-template">
+  <div style ="padding: 20px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    text-align: center;
+    text-overflow: ellipsis;
+    font-size: 15px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left:-20px;
+    ">
+    <i class="fa fa-spinner fa-pulse"></i>
+  </div>
+  </script>
+
+  <!-- ファイル数超過確認画面 未使用 -->
+  <script id="confirmMaxFileCount.html" type="text/ng-template">
+    <div class="modal-header text-center" style="background-color :#f8f8ff">
+      <h4 class="modal-title">{!$Label.SB_NCS1C_Text_NumberOfFilesExceeded}</h4>
+    </div>
+    <div class="modal-body">
+      <p>{!$Label.SB_NCS1C_Text_MaxAttachment1}{{config.maxFileCount}}&nbsp;{!$Label.SB_NCS1C_Text_MaxAttachment2}</p>
+    </div>
+    <div class="modal-footer" style="background-color :#f8f8ff">
+      <div class="col-xs-offset-1 col-xs-11">
+        <button class="btn btn-default col-xs-4" ng-click="$dismiss()">{!$Label.SB_NCS1C_Label_Cancel}</button>
+        <div class="col-xs-1"></div>
+        <button class="btn btn-primary col-xs-4" ng-click="$close(status.showLog)">{!$Label.SB_NCS1C_Label_OK}</button>
+      </div>
+    </div>
+  </script>
+
+  </apex:page>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- 自分所有以外の名刺で所有者を表示する場合にはチェックします。 --></help>
+    <label><!-- S名刺詳細：所有者を表示する --></label>
+    <name>SDetailShowOtherOwner__c</name>
+</CustomFieldTranslation>

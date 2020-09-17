@@ -1,0 +1,79 @@
+<!-- SB_NameCard_CompanyTreeView
+/**
+ *
+ * 名刺 - 組織情報のページ内のビュー　　
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author jo
+ *  @Version 1      2015.2.xx
+ *  @author sawano  SB_NameCard_SNameCardDetailWeb  から移行
+ *  @Version 2      2015.3.xx
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false" id="thePage">
+<head>
+    <title>名刺の詳細</title>
+<apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/angular.treeview.css')}"/>
+<style type="text/css">
+.img-modal-window .modal-dialog {
+  position: relative;
+  top: 100px;
+}
+</style>
+</head>
+
+<form id="theForm">
+<uib-tabset justified="false">
+<uib-tab heading="{!$Label.SB_NCS1_Label_Organization}" ng-click="showCompnayTree()" ng-disabled="working" id="webCompanyTree" style="display:none;">
+    <!-- LEX用に フッターの分だけスペースをおく -->
+    <div class="span4 well" style="margin-bottom: 48pt">
+        <div class="sv-loading" ng-show="working">
+            <img src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+        </div>
+        <div ng-show="doneOrgTree && nodeList.length > 0">
+            <p class="bg-info">{!$Label.SB_NCS1_Text_ViewDetailsInGrid}</p>
+            <div
+                data-angular-treeview="true"
+                data-tree-id="treeOrg"
+                data-tree-model="nodeList"
+                data-node-id="nodeId"
+                data-node-label="label"
+                data-node-children="items"
+                data-node-mine="mine"
+                data-node-selected="selected" >
+            </div>
+
+<!--                 data-node-label="nodeName"
+                data-node-children="children"
+ -->
+            <br/>
+            <p style="font-size: 10px">{!$Label.SB_NCS1_Text_OnlyLatestNC}</p>
+            <p style="font-size: 10px"> <i class="glyphicon glyphicon-star"/>&nbsp;:&nbsp;{!$Label.SB_NCS1_Text_OwnedNamecard}</p>
+        </div>
+    </div>
+</uib-tab>
+</uib-tabset>
+</form>
+
+<script type="text/javascript">
+    function test() {
+        var form = document.getElementById("thePage:theForm");
+        var spans = form.getElementsByTagName("span");
+        alert(1);
+        for (var i = 0; i < spans.length; i++) {
+            var span = spans[i];
+            alert(span.style.color);
+        }
+    }
+
+    function showWebCompanyTree() {
+        var t = document.getElementById("webCompanyTree");
+        t.click();
+
+        //setTimeout('test()', 5000);
+    }
+    // TODO 別方法？
+    setTimeout('showWebCompanyTree()', 1000);
+</script>
+</apex:page>

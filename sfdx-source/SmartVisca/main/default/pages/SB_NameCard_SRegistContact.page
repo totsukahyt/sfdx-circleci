@@ -1,0 +1,107 @@
+<!-- SB_NameCard_SRegistContact
+/**
+ *
+ * Salesforce1対応 取引先・取引先責任者へ登録 登録画面 取引先責任者選択
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2016.04.xx  //
+ *  @Version 2    2018.03.xx  //v.1.22 SV_DEV-582 『「上書きする」チェックボックスを表示する』機能について取引先・取責を分けて制御できるようにしたい
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<!-- 取引先責任者選択 -->
+<head>
+<style type="text/css">
+</style>
+</head>
+
+<h4 data-fittext=".9" data-fittext-min="10" data-fittext-max="inherit" >{{labels.caption}}</h4>
+<div ng-show="working" style="padding-top:40px; text-align:center">
+  <i class="fa fa-spinner fa-pulse fa-2x" style="color:#4169e1"></i>
+</div>
+<!--  -->
+<div ng-show="!working">
+  <p class="bg-danger" ng-show="accounts.length > 202">{{labels.queryOver}}</p>
+  <uib-accordion close-others="oneAtATime" ng-repeat="item in contacts">
+    <uib-accordion-group is-open="item.selected" ng-click="toggleSelect(item)" panel-class="{{item.selected ? 'panel-success' :''}}">
+      <uib-accordion-heading >
+        <div class="row">
+          <div class="col-xs-10">
+            {{item.title}}&nbsp;
+          </div>
+          <div class="col-xs-2" ng-show="item.selected && item.type!==2"><i class="pull-right fa fa-check" style="color:#e0ffff;"></i></div>
+        </div>
+      </uib-accordion-heading>
+      <!-- 一致する取引先責任者 を選択 -->
+      <div ng-show="item.type===1">
+        <div class="row"  ng-repeat="val in item.summary">
+          <div class="col-xs-12">
+          {{val}}
+          </div>
+        </div>
+        <div class="" ng-hide="item.summary.length == item.values.length">
+          <button type="button" class="center-block btn btn-default btn-sm" ng-click="openDetail(item)">{!$Label.SB_NCS1R_Text_ViewDetails}</button>
+          <!-- <button uib-popover="{{item.values}}" popover-title="{{item.title}}" type="button" class="center-block btn btn-default">詳細表示</button> -->
+        </div>
+      </div>
+      <!-- 一致する取引先責任者 以外 -->
+      <!-- その他を検索して選択 -->
+      <div ng-show="item.type===2">
+        <div>
+          <button type="button" class="center-block btn btn-info btn-sm" ng-click="openSearchContact()"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;{!$ObjectType.Contact.Label}</button>
+        </div>
+      </div>
+      <!-- 新規作成 -->
+      <div ng-show="item.type===3">
+        <h5 ng-show="recTypeInfo.contact.length <= 1">{{item.info}}</h5>
+        <div ng-show="recTypeInfo.contact.length > 1">
+          <div class="row">
+            <div class="col-xs-6 col-md-2">
+              <label>{!$Label.SB_NCS1R_Text_RecordType}&nbsp;:</label>
+            </div>
+            <div class="col-xs-10 col-md-10">
+              <select id="recTypeSelect" class="form-control" ng-model="settings.registRecType.contact" ><option ng-repeat="r in recTypeInfo.contact" value="{{r.id}}">{{r.label}}</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </uib-accordion-group>
+  </uib-accordion>
+
+</div>
+
+  <!-- 既存の取引先責任者の情報を名刺情報で上書きする  新規作成しかないときは表示しない。ngFitTextが効かないので、テキストを短くフォントを小さくします。-->
+  <div class="form-group checkbox checkbox-success checkbox-circle" ng-show="contacts.length > 1 && config.registDispContactOverWriteCheckbox" >
+    <input id="cb_OverWriteContact" type="checkbox"  ng-model="settings.overwriteContact" ng-disabled="!config.enableContactEdit"/>
+    <label for="cb_OverWriteContact" style="font-size: 90%;"><i class="fa fa-pencil-square-o"></i>&nbsp;{{labels.overwrite}}</label>
+  </div>
+
+<br/>
+<br/>
+<br/>
+<!-- ボタン -->
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div style="padding:6px; text-align: center;">
+    <!-- 戻る ボタン -->
+    <div class="btn btn-default pull-left" role="button" ng-disabled="editMode" ng-click="back()">
+      <i class="fa fa-arrow-circle-o-left" aria-hidden="true">&nbsp;{!$Label.SB_NCS1R_Label_GoBack}</i>
+    </div>
+    <!-- キャンセル ボタン -->
+    <div class="btn btn-default pull-center" role="button" ng-disabled="editMode" ng-click="return()">
+      <i class="fa fa-ban" aria-hidden="true">&nbsp;{!$Label.SB_NCS1R_Label_Cancel}</i>
+    </div>
+      <!-- 表裏入替え -->
+<!--       <div class="btn btn-default" role="button" ng-click="reverse()" ng-hide="card.back==null">
+        <i class="fa fa-arrows-h"></i>
+      </div>
+ -->
+      <!-- 次へボタン -->
+    <div class="btn btn-default pull-right" role="button" ng-disabled="!isSelected() || working" ng-click="next()">
+      <i class="fa fa-arrow-circle-o-right" aria-hidden="true">&nbsp;{!$Label.SB_NCS1R_Label_Next}</i>
+    </div>
+  </div>
+</nav>
+</apex:page>

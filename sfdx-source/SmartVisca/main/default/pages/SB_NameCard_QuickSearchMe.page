@@ -1,0 +1,44 @@
+<!--
+/**
+ * SB_NameCard_QuickSearch.page
+ * サイドバーの名刺検索 で 自分の名刺 チェックボックス付き
+ * SV_DEV-580 「私の名刺検索オプション付きの名刺検索」サイドバーについて検索結果画面のリンクが機能しない
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2016.8.xx
+ *
+ **/
+-->
+<apex:page showHeader="false" sidebar="false">
+<head>
+<style type="text/css">
+*{
+margin:2;
+}
+
+body{
+ background:#CFEEF8;
+}
+</style>
+</head>
+<body>
+<div>
+<form id="phSearchForm" onsubmit="if (window.ffInAlert) { return false; }"
+    name="sbsearch" target="_top" method="GET" action="/_ui/search/ui/UnifiedSearchResults">
+    <!-- SV_DEV-580によってコメントアウト -->
+ <input type="hidden" id="sen" name="sen" value="{!$ObjectType.NameCard__c.keyPrefix}" ></input>
+<!-- <input type="hidden" id="searchType" name="searchType" value="2"></input>
+<input type="hidden" id="initialViewMode" name="initialViewMode" value="summary"></input>
+<input type="hidden" id="saveOptions" name="saveOptions" value="1"></input> -->
+<!--<input type="hidden" id="fen" name="fen" value="{!$ObjectType.NameCard__c.keyPrefix}"></input> -->
+
+<input type="text" id="str" name="str" style="width:130px;box-sizing:border-box;" length="50"></input>
+<input value="go!" type="submit"></input>
+<BR/>
+<input type="checkbox" id="searchOwner" style="box-sizing:border-box;" name="searchOwner" value="1">{!$Label.SB_NC_Label_MyNameCards}</input>
+</form>
+</div>
+</body>
+</apex:page>

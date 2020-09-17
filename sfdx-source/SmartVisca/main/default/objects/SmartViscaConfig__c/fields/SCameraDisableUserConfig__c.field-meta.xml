@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SCameraDisableUserConfig__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>カスタム設定「SmartViscaユーザ設定」で設定した値に固定となります</description>
+    <externalId>false</externalId>
+    <inlineHelpText>カスタム設定「SmartViscaユーザ設定」で設定した値に固定となります</inlineHelpText>
+    <label>SSmartViscaカメラでユーザによる設定変更を不可にする</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

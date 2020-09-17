@@ -1,0 +1,66 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef1"
+            },
+            "Website": "www.cloudmktg.jp",
+            "Site": "コンサルティング部 マーケティング",
+            "Name": "クラウドマーケティング株式会社",
+            "SmartViscaf__NameCardListName__c": "ニュービジネスフェア2019",
+            "Phone": "03-5488-6010",
+            "ShippingCity": "渋谷区",
+            "ShippingPostalCode": "150-0022",
+            "ShippingState": "東京都",
+            "ShippingStreet": "恵比寿南1-5-5JR恵比寿ビル11F",
+            "BillingCity": "渋谷区",
+            "BillingPostalCode": "150-0022",
+            "BillingState": "東京都",
+            "BillingStreet": "恵比寿南1-5-5JR恵比寿ビル11F"
+            
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef2"
+            },
+            "Fax": "03-1111-1222",
+            "Website": "www.meishiprinting.jp",
+            "Site": "第三営業部",
+            "Name": "名刺印刷株式会社",
+            "SmartViscaf__NameCardMemo__c": "会社紹介制作打ち合わせ",
+            "Phone": "03-1111-1111",
+            "ShippingCity": "新宿区",
+            "ShippingPostalCode": "123-4567",
+            "ShippingState": "東京都",
+            "ShippingStreet": "新宿1-2-3名刺ビル1F",
+            "BillingCity": "新宿区",
+            "BillingPostalCode": "123-4567",
+            "BillingState": "東京都",
+            "BillingStreet": "新宿1-2-3名刺ビル1F"
+            
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef3"
+            },
+            "Fax": "03-0001-1000",
+            "Website": "ebisuworks.jp",
+            "Site": "人事部",
+            "Name": "株式会社EBISU WORKS",
+            "SmartViscaf__NameCardListName__c": "異業種交流会",
+            "Phone": "03-0001-1234",
+            "ShippingCity": "渋谷区",
+            "ShippingPostalCode": "150-6018",
+            "ShippingState": "東京都",
+            "ShippingStreet": "恵比寿4-20",
+            "BillingCity": "渋谷区",
+            "BillingPostalCode": "150-6018",
+            "BillingState": "東京都",
+            "BillingStreet": "恵比寿4-20"
+            
+        }
+    ]
+}

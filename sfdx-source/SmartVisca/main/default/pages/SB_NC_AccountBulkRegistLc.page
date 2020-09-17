@@ -1,0 +1,42 @@
+<!--
+/**
+ *
+ *  SB_NC_AccountBulkRegistLc
+ *  LEX 取引先・取引先責任者一括登録画面
+ *
+ *
+ * Copyright (C) 2019 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author K.Yoshida
+ *  @Version 2.2  2019.02.XX SV_DEV-1558 LEX 取引先登録 一括画面をLXパッケージ同様のLC化で追加
+ *
+ **/
+-->
+<apex:page standardController="NameCard__c" recordSetVar="nameCardList" extensions="SB_NC_AccountBulkRegistController" title="{!windowTitle}">
+  <apex:pageMessages />
+  <apex:includeLightning />
+
+  <div class="slds" style="height: calc(100% - 50px);">
+      <div id="lt_comp" style="height: 100%;"/>
+  </div>
+
+  <script>
+    document.body.parentElement.style='height:100%';
+    document.body.style='padding:0px;';
+    $Lightning.use("{!JSENCODE(namespace_x)}" + "SB_NC_CardApp", function () { // sawano 2017.10.xx v1.21 for conde scan
+      $Lightning.createComponent("{!JSENCODE(namespace_x)}" + "SB_NC_AccountBulkRegist",   // sawano 2017.10.xx v1.21 for conde scan
+        {
+          recordId: "{!targetIds}",
+          retUrl: "{!JSENCODE(retUrl)}", // sawano 2017.10.xx v1.21 for conde scan
+          fromLabel: "{!fromLabel}",
+          fromId: "{!fromId}",
+          viewLabel: "{!viewLabel}",
+          viewId: "{!viewId}"
+        },
+        "lt_comp",
+        function (cmp) {
+          // do some stuff
+        });
+    });
+  </script>
+</apex:page>

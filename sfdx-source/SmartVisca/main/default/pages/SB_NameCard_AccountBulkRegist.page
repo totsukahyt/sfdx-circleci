@@ -1,0 +1,235 @@
+<!-- $Id: SB_NameCard_AccountBulkRegist.page 16 2014-03-14 11:33:00Z ume $ -->
+<!-- 
+    SV_DEV-522  取引先・取引先責任者/リード登録画面で新規データ登録の際に複数回登録ボタンが押下されると同一データが複数登録されてしまう
+    SV_DEV-606  取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル
+    @author gao
+    @Version 1.20.1  2017.8.XX  SV_DEV-521  取引先・取引先責任者登録画面にて取引先の編集権限がなくても「既存の取引先の情報を名刺情報で上書きする」が有効化されてしまう
+    @Version 1.22  2017.10.XX SV_DEV-591  取引先・取引先責任者一括登録時の所有者について
+    @Version 1.22  2017.10.XX SV_DEV-606  取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル
+    @Version 2.2   2019.03.XX SV_DEV-842 Classic一括登録画面の所有者選択の初期値をデフォルトでオンにしたい。
+    @Version 2.4  2019.07.xx sawano 最初の例外のとき、CANCELで戻れないので、修正。保存ボタン 有効・無効判定
+-->
+<!-- Copyright (c) 2011-2015 SunBridge Inc. -->
+<apex:page standardController="NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_AccountBulkRegistController" title="{!title}" showHeader="true" sidebar="false">
+  <apex:pageMessages id="pageMsgs" escape="false"/>
+  <apex:form id="All">
+  <apex:actionFunction action="{!saveNC}" name="saveNC" reRender="pageMsgs,saveflage,nameCardTable" oncomplete="saveClick();endLoading();"/>
+  <apex:inputHidden value="{!saveok}" id="saveflage"/>
+  <apex:inputHidden value="{!registTodoAll}" id="allToDo"/>
+    <apex:pageBlock id="blockid" title="{!registerAllToAccountAndContact}">
+      <apex:pageBlockButtons >
+          <apex:commandButton disabled="{!NOT(enableSave)}" onclick="startSave('{!$Component.savebtn}','{!$Component.cancelbtn}');" rerender="aa" value="{!$Label.SB_NC_Save}" id="savebtn"/>
+          <apex:commandButton id="cancelbtn" oncomplete="cancelClick();" value="{!$Label.SB_NC_Cancel}" immediate="true" />
+      </apex:pageBlockButtons>
+
+      <!-- 検索条件 選択部 -->
+      <apex:pageBlockSection columns="2">
+        <apex:selectRadio label="{!$Label.SB_NC_SearchCondition}" value="{!searchType}" disabled="{!NOT(enableSave)}">
+          <apex:actionSupport event="onclick" action="{!setNameCardTable}" rerender="pageMsgs, nameCardTable" oncomplete="endLoading();"/>
+          <apex:selectOptions value="{!searchTypeSelectOpts}"/>
+        </apex:selectRadio>
+
+      </apex:pageBlockSection>
+      <apex:pageBlockTable id="nameCardTable" value="{!nameCardTable}" var="ncRec">
+        <apex:column rendered="{!isError}">
+          <apex:facet name="header"></apex:facet>
+          <apex:image value="/img/msg_icons/error16.png" rendered="{!ncRec.hasSaveError}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606  取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.company_name__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nc.company_name__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606  取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.division__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nc.division__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606  取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.title_name__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nc.title_name__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606  取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.Name.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nc.Name}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606  取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.address__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nc.zip_code__c} {!ncRec.nc.address_pref__c}{!ncRec.nc.address__c}{!ncRec.nc.address_bld__c}{!ncRec.nc.address_eng__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606  取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.mobile__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nc.mobile__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606  取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.email__c.Label}</apex:facet>
+          <apex:outputText value="{!ncRec.nc.email__c}"/>
+        </apex:column>
+        <apex:column id="accountsAndContactsOption">
+          <apex:facet name="header">{!accountAndContact}</apex:facet>
+          <apex:selectList id="accAndCon" value="{!ncRec.accAndCon}" size="1">
+            <apex:selectOptions value="{!ncRec.accAndConSelectOpts}"/>
+          </apex:selectList>
+        </apex:column>
+        <apex:column >
+          <apex:facet name="header"><input type="checkbox" id="allCheckTodo" onclick="changecheck(this);" />{!$Label.SB_NC_AddTodo}</apex:facet>
+          <apex:inputCheckbox Id="todoCheckbox" value="{!ncRec.registTask}" onclick="changeToDocheck(this);"/>
+        </apex:column>
+      </apex:pageBlockTable>
+      <apex:pageBlocksection columns="2">
+        <apex:pageBlockSectionItem rendered="{!showUpdateAccount}">
+          <apex:outputPanel >
+            <apex:inputCheckbox disabled="{!canNotUpdataAccount}" value="{!accountOverwrite}"/>
+            <apex:outputLabel style="{!canNotUseStyleAcc}" value="{!updateForAccount}"/>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!showUpdateContact}">
+          <apex:outputPanel >
+            <apex:inputCheckbox disabled="{!canNotUpdataContact}" value="{!contactOverwrite}"/>
+            <apex:outputLabel style="{!JSENCODE(canNotusestylecon)}" value="{!updateForContact}"/>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+      </apex:pageBlocksection>
+      <!-- SV_DEV-591 取引先・取引先責任者一括登録時の所有者について -->
+      <apex:pageBlocksection id="newBlock" columns="2" Title="{!rulesOfCreate}" rendered="{!showSelectWhenNew}">
+        <apex:pageBlockSectionItem id="ownerSelectItem">
+          <apex:outputLabel value="{!$Label.SB_NC_Owner}" id="ownerinputLabel"/>
+          <apex:inputField value="{!owner.OwnerId}" required="false" id="ownerinput"/>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$Label.SB_NC_NameCardOwner}"/>
+          <apex:inputCheckbox onchange="changeUserNameCardOwner(this.checked);" value="{!useNameCardOwner}" required="false"/>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel rendered="{!showAccountRecType}" value="{!accountRecType}"/>
+          <apex:selectList style="margin-left: 5pt;" rendered="{!showAccountRecType}" id="aRecordType" value="{!accountRecTypeId}" multiselect="false" size="1" disabled="{!accountRecTypeEdit}">
+            <apex:selectOptions value="{!AccRecTypeSelectOpts}"/>
+          </apex:selectList>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel rendered="{!showContactRecType}" value="{!contactRecType}"/>
+          <apex:selectList style="margin-left: 5pt;" rendered="{!showContactRecType}" id="cRecordType" value="{!contactRecTypeId}" multiselect="false" size="1" disabled="{!contactRecTypeEdit}">
+            <apex:selectOptions value="{!ContRecTypeSelectOpts}"/>
+          </apex:selectList>
+        </apex:pageBlockSectionItem>
+      </apex:pageBlocksection>
+    </apex:pageBlock>
+    <script >
+      //保存中...
+      var saveingValue = "{!$Label.SB_NC_Saving}";
+      //保存ボタン1
+      var saveid1 = "";
+      //キャンセルボタン1
+      var cancelid1 = "";
+      //保存ボタン2
+      var saveid2 = "";
+      //キャンセルボタン2
+      var cancelid2 = "";
+      //SV_DEV-842 Classic一括登録画面の所有者選択の初期値をデフォルトでオンにしたい。
+      changeUserNameCardOwner(true);
+
+      //ボタンを保存中に設定
+      function saveChangeValue(strid){
+        document.getElementById(strid).classList.add('btnDisabled');
+        document.getElementById(strid).disabled="true";
+        document.getElementById(strid).value=saveingValue;
+      }
+
+      //ボタンの表示を戻す
+      function saveBackValue(strid,val){
+        document.getElementById(strid).classList.remove('btnDisabled');
+        document.getElementById(strid).disabled="";
+        document.getElementById(strid).value=val;
+      }
+
+     function cancelClick(){
+        rePage();
+      }
+
+      //画面遷移操作
+      function saveClick(){
+        var saveok = document.getElementById('{!$Component.saveflage}').value;
+        if(saveok == false || saveok == 'false'){
+          saveBackValue(saveid1,"{!$Label.SB_NC_Save}");
+          saveBackValue(cancelid1,"{!$Label.SB_NC_Cancel}");
+          saveBackValue(saveid2,"{!$Label.SB_NC_Save}");
+          saveBackValue(cancelid2,"{!$Label.SB_NC_Cancel}");
+          return;
+        }
+        rePage();
+      }
+
+      function rePage(){
+        if( (typeof sforce != 'undefined') && (sforce != null) ) {
+          // S1とか
+          sforce.one.back();
+        } else {
+        // クラシック
+        window.open('{!retUrl}', "_top"); 
+        }
+      }
+
+
+      function startSave(saveid,cancelid){
+        saveid1 = isContains(saveid,'bottom');
+        saveid2 = saveid;
+        cancelid1 = cancelid;
+        cancelid2 = isContains(cancelid,'bottom');
+        saveChangeValue(saveid1);
+        saveChangeValue(cancelid1);
+        saveChangeValue(saveid2);
+        saveChangeValue(cancelid2);
+        saveNC();
+      }
+
+      function isContains(str, substr) {
+        var index = str.indexOf(substr);
+        var changeid = '';
+        if (index >0) {
+          changeid = str.substring(0,index) + str.substring(index + 7,str.length);
+        } else {
+          var index1 = str.lastIndexOf(':');
+          changeid = str.substring(0,index1) + ':bottom' + str.substring(index1,str.length);
+        }
+        return changeid;
+      }
+
+      function changecheck(e) {
+        var arrs = document.getElementsByTagName("input");
+        for(var i=0;i<arrs.length;i++){
+              if (arrs[i].id.indexOf("todoCheckbox")!=-1){
+                arrs[i].checked = e.checked;
+             }
+        }
+        document.getElementById('{!$Component.allToDo}').value = e.checked;
+      }
+
+      function changeToDocheck(e) {
+        if (e.checked == false) {
+          document.getElementById('{!$Component.allToDo}').value = e.checked;
+          document.getElementById('allCheckTodo').checked = document.getElementById('{!JSENCODE($Component.allToDo)}').value == 'true';
+        }
+      }
+
+      function changeUserNameCardOwner(flage) {
+        var dis = flage == true ? 'flage' : '';
+        // document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_mlktp').disabled = dis;
+        document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}' + '_lkwgt').hidden = flage;
+        document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinput}').disabled = dis;
+        document.getElementById('{!$Component.All.blockid.newBlock.ownerSelectItem.ownerinputLabel}').style = flage == true ? 'color:#999999;' : '';
+      }
+
+      function endLoading() {
+        document.getElementById('allCheckTodo').checked = document.getElementById('{!JSENCODE($Component.allToDo)}').value == 'true';
+      }
+
+      document.getElementById('allCheckTodo').checked = document.getElementById('{!JSENCODE($Component.allToDo)}').value == 'true';
+
+    </script>
+  </apex:form>
+</apex:page>

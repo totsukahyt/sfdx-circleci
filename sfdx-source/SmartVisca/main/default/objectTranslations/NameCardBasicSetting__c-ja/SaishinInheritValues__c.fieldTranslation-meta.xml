@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- 同じ人の名刺（同一の姓、名、メールアドレス）が複数ある場合、２次納品のとき、名刺交換日をもとに最新の名刺を判定します。最新の名刺に変更があった場合、新しい最新の名刺に、お客様が名刺オブジェクトに追加したカスタム項目の値を引継ぐことが可能です。この機能は、追加したカスタム項目がない場合、選択できません。 --></help>
+    <label><!-- 最新の名刺が値を引継ぐ機能:有効化 --></label>
+    <name>SaishinInheritValues__c</name>
+</CustomFieldTranslation>

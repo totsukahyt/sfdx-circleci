@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SSmartViscaServerOptions__c</fullName>
+    <description>必要に応じてSmartViscaサーバへ送る追加のパラメータを指定します。
+セッションCookieが使えない環境では、 proxy_flag:1</description>
+    <externalId>false</externalId>
+    <inlineHelpText>必要に応じてSmartViscaサーバへ送る追加のパラメータを指定します。</inlineHelpText>
+    <label>SSmartViscaサーバ オプション</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

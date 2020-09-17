@@ -1,0 +1,448 @@
+<!--
+
+  SB_NameCard_RenkeiMonitor
+    自動連携検証画面
+
+   @author sawano
+   @Version 1      2017.08.xx
+   @Version 2      2017.12.xx  名刺が処理対象か表示
+   @Version 2.2    sawano   2019.03.XX 2.1.1 パッチで JSENCODE で2019.02 コードスキャンをパス → セキュリティレビュー更新 2.2へ反映
+   @Version 2.5.3 2020.07.20 コードスキャン対応で、戻り先ページ指定しない。 retUrlパラメータを使わない。 PRODUCT-480 SmartVisca コードスキャン対応の v2.5.3 の修正の v2.6 へ向けての反映
+
+    Copyright (c) 2017-2020 SunBridge Inc.
+
+  LEXで ブラウザのコンソールで
+  var urlEvent = $A.get("e.force:navigateToURL");
+  urlEvent.setParams({
+    "url": '/apex/SB_NameCard_RenkeiMonitor?id=XXXXX'
+  });
+  urlEvent.fire();
+
+  Classic では アドレスバー に
+  ----/apex/SB_NameCard_RenkeiMonitor?id=XXXXX
+
+  パッケージ環境では、 SmartViscaT05__ をつける。
+
+-->
+<apex:page id="thePage" showHeader="true" sidebar="true" tabStyle="NameCard__c"
+    standardController="NameCard__c" recordSetVar="nameCardList" extensions="SB_NameCard_RenkeiMonitorController" action="{!init}">
+<head>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/jquery.min.js')}"/>
+  <style type="text/css">
+    .dialog {
+      overflow: hidden;
+      position: absolute;
+      top: 30%;
+      height: auto;
+      width: 600px;
+      display: none;
+      border:1px solid #aaa;
+      z-index:1000;
+    }
+    .dialog-header {
+      border: 1px solid #aaa;
+      background: #cccccc;
+      color: #222222;
+      font-weight: bold;
+      overflow: hidden;
+      padding:5px;
+    }
+    .dialog-title {
+      float: left;
+    }
+    .dialog-close {
+      float: right;
+      border: 1px solid #d3d3d3;
+      background: #e6e6e6;
+      font-weight: normal;
+      color: #555555;
+    }
+    .dialog-content {
+      position: relative;
+      border: 0;
+      padding: .5em 1em;
+      background: #fff;
+      overflow: auto;
+      width: auto;
+      height: auto;
+    }
+  </style>
+  <script type="text/javascript">
+
+    // アカウント作成画面を開く
+    function openCreateAccount() {
+      if( (typeof sforce != 'undefined') && (sforce != null) ) {
+        // S1とか
+        var textValues = '{!JSENCODE(createAccountJsonParam)}';  // v2.1.1 JSENCODE に
+        var objValues = JSON.parse(textValues);
+        var defaultFieldValues = { defaultFieldValues: objValues };
+        var rectypeId = "{!accountRectypeId}";
+        rectypeId = rectypeId ? rectypeId : null;
+        sforce.one.createRecord("Account", rectypeId, objValues);
+      }
+      else {
+        // クラシック
+        window.open("{!URLFOR($Action.Account.New)}&{!JSENCODE(createAccountUrlParam)}", "_blank");
+      }
+    }
+
+    // コンタクト作成画面を開く
+    function openCreateContact() {
+      if( (typeof sforce != 'undefined') && (sforce != null) ) {
+        // S1とか
+        var textValues = '{!JSENCODE(createContactJsonParam)}';  // v2.1.1 JSENCODE に
+        var objValues = JSON.parse(textValues);
+        var defaultFieldValues = { defaultFieldValues: objValues };
+        var rectypeId = "{!contactRectypeId}";
+        rectypeId = rectypeId ? rectypeId : null;
+        sforce.one.createRecord("Contact", rectypeId, objValues);
+      }
+      else {
+        // クラシック
+        window.open("{!URLFOR($Action.Contact.NewContact)}&{!JSENCODE(createContactUrlParam)}", "_blank");
+      }
+    }
+
+    // レコード詳細画面を開く
+    function openRecord(e, id) {
+      if( (typeof sforce != 'undefined') && (sforce != null) ) {
+        // S1とか
+        sforce.one.navigateToSObject(id);
+      }
+      else {
+        // クラシック
+        window.open("/" + id, "_blank");
+        e.preventDefault();
+      }
+    }
+
+    // // 登録を試す
+    // function startRun(){
+    //     startSpinner();
+    //     runAll();
+    // }
+
+    // //スピーナ表示
+    // function startSpinner(){
+    //   document.getElementById('contentLoading').style.display = 'block';
+    // }
+
+    // //スピーナ非表示
+    // function endSPinner(){
+    //   document.getElementById('contentLoading').style.display = 'none'
+    // }
+    function stopReload(e) {
+      e.preventDefault();
+    }
+
+    function showValues(e, values) {
+      e.preventDefault();
+
+      var items = [];
+      $.each(JSON.parse(values), function(key, val) {
+        items.push(key + ': ' + val);
+      });
+      var text = items.join('<BR>');
+
+
+      var leftPosition = (($(window).width() - $("#values-dialog").outerWidth(true)) / 2);
+      //CSSを変更
+      $("#values-dialog").css({"left": leftPosition + "px"});
+      $("#dialog-content").html(text);
+      //ダイアログを表示する
+      $("#values-dialog").show();
+
+
+      return false;
+    }
+
+    //
+    $(function(){
+      //閉じるボタンで非表示
+      $(".dialog-close").on("click", function(){
+        $(this).parents(".dialog").hide();
+      });
+    });
+
+  </script>
+</head>
+
+<div class="dialog" id="values-dialog">
+  <div class="dialog-header">
+    <!-- 項目の値 -->
+    <span class="dialog-title">{!$Label.SB_NC_RenkeiMon_FieldValue}</span>
+    <button type="button" class="dialog-close">
+      <!-- 閉じる -->
+      {!$Label.SB_NC_Label_Close}☓
+    </button>
+  </div>
+  <div class="dialog-content" id="dialog-content">
+    <p></p>
+  </div>
+</div>
+
+
+
+<!-- メッセージを表示するエリア -->
+<apex:outputPanel id="messagePanel">
+  <apex:pageMessages id="pageMsgs"/>
+</apex:outputPanel>
+
+<!--   <div id="contentLoading" style="width: 100%;display :none;
+           height: 100%;
+           top: 0px;
+           left: 0px;
+           position: fixed;
+           opacity: 0.7;
+           background-color: #fff;
+           z-index: 99;
+           text-align: center;">
+      <div style="position: fixed;
+              top: 50%;
+              left: 50%;
+              text-align: center;
+              z-index: 100;">
+              <img src="/img/loading.gif" alt="Saveing" />
+              <span class="waitingDescription"></span>
+      </div>
+  </div>
+ -->
+<apex:form id="theForm">
+
+  <apex:actionRegion >
+      <apex:actionFunction action="{!runAll}" name="runAll" immediate="true" reRender="opTable, btnRunAll, btnRunAll2, pageMsgs" oncomplete=""/>
+      <apex:actionFunction action="{!startProcess}" name="startProcess" immediate="true" reRender="opTable, btnRunAll, btnRunAll2" oncomplete="runAll();"/>
+  </apex:actionRegion>
+  <apex:pageBlock id="pBlock" title="">
+    <apex:pageBlockButtons id="btns" location="top">
+      <!-- <apex:commandButton action="{!run}" value="対象の抽出まで"/> -->
+      <!-- <apex:commandButton id="btnRunAll" action="{!runAll}" value="登録を試す" /> disabled="{!buttonStatus}" -->
+
+      <!-- <apex:commandButton id="btnRunAll" onclick="startRun();" value="登録を試す"/> -->
+      <!-- <apex:commandButton id="btnRunAll" onclick="this.disabled='disabled'; runAll();" value="登録を試す2"/> -->
+      <!-- <apex:commandButton id="btnRunAll" onclick="startProcess();" value="{!buttonLabel}" immediate="true" disabled="{!buttonStatus}" /> -->
+      <apex:commandButton id="btnRunAll" disabled="{!disableRun}" onclick="this.disabled='disabled'; startProcess(); return false;" value="{!buttonLabel}" immediate="true" />
+      <!-- 取引先新規作成画面を起動 ボタン -->
+      <apex:commandButton id="btnCreateAccount"  onclick="openCreateAccount();" value="{!$Label.SB_NC_RenkeiMon_OpenAccoutCreate}" rendered="{!AND(IsSelectOne, OR(NOT(ISNULL(createAccountUrlParam)), NOT(ISNULL(createAccountJsonParam))))}"/>
+      <!-- 取引先責任者新規作成画面を起動 ボタン -->
+      <apex:commandButton id="btnCreateContact" onclick="openCreateContact();" value="{!$Label.SB_NC_RenkeiMon_OpenContactCreate}" rendered="{!AND(IsSelectOne, OR(NOT(ISNULL(createContactUrlParam)), NOT(ISNULL(createContactJsonParam))))}"/>
+      <!-- キャンセル -->
+      <apex:commandButton id="btnCancel" value="{!$Label.SB_NC_Cancel}" oncomplete="cancelClick();"/>
+    </apex:pageBlockButtons>
+
+    <!-- topと bottom にわけないと rerender が効かない -->
+    <apex:pageBlockButtons id="btns2" location="bottom">
+      <apex:commandButton id="btnRunAll2" disabled="{!disableRun}" onclick="this.disabled='disabled'; startProcess(); return false;" value="{!buttonLabel}" immediate="true" />
+      <!-- 取引先新規作成画面を起動 ボタン -->
+      <apex:commandButton onclick="openCreateAccount();" value="{!$Label.SB_NC_RenkeiMon_OpenAccoutCreate}" rendered="{!AND(IsSelectOne, OR(NOT(ISNULL(createAccountUrlParam)), NOT(ISNULL(createAccountJsonParam))))}"/>
+      <!-- 取引先責任者新規作成画面を起動 ボタン -->
+      <apex:commandButton onclick="openCreateContact();" value="{!$Label.SB_NC_RenkeiMon_OpenContactCreate}" rendered="{!AND(IsSelectOne, OR(NOT(ISNULL(createContactUrlParam)), NOT(ISNULL(createContactJsonParam))))}"/>
+      <!-- キャンセル -->
+      <apex:commandButton value="{!$Label.SB_NC_Cancel}" oncomplete="cancelClick();"/>
+    </apex:pageBlockButtons>
+
+    <!--  名刺情報 -->
+    <apex:pageBlockSection title="{!$Label.SB_NC_RenkeiMon_BusinessCardInformation}" columns="2" rendered="{!IsSelectOne}">
+      <apex:pageBlockSectionItem >
+        <apex:outputLabel value="{!$ObjectType.NameCard__c.fields.company_name__c.Label}"/>
+        <apex:outputText value="{!nameCard.company_name__c}"/>
+      </apex:pageBlockSectionItem>
+
+      <apex:pageBlockSectionItem >
+        <apex:outputLabel value="{!$ObjectType.NameCard__c.fields.address_pref__c.Label}"/>
+        <apex:outputText value="{!nameCard.address_pref__c}"/>
+      </apex:pageBlockSectionItem>
+
+      <apex:pageBlockSectionItem >
+        <apex:outputLabel value="{!$ObjectType.NameCard__c.fields.division__c.Label}"/>
+        <apex:outputText value="{!nameCard.division__c}"/>
+      </apex:pageBlockSectionItem>
+
+      <apex:pageBlockSectionItem >
+        <apex:outputLabel value="{!$ObjectType.NameCard__c.fields.title_name__c.Label}"/>
+        <apex:outputText value="{!nameCard.title_name__c}"/>
+      </apex:pageBlockSectionItem>
+
+      <apex:pageBlockSectionItem >
+        <apex:outputLabel value="{!$ObjectType.NameCard__c.fields.Name.Label}"/>
+        <apex:panelGroup >
+          <apex:outputText value="{!nameCard.Name}"/>
+        </apex:panelGroup>
+      </apex:pageBlockSectionItem>
+
+      <apex:pageBlockSectionItem />
+
+      <apex:pageBlockSectionItem >
+        <apex:outputLabel value="{!$ObjectType.NameCard__c.fields.mobile__c.Label}"/>
+        <apex:outputField value="{!nameCard.mobile__c}"/>
+      </apex:pageBlockSectionItem>
+
+      <apex:pageBlockSectionItem >
+        <apex:outputLabel value="{!$ObjectType.NameCard__c.fields.email__c.Label}"/>
+        <apex:outputField value="{!nameCard.email__c}"/>
+      </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+
+    <!-- 登録先候補 -->
+    <apex:pageBlockSection title="{!$Label.SB_NC_RenkeiMon_CandidateToBeRegistered}" columns="1">
+      <apex:pageBlockSectionItem >
+        <!-- 選択した名刺に対応する取引先ならびに取引先責任者 -->
+        <apex:outputLabel value="{!$Label.SB_NC_RenkeiMon_AcntContMatchToCard}"/>
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem rendered="{!NOT(ISNULL(over1000Caption))}">
+        <!-- 1000件超えたとき -->
+        <apex:outputLabel value="{!over1000Caption}"/>
+      </apex:pageBlockSectionItem>
+      <apex:pageBlockSectionItem >
+        <apex:pageBlockTable id="candidatesTable" value="{!candidates}" var="val">
+
+          <apex:column width="80px">
+            <!-- 名刺レコードID -->
+            <apex:facet name="header">{!$ObjectType.NameCard__c.Label}&nbsp;{!$Label.SB_NC_RenkeiMon_RecordId}</apex:facet>
+            <apex:outputText value="{!val.card.Id}"/>
+          </apex:column>
+
+          <apex:column width="100px">
+            <!-- 名刺 氏名 -->
+            <apex:facet name="header">{!$ObjectType.NameCard__c.Label}&nbsp;{!$ObjectType.NameCard__c.Fields.Name.Label}</apex:facet>
+            <apex:outputLink onclick="openRecord(event, '{!val.card.Id}')"><apex:outputText value="{!val.card.Name}"/></apex:outputLink>
+          </apex:column>
+
+          <apex:column width="80px">
+            <!-- 取引先レコードID -->
+            <apex:facet name="header">{!$ObjectType.Account.Label}&nbsp;{!$Label.SB_NC_RenkeiMon_RecordId}</apex:facet>
+            <apex:outputText value="{!val.acnt.Id}"/>
+          </apex:column>
+
+          <apex:column width="100px">
+            <!-- 取引先 -->
+            <apex:facet name="header">{!$ObjectType.Account.Label}</apex:facet>
+            <apex:outputLink onclick="openRecord(event, '{!val.acnt.Id}')"><apex:outputText value="{!val.acnt.Name}"/></apex:outputLink>
+          </apex:column>
+
+          <apex:column width="80px">
+            <!-- 取引先責任者レコードID -->
+            <apex:facet name="header">{!$ObjectType.Contact.Label}&nbsp;{!$Label.SB_NC_RenkeiMon_RecordId}</apex:facet>
+            <apex:outputText value="{!val.cont.Id}"/>
+          </apex:column>
+
+          <apex:column width="180px">
+            <!-- 取引先責任者 -->
+            <apex:facet name="header">{!$ObjectType.Contact.Label}</apex:facet>
+            <apex:outputLink onclick="openRecord(event, '{!val.cont.Id}')"><apex:outputText value="{!val.cont.Name}"/></apex:outputLink>
+          </apex:column>
+
+        </apex:pageBlockTable>
+      </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+
+    <!-- 処理結果 -->
+      <apex:outputPanel id="opTable" >
+<!--       <apex:outputText value="{!NOW()}"/>
+  <apex:dataTable value="{!results}" var="val">
+              <apex:column width="80px">
+                <apex:facet name="header">名刺レコードID</apex:facet>
+                <apex:outputText value="{!val.card.Id}"/>
+            </apex:column>
+
+            <apex:column width="100px">
+                <apex:facet name="header">名刺 氏名</apex:facet>
+                <apex:outputLink onclick="openRecord('{!val.card.Id}')"><apex:outputText value="{!val.card.Name}"/></apex:outputLink>
+            </apex:column>
+
+            <apex:column >
+                <apex:facet name="header">取引先処理</apex:facet>
+                <apex:outputText value="{!val.acntProcess}"/>
+            </apex:column>
+
+            <apex:column >
+                <apex:facet name="header">取引先責任者処理</apex:facet>
+                <apex:outputText value="{!val.contProcess}"/>
+            </apex:column>
+
+            <apex:column >
+                <apex:facet name="header">結果</apex:facet>
+                <apex:outputText value="{!IF(val.success, '○', '-')}"/>
+            </apex:column>
+
+            <apex:column>
+                <apex:facet name="header">結果メッセージ</apex:facet>
+                <apex:outputText value="{!val.message}"/>
+            </apex:column>
+
+  </apex:dataTable>
+ -->
+    <!-- 処理結果（ロールバックしています。） -->
+    <apex:pageBlockSection id="sectResult" title="{!$Label.SB_NC_RenkeiMon_RegisteringResultNotExe}" columns="1" rendered="{!HaveResults}">
+      <apex:pageBlockSectionItem >
+        <!-- 実施時刻:  -->
+        <apex:outputLabel value="{!$Label.SB_NC_RenkeiMon_TerminateTime}" for="terminateTime"/> <apex:outputText id="terminateTime" value="{!terminateTime}"/>
+      </apex:pageBlockSectionItem>
+    <!-- <apex:pageBlockSection id="sectResult" title="処理結果（ロールバックしています。）" columns="1"> -->
+      <apex:pageBlockSectionItem >
+        <apex:pageBlockTable id="tabResults" value="{!results}" var="val">
+
+          <apex:column width="80px">
+            <!-- 名刺レコードID -->
+            <apex:facet name="header">{!$ObjectType.NameCard__c.Label}&nbsp;{!$Label.SB_NC_RenkeiMon_RecordId}</apex:facet>
+            <apex:outputText value="{!val.card.Id}"/>
+          </apex:column>
+
+          <apex:column >
+            <!-- 処理対象 -->
+            <apex:facet name="header">{!$Label.SB_NC_RenkeiMon_ProcessTarget}</apex:facet>
+            <apex:outputText value="{!IF(val.ignore, 'N', 'Y')}"/>
+          </apex:column>
+
+          <apex:column width="100px">
+            <!-- 名刺 氏名 -->
+            <apex:facet name="header">{!$ObjectType.NameCard__c.Label}&nbsp;{!$ObjectType.NameCard__c.Fields.Name.Label}</apex:facet>
+            <apex:outputLink onclick="openRecord(event, '{!val.card.Id}')"><apex:outputText value="{!val.card.Name}"/></apex:outputLink>
+          </apex:column>
+
+          <apex:column width="100px">
+            <!-- 取引先処理 -->
+            <apex:facet name="header">{!$ObjectType.Account.Label}&nbsp;{!$Label.SB_NC_RenkeiMon_Registering}</apex:facet>
+            <apex:outputLink onclick="showValues(event, '{!val.accountValues}'); return false;"><apex:outputText value="{!val.acntProcess}"/></apex:outputLink>
+          </apex:column>
+
+          <apex:column width="100px">
+            <!-- 取引先責任者処理 -->
+            <apex:facet name="header">{!$ObjectType.Contact.Label}&nbsp;{!$Label.SB_NC_RenkeiMon_Registering}</apex:facet>
+            <apex:outputLink onclick="showValues(event, '{!val.contactValues}'); return false;"><apex:outputText value="{!val.contProcess}"/></apex:outputLink>
+          </apex:column>
+
+          <apex:column >
+            <!-- 結果 -->
+            <apex:facet name="header">{!$Label.SB_NC_RenkeiMon_Result}</apex:facet>
+            <apex:outputText value="{!IF(val.success, '○', '-')}"/>
+          </apex:column>
+
+          <apex:column >
+            <!-- 結果メッセージ -->
+            <apex:facet name="header">{!$Label.SB_NC_RenkeiMon_ResultMessage}</apex:facet>
+            <apex:outputText value="{!val.message}"/>
+          </apex:column>
+
+        </apex:pageBlockTable>
+      </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+    </apex:outputPanel>
+  </apex:pageBlock>
+</apex:form>
+
+
+<script>
+  // v.2.5.3  2020.07.20 コードスキャン対応で、戻り先ページ指定しない。 リストビューの識別しない。retUrlパラメータを使わない。PRODUCT-480 SmartVisca コードスキャン対応の v2.5.3 の修正の v2.6 へ向けての反映
+  function cancelClick(){
+    if( (typeof sforce != 'undefined') && (sforce != null) ) {
+      // LEX,S1
+      sforce.one.back();
+    } else {
+      // クラシック
+      history.back();
+    }
+  }
+</script>
+
+</apex:page>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>When business card data is delivered secondarily, you can create and update Account and contact  automatically. In the &quot;SmartVisca conversion setting&quot; tab, set the conditions to be linked.</help>
+    <label>Auto.: Enable Auto. feature</label>
+    <name>RenkeiActive__c</name>
+</CustomFieldTranslation>

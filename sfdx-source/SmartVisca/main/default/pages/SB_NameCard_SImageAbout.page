@@ -1,0 +1,35 @@
+<!-- SB_NameCard_SImageAbout
+/**
+ *
+ * SmartVisca カメラ about
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 2    2015.8.xx   // Boootstrap版
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+    <title>{!$Label.SB_NCS1C_Text_Sunbridge}</title>
+<style type="text/css">
+
+/*a.list-group-item, button.list-group-item {
+    min-height: 100px;
+}
+*/
+</style>
+</head>
+<div class="list-group">
+  <a href="http://www.sunbridge.com/" class="list-group-item">
+      <!-- <img style="max-hight:40px"  ng-show="!config.enableSfdc" ng-src="img/sb_logo.gif"/> -->
+      <img style="max-hight:40px"  ng-show="config.enableSfdc" ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/sb_logo.gif')}"/>
+  </a>
+  <a href="http://smartvisca.sunbridge.com/" class="list-group-item">
+      <!-- <img style="max-hight:40px"  ng-show="!config.enableSfdc" ng-src="img/sv_logo.gif"/> -->
+      <img style="max-hight:40px"  ng-show="config.enableSfdc" ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/sv_logo.gif')}"/>
+  </a>
+</div>
+
+</apex:page>

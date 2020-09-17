@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RenkeiAccountNOExistCreateNew__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>自動連携での取引先のクエリの結果既存の取引先がなければ新規作成する</description>
+    <externalId>false</externalId>
+    <label>自動連携:既存の取引先がなければ新規作成する</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Specify comma separated &lt;Contact field API Name&gt;:&lt;number&gt; to show in regsistering cont. Name and Id are display anyway. &lt;number&gt; should be 1 for display the field in list only 2 for display the field in list and popup 3 for display the field in popup only</help>
+    <label>SDisplayed Item of Contact Registration1</label>
+    <name>SRegistQueryContactFields1__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,89 @@
+<!-- SB_NameCard_STagdList
+/**
+ *
+ * Salesforce1対応 タグ付き名刺ビュー
+ *
+ * Copyright (C) 2014 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.5.xx
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+  <title>{!$Label.SB_NCS1_Label_TaggedNamecards}</title>
+  <style type="text/css"></style>
+  <script type="text/javascript"></script>
+</head>
+
+<div class="container" style="padding-top: 10pt;">
+  <div ng-show="working">
+    <div class="sv-loading">
+      <img ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+    </div>
+  </div>
+
+  <div ng-show="!working">
+    <p class="text-success" ng-show="tags.length > 0"  ng-cloak="true">{!$Label.SB_NCS1_Text_ClickTagToConfirmNC}</p>
+    <p class="bg-warning" ng-show="tags.length == 0"  ng-cloak="true">{!$Label.SB_NCS1_Text_TaggedNCNotFound}</p>
+
+    <!-- タグの追加は ページ下部がいいけれど、実S1では、Collapse が機能せず、href='#'みたいにうごくので、ページ上部に配置 -->
+    <p style="padding-left: 10px;" ng-show="!isWorking()" align="right">
+      <button class="btn btn-default" role="button" ng-click="isCollapsed = !isCollapsed">
+        <i class="glyphicon glyphicon-tags"></i>&nbsp;{!$Label.SB_NCS1_Text_AddTags}
+      </button>
+    </p>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+    <div uib-collapse="isCollapsed">
+      <div class="well well-lg">
+        <div class="col-lg-6">
+          <div class="input-group">
+            <input type="text" name="newTag" class="form-control" ng-model="newTag" required="true" placeholder="{!$Label.SB_NCS1_Label_NewTag}..."/>
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="newTag=''"><i class="glyphicon glyphicon-remove"/></button>
+            </span>
+          </div><!-- /input-group -->
+          <button type="submit" class="btn btn-default" ng-click="addNewTag()">{!$Label.SB_NCS1_Label_Add}</button>
+        </div><!-- /.col-lg-6 -->
+      </div>
+    </div>
+
+    <uib-accordion close-others="oneAtATime">
+      <uib-accordion-group  ng-repeat="tag in tags" id="tag{{$index}}" ng-init="tagIndex = $index">
+        <uib-accordion-heading><i class="glyphicon" ng-class="{'glyphicon-tags': tag.tagIsTag, 'glyphicon-tag': !stag.tagIsTag}"/>
+          &nbsp;{{tag.tagLabel}}<span class="pull-right badge">{{tag.cards.length}}</span>
+        </uib-accordion-heading>
+        <table class="table">
+          <thead>
+          </thead>
+          <tbody>
+            <tr id="{{card.Id}}" ng-click="doDetail(tagIndex, card.Id, !showDelete)"  ng-repeat="card in tag.cards"
+              ng-swipe-left="showDelete = true && tag.tagIsTag" ng-swipe-right="showDelete = false">
+            <td>
+              <div class="thumbs">
+                <span class="thumbnail" style="background-image: url('/servlet/servlet.FileDownload?file={{card.image_id__c}}')"/>
+              </div><!-- .thumbs -->
+            </td>
+            <td>
+              <a ng-click="doDetail(tagIndex, card.Id, !showDelete)"><b class="fullname">{{card.Name}}</b></a> <br />
+              <div><small class="metadata">{{card.company_name__c}}</small> </div>
+              <div><small class="metadata">{{card.title_name__c}}</small></div>
+            </td>
+            <td>
+              <a ng-show="showDelete" ng-animate=" 'delete' " class="btn btn-danger pull-right" ng-click="removeTag(card.Id, tag)">{!$Label.SB_NCS1_Label_Remove}</a>
+              <i ng-show="!showDelete" class="glyphicon glyphicon-chevron-right"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ul class="pager">
+        <li role="presentation" class="divider"></li>
+        <li><a ng-show="tag.tagIsTag" ng-click="openCardsToLabel($index, tag)">{!$Label.SB_NCS1_Text_AddNCToTag}&nbsp;<i class="glyphicon glyphicon-plus"></i></a></li>
+        <li><a ng-show="!tag.tagIsTag" ng-click="openCardsToLabel($index, tag)">{!$Label.SB_NCS1_Text_AddNCToNCList}&nbsp;<i class="glyphicon glyphicon-plus"></i></a></li>
+      </ul>
+    </uib-accordion-group>
+  </uib-accordion>
+
+</div>
+</div>
+</apex:page>

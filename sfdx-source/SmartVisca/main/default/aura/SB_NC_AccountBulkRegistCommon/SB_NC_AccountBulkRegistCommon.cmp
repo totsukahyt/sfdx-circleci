@@ -1,0 +1,304 @@
+<!-- /**
+ *
+ *  SB_NC_AccountBulkRegistCommon
+ *  取引先・取引先責任者一括登録 データ入力用コンポーネント
+ *
+ *  Copyright (C) 2019 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author K.Yoshida
+ *  @Version 2.2       2019.02.XX SV_DEV-1558 LEX 取引先登録 一括画面をLXパッケージ同様のLC化で追加
+ *  @Version 2.4       2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *
+ **/ -->
+ <aura:component implements="force:appHostable,force:hasRecordId" access="global" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="selectMap" type="Map" /> <!-- 名刺一覧のデータを保存されてます -->
+  <aura:attribute name="fromLabel" type="String" /> <!-- パンくず用 名刺オブジェクトのラベル -->
+  <aura:attribute name="fromId" type="String" /> <!-- パンくず用 名刺オブジェクトID -->
+  <aura:attribute name="viewLabel" type="String" /> <!-- パンくず用 リストビューのラベル -->
+  <aura:attribute name="viewId" type="String" /> <!-- パンくず用 リストビューのID -->
+  <aura:attribute name="titleV" type="Sobject" /> <!-- 画面表示用ラベルに関する内容 -->
+  <aura:attribute name="dataCount" type="Integer" /> <!-- 表示名刺数 -->
+  
+  <aura:attribute name="fieldList" type="Sobject" /> <!-- DataTableに表示する項目リスト -->
+  <aura:attribute name="dataList" type="Sobject" /> <!-- DataTableに表示する内容 -->
+  <aura:attribute name="inputV" type="Sobject" /> <!-- 画面で入力された内容を保持 -->
+
+  <aura:attribute name="showModal" type="Boolean" default="false" /> <!-- レコードタイプ絞り込みウインドウ表示フラグ -->
+  <aura:attribute name="backupV" type="Sobject" /> <!-- レコードタイプ絞り込みウインドウ 閉じるで設定戻す用 -->
+  <aura:attribute name="openNewSection" type="Boolean" default="true" /> <!-- 新規作成時の指定セクションを表示フラグ -->
+  <aura:attribute name="openOverWriteSection" type="Boolean" default="true" /> <!-- 上書きセクション表示フラグ -->
+
+  <aura:attribute name="showErrorMsg" type="Boolean" /> <!-- エラーメッセージ表示フラグ -->
+  <aura:attribute name="dataHasError" type="Boolean" default="false" /> <!-- 保存に関するエラー -->
+  <aura:attribute name="searchError" type="Boolean" default="false" /> <!-- 検索によるエラー -->
+  <aura:attribute name="errorMsg" type="String" /> <!-- エラーメッセージ -->
+
+  <!-- DataTable thead width reset  -->
+  <aura:method name="reSetThead" action="{!c.reSetThead}" access="PUBLIC" /> <!-- 名刺一覧ヘッダー設定 -->
+
+  <aura:registerEvent name="changeSearchCondition" type="c:SB_NC_AccountBulkRegistChangeSearchConditionEvent" />
+  <aura:registerEvent name="accountBulkRegistEvent" type="c:SB_NC_AccountBulkRegistCommonEvent" />
+
+  <!-- 画面タイトル -->
+  <lightning:tile label="{!v.titleV.linkName}" href="{!v.titleV.linkTo}" class="slds-page-header titleTop">
+    <aura:set attribute="media">
+      <lightning:icon iconName="{!v.titleV.iconName}" size="{!v.titleV.iconSize}" />
+      <p>{!v.dataCount}&nbsp;{!$Label.c.SB_NC_Label_Count}</p>
+    </aura:set>
+    <aura:set attribute="body">
+      <lightning:breadcrumbs>
+        <lightning:breadcrumb label="{!v.fromLabel}" href="{!v.fromId}" />
+        <lightning:breadcrumb label="{!v.viewLabel}" href="{!v.viewId}" />
+      </lightning:breadcrumbs>
+      <div class="slds-grid">
+        <div class="slds-grid slds-no-space">
+          <h1 class="slds-text-heading_medium slds-truncate" title="Update by Business Card">{!v.titleV.titleName}</h1>
+        </div>
+      </div>
+    </aura:set>
+  </lightning:tile>
+
+  <!-- 一括画面の検索条件 -->
+  <div style="position: fixed;z-index: 9000; float:right; right: 30px; top: 30px;">
+    <lightning:buttonMenu menuAlignment="right" iconName="utility:search" class="right40" alternativeText="Settings"
+      onselect="{!c.selectedSearchMenu}">
+      <aura:iteration var="val" items="{!v.inputV.searchConditions}">
+        <lightning:menuItem 
+          disabled="{!val.disabled == true}" label="{!val.label}" value="{!val.value}" iconName="{!val.iconName}"
+          checked="{!val.value == v.inputV.searchConditionValue || val.value == v.inputV.searchConditionValueContact}" />
+      </aura:iteration>
+    </lightning:buttonMenu>
+    <lightning:button class="slds-button slds-button_icon-more" variant="Neutral" label=""
+      iconName="utility:filterList" iconPosition="left" onclick="{!c.showModal }" />
+  </div>
+
+  <!-- BODY -->
+  <div style="margin-top: 101px;height: calc(100% - 101px);">
+    <div style="padding: 0px 0px 0px 0px;">
+      <div style="display:inline-block;min-width: 100%; padding: 0.75rem 0.75rem 0.75rem 0.75rem;">
+        <!-- Datatableを表示する -->
+        <div class="slds-box slds-theme_shade">
+          <c:SB_NC_AccountBulkRegistDataTable labelMap="{!v.inputV.labelMap}" haveError="{!v.dataHasError}"
+            aura:id="dataTable" fieldList="{!v.fieldList}" selectMap="{!v.selectMap}" objs="{!v.dataList}" />
+        </div>
+        <div style="position: relative;width: 100%;z-index: 8000; padding: 0.75rem 0px 0px 0px;">
+          <!-- 上書きの指定セクション -->
+          <aura:renderIf isTrue="{!v.inputV.showOverWrite}">
+            <div class="slds-box slds-theme_shade" style="height: 100%; padding: 10px 0px 10px 0px;">
+              <div class="">
+                <h3 class="slds-section__title test-id__section-header-container">
+                  <button aria-controls="accordion-details-01" aria-expanded="true"
+                    onclick="{!c.changeOverWriteSection}"
+                    class="slds-button test-id__section-header-button slds-section__title-action">
+                    <lightning:icon iconName="{!'utility:' + if(v.openOverWriteSection, 'switch', 'chevronright')}"
+                      size="x-small" />
+                    <span class="slds-test-id__section-header-title slds-truncate"
+                      title="Accordion summary">{!v.inputV.overWriteLabel}</span>
+                  </button>
+                </h3>
+              </div>
+              <!-- 既存上書きのチェックボックスを表示 -->
+              <aura:renderIf isTrue="{!v.openOverWriteSection}">
+                <div class="slds-media">
+                  <div class="slds-grid slds-wrap slds-grid_pull-padded"
+                    style="width:100%; margin-right: 20px; margin-left: 20px;">
+                    <aura:iteration var="va" items="{!v.inputV.inputRegistOverWritValues}">
+                      <aura:renderIf isTrue="{!va.show}">
+                        <div
+                          class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_-of-2"
+                          style="">
+                          <c:SB_NC_AccountBulkRegistCheckbox dis="{!va.overWriteCheck.disabled}"
+                            checked="{!va.overWriteCheck.checked}" boxid="{!va.overId + 'checkbox'}"
+                            boxlabel="{!va.overWriteCheck.label}" />
+                        </div>
+                      </aura:renderIf>
+                    </aura:iteration>
+                  </div>
+                </div>
+              </aura:renderIf>
+            </div>
+          </aura:renderIf>
+
+          <!-- 新規作成時の指定セクション -->
+          <div class="slds-box slds-theme_shade"
+            style="height: 100%;padding: 10px 0px 10px 0px;margin-top: 0.75rem;">
+            <ul class="slds-accordion">
+              <li class="slds-accordion__list-item">
+                <section class="{!' ' + if(v.openNewSection, 'slds-is-open', '')}">
+                  <div class="">
+                    <h3 class="slds-section__title test-id__section-header-container">
+                      <button aria-controls="accordion-details-01" aria-expanded="true"
+                        onclick="{!c.changeNewSection}"
+                        class="slds-button test-id__section-header-button slds-section__title-action">
+                        <lightning:icon iconName="{!'utility:' + if(v.openNewSection, 'switch', 'chevronright')}"
+                          size="x-small" />
+                        <span class="slds-test-id__section-header-title slds-truncate"
+                          title="Accordion summary">{!v.inputV.newSectionLabel}</span>
+                      </button>
+                    </h3>
+                  </div>
+                  <div aria-hidden="false" class="slds-accordion__content" id="accordion-details-01">
+                    <div class="slds-media">
+                      <!-- 所有者選択(必ず表示) -->
+                      <div class="slds-grid slds-wrap slds-grid_pull-padded"
+                        style="width:100%; margin-right: 20px; margin-left: 20px;margin-top:10px;">
+                        <!-- 所有者を入力するLookup(Contact) -->
+                        <div
+                          class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                          <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                              <c:SB_Strike_Lookup label="{!v.inputV.accountOwnerLabel}" object="User"
+                                searchField="Name" placeholder="" iconName="standard:user" subtitleField=""
+                                order="Name" loadingMessage="Loading..." errorMessage="Invalid input"
+                                value="{!v.inputV.accountOwnerId}" disabled="{!v.inputV.useNameCardAccountOwner}"
+                                haveQueue="false" userLabel="{!v.inputV.userLabel}" queueLabel="{!v.inputV.queueLabel}"
+                                filter="IsActive = True" />
+                            </div>
+                          </div>
+                        </div>
+                        <!-- 名刺所有者を取引先所有者にする -->
+                        <div
+                          class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2"
+                          style="display:block">
+                          <div class="slds-form-element">
+                            <div class="slds-form-element__control"
+                              style="margin-top:30px;">
+                              <span class="slds-checkbox">
+                                <input type="checkbox" name="options" id="checkboxUserNameCardContact"
+                                  onclick="{!c.changeUseNameCardOwnerContact}"
+                                  checked="{!v.inputV.useNameCardAccountOwner == true}"
+                                  value="{!v.inputV.useNameCardAccountOwner}" />
+                                <label class="slds-checkbox__label" for="checkboxUserNameCardContact">
+                                  <span class="slds-checkbox_faux"></span>
+                                  <span
+                                    class="slds-form-element__label">{!v.inputV.useNameCardAccountOwnerLabel}</span>
+                                </label>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- レコードタイプ選択 -->
+                    <div>
+                      <div class="slds-media" style="{!if(v.inputV.showRecordType,'margin-top:10px;','')}">
+                        <div class="slds-grid slds-wrap slds-grid_pull-padded"
+                          style="width:100%; margin-right: 20px; margin-left: 20px;">
+                          <aura:renderIf isTrue="{!v.inputV.showRecordTypeAcc}">
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                              <lightning:select name="selectItem" label="{!v.inputV.accPickListValue.pickListTitle}" value="{!v.inputV.accPickListValue.selectValue}">
+                                <aura:iteration var="val" items="{!v.inputV.accRecordTypesInfos.infos}">
+                                    <aura:renderIf isTrue="{!and(val.isAvailable)}">
+                                      <option value="{!val.id}">{!val.label}</option>
+                                    </aura:renderIf>
+                                </aura:iteration>
+                              </lightning:select>
+                            </div>
+                          </aura:renderIf>
+                          <aura:renderIf isTrue="{!v.inputV.showRecordTypeCon}">
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                              <lightning:select name="selectItem" label="{!v.inputV.conPickListValue.pickListTitle}" value="{!v.inputV.conPickListValue.selectValue}">
+                                <aura:iteration var="val" items="{!v.inputV.conRecordTypesInfos.infos}">
+                                    <aura:renderIf isTrue="{!and(val.isAvailable)}">
+                                      <option value="{!val.id}">{!val.label}</option>
+                                    </aura:renderIf>
+                                </aura:iteration>
+                              </lightning:select>
+                            </div>
+                          </aura:renderIf>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- フッター -->
+  <div class="slds-docked-form-footer" style="z-index: 9000;">
+    <!-- 閉じる ボタン -->
+    <!-- <lightning:layout horizontalAlign="center"> -->
+    <lightning:button label="{!v.titleV.closeValue}" iconName="utility:close" variant="neutral" onclick="{!c.close}"
+      iconPosition="left" />
+    <!-- 保存ボタン -->
+    <lightning:button label="{!v.titleV.saveValue}" iconName="utility:check" variant="brand" onclick="{!c.save}"
+      iconPosition="left" />
+    <!-- </lightning:layout> -->
+  </div>
+  <c:SB_NC_AccountBulkRegistRecordTypeConditionModal  inputV="{!v.inputV}" backupV="{!v.backupV}" show="{!v.showModal}"
+    searchRecordTypesMap="{!v.inputV.searchRecordTypesMap}" />
+  <aura:renderIf isTrue="{!and(v.showErrorMsg == true, not(empty(v.errorMsg)))}">
+    <div class="demo-only" style="z-index: 9999;">
+      <div role="dialog" class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__container">
+          <div class="slds-modal__header">
+            <div class="slds-notify_container">
+              <div class="slds-notify slds-notify_toast slds-theme_warning" role="alert">
+                <span class="slds-assistive-text">Error</span>
+                <div class="slds-notify__content slds-grid">
+                  <lightning:icon iconName="utility:warning" size="small" />
+                  <div class="slds-col slds-align-middle">
+                    <h2 class="slds-text-heading_small">warning</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h2 class="slds-text-heading_medium">&nbsp;</h2>
+          </div>
+          <div class="slds-modal__content slds-p-around_medium">
+            <ui:outputRichText class="slds-text-longform" value="{!v.errorMsg}" />
+          </div>
+          <div class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral slds-container_center slds-button" type="button"
+              onclick="{!if(v.searchError == false, c.hiddenError, c.close)}">
+              <!-- react-text: 528 -->OK
+              <!-- /react-text --></button>
+          </div>
+        </div>
+      </div>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+  </aura:renderIf>
+  <!-- 名刺選択されていない場合エラーメッセージを表示します -->
+  <aura:renderIf isTrue="{!v.dataList.length == 0}">
+    <div role="dialog" class="slds-modal slds-fade-in-open slds-modal_small">
+      <div class="slds-modal__container">
+        <div class="slds-modal__header">
+          <div class="slds-notify_container">
+            <div class="slds-notify slds-notify_toast slds-theme_alert"
+              style="background-color: rgba(84,105,141,.95);" role="alert">
+              <span class="slds-assistive-text">Error</span>
+              <div class="slds-notify__content slds-grid">
+                <lightning:icon iconName="utility:warning" size="small" variant="inverse" />
+                <div class="slds-col slds-align-middle">
+                  <h2 class="slds-text-heading_small">{!$Label.c.SB_NC_Label_WarningConfirm}</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2 class="slds-text-heading_medium">&nbsp;</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around_medium">
+          <div>
+            <div>
+              <p>{!$Label.c.SB_NC_MSG_NotSelectNameCard}</p>
+            </div>
+          </div>
+        </div>
+        <div class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral slds-container_center slds-button" type="button"
+            onclick="{!c.close}">
+            OK
+            </button>
+        </div>
+      </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:renderIf>
+</aura:component>

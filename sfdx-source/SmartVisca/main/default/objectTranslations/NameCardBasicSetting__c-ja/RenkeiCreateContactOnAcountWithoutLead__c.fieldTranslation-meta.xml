@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- 自動連携:リードなく、取引先既存で取引先責任者を作成する --></label>
+    <name>RenkeiCreateContactOnAcountWithoutLead__c</name>
+</CustomFieldTranslation>

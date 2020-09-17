@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SDisableCameraLauncher__c</fullName>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+    <label>SSmartViscaカメラ起動ボタンを表示しない</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,132 @@
+<!--
+/**
+ *
+ *  SmartVisca
+ *    SB_NC_SetNewCareer.cmp
+ *   転職先を設定
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2016.11.xx
+ *  @Version 2      2017.3.xx  DTO にした
+ *  @Version 2.4    2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *                             SV_DEV-873/SV_DEV-1614 タイトル部分の表示不具合修正
+ *
+ * 起動 /apex/SB_NC_CardAppLauncher?id=a0210000016psbF&app=newcareer
+ *
+ * 注意！  パッケージにするとき、コンポーネントに名前空間名をつける必要がある！ c: を SmartViscaf: に変える
+ *
+ **/
+-->
+<aura:component controller="SB_NC_SetNewCareerLcController" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable">
+  <aura:attribute name="recordId" type="Id" />
+  <aura:attribute name="retUrl" type="String"/>
+  <aura:attribute name="newCard" type="Object" description="The current record Id to display" />
+  <aura:attribute name="initialError" type="Boolean" default="false"/>
+  <aura:attribute name="errorMsg" type="String" />
+  <aura:attribute name="saving" type="Boolean" default="false"/>
+
+  <aura:attribute name="fromLabel" type="String" /> <!-- パンくず用 名刺オブジェクトのラベル -->
+  <aura:attribute name="fromId" type="String" />    <!-- パンくず用 名刺オブジェクトID -->
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <!-- Event handlers -->
+    <!-- Lookup Type 1 -->
+  <aura:handler name="selSObjEvent" event="c:SB_NC_SelectSObjectEvent" action="{!c.handleSelSObject}"/>
+    <!--  Lookup Type 2-->
+<!--   <aura:handler name="updateLookupIdEvent" event="SmartViscaf:SB_NC_LookupIdUpdateEvent" action="{!c.handleAccountIdUpdate}"/>
+  <aura:handler name="clearLookupIdEvent" event="SmartViscaf:SB_NC_LookupIdClearEvent" action="{!c.handleAccountIdClear}"/>
+ -->
+  <!-- Spinner 用 -->
+  <aura:attribute name="working" type="Boolean" default="true"/>
+  <aura:handler event="aura:waiting" action="{!c.toggleSpinner}"/>
+  <aura:handler event="aura:doneWaiting" action="{!c.toggleSpinner}"/>
+  
+  <div class="slds-tabs_default" style="height: 100%; width: 100%; top: 0px; left: 0; right: auto; z-index:9001; overflow: auto; position: absolute;">
+    <!-- ヘッダー -->
+    <lightning:tile label="{!v.fromLabel}" href="{!v.fromId}" class="slds-page-header titleTop">
+      <aura:set attribute="media">
+        <lightning:icon iconName="standard:people" size="large" alternativeText="Business Card"/>
+      </aura:set>
+      <aura:set attribute="body">
+        <div class="slds-grid">
+          <div class="slds-grid slds-no-space">
+            <h1 class="slds-text-heading_medium slds-truncate" title="Set New Career">{!$Label.c.SB_NC_SetNewCareer}</h1>
+          </div>
+        </div>
+      </aura:set>
+    </lightning:tile>
+    <!-- 中身 -->
+    <div style="position: fixed;margin-top: 50px;z-index: 9000;width: 100%;">
+      <aura:if isTrue="{!not(empty(v.errorMsg))}">
+        <ui:message title="" severity="error" closable="true">
+          {!v.errorMsg}
+        </ui:message>
+      </aura:if>
+      <div class="shade_back">
+        <!-- 選択した名刺の情報 -->
+        <c:SB_NC_CardDetail recordId="{!v.recordId}"/>
+        <!-- 初期エラーがない場合 -->
+        <aura:if isTrue="{!not(v.initialError)}">
+          <!-- 転職先の名刺 選択部分-->
+          <div class="slds-grid slds-wrap slds-grid_pull-padded-medium slds-theme_shade ">
+            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-3">
+              <div class="slds-box_small slds-theme_shade slds-text-align_right">
+                <lightning:icon iconName="utility:forward" size="large" alternativeText="New Career"/>
+              </div>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-3">
+              <div class="slds-col">
+                <div class="slds-box_small slds-theme_shade slds-text-align_left">
+                    <!-- 転職先の名刺 -->
+                  <dl>
+                    <dt><p class="slds-text-heading_label slds-truncate">{!$Label.c.SB_NC_NewCareerCard}</p></dt>
+                    <aura:if isTrue="{!v.newCard != null}">
+                      <!-- <force:recordView recordId="{!v.newCard.id}" type="MINI" /> -->
+                      <dd onmouseenter="{!c.clickNewCard}" onmouseleave="{!c.clickNewCard}" ><p class="slds-text-body_regular slds-truncate"><a href="{!'/' + v.newCard.id}"><ui:outputText value="{!v.newCard.name}" /></a></p></dd>
+                      <!-- PopOver -->
+                    <div aura:id="newCardPopover" class="slds-popover slds-nubbin_top-left slds-hide mini_info" role="dialog">
+                      <div class="slds-popover__body">
+                        <p><ui:outputText value="{!v.newCard.company_name}" /></p>
+                        <p><ui:outputText value="{!v.newCard.division}" />&nbsp;<ui:outputText value="{!v.newCard.title_name}" /></p>
+                        <p><ui:outputText value="{!v.newCard.email}" /></p>
+                        <p>{!$Label.c.SB_NC_LatestCard}&nbsp;:<ui:outputCheckbox value="{!v.newCard.latest}" /></p>
+                        <p><ui:outputDate value="{!v.newCard.card_exchange_date}" format="yyyy/MM/dd"/></p>
+                      </div>
+                    </div>
+                    <aura:set attribute="else">
+                      <dd><p class="slds-text-body_regular slds-truncate">({!$Label.c.SB_NC_TEXT_NotSelected})</p></dd>
+                    </aura:set>
+                    </aura:if>
+                  </dl>
+                </div>
+              </div>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-3">
+              <div class="slds-col">
+                <div class="slds-box_small slds-theme_shade slds-text-align_center">
+                  <!-- 名刺選択のModalDialog -->
+                  <c:SB_NC_LookupModal sobjName="NameCard__c" label="{!$Label.c.SB_NC_SelectNewCareerCard}"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aura:if>
+      </div>
+      <!-- フッターの分だけスペースをおく -->
+      <div style="margin-bottom: 48px; "></div>
+    </div>
+    <!-- フッター -->
+    <div class="slds-docked-form-footer">
+      <aura:if isTrue="{!not(v.initialError)}">
+        <button type="button" class="slds-button slds-button_neutral" onclick="{!c.cancel}" >{!$Label.c.SB_NC_Cancel}</button>
+        <button type="button" class="slds-button slds-button_brand" disabled="{!v.saving}" onclick="{!c.save}" >{!$Label.c.SB_NC_Save}</button>
+      <aura:set attribute="else">
+        <button type="button" class="slds-button slds-button_neutral" onclick="{!c.cancel}" >{!$Label.c.SB_NC_Label_Close}</button>
+      </aura:set>
+      </aura:if>
+    </div>
+
+  </div>
+</aura:component>

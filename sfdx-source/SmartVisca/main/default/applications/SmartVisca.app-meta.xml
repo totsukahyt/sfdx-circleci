@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>NameCard__c</defaultLandingTab>
+    <description>SmartVisca (C) SunBridge Corp.</description>
+    <label>SmartVisca</label>
+    <logo>SmartVisca/SmartVisca_Flat_Logo.png</logo>
+    <tabs>NameCard__c</tabs>
+    <tabs>standard-Account</tabs>
+    <tabs>standard-Contact</tabs>
+    <tabs>standard-report</tabs>
+    <tabs>standard-Dashboard</tabs>
+</CustomApplication>

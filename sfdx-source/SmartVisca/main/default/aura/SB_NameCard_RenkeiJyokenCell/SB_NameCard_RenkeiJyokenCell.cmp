@@ -1,0 +1,165 @@
+<!-- /**
+ *
+ *  SB_NameCard_RenkeiJyokenCell
+ *  名刺連携連携条件を列毎に表示するコンポーネント
+ *
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.20      2017.02.XX
+ *  @Version 2.0.2     2018.07.XX SV_DEV-1106 SmartVisca基本設定レコードの一部項目の値が反転して表示される。
+ *  @Version 2.1       2018.04.XX  SV_DEV-876   連携設定条件に名刺項目に参照項目が選択できないことを変更
+ *  @Version 2.1       2018.04.XX  SV_DEV-885 基本設定、連携条件設定、連携マッピングタブ切り替えの見直し
+ *  @Version 2.1       2018.04.XX  SV_DEV-1106 SmartVisca基本設定レコードの一部項目の値が反転して表示される。
+ *  @Version 2.4       2019.05.XX  SV_DEV-1630と合わせてリファクタリングを実施
+ *                     2019.05.XX  SV_DEV-1331 SLDS CSSクラス名変更対応
+ *
+ **/ -->
+<aura:component implements="force:appHostable" access="global">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit2}"/>
+  <!-- 変更フラグ更新 -->
+  <aura:registerEvent name="changeJyoukenEvent" type="c:SB_NameCard_JyoukenEvent"/>
+  <!-- 選択できる名詞項目 -->
+  <aura:attribute name="leftSelects" type="List"/>
+  <!-- obj2全て項目 -->
+  <aura:attribute name="allrightSelects" type="List"/>
+  <!-- 選択された項目 -->
+  <aura:attribute name="rightSelects" type="List"/>
+  <!-- 名刺タイプリスト -->
+  <aura:attribute name="nameCardTypeList" type="List"/>
+  <!-- 削除フラグ -->
+  <aura:attribute name="removeFlag" type="Boolean"/>
+  <!-- エラーフラグ -->
+  <aura:attribute name="isError" type="Boolean"/>
+  <!-- タイプによる演算子 -->
+  <aura:attribute name="typeCondition" type="Map"/>
+  <!-- 名刺タイプマップ -->
+  <aura:attribute name="nameCardMap" type="Map"/>
+  <!-- コンポーネントのgid -->
+  <aura:attribute name="gid" type="String"/>
+  <!-- 正規表現式を保存 -->
+  <aura:attribute name="reg" type="String"/>
+  <!-- 項目エラーフラグ -->
+  <aura:attribute name="filesError" type="Boolean"/>
+  <!-- 項目エラーメッセージ -->
+  <aura:attribute name="filesErrormessage" type="String"/>
+  <!-- 数値保存用 -->
+  <aura:attribute name="number" type="DOUBLE"/>
+  <!-- 項目タイプ -->
+  <aura:attribute name="type" type="String"/>
+  <!-- 基本設定 -->
+  <aura:attribute name="baseSet" type="Sobject"/>
+  <!-- ベルトMap -->
+  <aura:attribute name="labMap" type="Map"/>
+  <!-- timeタイプ表示用コントロールクラス -->
+  <aura:attribute name="timeClass" type="String"/>
+  <!-- booleanタイプ表示用コントロールクラス -->
+  <aura:attribute name="booleanClass" type="String"/>
+  <!-- doubleタイプ表示用コントロールクラス -->
+  <aura:attribute name="doubleClass" type="String"/>
+  <!-- urlタイプ表示用コントロールクラス -->
+  <aura:attribute name="urlClass" type="String"/>
+  <!-- emailタイプ表示用コントロールクラス -->
+  <aura:attribute name="emailClass" type="String"/>
+  <!-- textareaタイプ表示用コントロールクラス -->
+  <aura:attribute name="textareaClass" type="String"/>
+  <!-- textタイプ表示用コントロールクラス -->
+  <aura:attribute name="textClass" type="String"/>
+  <!-- 名刺項目エラーメッセージ -->
+  <aura:attribute name="nameCardFieldErrorMsg" type="String"/>
+  <!-- 演算しエラーメッセージ -->
+  <aura:attribute name="operatorErrorMsg" type="String"/>
+  <tr class="minwidth">
+    <td style="width:6%;">
+      <div class="slds-media">
+       <div class="slds-media__figure">
+          <label class="slds-checkbox" for="{!v.gid}">
+            <input name="checkboxtop" type="checkbox" id="{!v.gid}" checked="{!v.removeFlag}" onclick="{!c.removeChange}"/>
+              <div class="slds-form-element__label"></div>
+              <div class="slds-checkbox_faux"></div>
+              <div class="slds-assistive-text"></div>
+          </label>
+        </div>
+      </div>
+    </td>
+    <td style="width:28%;">
+      <div style="width:70%" class="slds-form-element">
+        <div class="slds-form-element__control">
+          <ui:inputSelect class="slds-select" change="{!c.changLeft}">
+            <aura:iteration items="{!v.leftSelects }" var="va">
+              <!-- <aura:renderIf isTrue="{!va.value == v.baseSet.NameCardName}"> -->
+              <ui:inputSelectOption text="{!va.value}" label="{!va.label}" value="{!va.value == v.baseSet.NameCardName}"/>
+              <!-- <aura:set attribute="else"> -->
+                  <!-- <ui:inputSelectOption text="{!va.value}" label="{!va.label}"/> -->
+                <!-- </aura:set> -->
+              <!-- </aura:renderIf> -->
+            </aura:iteration>
+          </ui:inputSelect>
+        </div>
+      </div>
+      <aura:renderIf isTrue="{!not(empty(v.nameCardFieldErrorMsg))}">
+        <div class="slds-form-element slds-has-error">
+           <div class="slds-form-element__help" id="{v.gid + 'nameCardFieldError'}">{!v.nameCardFieldErrorMsg}</div>
+        </div>
+      </aura:renderIf>
+    </td>
+
+
+    <td style="width:26%;">
+      <div style="width:70%" class="slds-form-element">
+        <div class="slds-form-element__control">
+          <ui:inputSelect class="slds-select" change="{!c.changeRight}">
+            <aura:iteration items="{!v.rightSelects }" var="va">
+              <!-- <aura:renderIf isTrue="{!va.value == v.baseSet.Operator}"> -->
+              <ui:inputSelectOption text="{!va.value}" label="{!va.label}" value="{!va.value == v.baseSet.Operator}"/>
+              <!-- </aura:renderIf> -->
+                <!-- <aura:renderIf isTrue="{!va.value != v.baseSet.Operator}"> -->
+              <!-- </aura:renderIf> -->
+            </aura:iteration>
+          </ui:inputSelect>
+        </div>
+      </div>
+      <aura:renderIf isTrue="{!not(empty(v.operatorErrorMsg))}">
+          <div class="slds-form-element slds-has-error">
+             <div class="slds-form-element__help" id="{v.gid + 'operatorError'}">{!v.operatorErrorMsg}</div>
+          </div>
+        </aura:renderIf>
+    </td>
+
+    <td style="width:30%;">
+      <div style="width:70%" class="slds-form-element">
+        <!-- <lightning:input label="aa" value="{!v.baseSet.Value__c}" name="blue" /> -->
+        <div class="slds-form-element">
+          <div class="slds-form-element__control">
+            <!-- タイプがDateの場合 -->
+            <div class="{!v.timeClass}">
+              <ui:inputDate aura:id="{!v.gid + 'date'}"  value="{!v.baseSet.Value}" displayDatePicker="true" blur="{!c.changeValue}"/>
+            </div>
+              <!-- Valueを設定すると他のタイプ値を変更しても反映されないのでメソッドで設定する -->
+            <ui:inputSelect class="{!v.booleanClass}" change="{!c.booleanChangeValue}">
+              <ui:inputSelectOption text="true" label="true" value="{!v.baseSet.Value == 'true'}"/>
+              <ui:inputSelectOption text="false" label="false" value="{!v.baseSet.Value == 'false'}"/>
+            </ui:inputSelect>
+
+            <ui:inputNumber class="{!v.doubleClass}" value="{!v.number}" blur="{!c.changeNumber}"/>
+
+            <ui:inputURL class="{!v.urlClass}" value="{!v.baseSet.Value}"  blur="{!c.changeValue}"/>
+
+            <ui:inputEmail class="{!v.emailClass}" value="{!v.baseSet.Value}" blur="{!c.changeValue}"/>
+
+            <ui:inputTextArea class="{!v.textareaClass}" value="{!v.baseSet.Value}" required="true" blur="{!c.changeValue}"/>
+
+            <ui:inputText class="{!v.textClass}" value="{!v.baseSet.Value}" required="true" blur="{!c.changeValue}"/>
+
+          </div>
+        </div>
+        <aura:renderIf isTrue="{!not(empty(v.filesErrormessage))}">
+          <div class="slds-form-element slds-has-error">
+             <div class="slds-form-element__help" id="{v.gid + 'error'}">{!v.filesErrormessage}</div>
+          </div>
+        </aura:renderIf>
+      </div>
+    </td>
+  </tr>
+</aura:component>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>In the registration page for account / contact , &quot;default search condition&quot; defaults to &quot;search by account name only&quot;.</help>
+    <label>Search Only in  Acc&amp;Con by Account Name</label>
+    <name>AccountSearchType__c</name>
+</CustomFieldTranslation>

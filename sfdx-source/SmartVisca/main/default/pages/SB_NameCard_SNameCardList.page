@@ -1,0 +1,82 @@
+<!-- SB_NameCard_SNameCardList
+/**
+ *
+ * Salesforce1対応 名刺一覧ビュー
+ *
+ * Copyright (C) 2014 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.5.xx
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+    <title>{!$Label.SB_NCS1_Text_NCList}</title>
+<style type="text/css"></style>
+<script type="text/javascript"></script>
+</head>
+<div class="container" style="padding-top: 10pt;">
+<div ng-show="working">
+    <div class="sv-loading">
+        <img src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+    </div>
+</div>
+
+<div ng-show="!working" style="height: 500px;">
+    <p class="bg-warning" ng-show="cards.length == 0" ng-cloak="true">{!$Label.SB_NCS1_Text_AvailableNCNotFound}</p>
+    <div ng-show="cards.length > 0" style="float: left">
+        <div style="margin-bottom: 10px;">
+            <input type="text" ng-model="nameFilter" placeholder="{!$Label.SB_NCS1_Label_Filter}..." class="size-full plm prx pvm input input--default input--ph-1 input--focus-1" style="width:80%;"/>
+        </div>
+    </div>
+    <div ng-show="cards.length > 0" >
+        <div class="btn-group" uib-dropdown="uib-dropdown" is-open="status.isopen" style="float: right;">
+            <button type="button" class="btn btn-primary uib-dropdown-toggle" uib-dropdown-toggle="true" data-toggle="uib-dropdown" ng-disabled="disabled" style="font-size: 11pt;">
+            {!$Label.SB_NCS1_Label_Sort} <span class="caret"></span>
+            </button>
+            <ul class="uib-dropdown-menu uib-dropdown-menu-right" uib-dropdown-menu="true" role="menu" aria-labelledby="single-button" style="left: -100%; width: 100%">
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1" ng-click="orderBy(1, !desc)">{!$Label.SB_NCS1_Label_NameKana}
+                    <i class="glyphicon" ng-show="order==namespace_x + 'name_kana__c'" ng-class="desc ? 'glyphicon-sort-by-alphabet-alt':'glyphicon-sort-by-alphabet'"/>
+                </a></li>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1" ng-click="orderBy(2, !desc)">{!$Label.SB_NCS1_Label_CompanyNameKana}
+                    <i class="glyphicon" ng-show="order==namespace_x + 'company_name_kana__c'" ng-class="desc? 'glyphicon-sort-by-alphabet-alt':'glyphicon-sort-by-alphabet'"/>
+                </a></li>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1" ng-click="orderBy(3, !desc)">{!$Label.SB_NCS1_Text_NCExchangeDate}
+                    <i class="glyphicon" ng-show="order==namespace_x + 'card_exchange_date__c'" ng-class="desc ? 'glyphicon-sort-by-order-alt':'glyphicon-sort-by-order'"/>
+                </a></li>
+            </ul>
+        </div>
+
+        <table class="table">
+        <thead>
+        </thead>
+        <tbody>
+            <tr id="{{card.Id}}" ng-click="doDetail(card.Id)" ng-repeat="card in cards | filter: searchFilter"
+                      repeat-done="layoutDone()" ng-cloak="true" > <!-- | orderBy:order:desc | nullToLast:order" -->
+                <td>
+                    <div class="thumbs">
+                        <span class="thumbnail" style="background-image: url('/servlet/servlet.FileDownload?file={{card[imageId]}}')"/>
+                    </div>
+                </td>
+                <!-- <td style="white-space: nowrap; text-overflow: ellipsis; overflow-y: hidden"> -->
+                <td>
+                    <a name="{{card.Id}}" ><b class="fullname">{{card.Name}}</b></a> <br />
+                    <div><small class="metadata">{{card[namespace_x + 'company_name__c']}}</small> </div>
+                    <div><small class="metadata">{{card[namespace_x + 'title_name__c']}}</small></div>
+                </td>
+                <td><i class="glyphicon glyphicon-chevron-right"/></td>
+            </tr>
+        </tbody>
+        </table>
+
+        <ul class="pager">
+            <li><a ng-show="isContinued()" ng-click="nextPage()">{!$Label.SB_NCS1_Text_More}</a></li>
+            <li><a ng-show="config.devMode && cards.length > 8" ng-click="gotoTop()">{!$Label.SB_NCS1_Text_Top}</a></li>
+        </ul>
+    </div>
+</div>
+</div>
+</apex:page>

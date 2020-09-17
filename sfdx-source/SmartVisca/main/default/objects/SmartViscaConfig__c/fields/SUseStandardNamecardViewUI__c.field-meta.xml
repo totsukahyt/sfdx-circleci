@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SUseStandardNamecardViewUI__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>名刺の詳細画面はSmartVisca専用のカスタマイズ画面でなくSalesforce1の標準画面を使用します。</description>
+    <externalId>false</externalId>
+    <inlineHelpText>チェックすると、名刺編集も標準の画面になります。</inlineHelpText>
+    <label>S名刺詳細は標準の画面を使う</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

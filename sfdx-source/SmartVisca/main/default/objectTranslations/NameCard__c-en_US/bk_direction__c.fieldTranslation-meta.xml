@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>0: Landscape1: Portrait</help>
+    <label>Portrait (Back)</label>
+    <name>bk_direction__c</name>
+</CustomFieldTranslation>

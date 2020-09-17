@@ -1,0 +1,53 @@
+<!-- SB_NameCard_SRegistMenu
+/**
+ *
+ * Salesforce1対応 取引先・取引先責任者へ登録 メニュー
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2016.4.xx
+ *
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+
+<!-- ローディング中 -->
+<div ng-show="working" style="padding-top:40px; text-align:center">
+  <i cclass="fa fa-spinner fa-pulse fa-2x" style="color:#4169e1"></i>
+</div>
+<!-- ローディング完了後 -->
+<div ng-hide="working">
+  <!-- 登録用ビュー -->
+  <!-- <div lass="container" ng-show="$state.current.name == 'menu.regist'" > -->
+  <div class="container" ng-show="$state.current.name.indexOf('menu.regist') === 0" >
+    <div ui-view="registView" ></div>
+  </div>
+  <!-- 一覧用ビュー -->
+  <div class="container" ng-show="$state.current.name == 'menu.list'" >
+    <div ui-view="listView" ></div>
+  </div>
+  <!-- 詳細用ビュー -->
+  <div class="container" ng-show="$state.current.name == 'menu.detail'" >
+    <div ui-view="detailView" ></div>
+  </div>
+  <!-- 一括登録用ビュー -->
+  <div class="container" ng-show="$state.current.name == 'menu.bulk'" >
+    <div ui-view="bulkView" ></div>
+  </div>
+  <!-- 履歴用ビュー -->
+  <div class="container" ng-show="$state.current.name == 'menu.history'">
+    <div ui-view="historyView" ></div>
+  </div>
+  <!-- 設定用ビュー -->
+  <div class="container" ng-show="$state.current.name == 'menu.settings'">
+    <div ui-view="settingsView" ></div>
+  </div>
+  <!-- テストビュー -->
+  <div class="container" ng-show="$state.current.name == 'menu.test'">
+    <div ui-view="testView" ></div>
+  </div>
+</div>
+
+
+</apex:page>

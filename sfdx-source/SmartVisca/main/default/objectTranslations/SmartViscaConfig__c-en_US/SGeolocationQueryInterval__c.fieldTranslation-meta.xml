@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Interval to contact Google (ms)</help>
+    <label>S Interval to Get the GeoLocation</label>
+    <name>SGeolocationQueryInterval__c</name>
+</CustomFieldTranslation>

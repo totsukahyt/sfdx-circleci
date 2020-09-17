@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SDetailShowOtherOwner__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>自分所有以外の名刺で名刺詳細画面（SmartVisca専用のカスタマイズ画面）に所有者を表示します。</description>
+    <externalId>false</externalId>
+    <inlineHelpText>自分所有以外の名刺で所有者を表示する場合にはチェックします。</inlineHelpText>
+    <label>S名刺詳細：所有者を表示する</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

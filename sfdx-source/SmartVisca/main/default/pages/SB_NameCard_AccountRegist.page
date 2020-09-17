@@ -1,0 +1,315 @@
+<!-- $Id: SB_NameCard_AccountRegist.page 16 2014-03-14 11:33:00Z ume $ -->
+<!--
+  SV_DEV-522  取引先・取引先責任者/リード登録画面で新規データ登録の際に複数回登録ボタンが押下されると同一データが複数登録されてしまう
+  SV_DEV-608  取引先・取引先責任者に登録（個別）の 名刺情報に関する項目のラベルの英語表記
+  @author gao
+  @Version 1.20.1  2017.8.XX SV_DEV-521  取引先・取引先責任者登録画面にて取引先の編集権限がなくても「既存の取引先の情報を名刺情報で上書きする」が有効化されてしまう
+  @Version 1.22  2017.8.XX SV_DEV-481 「取・取責」登録ボタン内の名刺セクションの文言変更依頼
+  @Version 1.22 2018.02.xx SV_DEV-781  個別取引先登録 で 既存の アカウント、コンタクトを選択していても、「新規作成時の指定」の所有者をしていしていないとエラーになる。
+  SV_DEV-481
+  
+  @Version 2.4 2019.07.xx LDV対応取引先登録 KDDI様対応を基本版に反映
+-->
+<!-- Copyright (c) 2011-2019 SunBridge Inc. -->
+<apex:page controller="SB_NameCard_AccountRegistController" title="{!windowTitle}" tabStyle="NameCard__c" showHeader="true"
+  sidebar="true">
+  <apex:pageMessages id="pageMsgs" escape="false" />
+  <apex:form >
+    <div id="contentLoading" style="width: 100%;display :none;
+            height: 100%;
+            top: 0px;
+            left: 0px;
+            position: fixed;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 999;
+            text-align: center;">
+      <div style="position: fixed;
+                top: 50%;
+                left: 50%;
+                text-align: center;
+                z-index: 100;">
+        <img src="/img/loading.gif" alt="Saveing" />
+        <span class="waitingDescription"></span>
+      </div>
+    </div>
+    <apex:actionFunction action="{!checkradio}" name="checkradio" reRender="aRecordType,cRecordType" />
+    <apex:actionFunction name="save" action="{!save}" reRender="pageMsgs,blockid,accountTableIndex" oncomplete="endLoad();" />
+
+    <apex:inputHidden value="{!debug}" />
+    <apex:inputHidden id="accountTableIndex" value="{!accountTableIndex}" />
+    <apex:pageBlock title="{!registerToContact}" id="blockid">
+      <apex:pageBlockButtons id="buttons">
+        <apex:commandButton onclick="startLoad('{!$Component.savebtn}','{!$Component.cancelbtn}')" value="{!$Label.SB_NC_Save}" disabled="{!OR(NOT(enableOperation), ISBLANK(nameCard))}"
+          rendered="{!NOT(dispDuplicateCheck)}" oncomplete="save();" id="savebtn" />
+        <apex:commandButton onclick="startLoad('{!$Component.savealertignorebtn}','{!$Component.cancelbtn}')" value="{!$Label.SB_NC_SaveAlertIgnore}"
+          disabled="{!ISBLANK(nameCard)}" rendered="{!dispDuplicateCheck}" oncomplete="save();" id="savealertignorebtn" />
+        <apex:commandButton action="{!cancel}" value="{!$Label.SB_NCS1_Label_Cancel}" immediate="true" disabled="{!ISBLANK(nameCard)}"
+          id="cancelbtn" />
+      </apex:pageBlockButtons>
+
+      <!-- 名刺詳細 セクション -->
+      <apex:pageBlockSection title="{!$Label.SB_NC_BusinessCard}" columns="2">
+        <apex:pageBlockSectionItem >
+          <!-- SV_DEV-608  取引先・取引先責任者に登録（個別）の 名刺情報に関する項目のラベルの英語表記 -->
+          <apex:outputLabel value="{!$ObjectType.NameCard__c.Fields.company_name__c.Label}" />
+          <apex:outputText value="{!nameCard.company_name__c}" />
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <!-- SV_DEV-608  取引先・取引先責任者に登録（個別）の 名刺情報に関する項目のラベルの英語表記 -->
+          <apex:outputLabel value="{!$ObjectType.NameCard__c.Fields.address_pref__c.Label}" />
+          <apex:outputText value="{!nameCard.address_pref__c}" />
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <!-- SV_DEV-608  取引先・取引先責任者に登録（個別）の 名刺情報に関する項目のラベルの英語表記 -->
+          <apex:outputLabel value="{!$ObjectType.NameCard__c.Fields.division__c.Label}" />
+          <apex:outputText value="{!nameCard.division__c}" />
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <!-- SV_DEV-608  取引先・取引先責任者に登録（個別）の 名刺情報に関する項目のラベルの英語表記 -->
+          <apex:outputLabel value="{!$ObjectType.NameCard__c.Fields.title_name__c.Label}" />
+          <apex:outputText value="{!nameCard.title_name__c}" />
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$ObjectType.NameCard__c.Fields.Name.Label}" />
+          <apex:panelGroup >
+            <apex:outputText value="{!nameCard.Name}" />
+            <!--      <apex:outputText value=" "/>
+                        <apex:outputText value="{!nameCard.person_name_first__c}"/> -->
+          </apex:panelGroup>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem />
+
+        <apex:pageBlockSectionItem >
+          <!-- SV_DEV-608  取引先・取引先責任者に登録（個別）の 名刺情報に関する項目のラベルの英語表記 -->
+          <apex:outputLabel value="{!$ObjectType.NameCard__c.Fields.mobile__c.Label}" />
+          <apex:outputField value="{!nameCard.mobile__c}" />
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <!-- SV_DEV-608  取引先・取引先責任者に登録（個別）の 名刺情報に関する項目のラベルの英語表記 -->
+          <apex:outputLabel value="{!$ObjectType.NameCard__c.Fields.email__c.Label}" />
+          <apex:outputField value="{!nameCard.email__c}" />
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <!-- 登録先 セクション -->
+      <apex:pageBlockSection title="{!$Label.SB_NC_RegisterTo}" columns="1" id="sectionTarget">
+        <!-- 検索条件 -->
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$Label.SB_NC_SearchCondition}" />
+          <apex:selectRadio value="{!searchType}" disabled="{!NOT(enableOperation)}">
+            <apex:actionSupport event="onclick" action="{!search}" rerender="pageMsgs, sectionTarget" />
+            <apex:selectOptions value="{!searchTypeSelectOpts}" />
+          </apex:selectRadio>
+        </apex:pageBlockSectionItem>
+
+        <!-- クエリで上限を超えたときメッセージを表示 -->
+        <apex:pageBlockSectionItem rendered="{!NOT(ISBLANK(queryProcessMessage))}">
+          <apex:outputLabel value="" />
+          <apex:outputText value="{!queryProcessMessage}" />
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$Label.SB_NC_SelectRegister}" />
+          <apex:pageBlockTable id="accTable" value="{!accountTable}" var="val">
+            <apex:column style="width:15px;">
+              <apex:facet name="header">{!$Label.SB_NC_Select}</apex:facet>
+              <!-- <apex:selectRadio value="{!val.index}" onclick="document.getElementById('{!$Component.accountTableIndex}').value = this.value;" onselect="checkradio(this.value)"/> -->
+              <input type="radio" id="{!val.index}" name="accTblIndex" value="{!val.index}" onclick="document.getElementById('{!$Component.accountTableIndex}').value = this.value;checkradio();"/>
+            </apex:column>
+
+            <apex:column >
+              <apex:variable var="accountOwnekrlabel" value="{!accountOwnerlabel}" />
+              <apex:facet name="header">{!accountOwnerlabel}</apex:facet>
+              <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(val.accountId))}">
+                <a href="/{!val.accountId}" id="lookup{!val.accountId}acc{!val.index}" onblur="LookupHoverDetail.getHover('lookup{!val.accountId}acc{!val.index}').hide();"
+                  onfocus="LookupHoverDetail.getHover('lookup{!val.accountId}acc{!val.index}', '/{!val.accountId}/m?isAjaxRequest=1').show();"
+                  onmouseout="LookupHoverDetail.getHover('lookup{!val.accountId}acc{!val.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!val.accountId}acc{!val.index}', '/{!val.accountId}/m?isAjaxRequest=1').show();">
+                  <apex:outputText value="{!val.accountName}{!IF(dispAccountOwner&&NOT(ISBLANK(val.accountId)), ' ('&val.accountOwner&')', '')}"
+                    rendered="{!NOT(val.showLookUpAccount)&&NOT(val.showLookUpContact)}" />
+                  <apex:outputText value="{!lookUpContactAccount.Name}{!IF(dispAccountOwner&&NOT(ISBLANK(lookUpContactAccount.Id)), ' ('&lookUpContactAccount.Owner.Name&')', '')}"
+                    rendered="{!val.showLookUpContact}" />
+                </a>
+              </apex:outputPanel>
+              <apex:outputPanel layout="none" rendered="{!ISBLANK(val.accountId)}">
+                <apex:outputText value="{!val.accountName}{!IF(dispAccountOwner&&NOT(ISBLANK(val.accountId)), ' ('&val.accountOwner&')', '')}"
+                  rendered="{!NOT(val.showLookUpAccount)&&NOT(val.showLookUpContact)}" />
+                <apex:outputText id="lookUpAccount" value="{!lookUpContactAccount.Name}{!IF(dispAccountOwner&&NOT(ISBLANK(lookUpContactAccount.Id)), ' ('&lookUpContactAccount.Owner.Name&')', '')}"
+                  rendered="{!val.showLookUpContact}" />
+              </apex:outputPanel>
+              <apex:inputField value="{!lookUpAccount.account__c}" rendered="{!val.showLookUpAccount}" />
+            </apex:column>
+
+            <apex:column rendered="{!IF(dispState, true, false)}">
+              <!-- SV_DEV-608  取引先・取引先責任者に登録（個別）の 名刺情報に関する項目のラベルの英語表記 -->
+              <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.address_pref__c.Label}</apex:facet>
+              <apex:outputText value="{!val.state}" />
+            </apex:column>
+
+            <apex:column >
+              <!-- SV_DEV-608  取引先・取引先責任者に登録（個別）の 名刺情報に関する項目のラベルの英語表記 -->
+              <apex:facet name="header">{!$ObjectType.Account.Fields.Site.Label}/{!$ObjectType.Contact.Fields.Department.Label}</apex:facet>
+              <apex:outputText value="{!val.division}" />
+            </apex:column>
+
+            <apex:column rendered="{!IF(dispTitle, true, false)}">
+              <apex:facet name="header">{!$ObjectType.Contact.Fields.title.Label}</apex:facet>
+              <apex:outputText value="{!val.title}" />
+            </apex:column>
+
+            <apex:column >
+              <apex:facet name="header">{!contactOwnerlabel}</apex:facet>
+              <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(val.contactId))}">
+                <a href="/{!val.contactId}" id="lookup{!val.contactId}acc{!val.index}" onblur="LookupHoverDetail.getHover('lookup{!val.contactId}acc{!val.index}').hide();"
+                  onfocus="LookupHoverDetail.getHover('lookup{!val.contactId}acc{!val.index}', '/{!val.contactId}/m?isAjaxRequest=1').show();"
+                  onmouseout="LookupHoverDetail.getHover('lookup{!val.contactId}acc{!val.index}').hide();" onmouseover="LookupHoverDetail.getHover('lookup{!val.contactId}acc{!val.index}', '/{!val.contactId}/m?isAjaxRequest=1').show();">
+                  <apex:outputText value="{!val.contactName}{!IF(dispContactOwner&&NOT(ISBLANK(val.contactId)), ' ('&val.contactOwner&')', '')}"
+                    rendered="{!NOT(val.showLookUpContact)}" />
+                </a>
+              </apex:outputPanel>
+              <apex:outputPanel layout="none" rendered="{!ISBLANK(val.contactId)}">
+                <apex:outputText value="{!val.contactName}{!IF(dispContactOwner&&NOT(ISBLANK(val.contactId)), ' ('&val.contactOwner&')', '')}"
+                  rendered="{!NOT(val.showLookUpContact)}" />
+              </apex:outputPanel>
+              <apex:inputField id="cLookUp" value="{!lookUpContact.contact__c}" rendered="{!val.showLookUpContact}">
+                <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="lookUpAccount" />
+              </apex:inputField>
+
+              <!--<apex:outputLink value="/{!val.contactId}" disabled="{!IF(ISBLANK(val.contactId), true, false)}">
+                                <apex:outputText value="{!val.contactName}{!IF(dispContactOwner&&NOT(ISBLANK(val.contactId)), ' ('&val.contactOwner&')', '')}" rendered="{!NOT(val.lookUpContact)}"/>
+                                <apex:inputField id="cLookUp" value="{!lookUpContact.contact__c}" rendered="{!val.lookUpContact}">
+                                    <apex:actionSupport event="onchange" action="{!setLookUp}" rerender="lookUpAccount"/>
+                                </apex:inputField>
+                            </apex:outputLink>-->
+            </apex:column>
+
+            <apex:column rendered="{!IF(dispMobile, true, false)}">
+              <apex:facet name="header">{!$ObjectType.Contact.Fields.MobilePhone.Label}</apex:facet>
+              <apex:outputText value="{!val.mobile}" />
+            </apex:column>
+
+            <apex:column rendered="{!IF(dispMail, true, false)}">
+              <apex:facet name="header">{!$ObjectType.Contact.Fields.Email.Label}</apex:facet>
+              <apex:outputText value="{!val.email}" />
+            </apex:column>
+
+            <apex:column rendered="{!IF(dispLastModifiedDate, true, false)}">
+              <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.lastModifiedDate.Label}</apex:facet>
+              <apex:outputText value="{0, date, yyyy/MM/dd}">
+                <apex:param value="{!val.lastModifiedDate+0.375}" />
+              </apex:outputText>
+            </apex:column>
+          </apex:pageBlockTable>
+        </apex:pageBlockSectionItem>
+
+        <!-- レコードタイプの選択部 -->
+        <apex:pageBlockSectionItem rendered="{!showRecTypeSectionItem}">
+          <apex:outputText value="" />
+          <apex:outputPanel >
+            <apex:outputText value="{!recordTypeExplain}" />
+            <br/>
+            <br/>
+            <apex:outputLabel rendered="{!showAccountRecType}" value="{!accountRecType}" />
+              <apex:selectList style="margin-left: 5pt;" rendered="{!showAccountRecType}" id="aRecordType" value="{!accountRecTypeId}"
+                multiselect="false" size="1" disabled="{!accountRecTypeEdit}">
+                <apex:selectOptions value="{!AccRecTypeSelectOpts}" />
+              </apex:selectList>
+            <apex:outputLabel style="margin-left: 30pt;" rendered="{!showContactRecType}" value="{!contactRecType}" />
+              <apex:selectList style="margin-left: 5pt;" rendered="{!showContactRecType}" id="cRecordType" value="{!contactRecTypeId}"
+                multiselect="false" size="1" disabled="{!contactRecTypeEdit}">
+                <apex:selectOptions value="{!ContRecTypeSelectOpts}" />
+              </apex:selectList>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+
+        <!-- 上書きする 選択部 -->
+        <apex:pageBlockSectionItem rendered="{!showUpdate}">
+          <apex:outputLabel value="" />
+          <apex:outputPanel >
+            <apex:inputCheckbox disabled="{!cannotUpdataAccount}" rendered="{!showUpdateAccount}" value="{!accountOverwrite}" />
+            <apex:outputLabel style="{!cannotUseStyleAcc}" rendered="{!showUpdateAccount}" value="{!updateForAccount}" />
+            &nbsp;&nbsp;
+            <apex:inputCheckbox disabled="{!cannotUpdataContact}" rendered="{!showUpdateContact}" value="{!contactOverwrite}" />
+            <!-- kou 2017.10.xx  Stored XSS  v1.21 for code scan -->
+            <apex:outputLabel style="{!JSENCODE(cannotUseStyleCon)}" rendered="{!showUpdateContact}" value="{!updateForContact}" />
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <!-- 所有者選択 セクション -->
+      <apex:pageBlockSection title="{!rulesOfCreate}" columns="1" rendered="{!isShowOwnerSelector}">
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$Label.SB_NC_Owner}" />
+          <!-- SV_DEV-781  個別取引先登録 で 既存の アカウント、コンタクトを選択していても、「新規作成時の指定」の所有者をしていしていないとエラーになる。 -->
+          <apex:inputField required="false" value="{!owner.OwnerId}" />
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <!-- ToDo セクション -->
+      <apex:pageBlockSection title="{!$Label.SB_NC_ToDo}" columns="1">
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$Label.SB_NC_Subject}" />
+          <apex:inputField value="{!todo.Subject}" />
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$Label.SB_NC_DueDate}" />
+          <apex:inputField value="{!todo.ActivityDate}" />
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$Label.SB_NC_Comment}" />
+          <apex:inputField value="{!todo.Description}" style="width:800px; height:150px;" />
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$Label.SB_NC_AddTodo}" />
+          <apex:inputCheckbox value="{!registTodo}" />
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+    </apex:pageBlock>
+    <script type="text/javascript">
+      //保存中...
+      var saveingValue = "{!$Label.sb_nc_saving}";
+      //保存ボタンをクリック
+      function startLoad(saveid, cancelid) {
+        saveChangeValue(saveid);
+        saveChangeValue(cancelid);
+        saveChangeValue(isContains(saveid, 'bottom'));
+        saveChangeValue(isContains(cancelid, 'bottom'));
+      }
+      //保存中に状態変更
+      function saveChangeValue(strid) {
+        document.getElementById(strid).classList.add('btnDisabled');
+        document.getElementById(strid).disabled = true;
+        document.getElementById(strid).value = saveingValue;
+      }
+      //bottom topボタンをクリックその逆のIDを返す
+      function isContains(str, substr) {
+        var index = str.indexOf(substr);
+        var changeid = '';
+        if (index > 0) {
+          changeid = str.substring(0, index) + str.substring(index + 7, str.length);
+        } else {
+          var index1 = str.lastIndexOf(':');
+          changeid = str.substring(0, index1) + ':bottom' + str.substring(index1, str.length);
+        }
+        return changeid;
+      }
+
+      //保存終了、ラジオボタンを再設定
+      function endLoad() {
+        document.getElementById(document.getElementById('{!$Component.accountTableIndex}').value).checked = '1';
+      }
+    </script>
+  </apex:form>
+  <!-- <script>
+        document.getElementById('{!accountTableIndex}').checked = '1';
+    </script> -->
+</apex:page>

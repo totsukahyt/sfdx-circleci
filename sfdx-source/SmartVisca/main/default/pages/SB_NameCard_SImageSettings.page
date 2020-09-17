@@ -1,0 +1,162 @@
+<!-- SB_NameCard_SImageSettings
+/**
+ *
+ * SmartVisca カメラ 設定画面
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 2    2015.8.xx   // Boootstrap版
+ *  @Version 3    2016.3.xx   // 画像補正対応
+ *
+ **/
+ -->
+ <apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+  <head>
+    <title>{!$Label.SB_NCS1C_Menu_Settings}</title>
+  <style type="text/css">
+  .panel-title {
+      font-size: 14px;
+  }
+  .list-group-item {
+      padding: 5px 15px;
+  }
+  </style>
+  </head>
+
+  <div class="container">
+
+  <h4><i class="fa fa-cog"  style="color:#696969;">&nbsp;{!$Label.SB_NCS1C_Menu_Settings}</i></h4>
+
+
+  <section>
+  <form  name="settingsForm" role="form">
+
+  <div class="panel panel-default" style="margin-left: -15pt; margin-right: -15pt;">
+    <div class="panel-heading">
+      <p class="panel-title">{!$Label.SB_NCS1C_Text_HandingImage}:</p>
+    </div>
+    <ul class="list-group">
+      <!-- 裏面も撮る -->
+      <li  class="list-group-item">
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cb_doubleSide" type="checkbox"  ng-model="settings.svcDoubleSide"/>
+          <label for="cb_doubleSide"><i class="fa fa-files-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_AlsoBackside}&nbsp;&nbsp;&nbsp;</label>
+        </div>
+      </li>
+      <!-- 画像補正をする -->
+      <li  class="list-group-item">
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cb_imgTran" type="checkbox"  ng-model="settings.svcImageTransform"/>
+          <label for="cb_imgTran"><i class="fa fa-crop"></i>&nbsp;{!$Label.SB_NCS1C_Label_TransformTheImg}&nbsp;&nbsp;&nbsp;</label>
+        </div>
+      </li>
+      <!-- 2020.04.xx v2.5 SV_DEV-2412 SmartViscaカメラの「陰影除去」機能を非表示にする -->
+      <div ng-show="settings.sDevelopment">
+        <!-- 影を除去する 2019.04.xx -->
+        <li class="list-group-item">
+          <div class="form-group checkbox checkbox-success checkbox-circle">
+            <input id="cb_confTran" type="checkbox"  ng-model="settings.svcShadeFilter" ng-disabled="!settings.svcImageTransform"/>
+            <label for="cb_congTran"><i class="fa fa-eye"></i>&nbsp;{!$Label.SB_NCS1C_Label_ShadeFilter}&nbsp;&nbsp;&nbsp;</label>
+          </div>
+        </li>
+        <!-- ごま塩ノイズを除去する 2019.04.xx -->
+        <li  class="list-group-item">
+          <div class="form-group checkbox checkbox-success checkbox-circle">
+            <input id="cb_confTran" type="checkbox"  ng-model="settings.svcNoiseFilter" ng-disabled="!settings.svcImageTransform || !settings.svcShadeFilter"/>
+            <label for="cb_congTran"><i class="fa fa-eye"></i>&nbsp;{!$Label.SB_NCS1C_Label_NoiseFilter}&nbsp;&nbsp;&nbsp;</label>
+          </div>
+        </li>
+        <!-- ごみを除去する -2019.04.xx -->
+        <li  class="list-group-item">
+          <div class="form-group checkbox checkbox-success checkbox-circle">
+            <input id="cb_confTran" type="checkbox"  ng-model="settings.svcGabageFilter" ng-disabled="!settings.svcImageTransform || !settings.svcShadeFilter || !settings.svcNoiseFilter"/>
+            <label for="cb_congTran"><i class="fa fa-eye"></i>&nbsp;{!$Label.SB_NCS1C_Label_GabageFilter}&nbsp;&nbsp;&nbsp;</label>
+          </div>
+        </li>
+      </div>
+      <!-- 補正処理に使う長辺のサイズ(ピクセル) 画像を縮小して処理  2019.04.xx -->
+      <!-- <li  class="list-group-item">
+          <div class="form-group" ng-disabled="!settings.svcImageTransform || !settings.svcShadeFilter" >
+            <label for="longSidePixcel"><i class="fa fa-picture-o"></i>&nbsp;補正処理に使う長辺のサイズ(ピクセル)</label>
+            <rzslider id ="longSidePixcel" rz-slider-model="settings.svcInputImageSize" rz-slider-options="options"></rzslider>
+          </div>
+      </li>   -->
+      <!-- 補正結果を確認する -->
+      <li  class="list-group-item">
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cb_confTran" type="checkbox"  ng-model="settings.svcConfirmTransform" ng-disabled="!settings.svcImageTransform"/>
+          <label for="cb_congTran"><i class="fa fa-eye"></i>&nbsp;{!$Label.SB_NCS1C_Label_ConfirmTheTransformationResult}&nbsp;&nbsp;&nbsp;</label>
+        </div>
+      </li>
+      <!-- 長辺のサイズ(ピクセル)  -->
+  <!--     <li  class="list-group-item">
+        <div class="form-group">
+          <label for="longSideMaxPixcel"><i class="fa fa-picture-o"></i>&nbsp;長辺のサイズ(ピクセル)</label>
+          <rzslider id ="longSideMaxPixcel" rz-slider-model="settings.svcImageSize" rz-slider-options="options"></rzslider>
+        </div>
+      </li>
+   -->  </ul>
+
+    <div class="panel-heading">
+      <p class="panel-title">{!$Label.SB_NCS1C_Text_ForInfoOfNCUnit}:</p>
+    </div>
+    <ul class="list-group">
+      <!-- メモを引き継ぐ -->
+      <li  class="list-group-item">
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cb_repeatMemo" type="checkbox"  ng-model="settings.svcRepeatMemo"/>
+          <label for="cb_repeatMemo"><i class="fa fa-pencil-square-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_TakeOverMemo}&nbsp;&nbsp;&nbsp;</label>
+        </div>
+      </li>
+      <!-- 名刺交換日を引き継ぐ -->
+      <li  class="list-group-item">
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cb_repeatExchangeDate" type="checkbox"  ng-model="settings.svcRepeatExchangeDate"/>
+          <label for="cb_repeatExchangeDate"><i class="fa fa-calendar-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_TakeOverNCExchangeDate}&nbsp;&nbsp;&nbsp;</label>
+        </div>
+      </li>
+    </ul>
+
+    <div class="panel-heading">
+      <p class="panel-title">{!$Label.SB_NCS1C_Text_ForInfoOfSendingUnit}:</p>
+    </div>
+    <ul class="list-group">
+      <!-- 名刺リスト名を覚えておく -->
+      <li  class="list-group-item">
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cb_keepListName" type="checkbox"  ng-model="settings.svcKeepListName"/>
+          <label for="cb_keepListName"><i class="fa fa-list-alt"></i>&nbsp;{!$Label.SB_NCS1C_Label_RememberTheNCListName}&nbsp;&nbsp;&nbsp;</label>
+        </div>
+      </li>
+      <!-- 手書きメモをデジタル化する -->
+      <li  class="list-group-item">
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cb_freehandMemo" type="checkbox"  ng-model="settings.svcFreehandMemo"/>
+          <label for="cb_freehandMemo"><i class="fa fa-share-square-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_DigitizeHandwrittenMemo}&nbsp;&nbsp;&nbsp;</label>
+        </div>
+      </li>
+      <!-- 表面のみ入力（英語優先） -->
+      <li  class="list-group-item">
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cb_frontOnly" type="checkbox"  ng-model="settings.svcFrontOnly"/>
+          <label for="cb_frontOnly"><i class="fa fa-file-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_FrontsideOnlyInput}&nbsp;&nbsp;&nbsp;</label>
+        </div>
+      </li>
+      <!-- 位置情報を送信履歴に残す -->
+      <li  class="list-group-item">
+        <div class="form-group checkbox checkbox-success checkbox-circle">
+          <input id="cb_geoLocation" type="checkbox"  ng-model="settings.svcGeoLocation"/>
+          <label for="cb_geoLocation"><i class="fa fa-map-marker"></i>&nbsp;{!$Label.SB_NCS1C_Label_LeaveGeoLocationInfo}&nbsp;&nbsp;&nbsp;</label>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+
+  </form>
+
+  </section>
+  </div>
+
+  </apex:page>

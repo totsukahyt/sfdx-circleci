@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RenkeiLeadExcludeHojinkakuPartial__c</fullName>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+    <label>自動連携:リード会社名は法人格を除いて部分一致検索</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  sfdx: circleci/salesforce-sfdx@2.0.0
+  sfdx: circleci/salesforce-sfdx@2.1.0
   slack: circleci/slack@3.4.2
 
 ####################################################################################################
@@ -9,12 +9,13 @@ orbs:
 ####################################################################################################
 jobs:
   build-and-test:
-    docker:
-      - image: ncino/ci-sfdx
-    # machine: true
-    working_directory: ~/smartvisca-lead-package
+    executor: sfdx/default
+    working_directory: ~/smartvisca-package
     steps:
       - checkout
+      # 20200915 ソースdeployエラーのため、CLI最新版に変更
+      # - sfdx/install:
+      #     version: "7.69.0"
       - sfdx/install
       #　DEV環境認証開始
       - run:
@@ -40,21 +41,22 @@ jobs:
             if [ $CIRCLE_PULL_REQUEST ]; then
               echo 'Test scratch環境の作成 '
               sfdx force:limits:api:display -u DEV-${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
-              sfdx force:org:create -f ~/smartvisca-lead-package/config/project-scratch-def.json -a circle_build_test -s -d 1 --wait 5
-              # 下記SmartVscaのバージョン：2.5.2
-              sfdx force:package:install --package 04t10000000jwLWAAY -s AllUsers -u circle_build_test -k sb202006 --publishwait 6 --wait 10
-              sfdx force:source:push -u circle_build_test
+              sfdx force:org:create -f ~/smartvisca-package/config/project-scratch-def-developer.json -a circle_build_test -s -d 1 --wait 5
+              sfdx force:source:deploy -u circle_build_test -p sfdx-source/SmartVisca
+              sfdx force:source:deploy -u circle_build_test -p sfdx-source/unpackaged/dev-config
               sfdx force:user:create --setalias ${CIRCLE_WORKFLOW_ID}@test.org --definitionfile config/project-user-admin-def.json
+              sfdx force:apex:execute -u ${CIRCLE_WORKFLOW_ID}@test.org -f script/apex/postinstall.apex
             else
               exit 0
             fi
       - run:
           name: Run Apex Tests
+          no_output_timeout: 30m
           command: |
             if [ $CIRCLE_PULL_REQUEST ]; then
               echo 'Running Apex Tests'
               mkdir -p ~/junit
-              sfdx force:apex:test:run -c -d ~/junit -r junit -u ${CIRCLE_WORKFLOW_ID}@test.org --wait 5
+              sfdx force:apex:test:run -c -d ~/junit -r junit -u ${CIRCLE_WORKFLOW_ID}@test.org --wait 30
               echo 'export TESTMSG_HEAD=$(echo Unit Test が正常に完了しました。)' >> $BASH_ENV
               source $BASH_ENV
             else
@@ -93,13 +95,15 @@ jobs:
 ## PURPOSE:
 ####################################################################################################
   create-feature-scratch:
-    docker:
-      - image: ncino/ci-sfdx
-    # machine: true
-    working_directory: ~/smartvisca-lead-package
+    executor: sfdx/default
+    working_directory: ~/smartvisca-package
     steps:
       - checkout
+      # 20200915 ソースdeployエラーのため、CLI最新版に変更
+      # - sfdx/install:
+      #     version: "7.69.0"
       - sfdx/install
+
       #　DEV環境認証開始
       - run: 
           name: create server key 
@@ -121,11 +125,11 @@ jobs:
             if [ "${SCRATCH_CNT}" = "1" ]; then
               echo 'Featrue scratch環境の作成 '
 
-              sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_BRANCH} -a ${CIRCLE_BRANCH} -s -d 30  --wait 10
-              # 下記SmartVscaのバージョン：2.5.2
-              sfdx force:package:install --package 04t10000000jwLWAAY -s AllUsers -u ${CIRCLE_BRANCH} -k sb202006 --publishwait 6 --wait 10
-              sfdx force:source:push -u ${CIRCLE_BRANCH}
+              sfdx force:org:create -f config/project-scratch-def-developer.json orgName=${CIRCLE_BRANCH} -a ${CIRCLE_BRANCH} -s -d 30  --wait 10
+              sfdx force:source:deploy -u ${CIRCLE_BRANCH} -p sfdx-source/SmartVisca
+              sfdx force:source:deploy -u ${CIRCLE_BRANCH} -p sfdx-source/unpackaged/dev-config
               sfdx force:user:create --setalias ${CIRCLE_WORKFLOW_ID}@feature.org --definitionfile config/project-user-admin-def.json
+              sfdx force:apex:execute -u ${CIRCLE_WORKFLOW_ID}@feature.org -f script/apex/postinstall.apex
               sfdx force:user:password:generate -u ${CIRCLE_WORKFLOW_ID}@feature.org
               sfdx force:user:display --targetusername ${CIRCLE_WORKFLOW_ID}@feature.org | sed '1,3d' > ./dev_userPassword.txt
               cat ./dev_userPassword.txt
@@ -133,14 +137,13 @@ jobs:
               source $BASH_ENV
             else
               echo 'すでに環境が作成されています。'
-              echo 'export DEVMSG_HEAD=$(echo 当ブランチで既に環境が作成されています。)' >> $BASH_ENV
-              source $BASH_ENV
+
             fi
 
       - slack/notify:
           channel: ${SLACK_CHANNEL}
           color: '#42e2f4'
-          message: "${DEVMSG_HEAD} \n ブランチ：${CIRCLE_BRANCH} \n ${VERY_IMPORTANT}"
+          message: "Featrue scratch環境を作成しました。 \n ブランチ：${CIRCLE_BRANCH} \n ${VERY_IMPORTANT}"
           webhook: '${SLACK_WEBHOOK}'
           include_job_number_field: false
       
@@ -156,87 +159,196 @@ jobs:
 ####################################################################################################
   create-beta-package:
     executor: sfdx/default
+    docker:
+      - image: circleci/node:current-browsers
+    environment:
+      PACKAGE_VERSION_NAME : September 2020
+      METADATA_PACKAGE_ID : 03310000000VKOnAAO
     steps:
       - checkout
+      # 20200915 ソースdeployエラーのため、CLI最新版に変更
+      # - sfdx/install:
+      #     version: "7.69.0"
       - sfdx/install
+
+      - run:
+          name: create date files
+          command: |
+            TODAY=$(date +%u)
+            # 今週の月曜日を取得
+            if [ 1 -lt TODAY]; then
+              echo $(date "+%s" --date "last monday") > ./monday.txt
+            else
+              echo $(date "+%s") > ./monday.txt
+            fi
+            # 最新のcommit日を取得
+            echo $(git log -1 --date=format:"%s" --format="%ad") > ./commit_date.txt
+            # betaパッケージパージョン名
+            echo $(date '+%Y%m%d') > ./version_name.txt
+
       #　PJT環境認証開始
       - run: 
           name: create PKG org server key
-          command: openssl enc -nosalt -aes-256-cbc -d -in assets/server_pkg.key.enc -out assets/server_pkg.key -base64 -K ${PKGORG_DECRYPTION_KEY} -iv ${PKGORG_DECRYPTION_IV}
+          command: |
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              openssl enc -nosalt -aes-256-cbc -d -in assets/server_pkg.key.enc -out assets/server_pkg.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
+            else
+              exit 0
+            fi
       - run: 
           name: PKG jwt
-          command: sfdx force:auth:jwt:grant --clientid ${PKGORG_CONSUMER_KEY} --jwtkeyfile assets/server_pkg.key --username ${PKGORG_SFDC_USERNAME} --setdefaultdevhubusername --setalias PKG-${CIRCLE_PROJECT_REPONAME}-BETA
+          command: |
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              sfdx force:auth:jwt:grant --clientid ${PKGORG_CONSUMER_KEY} --jwtkeyfile assets/server_pkg.key --username ${PKGORG_SFDC_USERNAME} --setdefaultdevhubusername --setalias PKG-${CIRCLE_PROJECT_REPONAME}-BETA
+            else
+              exit 0
+            fi
       #　PJT環境認証完了
       #　DEV環境認証開始
       - run: 
           name: create DEV org server key
-          command: openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
+          command: |
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
+            else
+              exit 0
+            fi
       - run: 
           name: DEV jwt
-          command: sfdx force:auth:jwt:grant --clientid ${HUB_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias DEV-${CIRCLE_PROJECT_REPONAME}-BETA
+          command: |
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              sfdx force:auth:jwt:grant --clientid ${HUB_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias DEV-${CIRCLE_PROJECT_REPONAME}-BETA
+            else
+              exit 0
+            fi
+
       #　DEV環境認証完了
       - run:
           name: Convert SFDX source to MDAPI source
           command: |
-            sfdx force:source:convert -r "$PACKAGE_DIRECTORY" \
-                                      -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
-                                      -n "$PACKAGE_NAME" \
-                                      --loglevel error
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              # パッケージ用にprefixつけたソースに上書き
+              cp sfdx-source/packaged/main sfdx-source/SmartVisca/ -f -r
+
+              sfdx force:source:convert -r "$PACKAGE_DIRECTORY" \
+                                        -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
+                                        -n "$PACKAGE_NAME" \
+                                        --loglevel error
+              # package.xmlにインストール後スクリプトの記載
+              sed -i 's|</Package>|<postInstallClass>SB_NC_PostInstallScript</postInstallClass></Package>|' ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
+              cat ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
+            else
+              exit 0
+            fi
 
       - run:
           name: Deploy MDAPI Source to the Packaging Org
           command: |
-            sfdx force:mdapi:deploy -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
-                                    -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
-                                    -w 15 \
-                                    --verbose \
-                                    --loglevel error
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              sfdx force:mdapi:deploy -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
+                                      -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+                                      -w 15 \
+                                      --verbose \
+                                      --loglevel error
+            else
+              exit 0
+            fi
 
       - run:
           name: List current version history for the first-generation package about to be uploaded
           command: |
-            sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
-                                             -i $METADATA_PACKAGE_ID \
-                                             --loglevel error
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+                                               -i $METADATA_PACKAGE_ID \
+                                               --loglevel error
+            else
+              exit 0
+            fi
 
       - run:
           name: Create (upload) a new MANAGED BETA package version
+          no_output_timeout: 30m
           command: |
-            sfdx force:package1:version:create -i $METADATA_PACKAGE_ID \
-                                               -n "$PACKAGE_VERSION_NAME" \
-                                               -d "Package version generated by CI process" \
-                                               -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
-                                               -w 15 \
-                                               --loglevel error > ./versionId.txt
-            sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
-                                             -i $METADATA_PACKAGE_ID \
-                                             --loglevel error
-            VID=$(cat ./versionId.txt)
-            echo 'VID1 : ' ${VID}
-            VID=`echo ${VID#*[}`
-            echo 'VID2 : ' ${VID}
-            VID=`echo ${VID%]*}`
-            echo 'VID3 : ' ${VID}
-            echo 'export VERSIONID_ENV=${VID}' >> $BASH_ENV
-            source $BASH_ENV
-            echo 'QA scratch環境の作成 '
-            sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-${CIRCLE_TAG} -a ${CIRCLE_TAG} -n -s -d 30 --wait 10
-            sfdx force:org:list --all
-            # 下記SmartVscaのバージョン：2.5.2
-            sfdx force:package:install --package 04t10000000jwLWAAY -s AllUsers -u ${CIRCLE_TAG} -k sb202006 --publishwait 6 --wait 10
-            sfdx force:package:install --package $VERSIONID_ENV -u ${CIRCLE_TAG} --publishwait 6 --wait 10
-            sfdx force:user:create --setalias qa-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile config/project-user-admin-def.json
-            sfdx force:user:password:generate -u qa-${CIRCLE_WORKFLOW_ID}@package.org
-            sfdx force:user:display --targetusername qa-${CIRCLE_WORKFLOW_ID}@package.org | sed '1,3d' > ./qa_userPassword.txt
-            cat ./qa_userPassword.txt
-            echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.txt)' >> $BASH_ENV
-            echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
-            source $BASH_ENV
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              sfdx force:package1:version:create -i $METADATA_PACKAGE_ID \
+                                                 -n "$PACKAGE_VERSION_NAME" \
+                                                 -d "Package version generated by CI process" \
+                                                 -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+                                                 -w 20 \
+                                                 --loglevel error > ./versionId.txt
+              sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+                                               -i $METADATA_PACKAGE_ID \
+                                               --loglevel error > ./version_info.txt
+              VID=$(cat ./versionId.txt)
+              echo 'VID1 : ' ${VID}
+              VID=`echo ${VID#*[}`
+              echo 'VID2 : ' ${VID}
+              VID=`echo ${VID%]*}`
+              echo 'VID3 : ' ${VID}
+              echo 'export VERSIONID_ENV=${VID}' >> $BASH_ENV
+              source $BASH_ENV
+              grep ${VERSIONID_ENV} ./version_info.txt > pkg_info.txt
+              echo 'QA scratch環境の作成 '
+              sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-QA-${CIRCLE_PROJECT_REPONAME}-BETA -a QA-${CIRCLE_PROJECT_REPONAME}-BETA -n -s -d 30 --wait 10
+              sfdx force:org:list --all
+              sfdx force:package:install --package $VERSIONID_ENV -u QA-${CIRCLE_PROJECT_REPONAME}-BETA --publishwait 15 --wait 15
+              sfdx force:user:password:generate -u QA-${CIRCLE_PROJECT_REPONAME}-BETA
+              sfdx force:user:display --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA --json > ./qa_userPassword.json
+              cat ./qa_userPassword.json
+              echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.json)' >> $BASH_ENV
+              echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
+              source $BASH_ENV
+            else
+              exit 0
+            fi
+
+      - run:
+          name: create and push beta tag
+          command: |
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              # betaタグを作成　例：beta_1.0.0_20200819
+              PKG_INFO=$(cat pkg_info.txt)
+              if [[ $PKG_INFO =~ [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} ]]; then
+                PKG_VERSION=${BASH_REMATCH[0]}
+              fi
+              TAG_HEAD=$(echo beta_)
+              UB=$(echo _)
+              BETA_TAG=$(echo $TAG_HEAD$PKG_VERSION$UB${VERSION_NAME})
+              echo '{"betatag":"'$BETA_TAG'"}' > data/beta_tag.json
+              git tag $BETA_TAG
+              git push origin $BETA_TAG
+            else
+              exit 0
+            fi
+
+      - run:
+          name: initial setting in  SmartVisca-package
+          command: |
+            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+              # 環境設定
+              sfdx force:source:deploy -u QA-${CIRCLE_PROJECT_REPONAME}-BETA -p sfdx-source/unpackaged/qa-config
+              sfdx force:apex:execute -u  QA-${CIRCLE_PROJECT_REPONAME}-BETA -f script/apex/SB_AutomaticcCooperationSetting.apex
+
+              sfdx force:user:permset:assign --permsetname "permset" --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA
+              sfdx force:user:permset:assign --permsetname "SmartViscaAdminUser" --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA
+
+              sfdx force:user:create --setalias test2-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_mktg2019.xltvyt2mceva.uo598j4fqxu8@sv.com.json username=svdemo_mktg${CIRCLE_WORKFLOW_ID}@sv.com
+              sfdx force:user:create --setalias test3-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_sales2019.qmwtyalmpjol.o9x6vrua3tos@sv.com.json username=svdemo_sales${CIRCLE_WORKFLOW_ID}@sv.com
+              sfdx force:user:create --setalias test4-${CIRCLE_WORKFLOW_ID}@package.org --definitionfile data/test-users/svdemo_salesmgr2019.shqp9lpwtmwl.n4al68ywrcoq@sv.com.json username=svdemo_salesmgr${CIRCLE_WORKFLOW_ID}@sv.com
+              sfdx force:data:tree:import -p data/test-records/SmartViscaf__NameCard__c-Account-Contact-plan.json -u  QA-${CIRCLE_PROJECT_REPONAME}-BETA
+              sfdx force:apex:execute -u  QA-${CIRCLE_PROJECT_REPONAME}-BETA -f script/apex/updateNameCardReferAttachment.apex
+
+              npm install
+              npx mocha script/e2e/SmartViscaInitialSetting.js --timeout 20000
+
+            else
+              exit 0
+            fi
 
       - slack/notify:
           channel: ${SLACK_CHANNEL}
           color: '#42e2f4'
-          message: "${QAMSG_HEAD} \n タグ：${CIRCLE_TAG} \n ${QAVERY_IMPORTANT}"
+          message: "${QAMSG_HEAD} \n タグ：$BETA_TAG \n ${QAVERY_IMPORTANT}"
           webhook: '${SLACK_WEBHOOK}'
           include_job_number_field: false
 
@@ -248,19 +360,6 @@ jobs:
 
 workflows:
   version: 2.1
-  all_jobs:
+  commit-workflow:
     jobs:
-      - build-and-test:
-          context: org-sbdevhub
-      - create-feature-scratch:
-          context: org-sbdevhub
-          filters:
-            branches:
-              only: /^feature.*/
-      - create-beta-package:
-          context: org-sbdevhub
-          filters:
-            tags:
-              only: /^beta.*/
-            branches:
-              ignore: /.*/
+      - create-beta-package

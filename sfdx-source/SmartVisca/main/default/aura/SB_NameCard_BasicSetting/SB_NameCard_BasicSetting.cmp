@@ -1,0 +1,658 @@
+<!-- /**
+ *
+ *  SB_NameCard_BasicSetting
+ *  SmartVisca設定 SmartVisca 基本設定 ページ
+ *
+ *
+ *
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.22      2017.07.XX SV_DEV-527 SmartVisca 基本設定の リード対応
+ *  @Version 1.20.1    2017.08.XX SV_DEV-543 SmartVisca 連携設定で保存後に画面下部にエラーメッセージが表示される
+ *  @Version 1.22      2018.02.XX SV_DEV-735 基本設定レコードが二つ作成される
+ *  @Version 2.0.3     2018.09.XX SV_DEV-1200 [要望]（LEX用・Classic用「SmartVisca設定」SmartVisca基本設定画面)自動連携機能枠内、自動連携機能を有効化→取引先・取引先責任者に登録に変更、リードに登録機能を有効化との段落をなくす、リードに登録機能を一番上へ移動してほしい
+ *  @Version 2.4       2019.05.XX SV_DEV-1630と合わせてリファクタリングを実施
+ *                     2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *                     2019.05.XX SV_DEV-463  名寄せ条件のカスタマイズ 他、諸々機能強化
+ *  @Version 2.5       2019.12.XX SV_DEV-2390 Classic SV設定：リード登録時のToDo登録機能に関する設定項目の追加
+ *
+ **/ -->
+
+
+
+ <aura:component controller="SB_NameCard_BasicSettingLcController" implements="force:appHostable" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <!-- チェックボックスの変更をするときに実行するメソッド -->
+  <aura:handler name="changeSaveFlag" event="c:SB_NameCard_CheckCckboxEvent" action="{!c.changeCheckCckbox}"/>
+
+  <aura:registerEvent name="ref" type="c:SB_NameCard_RefreshLastTimeEvent"/>
+  <!-- タブ変更時、編修放棄 -->
+  <aura:method name="refdata" action="{!c.doInit}" access="PUBLIC"/>
+  <!-- タブロード開始メソッド -->
+  <aura:method name="loadingStart" action="{!c.loadingStart}" access="PUBLIC"/>
+  <!-- 表示メッセージを隠す -->
+  <aura:method name="hiddenMsg" action="{!c.hiddenMsg}" access="PUBLIC"/>
+  <!-- 画面変更あるチェック -->
+  <aura:method name="checkChange" action="{!c.checkChange}" access="PUBLIC"/>
+  <!-- タブロード停止メソッド -->
+  <aura:method name="loadingEnd1" action="{!c.loadingEnd1}" access="PUBLIC"/>
+  <!-- 子コンポネートのイベントキャッチ -->
+  <aura:method name="isNeedSave" action="{!c.isNeedSave}" access="PUBLIC"/>
+  <!-- タブ変更Event  loadingEnd -->
+  <aura:registerEvent name="loadingEnd" type="c:SB_NameCard_LoadingEnd"/>
+  <!-- lex Classic判定フラグ -->
+  <aura:attribute name="showStyle" type="String"/>
+  <!-- alert表示内容 -->
+  <aura:attribute name="message" type="String"/>
+  <!-- alert表示フラグ -->
+  <aura:attribute name="showAlert" type="Boolean"/>
+  <!-- 成功メッセージ -->
+  <aura:attribute name="okMsg" type="String"/>
+  <!-- ウォーニングメッセージ -->
+  <aura:attribute name="warningMsg" type="String"/>
+  <!-- 保存ウォーニングメッセージ -->
+  <aura:attribute name="saveWarningMsg" type="String"/>
+  <!-- エラーメッセージ -->
+  <aura:attribute name="errorMsg" type="String"/>
+  <!-- ラベルマップ -->
+  <aura:attribute name="labMap" type="Map"/>
+  <!-- 最終更新者表示タイプクラス(更新者あるの場合リンクあり) -->
+  <aura:attribute name="urlHidden" type="String"/>
+  <!-- 最終更新者表示タイプクラス(未更新の場合リンクなし) -->
+  <aura:attribute name="textHidden" type="String"/>
+  <!-- 親コンポネートのloadフラグ -->
+  <aura:attribute name="isLoading" type="Boolean"/>
+  <!-- このコンポネートのloadフラグ -->
+  <aura:attribute name="login" type="Boolean"/>
+  <!-- このページ変更あるかフラグ -->
+  <aura:attribute name="needSave" type="Boolean"/>
+  <!-- このページ変更あるかフラグ(クリア用) -->
+  <aura:attribute name="needSaveSelf" type="Boolean"/>
+  <!-- 親コンポネート保存中フラグ -->
+  <aura:attribute name="saveing" type="Boolean"/>
+
+
+  <!-- 基本設定 -->
+  <aura:attribute name="baseSet" type="Map"/>
+  <!-- backUp data -->
+  <aura:attribute name="backUpbaseSet" type="String"/>
+  <!-- 最新の名刺が値を引継ぐ機能表示切り替えフラグ -->
+  <aura:attribute name="showInheritSetting" type="Boolean"/>
+  <!-- 名刺設定情報系オブジェクト -->
+  <aura:attribute name="saishinInheritSettingValuesData" type="Object"/>
+  <!-- 名寄せ条件用リスト -->
+  <aura:attribute name="nayoseJyokenAvailableList" type="List" />
+  <aura:attribute name="nayoseJyokenSelectedList" type="List" />
+  <aura:attribute name="nayoseJyokenRequiredList" type="List" />
+  <!-- 最新の値を引継ぐ機能用リスト -->
+  <aura:attribute name="inheritValueAvailableList" type="List" />
+  <aura:attribute name="inheritValueSelectedList" type="List" />
+  <aura:attribute name="inheritValueRequiredList" type="List" />
+
+
+  <!-- 編集前名刺設定情報 -->
+  <aura:attribute name="backupInherit" type="String"/>
+
+  <!-- 取引先の会社名の比較対象無効フラグ -->
+  <aura:attribute name="disabledAccountCompareFieldSelect" type="Boolean"/>
+  <!-- 取引先の会社名の比較対象リスト -->
+  <aura:attribute name="registAccountCompareFieldList" type="List"/>
+  <!-- リードの会社名の比較対象無効フラグ -->
+  <aura:attribute name="disabledLeadCompareFieldSelect" type="Boolean"/>
+  <!-- リードの会社名の比較対象リスト -->
+  <aura:attribute name="registLeadCompareFieldList" type="List"/>
+
+  <!-- 検索対象の取引先レコードタイプ -->
+  <aura:attribute name="accRegistRecordTypeList" type="List"/>
+  <!-- 検索対象の取引先レコードタイプ -->
+  <aura:attribute name="conRegistRecordTypeList" type="List"/>
+  <!-- 検索対象の取引先レコードタイプ -->
+  <aura:attribute name="leadRegistRecordTypeList" type="List"/>
+  <!-- 取引先登録:ToDoの任命先 -->
+  <aura:attribute name="registToDoOwnerList" type="List"/>
+  <!-- リード登録:ToDoの任命先 -->
+  <aura:attribute name="registLeadToDoOwnerList" type="List"/>
+
+  <!-- leadパッケージ存在フラグ -->
+  <aura:attribute name="isEnableLeadExtention" type="Boolean" default="false"/>
+  <!-- leadパッケージv2.1以降存在フラグ -->
+  <aura:attribute name="isEnableLeadExtention21" type="Boolean" default="false"/>
+  <!-- 名寄せの条件拡張設定 -->
+  <aura:attribute name="isTriggerMergeExpandCriteria" type="Boolean" default="false"/>
+
+  <aura:renderIf isTrue="{!not(empty(v.errorMsg))}">
+    <ui:message title="" severity="error" closable="false">
+      {!v.errorMsg}
+    </ui:message>
+  </aura:renderIf>
+
+  <!--成功メッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.okMsg))}">
+    <ui:message title="" severity="confirm" closable="false">
+        {!v.okMsg}
+    </ui:message>
+  </aura:renderIf>
+
+  <!--警告メッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.warningMsg))}">
+    <ui:message title="" severity="warning" closable="false">
+        {!v.warningMsg}
+    </ui:message>
+  </aura:renderIf>
+
+  <!--保存警告メッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.saveWarningMsg))}">
+    <ui:message title="" severity="warning" closable="false">
+        {!v.saveWarningMsg}
+      <aura:renderIf isTrue="{!v.saveWarningMsg == v.labMap.SB_NC_SETTING_ERROR_OtherSection_Saved}">
+        <div class="bRight" data-aura-rendered-by="893:0"><a class="close" onclick="{!c.clearnWarningMsg}" data-aura-rendered-by="877:0">×</a></div>
+      </aura:renderIf>
+    </ui:message>
+  </aura:renderIf>
+
+  <!-- 名刺スキャンオプション -->
+  <aura:renderIf isTrue="{!v.isEnableLeadExtention}">
+    <div style="padding: 20px 20px 10px 20px;">
+      <div class="slds-box slds-theme_shade checkboxtitletop">
+        <h3 class="slds-section__title">{!$Label.c.SB_NC_MAPPING_LABEL_NCScanOption}</h3>
+        <h4>{!$Label.c.SB_NC_MAPPING_NCScanOptionHelpMessage}</h4>
+        <div class="slds-media" >
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" style="margin-top:20px;">
+              <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_NCCampaignActive}" obj="{!v.baseSet}"  boxid="ScanSelectCampaign__c" boxvalue="{!v.baseSet.ScanSelectCampaign__c}"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aura:renderIf>
+
+
+  <!-- 同一人物の判断条件 -->
+<!-- SV2.4 一旦リリース見送りのためコメントアウト
+  <aura:renderIf isTrue="{!v.isTriggerMergeExpandCriteria}">
+    <div style="padding: 20px 20px 10px 20px;">
+      <div class="slds-box slds-theme_shade checkboxtitletop">
+        <h3 class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_NayoseJyoken}</h3>
+        <h4>{!$Label.c.SB_NC_MAPPING_NayoseJyokenHelpMessage}</h4>
+        <div class="slds-media" >
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" style="margin-top:10px;">
+              <lightning:dualListbox name="nayoseJyokenListBox"  
+                            sourceLabel="{!$Label.c.SB_NC_CANSELECTFIELD}" 
+                            selectedLabel="{!$Label.c.SB_NC_SELECTEDFIELD}" 
+                            options="{!v.nayoseJyokenAvailableList}" 
+                            value="{!v.nayoseJyokenSelectedList}" 
+                            requiredOptions="{!v.nayoseJyokenRequiredList}" 
+                            max="3"
+                            onchange="{!c.nayoseJyokenListChange }"
+                            disableReordering="true" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aura:renderIf>
+-->
+  
+  
+  <!-- リードまたは取引先・取引先責任者に登録 -->
+  <div style="padding: 20px 20px 10px 20px;">
+    <div class="slds-box slds-theme_shade checkboxtitletop">
+      <h3 class="slds-section__title">
+        <aura:renderIf isTrue="{!v.isEnableLeadExtention == true}">
+          {!$Label.c.SB_NC_MAPPING_LABEL_REGISTAANDCANDL}
+        </aura:renderIf>
+        <aura:renderIf isTrue="{!v.isEnableLeadExtention == false}">
+          {!$Label.c.SB_NC_MAPPING_LABEL_REGISTAANDC}
+        </aura:renderIf>
+      </h3>
+      <h4>
+        <aura:renderIf isTrue="{!v.isEnableLeadExtention == true}">
+          {!$Label.c.SB_NC_MAPPING_RegistAandCandLHelpMessage}
+        </aura:renderIf>
+        <aura:renderIf isTrue="{!v.isEnableLeadExtention == false}">
+          {!$Label.c.SB_NC_MAPPING_RegistAandCHelpMessage}
+        </aura:renderIf>
+      </h4>
+
+      <!-- リードに登録 -->
+      <aura:renderIf isTrue="{!v.isEnableLeadExtention}">
+        <div class="slds-media " style="margin-left:20px;margin-top:10px;">
+          <div class="slds-form-element__control" style="width:100%;">
+            <fieldset class="slds-form-element checkboxtitletop">
+              <p style="font-size:14px;" class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_REGISTLEAD}</p>
+            </fieldset>
+          </div>
+        </div>
+        <!-- レコードタイプ表示 -->
+        <div class="slds-media" style="margin-left:30px;">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+              <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_Label_RegistDispLeadRectype}" obj="{!v.baseSet}"  boxid="RegistDispLeadRectype__c" boxvalue="{!v.baseSet.RegistDispLeadRectype__c}"/>
+            </div>
+          </div>
+        </div>
+        <!-- 上書きする初期値・表示非表示 -->
+        <div class="slds-media" style="margin-left:30px;">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+              <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!v.labMap.SB_NC_MAPPING_LABEL_RegistLeadNotOverWrite}" obj="{!v.baseSet}"  boxid="RegistLeadNotOverWrite__c" boxvalue="{!v.baseSet.RegistLeadNotOverWrite__c}"/>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+              <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_LeadOverwrite}" obj="{!v.baseSet}"  boxid="RegistDispLeadOverWriteCheckbox__c" boxvalue="{!v.baseSet.RegistDispLeadOverWriteCheckbox__c}"/>
+            </div>
+          </div>
+        </div>
+        <!-- 検索対象レコードタイプ -->
+        <aura:renderIf isTrue="{!v.isEnableLeadExtention21}">
+          <div class="slds-media" style="margin-left:30px;">
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+                <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:20PX;">
+                  <div class="slds-media__figure checkboxdivleft" style="margin-top: 10px;">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiLeadQueryRecordTypeIds}</div>
+                </div>
+                <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:20PX;">
+                  <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5 checkboxtitletop">
+                    <div class="slds-media__figure checkboxdivleft">
+                      <div class="slds-form-element__control " id="sele" style="width:210px;height:60px;">
+                        <div style="border-radius:3px;padding:4px;border:1px solid rgb(216, 221, 230);overflow:auto;height:68px; background-color:white;">
+                          <aura:iteration items="{!v.leadRegistRecordTypeList }" var="va">
+                            <div class="slds-form-element" style="margin-top: 3px;">
+                              <div class="slds-form-element__control">
+                                <span class="slds-checkbox">
+                                  <input type="checkbox" name="options" onclick="{!c.changeRegistRecordTypeList}" id="{!'checkboxl-' + va.value}" checked="{!va.check == 'true'}"/>
+                                  <label class="slds-checkbox__label" for="{!'checkboxl-' + va.value}">
+                                    <span class="slds-checkbox_faux"></span>
+                                    <span class="slds-form-element__label" style="white-space:nowrap;">{!va.label}</span>
+                                  </label>
+                                </span>
+                              </div>
+                            </div>
+                          </aura:iteration>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slds-media" style="margin-left:30px;">
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-top:10px;margin-left:30px;">
+              <h4>{!$Label.c.SB_NC_MAPPING_RegistLeadQueryRecordTypeIdsHelpMessage}</h4>
+            </div>
+          </div>
+          <!-- リードTODO登録・件名の初期値 -->
+          <div class="slds-media" style="margin-left:30px;">
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:20px;">
+                <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!v.labMap.SB_NC_MAPPING_LABEL_RegistNoToDo}" obj="{!v.baseSet}"  boxid="RegistLeadNoToDo__c" boxvalue="{!v.baseSet.RegistLeadNoToDo__c}"/>
+              </div>
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:20px;">
+              <!-- <label class="slds-checkbox" for="todosub"> -->
+                <div  class="left20 uiInput uiInputTextuiInput_default uiInput_input">
+                  <label class="uiLabel-left form-element__label uiLabel">
+                    <span>{!v.labMap.SB_NC_MAPPING_LABEL_RegsitToDoSubject}</span>
+                  </label>
+                  <input style="max-width:150px;" onchange="{!c.changeLeadTodoSub}" class="left10 input" type="text" value="{!v.baseSet.RegistLeadToDoSubject__c}"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- リードTODOの任命先 -->
+          <div class="slds-media" style="margin-left:30px;">
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" style="margin-top:20px;">
+                <div class="slds-media checkboxtitletop" style="width:100%;margin-left:10px;">
+                  <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+                    <div class="slds-media__figure" style="margin-left:30px;">{!$Label.c.SB_NC_MAPPING_LABEL_ToDoOwner}</div>
+                    <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5">
+                      <div class="slds-media__figure checkboxdivleft">
+                        <div class="slds-form-element__control" id="sele" style="width:300px;min-width:300px;">
+                          <c:SB_NameCard_RenkeiSettingSelect ischange="{!v.needSave}" selectlist='{!v.registLeadToDoOwnerList}' selectbody='{!v.baseSet.RegistLeadToDoOwner__c}'/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aura:renderIf>
+      </aura:renderIf>
+
+      <!-- 取引先に登録 -->
+      <div class="slds-media "  style="margin-left:20px;margin-top:10px;">
+        <div class="slds-form-element__control" style="width:100%;">
+          <fieldset class="slds-form-element checkboxtitletop">
+            <p style="font-size:14px;" class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_REGISTACCOUNT}</p>
+          </fieldset>
+        </div>
+      </div>
+      <!-- レコードタイプ表示 -->
+      <div class="slds-media " style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+            <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_Label_RegistDispAccountRectype}" obj="{!v.baseSet}"  boxid="RegistDispAccountRectype__c" boxvalue="{!v.baseSet.RegistDispAccountRectype__c}"/>
+          </div>
+        </div>
+      </div>
+      <!-- 上書きする初期値・表示非表示 -->
+      <div class="slds-media" style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+            <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!v.labMap.SB_NC_MAPPING_LABEL_RegistAccountNotOverWrite}" obj="{!v.baseSet}"  boxid="RegistAccountNotOverWrite__c" boxvalue="{!v.baseSet.RegistAccountNotOverWrite__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+            <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_AccountOverwrite}" obj="{!v.baseSet}"  boxid="RegistDispAccountOverWriteCheckbox__c" boxvalue="{!v.baseSet.RegistDispAccountOverWriteCheckbox__c}"/>
+          </div>
+        </div>
+      </div>
+      <!-- 検索対象レコードタイプ -->
+      <div class="slds-media" style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:20PX;">
+              <div class="slds-media__figure checkboxdivleft" style="margin-top: 10px;">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountQueryRecordTypeIds}</div>
+            </div>
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:20PX;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5 checkboxtitletop">
+                <div class="slds-media__figure checkboxdivleft">
+                  <div class="slds-form-element__control " id="sele" style="width:210px;height:60px;">
+                    <div style="border-radius:3px;padding:4px;border:1px solid rgb(216, 221, 230);overflow:auto;height:68px; background-color:white;">
+                      <aura:iteration items="{!v.accRegistRecordTypeList }" var="va">
+                        <div class="slds-form-element" style="margin-top: 3px;">
+                          <div class="slds-form-element__control">
+                            <span class="slds-checkbox">
+                              <input type="checkbox" name="options" onclick="{!c.changeRegistRecordTypeList}" id="{!'checkboxa-' + va.value}" checked="{!va.check == 'true'}"/>
+                              <label class="slds-checkbox__label" for="{!'checkboxa-' + va.value}">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label" style="white-space:nowrap;">{!va.label}</span>
+                              </label>
+                            </span>
+                          </div>
+                        </div>
+                      </aura:iteration>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-media" style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-top:10px;margin-left:30px;">
+          <h4>{!$Label.c.SB_NC_MAPPING_RegistAccountQueryRecordTypeIdsHelpMessage}</h4>
+        </div>
+      </div>
+
+      <!-- 取引先責任者に登録 -->
+      <div class="slds-media "  style="margin-left:20px;margin-top:10px;">
+        <div class="slds-form-element__control" style="width:100%;">
+          <fieldset class="slds-form-element checkboxtitletop">
+            <p style="font-size:14px;" class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_REGISTCONTACT}</p>
+          </fieldset>
+        </div>
+      </div>
+      <!-- レコードタイプ表示 -->
+      <div class="slds-media" style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+            <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_Label_RegistDispContactRectype}" obj="{!v.baseSet}"  boxid="RegistDispContactRectype__c" boxvalue="{!v.baseSet.RegistDispContactRectype__c}"/>
+          </div>
+        </div>
+      </div>
+      <!-- 上書きする初期値・表示非表示 -->
+      <div class="slds-media" style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+            <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!v.labMap.SB_NC_MAPPING_LABEL_RegistContactNotOverWrite}" obj="{!v.baseSet}"  boxid="RegistContactNotOverWrite__c" boxvalue="{!v.baseSet.RegistContactNotOverWrite__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+            <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_ContactOverwrite}" obj="{!v.baseSet}"  boxid="RegistDispContactOverWriteCheckbox__c" boxvalue="{!v.baseSet.RegistDispContactOverWriteCheckbox__c}"/>
+          </div>
+        </div>
+      </div>
+      <!-- 検索対象レコードタイプ -->
+      <div class="slds-media" style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:10px;">
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:20PX;">
+              <div class="slds-media__figure checkboxdivleft" style="margin-top: 10px;">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactQueryRecordTypeIds}</div>
+            </div>
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:20PX;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5 checkboxtitletop">
+                <div class="slds-media__figure checkboxdivleft">
+                  <div class="slds-form-element__control " id="sele" style="width:210px;height:60px;">
+                    <div style="border-radius:3px;padding:4px;border:1px solid rgb(216, 221, 230);overflow:auto;height:68px; background-color:white;">
+                      <aura:iteration items="{!v.conRegistRecordTypeList }" var="va">
+                        <div class="slds-form-element" style="margin-top: 3px;">
+                          <div class="slds-form-element__control">
+                            <span class="slds-checkbox">
+                              <input type="checkbox" name="options" onclick="{!c.changeRegistRecordTypeList}" id="{!'checkboxc-' + va.value}" checked="{!va.check == 'true'}"/>
+                              <label class="slds-checkbox__label" for="{!'checkboxc-' + va.value}">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label" style="white-space:nowrap;">{!va.label}</span>
+                              </label>
+                            </span>
+                          </div>
+                        </div>
+                      </aura:iteration>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-media" style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-top:10px;margin-left:30px;">
+          <h4>{!$Label.c.SB_NC_MAPPING_RegistContactQueryRecordTypeIdsHelpMessage}</h4>
+        </div>
+      </div>
+
+      <!-- 取引先責任者TODO登録・件名の初期値 -->
+      <div class="slds-media" style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:20px;">
+            <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!v.labMap.SB_NC_MAPPING_LABEL_RegistNoToDo}" obj="{!v.baseSet}"  boxid="RegistNoToDo__c" boxvalue="{!v.baseSet.RegistNoToDo__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2" style="margin-top:20px;">
+          <!-- <label class="slds-checkbox" for="todosub"> -->
+            <div  class="left20 uiInput uiInputTextuiInput_default uiInput_input">
+              <label class="uiLabel-left form-element__label uiLabel">
+                <span>{!v.labMap.SB_NC_MAPPING_LABEL_RegsitToDoSubject}</span>
+              </label>
+              <input style="max-width:150px;" onchange="{!c.changeTodoSub}" class="left10 input" type="text" value="{!v.baseSet.RegistToDoSubject__c}"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 取引先責任者TODOの任命先 -->
+      <div class="slds-media" style="margin-left:30px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" style="margin-top:20px;">
+            <div class="slds-media checkboxtitletop" style="width:100%;margin-left:10px;">
+              <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+                <div class="slds-media__figure" style="margin-left:30px;">{!$Label.c.SB_NC_MAPPING_LABEL_ToDoOwner}</div>
+                <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5">
+                  <div class="slds-media__figure checkboxdivleft">
+                    <div class="slds-form-element__control" id="sele" style="width:300px;min-width:300px;">
+                      <c:SB_NameCard_RenkeiSettingSelect ischange="{!v.needSave}" selectlist='{!v.registToDoOwnerList}' selectbody='{!v.baseSet.RegistToDoOwner__c}'/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 会社名の比較対象 -->
+  <div style="padding: 20px 20px 10px 20px;">
+    <div class="slds-box slds-theme_shade checkboxtitletop">
+      <h3 class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_CompareTarget}</h3>
+      <aura:renderIf isTrue="{!v.isEnableLeadExtention21 == true}">
+        <h4>{!$Label.c.SB_NC_MAPPING_RegistLeadCompareCustomizeHelpMessage}</h4>
+      </aura:renderIf>
+      <aura:renderIf isTrue="{!v.isEnableLeadExtention21 == false}">
+        <h4>{!$Label.c.SB_NC_MAPPING_RegistAccountCompareCustomizeHelpMessage}</h4>
+      </aura:renderIf>
+      <!-- 会社名の比較対象 -->
+      <div class="slds-media "  style="margin-left:30px;">
+        <div class="slds-form-element__control" style="width:100%;">
+          <fieldset class="slds-form-element checkboxtitletop">
+            <p style="font-size:14px;" class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_CompareTargetAccountName}</p>
+          </fieldset>
+        </div>
+      </div>
+      <div class="slds-media">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-top:10px;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 checkboxtitletop">
+            <div class="slds-float_left">
+              <c:SB_NameCard_RenkeiCheckbox  leftmargin="0"  needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_CompareTargetAccountCustomize}" obj="{!v.baseSet}"  boxid="RegistAccountCompareCustomize__c" boxvalue="{!v.baseSet.RegistAccountCompareCustomize__c}"/>
+            </div>
+            <div class="slds-float_left" style="margin-left:10px;margin-top:-5px;width:300px">
+              <c:SB_NameCard_RenkeiSettingSelect ischange="{!v.needSave}" selectlist='{!v.registAccountCompareFieldList}' selectbody='{!v.baseSet.RegistAccountCompareField__c}' dis='{!v.disabledAccountCompareFieldSelect}' />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- リード会社名の比較対象 -->
+      <aura:renderIf isTrue="{!v.isEnableLeadExtention21 == true}">
+        <div class="slds-media "  style="margin-left:30px;">
+          <div class="slds-form-element__control" style="width:100%;">
+            <fieldset class="slds-form-element checkboxtitletop">
+              <p style="font-size:14px;" class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_CompareTargetLeadCompanyName}</p>
+            </fieldset>
+          </div>
+        </div>
+        <div class="slds-media">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-top:10px;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 checkboxtitletop">
+              <div class="slds-float_left">
+                <c:SB_NameCard_RenkeiCheckbox  leftmargin="0"  needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_CompareTargetLeadCustomize}" obj="{!v.baseSet}"  boxid="RegistLeadCompareCustomize__c" boxvalue="{!v.baseSet.RegistLeadCompareCustomize__c}"/>
+              </div>
+              <div class="slds-float_left" style="margin-left:10px;margin-top:-5px;width:300px">
+                <c:SB_NameCard_RenkeiSettingSelect ischange="{!v.needSave}" selectlist='{!v.registLeadCompareFieldList}' selectbody='{!v.baseSet.RegistLeadCompareField__c}' dis='{!v.disabledLeadCompareFieldSelect}' />
+              </div>
+            </div>
+          </div>
+        </div>
+      </aura:renderIf>
+    </div>
+  </div>
+
+
+  <!-- 最新の名刺が値を引継ぐ機能 -->
+  <div style="padding: 20px 20px 10px 20px;">
+    <div class="slds-box slds-theme_shade checkboxtitletop">
+      <h3 class="slds-section__title ">{!$Label.c.SB_NC_TITLE_SaishinInherit}</h3>
+      <h4><aura:unescapedHtml value="{!$Label.c.SB_NC_MAPPING_SaishinInheritValuesHelpMessage}"/></h4>
+      <div class="slds-media" >
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" style="margin-top:20px;">
+            <c:SB_NameCard_RenkeiCheckbox dis="{!v.showInheritSetting == false}" leftmargin="0"  needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_Label_SaishinInheritValues}" obj="{!v.baseSet}"  boxid="SaishinInheritValues__c" boxvalue="{!v.baseSet.SaishinInheritValues__c}"/>
+          </div>
+        </div>
+      </div>
+      <aura:renderIf isTrue="{!v.showInheritSetting}">
+            <lightning:dualListbox name="inheritSettingListBox"  
+                           sourceLabel="{!$Label.c.SB_NC_CANSELECTFIELD}" 
+                           selectedLabel="{!$Label.c.SB_NC_SELECTEDFIELD}" 
+                           options="{!v.inheritValueAvailableList}" 
+                           value="{!v.inheritValueSelectedList}" 
+                           requiredOptions="{!v.inheritValueRequiredList}" 
+                           disableReordering="true" />
+              
+      </aura:renderIf>
+    </div>
+  </div>
+
+  <div style="padding: 20px 20px 60px 20px;">
+    <div class="slds-box slds-theme_shade scx">
+      <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+          <!-- {!v.baseset.LastModifiedById} -->
+          <div style="margin-top:20px;margin-left:20px;" class="slds-media__figure">{!$Label.c.SB_NC_MAPPING_LABEL_LastModifiedBy}
+            <span style="margin-left:20px;">
+              <ui:outputText class="{!v.textHidden}" value="{!v.baseSet.LastModifiedByName}"/>
+              <ui:outputURL class="{!v.urlHidden}" value="{!'/one/one.app#/sObject/' + v.baseSet.LastModifiedById + '/view'}" label="{!v.baseSet.LastModifiedByName}"/>
+            </span>
+          </div>
+        </div>
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+          <div style="margin-top:20px;margin-left:20px;" class="slds-media__figure">{!$Label.c.SB_NC_MAPPING_LABEL_LastModifiedByDate}
+            <span style="margin-left:20px;">
+              <ui:outputText value="{!v.baseSet.LastModifiedByDate}"/>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aura:renderIf isTrue="{!v.showStyle == 'LEX'}">
+      <div class="slds-docked-form-footer">
+          <!-- 保存 -->
+          <a type="button"   id = 'save' onclick="{!c.save}"  aria-haspopup="false" class="slds-button slds-button_brand">{!$Label.c.SB_NC_MAPPING_LABEL_SAVE_BUTTON}</a>
+      </div>
+  </aura:renderIf>
+  <aura:renderIf isTrue="{!v.showStyle == 'Classic'}">
+      <div class="csmfoot" style="margin-top:-20px;">
+          <!-- 保存 -->
+          <a type="button"   id = 'save' onclick="{!c.save}"  aria-haspopup="false" class="slds-button slds-button_brand">{!$Label.c.SB_NC_MAPPING_LABEL_SAVE_BUTTON}</a>
+      </div>
+  </aura:renderIf>
+  <aura:renderIf isTrue="{!v.showAlert}">
+    <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt" >
+      <div class="slds-modal__container">
+        <div class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture">
+          <button class="slds-button slds-modal__close slds-button_icon-inverse" title="Close">
+            <div class="slds-assistive-text">Close</div>
+          </button>
+          <h2 class="slds-text-heading_medium" id="prompt-heading-id">{!$Label.c.SB_NC_MAPPING_LABEL_NOTICE}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around_medium">
+          <!-- <p>{!$Label.SmartViscaf.SB_NC_MAPPING_MSG_DEFAULT}</p> -->
+          <p>{!v.message}</p>
+        </div>
+        <div class="slds-modal__footer slds-theme_default">
+          <button onclick="{!c.yes}" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_YES}</button>
+          <button onclick="{!c.no}" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_NO}</button>
+        </div>
+      </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:renderIf>
+
+  <!--ロード中...-->
+  <aura:renderIf isTrue="{!v.login}">
+    <div class="slds-spinner_container" style="background-color:white">
+      <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
+        <div class="slds-assistive-text">Loading</div>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+  </aura:renderIf>
+
+  <aura:renderIf isTrue="{!v.isLoading}">
+    <div class="slds-spinner_container" style="background-color:white">
+      <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
+        <div class="slds-assistive-text">Loading</div>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+  </aura:renderIf>
+
+</aura:component>

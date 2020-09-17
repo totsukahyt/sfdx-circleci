@@ -1,0 +1,107 @@
+<!-- SB_NameCard_CompanyTree
+/**
+ *
+ * Salesforce1のSB_NameCard_SIndex.pageを真似し、ウェブ用の組織ツリー画面
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author jo
+ *  @Version 1      2015.2.xx
+ *  @Version 2      2016.3.xx AngularJS 1.5.2 へ移行
+ *  @Version 3      2016.11.1x LEX,S1 の詳細画面カスタムボタンから起動したとき用に閉じるボタンを追加。
+ *  @Version 4      2017.12.xx   v1.22 Winter'18 <apex:slds /> を使用 SV_DEV-704 Lighting Design System は 静的リソースは使わず<apex:slds /> で引用する。
+ *  @Version 2.4    2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *                             SV_DEV-1652 SB_NC_CardAppLauncher.pageのapex:pageタグtitle属性対応
+ **/
+-->
+<apex:page docType="html-5.0" controller="SB_NameCard_SController" sidebar="false" title="{!$Label.SB_NC_BusinessCard}：{!$Label.SB_NCOTL_AppTitle}">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <title>組織情報</title>
+  <meta name="description" content=""/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+  <script type="text/javascript">
+      var configFromEnv = {};
+      configFromEnv.sessionId = "{!$API.session_Id}";
+      var namespace = "{!JSENCODE(namespace)}";
+      var namespace_x = namespace === "" ? "" : namespace +"__";
+      var iOSDevice = {!iOSDevice}  // iOSを識別
+      var iOS8 = {!iOS8}  // iOS 8.xx を識別
+      var apexController = (namespace!='' ? namespace + '.' : '') + 'SB_NameCard_SController';
+</script>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/bootstrap.min.css')}"/>
+
+  <!-- Classicだと、SLDS を読み込んだだけで画面がくずれるので、 遅延ロードする /> -->
+  <apex:slds />
+  <link id="sldsCss" href="{!URLFOR($Asset.SLDS, 'assets/styles/salesforce-lightning-design-system.min.css')}" rel="subresource"/>
+</head>
+
+<body ng-app="SB_NameCard_WebApp" style="padding-top: 0px;">
+
+<div ng-controller="NCBaseController" >
+    <div class="ngView" autoscroll="false"/>
+</div>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/jquery.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-locale_ja-jp.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/ui-bootstrap-tpls.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-route.js')}"/>
+
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_WebApp.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_WebControllers.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_SfdcServices.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_Directives.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_Filters.min.js')}"/>
+
+  <!-- 閉じるボタン -->
+  <div class="slds" style="display:none;" id="footer">
+    <div class="slds-docked-form-footer">
+      <div class="slds-grid slds-grid_align-center">
+        <div class="slds-col">
+          <button class="slds-button slds-button_neutral slds-not-selected" aria-live="assertive" id="btClose" name="btClose">
+            <span class="slds-text-not-selected">
+              <svg aria-hidden="true" class="slds-button__icon_stateful slds-button__icon_left">
+                <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+              </svg>{!$Label.SB_NC_Label_Close}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(function(){
+      if( (typeof sforce != 'undefined') && (sforce != null) ) {
+        // LEX or S1 のときだけ
+        $('#sldsCss').attr('rel', 'stylesheet');
+        // 表示している名刺レコードID
+        var targetId =location.hash.split('/')[2];
+        // 閉じるボタン クリック
+        $('#btClose').click(function(e) {
+          if( (typeof sforce != 'undefined') && (sforce != null) ) {
+            // S1とか
+            sforce.one.navigateToURL('/' + targetId);
+          }
+          else {
+            // クラシック
+            window.open('/' + targetId, "_top");
+          }
+        });
+        // フッターを 遅れて表示する
+        setTimeout(function(){
+            $('#footer').css('display', '');
+            // $('#btClose').removeClass('slds-hide');
+        }, 800);
+      }
+      else {
+        // Classic
+      }
+    });
+
+  </script>
+
+</body>
+</html>
+</apex:page>

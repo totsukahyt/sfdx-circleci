@@ -1,0 +1,5 @@
+<apex:page showHeader="false">
+  <script type="text/javascript">
+    window.location.href = "{!URLFOR($Resource.SB_SmartViscaGuide)}";
+  </script>
+</apex:page>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The record type of the contact is displayed in the registration destination list on the registration page for the account / contact [Moved]</help>
+    <label>Display the Record Type of Contact [M]</label>
+    <name>DispContactRectype__c</name>
+</CustomFieldTranslation>

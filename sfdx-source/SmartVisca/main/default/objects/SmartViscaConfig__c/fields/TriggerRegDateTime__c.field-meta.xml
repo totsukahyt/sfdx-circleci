@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TriggerRegDateTime__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>名刺の追加、更新時、項目「取引先」、「リード」に値がセットされていたら、取引先取込日時 リード取込日時に現在時刻をセットします。</description>
+    <externalId>false</externalId>
+    <label>トリガで取込日時をセットする</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

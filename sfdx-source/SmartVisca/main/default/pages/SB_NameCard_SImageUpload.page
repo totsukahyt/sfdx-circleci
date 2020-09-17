@@ -1,0 +1,225 @@
+<!-- SB_NameCard_SImageUpload
+/**
+ *
+ * SmartVisca カメラ 送信画面、プログレス ダイアログ
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2015.6.xx   // ionic 版
+ *  @Version 2    2015.8.xx   // Boootstrap版
+ *  @Version 3    2016.09.xx  // fantasy -> sans-serif
+ *  @Version 4    2017.10.xx  v1.21 所有者選択
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+    <title>{!$Label.SB_NCS1C_Text_Sending}</title>
+<style type="text/css">
+</style>
+</head>
+
+<div class="container">
+<section>
+<form name="uploadForm" role="form">
+
+<div class="panel panel-default" style="margin-left: -15pt; margin-right: -15pt;">
+  <div class="panel-heading">
+    <p class="panel-title">{!$Label.SB_NCS1C_Text_NCImgDigitalizationOptions}</p>
+  </div>
+  <ul class="list-group">
+    <!-- 名刺リスト名 -->
+    <li  class="list-group-item">
+      <div class="form-group">
+        <label for="inputName" class="control-label"><i class="fa fa-list-alt"></i>&nbsp;{!$Label.SB_NCS1C_Label_NCListName}</label>
+        <div class="row">
+        <div class="col-sm-12">
+          <input type="text" class="form-control" id="inputName" placeholder="{!$Label.SB_NCS1C_Label_NCListName}" ng-model="listName"
+                uib-typeahead="list as list.label for list in listNames | filter:$viewValue | limitTo:8"/>
+          <a class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear"
+            ng-click="listName=''" ng-show="listName.length>0" ng-hide="listName==null || listName.length==0"
+            style="pointer-events: auto; text-decoration: none;cursor: pointer; margin-right: 12px;"></a>
+        </div>
+        </div>
+      </div>
+    </li>
+    <!-- 所有者 v1.21 -->
+    <li  class="list-group-item" ng-show="config.sCameraEnableOwnerSelect">
+      <div class="form-group">
+        <label for="inputOwner" class="control-label"><i class="fa fa-user"></i>&nbsp;{!$Label.SB_NCS1_Text_Owner}</label>
+        <div class="input-group">
+          <input type="text" class="form-control" disabled="true" value="{{selectedUser.user.label}}" >
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" ng-click="selectOwner()"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+          </input>
+        </div><!-- /input-group -->
+      </div><!-- /form-group -->
+    </li>
+    <!-- 手書きメモをデジタル化する -->
+    <li  class="list-group-item">
+      <div class="form-group checkbox checkbox-success checkbox-circle">
+        <input id="cb_freehandMemo" type="checkbox"  ng-model="settings.freehandMemo"/>
+        <label for="cb_freehandMemo"><i class="fa fa-share-square-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_DigitizeHandwrittenMemo}</label>
+      </div>
+    </li>
+    <!-- 表面のみ入力 -->
+    <li  class="list-group-item">
+      <div class="form-group checkbox checkbox-success checkbox-circle">
+        <input id="db_frontOnly" type="checkbox"  ng-model="settings.frontOnly"/>
+        <label for="db_frontOnly"><i class="fa fa-files-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_FrontsideOnlyInput}&nbsp;&nbsp;&nbsp;</label>
+      </div>
+    </li>
+  </ul>
+</div>
+</form>
+</section>
+</div>
+
+  <div class="card">
+    <div class="item item-text-wrap">
+      {!$Label.SB_NCS1C_Text_Namecard}:&nbsp;{{cards.length}}&nbsp;&nbsp;{!$Label.SB_NCS1C_Textl_Image}:&nbsp;{{imageCount}}
+    </div>
+  </div>
+
+<div style="margin-bottom: 55px;"></div>
+
+<!-- ボタン -->
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div style="padding:6px;">
+      <a class="btn btn-default pull-left" role="button" ui-sref="menu.photos" >
+        <i class="fa fa-arrow-circle-o-left"></i>&nbsp;{!$Label.SB_NCS1C_Label_GoBack}
+      </a>
+      <div class="btn btn-default pull-right" role="button" on-long-press="buttonOnLongPress()" on-touch-end="buttonOnTouchEnd()">
+        <i class="fa fa-cloud-upload"></i>&nbsp;{!$Label.SB_NCS1C_Label_Send}
+      </div>
+  </div>
+</nav>
+
+<!-- 所有者選択のダイアログ -->
+<script id="selectOwner.html" type="text/ng-template">
+  <div class="modal-header text-center" style="background-color :#f8f8ff">
+    <h4 class="modal-title"><i class="fa fa-user"></i>&nbsp;{!$Label.SB_NC_Owner}</h4>
+  </div>
+  <div class="modal-body">
+    <div style="text-align: center;" ng-show="working">
+      <img ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+    </div>
+    <div ng-hide="working">
+      <form id="selectOwnerForm" name="selectOwnerForm">
+        <!-- 部署 選択 -->
+        <div class="form-group">
+          <div class="row">
+            <div class="col-xs-3 col-md-3">
+              <label for="slDept">{!$ObjectType.User.fields.Department.Label}</label>
+            </div>
+            <div class="col-xs-9 col-md-9">
+              <select id="slDept" class="form-control" ng-model="dlgItems.dept">
+                <option ng-repeat="dept in departmentUsers.departments" value="{{dept}}">{{dept}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- 絞込む 名刺ユーザ数上限以下-->
+        <div class="form-group" ng-hide="enableSearch">
+          <div class="row">
+            <div class="col-xs-3 col-md-3">
+              <label for="inputFiler" >{!$Label.SB_NCS1_Label_Filter}</label>
+            </div>
+            <div class="col-xs-9 col-md-9">
+              <input type="text" class="form-control" id="inputFiler" placeholder="{!$ObjectType.User.Fields.Name.Label} | {!$ObjectType.User.Fields.UserName.Label} | {!$ObjectType.User.Fields.EMail.Label} | {!$ObjectType.User.Fields.Department.Label}"
+                 ng-model="dlgItems.userFilter" />
+              <a class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear"
+                ng-click="dlgItems.userFilter=''" ng-show="dlgItems.userFilter.length>0" ng-hide="dlgItems.userFilter==null || dlgItems.userFilter.length==0"
+                style="pointer-events: auto; text-decoration: none;cursor: pointer; margin-right: 12px;"></a>
+            </div>
+          </div>
+        </div>
+        <!-- 検索 名刺ユーザ数上限こえ-->
+        <div class="form-group" ng-show="enableSearch">
+          <div class="row">
+            <div class="col-xs-3 col-md-3">
+              <label for="inputFiler" >{!$Label.SB_NCS1_Label_Search}</label>
+            </div>
+            <div class="col-xs-9 col-md-9">
+              <input type="text" class="form-control" id="inputFiler2" placeholder="{!$ObjectType.User.Fields.Name.Label} | {!$ObjectType.User.Fields.UserName.Label} | {!$ObjectType.User.Fields.EMail.Label} | {!$ObjectType.User.Fields.Department.Label}"
+                 ng-model="dlgItems.userFilter" ng-minlength="2" ng-maxLength="80"/>
+              <a class="glyphicon glyphicon-search form-control-feedback"
+                ng-click="searchUser()" ng-show="dlgItems.userFilter.length>=2" ng-hide="dlgItems.userFilter==null || dlgItems.userFilter.length<2"
+                style="pointer-events: auto; text-decoration: none;cursor: pointer; margin-right: 12px;"></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ユーザ (部署) リスト -->
+        <div class="form-group">
+          <select id="slUser" class="form-control" size="8" ng-model="dlgItems.user"
+            ng-options="user.label for user in departmentUsers.dept2Users[dlgItems.dept] | filter: searchFilter track by user.id">
+            <option value="" selected="selected">-- {!$Label.SB_NC_TEXT_NotSelected} --</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer" style="background-color :#f8f8ff">
+    <div class="col-xs-offset-1 col-xs-12">
+      <button class="btn btn-default col-xs-4" ng-click="cancel()">{!$Label.SB_NCS1C_Label_Cancel}</button>
+      <div class="col-xs-1"></div>
+      <button class="btn btn-primary col-xs-4" ng-click="ok()" >{!$Label.SB_NCS1C_Label_OK}</button>
+    </div>
+  </div>
+</script>
+
+<!-- 送信開始確認画面のモーダル -->
+<script id="confirmSend.html" type="text/ng-template">
+  <div class="modal-header text-center" style="background-color :#f8f8ff">
+    <h4 class="modal-title">{!$Label.SB_NCS1C_Text_StartOfSending}</h4>
+  </div>
+  <div class="modal-body">
+    <h5><i class="fa fa-info-circle fa-2x"></i>&nbsp;{!$Label.SB_NCS1C_Text_StartToSend}</h5>
+    <form ng-show="showOption">
+      <div class="form-group checkbox checkbox-primary checkbox-circle">
+        <input id="checkbox1" type="checkbox" ng-model="showLog"/>
+        <label for="checkbox1">{!$Label.SB_NCS1C_Label_ViewTheLog}&nbsp;&nbsp;&nbsp;</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer" style="background-color :#f8f8ff">
+    <div class="col-xs-offset-1 col-xs-11">
+      <button class="btn btn-default col-xs-4" ng-click="$dismiss()">{!$Label.SB_NCS1C_Label_Cancel}</button>
+      <div class="col-xs-1"></div>
+      <button class="btn btn-primary col-xs-4" ng-click="$close(showLog)">{!$Label.SB_NCS1C_Label_OK}</button>
+    </div>
+  </div>
+</script>
+
+<!--  送信中のモーダル -->
+<script id="uploading.html" type="text/ng-template">
+  <div class="modal-header text-center" style="background-color :#f8f8ff">
+    <h4 class="modal-title">{{status.title}}</h4>
+  </div>
+  <div class="modal-body">
+    <uib-progressbar class="progress-striped active" value="status.value" max="status.max" type="info">
+    <i class="fa fa-smile-o" ng-show="status.finished && status.success"></i>
+    <i class="fa fa-frown-o" ng-show="status.finished && !status.success"></i>
+    </uib-progressbar>
+
+    <div style="text-align:center;">
+      <h4 text-align="center" ng-show="!status.finished" style="font-family:sans-serif; color:grey;">{{status.msg}}</h4>
+      <h4 text-align="center" ng-show="status.finished" style="font-family: sans-serif; color:{{(status.success ? '#4169e1' : 'crimson')}}">{{status.msg}}</h4>
+      <h6 text-align="center" ng-show="!status.success" style="color:crimson;">{{status.errMsg}}</h6>
+    </div>
+    <div>
+      <h6 ng-show="showLog" ng-repeat="stat in status.logs track by $index">{{stat}}</h6>
+    </div>
+  </div>
+  <div class="modal-footer" ng-show="status.finished" style="background-color :#f8f8ff">
+    <div class="col-xs-3"></div>
+    <div class="col-xs-6">
+      <button class="btn {{status.success ? 'btn-success':'btn-danger'}} btn-block" ng-click="$close()">{!$Label.SB_NCS1C_Label_OK}</button>
+    </div>
+    <div class="col-xs-3"></div>
+  </div>
+</script>
+</apex:page>

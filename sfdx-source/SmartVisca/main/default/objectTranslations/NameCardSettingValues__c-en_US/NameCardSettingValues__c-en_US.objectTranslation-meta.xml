@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>SmartVisca Setting Value</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>SmartVisca Setting Values</value>
+    </caseValues>
+    <nameFieldLabel><!-- 名刺設定値名 --></nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

@@ -1,0 +1,33 @@
+<apex:page standardController="JinjiIdo__c" extensions="SB_NameCard_TitleUpdaterController" action="{!init}">
+
+<apex:sectionHeader title="{!$Label.sb_nc_reflectpersonnelchange}" subtitle="{!targetRecord.NameCard__r.Contact__r.Name}" id="theSectionHeader"/>
+
+<apex:form >
+
+<apex:pageblock title="{!reflectToTitle}" mode="edit" tabstyle="contact">
+
+    <apex:pagemessages />
+
+    <apex:pageBlockButtons >
+        <apex:commandButton value="{!replaceContactTitle}" action="{!updateContact}"/>
+        <apex:commandButton value="{!$Label.sb_nc_cancel}" action="{!cancel}"/>
+    </apex:pageBlockButtons>
+
+    <apex:pageblocksection title="{!contactlabel}" columns="2">
+        <apex:outputfield value="{!targetRecord.NameCard__r.Contact__r.Name}"/>
+        <apex:outputfield value="{!targetRecord.NameCard__r.Contact__r.Account.Name}"/>
+        <apex:outputfield value="{!targetRecord.NameCard__r.Contact__r.Title}"/>
+    </apex:pageblocksection>
+
+    <apex:pageblocksection title="{!$Label.sb_nc_newtitle}" columns="1">
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel value="{!$Label.sb_nc_newtitle2}" for="newTitle"/>
+            <apex:inputTextarea cols="70" rows="3" value="{!newTitle}" id="newTitle"/>
+        </apex:pageBlockSectionItem>
+    </apex:pageblocksection>
+
+</apex:pageblock>
+
+</apex:form>
+
+</apex:page>

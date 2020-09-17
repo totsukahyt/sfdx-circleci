@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SMAXMapInfoWindowCompanies__c</fullName>
+    <defaultValue>4</defaultValue>
+    <description>地図のピンをクリックしたとき表示される InfoWindow に表示するときの会社数の最大値</description>
+    <externalId>false</externalId>
+    <label>S地図のピンに表示する会社数の最大値</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

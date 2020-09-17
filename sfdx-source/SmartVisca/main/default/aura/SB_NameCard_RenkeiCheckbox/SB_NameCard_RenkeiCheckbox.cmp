@@ -1,0 +1,45 @@
+<!-- /**
+ *
+ *  SB_NameCard_RenkeiCheckbox
+ *  設定(表示)用CheckBox
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.20      2017.02.XX
+ *  @Version 2.4       2019.05.XX  SV_DEV-1630と合わせてリファクタリングを実施
+ *                     2019.05.XX  SV_DEV-1331 SLDS CSSクラス名変更対応
+ *
+ **/ -->
+<aura:component >
+  <aura:attribute name="boxlabel" type="String"/>
+  <aura:attribute name="boxid" type="String"/>
+  <aura:attribute name="boxvalue" type="Boolean"/>
+  <aura:attribute name="obj" type="Map"/>
+  <aura:attribute name="dis" type="Boolean"/>
+  <aura:attribute name="checked" type="Boolean"/>
+  <aura:attribute name="needsave" type="Boolean"/>
+  <aura:attribute name="leftmargin" type="Integer" default="10"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+  <aura:registerEvent name="changeSaveFlag" type="c:SB_NameCard_CheckCckboxEvent"/>
+  <div style="margin-left:20px;" class="slds-media checkboxtitletop">
+    <div class="slds-media__figure" style="width:100%;">
+      <aura:renderIf isTrue="{!v.dis == true}">
+        <label class="slds-checkbox" for="{!v.boxid}">
+          <input  name="checkboxtop" type="checkbox" id="{!v.boxid}" checked="{!v.checked}" disabled="{!v.dis}" />
+          <span class="slds-form-element__label"></span>
+          <span  class="slds-checkbox_faux checkboxleft"></span>
+          <span class="slds-assistive-text"></span>
+        </label>&nbsp;&nbsp;{!v.boxlabel}
+      </aura:renderIf>
+      <aura:renderIf isTrue="{!v.dis != true}">
+        <label class="slds-checkbox" for="{!v.boxid}">
+          <input  name="checkboxtop" type="checkbox" id="{!v.boxid}" checked="{!v.boxvalue}" onclick="{!c.clickbox}"/>
+          <span class="slds-form-element__label"></span>
+          <span  class="slds-checkbox_faux checkboxleft"></span>
+          <span class="slds-assistive-text"></span>
+        </label>&nbsp;&nbsp;{!v.boxlabel}
+      </aura:renderIf>
+    </div>
+  </div>
+</aura:component>

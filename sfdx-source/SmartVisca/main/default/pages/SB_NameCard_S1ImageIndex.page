@@ -1,0 +1,225 @@
+<!-- SB_NameCard_S1ImageIndex
+/**
+ *
+ * SmartVisca カメラ メイン
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2015.06.xx  // IONIC版
+ *  @Version 2    2015.8.xx   // Boootstrap版
+ *  @Version 3    2016.3.xx   // 画像補正対応 パッケージ 1.15 angularjs を 1.5.2に
+ *        2016.7.1x  angularjs を 1.5.7に  S1取引先登録機能追加時
+ *  @Version 2.3.1  2019.04.xx  画像補正ライブラリ2019年版対応
+ *  @Version 2.4    2019.08.xx  新カメラに移行 SB_NameCard_SImageIndex → SB_NameCard_S1ImageIndex
+ *
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false"
+    controller="SB_NameCard_SImageController">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width"/>
+  <title>{!$Label.SB_NC_S1CameraName}</title>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/bootstrap.min.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/bootstrap-theme.min.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'font-awesome/css/font-awesome.min.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/awesome-bootstrap-checkbox.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/rzslider.css')}"/>
+
+  <script type="text/javascript">
+    var configFromEnv = {};
+    configFromEnv.sessionId = "{!$Api.session_Id}";
+    configFromEnv.clientIPAddress = "{!JSENCODE(clientIPAddress)}";
+    configFromEnv.sfdcEndPoint = "{!$Api.Partner_Server_URL_330}";
+    configFromEnv.orgId = "{!$Organization.Id}";
+    configFromEnv.userName = "{!$User.Username}";
+    configFromEnv.userId = "{!$User.Id}";
+    var namespace = "{!JSENCODE(namespace)}";
+    var namespace_x = namespace === "" ? "" : namespace +"__";
+    var apexController = (namespace!='' ? namespace + '.' : '') + 'SB_NameCard_SImageController';
+    var iOSDevice = {!iOSDevice};  // iOSを識別
+    var android = {!android};
+    var useChart = false;
+  </script>
+
+  <style type="text/css">
+  .uploadButton {
+      display:inline-block;
+      position:relative;
+      overflow:hidden;
+      border-radius:25px;
+      border-color: #2e6da4;
+      background-color: #337ab7;
+ 
+      color:#fff;
+      text-align:center;
+      padding:10px;
+      line-height:30px;
+      width:180px;
+      cursor:pointer;
+      font-weight: 400;
+      font-size: 16px;
+  }
+  /*.uploadButton:hover {
+      border-color: navy;
+      background:navy;
+  }
+  */
+  .uploadButton input[type=file] {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      cursor:pointer;
+      opacity:0;
+  }
+  .bar-subheader {
+  /*  top: 44px;
+    display: block;
+  */  height: 60px;
+  }
+  /*.has-header {
+    top: 100px;
+  }
+  */
+  /*a.item-content {
+    padding-left: 180px;
+  }*/
+  /*a.item-thumbnail-left {
+    padding-left: 180px;
+  }
+  */.item-thumbnail-left .item-content {
+      padding-left: 160px;
+  }
+  </style>
+
+  <script>
+    // Visualforce page goes blank in the Salesforce1 iOS app
+    // https://success.salesforce.com/issues_view?id=a1p300000008Y6nAAE
+    (function(){try{var a=navigator.userAgent;
+    if((a.indexOf('Salesforce')!=-1)&&(a.indexOf('iPhone')!=-1||a.indexOf('iPad')!=-1)&&(a.indexOf('OS/')!=-1||a.indexOf('OS ')!=-1)&&(a.indexOf('Safari')==-1)){
+    var s=document.createElement('style');
+    s.innerHTML="html,html body{overflow: auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}";
+    document.getElementsByTagName('head')[0].appendChild(s);}}catch(e){}})();
+    var STATIC_LSDJS = "{!URLFOR($Resource.SB_SmartVisca_Appc, 'if/lsd.js')}"  // 2019版 画像補正で使ってる
+  </script>
+</head>
+
+<body ng-app="SB_NameCard_ImageApp"  ng-controller="TopCtrl"  style="padding-top: 60px; ">
+
+  <!-- ↓ 2019版 画像補正で使ってる -->
+  <span id="take"  style="display: none;"></span>　
+  <span id="treat" style="display: none;"></span>  
+  <button id="threshold-button" style="display: none;"></button><!-- ↓ ゴミ取り処理のクリック起動で使ってる -->
+  <div id="take_img" style="display: none;"></div>  
+
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+<!-- ブランド付き メニュー付き ヘッダー -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-branded" role="navigation">
+  <!-- スマホ用ヘッダ -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"
+        ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-brand visible-xs"><i class="fa fa-camera" style="color:#000080">&nbsp;{!$Label.SB_NC_S1CameraName}</i></div>
+  </div>
+  <!-- タブレット用ヘッダ -->
+  <div class="navbar-brand visible-sm text-center"><i class="fa fa-camera" style="color:#000080">&nbsp;{!$Label.SB_NC_S1CameraName}</i></div>
+  <!-- PC用ヘッダ -->
+  <div class="navbar-brand navbar-center hidden-xs hidden-sm"><i class="fa fa-camera" style="color:#000080">&nbsp;{!$Label.SB_NC_S1CameraName}</i></div>
+
+  <!-- スマホ用ドロップダウン メニュー -->
+  <nav class="navbar-collapse collapse"  role="navigation" uib-collapse="isCollapsed">
+  <!-- <nav id="navMenu" class="navbar-collapse collapse"  role="navigation" collapse="isCollapsed"> -->
+    <ul class="nav navbar-nav navbar-right" style="padding-right:10px;">
+      <li><a ng-click="isCollapsed = !isCollapsed" ui-sref="menu.photos"><i class="fa fa-picture-o">&nbsp;{!$Label.SB_NCS1C_Menu_NCImgRegistration}</i></a></li>
+      <li><a ng-click="isCollapsed = !isCollapsed" ui-sref="menu.history"><i class="fa fa-history">&nbsp;{!$Label.SB_NCS1C_Text_SendingHistory}</i></a></li>
+      <li><a ng-click="isCollapsed = !isCollapsed" ui-sref="menu.settings"><i class="fa fa-cog">&nbsp;{!$Label.SB_NCS1C_Menu_Settings}</i></a></li>
+      <li><a ng-click="isCollapsed = !isCollapsed" ui-sref="menu.about"><i class="fa fa-users">&nbsp;{!$Label.SB_NCS1C_Text_Sunbridge}</i></a></li>
+    </ul>
+  </nav>
+</nav>
+
+<div autoscroll="false" class="ui-view container" ></div>
+
+<!--
+  <div class="container" style="top: 100px;   bottom: 49px;">
+    <div ui-view=""></div>
+  </div>
+-->
+
+<!--
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <p>FOOTER </p>
+  <div ui-view="footerView" class="container" >
+  </div>
+</nav>
+-->
+
+  <!-- build:js(.) scripts/vendor.js -->
+  <!-- bower:js -->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/jquery.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-locale_ja-jp.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/bootstrap.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-animate.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-touch.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-cookies.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-resource.min.js')}"/>
+  <!-- <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-route.min.js')}"/> -->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-sanitize.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-translate.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-ui-router.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/ui-bootstrap-tpls.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/hammer.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular.hammer.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/exif.js')}"/>
+  <!-- <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/ng-google-chart.js')}"/> -->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/rzslider.min.js')}"/>
+  <!-- 画像補正用 2016年版-->
+  <!-- <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'ip/StringUtil.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'ip/thin.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'ip/outline.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'ip/homography.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'ip/glMatrix-0.9.5.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'ip/potrace.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'ip/clone.js')}"/> -->
+  <!-- 画像補正用 2019年版-->
+  <!-- <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/matrix2d.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/homography.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/glMatrix-0.9.5.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/SimpleImageData.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/histogram.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/imageFilter.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/ada_thresh10.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/floodfill.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/pictTransControl.js')}"/>この中でlib/lsd.jsをロードしています
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'if/pictTransLoader.js')}"/> -->
+  <!-- 画像補正用 2019年版→ES6版 -->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc,  'rit/translate-bundle.js')}"/>
+<!-- 本番  -->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc, 'js/SB_NameCard_ImageApp.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc, 'js/SB_NameCard_ImageCtrls.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc, 'js/SB_NameCard_SfdcServices.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc, 'js/SB_NameCard_ImageServices.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Appc, 'js/SB_NameCard_ImageDirectives.min.js')}"/>
+
+<!-- 開発中
+  <c:SB_NameCard_ImageApp />
+  <c:SB_NameCard_ImageCtrls />
+  <c:SB_NameCard_SfdcServices />
+  <c:SB_NameCard_ImageServices />
+  <c:SB_NameCard_ImageDirectives />
+ -->
+</body>
+
+</apex:page>

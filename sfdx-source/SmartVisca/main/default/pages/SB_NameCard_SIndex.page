@@ -1,0 +1,68 @@
+<!-- SB_NameCard_SIndex
+/**
+ *
+ * Salesforce1対応 SmartViscaタブ 新UIのメイン
+ *
+ * Copyright (C) 2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author aizawa
+ *  @Version 1      2018.10.xx
+ *
+ **/
+-->
+<apex:page sidebar="false"
+  showHeader="false"
+  standardStylesheets="false"
+  applyBodyTag="false"
+  applyHtmlTag="false"
+  docType="html-5.0"
+  controller="SB_NameCard_S2Controller"
+  >
+
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <meta name="format-detection" content="telephone=no"/>
+        <link href="{!URLFOR($Resource.SB_SmartVisca_App2, 'main.css')}" rel="stylesheet"/>
+        <script type="text/javascript">
+          var configFromEnv = {};
+          configFromEnv.sessionId = "{!$API.session_Id}";
+          configFromEnv.endpoint = "{!$Api.Partner_Server_URL_330}";
+          var namespace = "{!JSENCODE(namespace)}";
+          var namespace_x = namespace === "" ? "" : namespace +"__";
+          var namespace_d = namespace === "" ? "" : namespace +".";
+          var iOSDevice = {!iOSDevice};  // iOSを識別
+          var soslInvalidOneCharacterRegex = /{!$Label.SB_NC_SoslInvalidStringRegex}/; // 1文字でこの正規表現に当てはまると検索しない
+        </script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script src="{!URLFOR($Resource.SB_SmartVisca_App2, 'main.js')}"></script>
+    </body>
+</html>
+
+<!--
+<html>
+
+  <head>
+    <meta charset="UTF-8" />
+    <script type="text/javascript">
+      var configFromEnv = {};
+      configFromEnv.sessionId = "{!$API.session_Id}";
+      configFromEnv.endpoint = "{!$Api.Partner_Server_URL_330}";
+      var namespace = "{!JSENCODE(namespace)}";
+      var namespace_x = namespace === "" ? "" : namespace +"__";
+      var iOSDevice = {!iOSDevice}  // iOSを識別
+    </script>
+  </head>
+
+  <body style="margin: 0;">
+    VUE_APP:
+    <div id="app"></div>
+    <script src="{!URLFOR($Resource.VueTest, 'bundle.js')}"></script>
+  </body>
+
+</html>
+-->
+</apex:page>

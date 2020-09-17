@@ -1,0 +1,76 @@
+<!-- /**
+ *
+ *  SB_NC_AccountBulkRegist
+ *  取引先・取引先責任者一括登録コンポーネント
+ *
+ *
+ *  Copyright (C) 2019 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author K.Yoshida
+ *  @Version 2.2  2019.02.XX SV_DEV-1558 LEX 取引先登録 一括画面をLXパッケージ同様のLC化で追加
+ *  @Version 2.4  2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *
+ **/ -->
+<aura:component implements="force:appHostable,force:hasRecordId"  controller="SB_NC_AccountBulkRgsLcController">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="retUrl" type="String" /> <!-- 戻り先URL -->
+  <aura:attribute name="fromLabel" type="String" /> <!-- パンくず用 名刺オブジェクトのラベル -->
+  <aura:attribute name="fromId" type="String" /> <!-- パンくず用 名刺オブジェクトのID -->
+  <aura:attribute name="viewLabel" type="String" /> <!-- パンくず用 リストビューのラベル -->
+  <aura:attribute name="viewId" type="String" /> <!-- パンくず用 リストビューのID -->
+  <aura:attribute name="titleV" type="Sobject" /> <!-- 画面表示用ラベルに関する内容 -->
+  <aura:attribute name="dataCount" type="Integer" /> <!-- 対象名刺数 -->
+
+  <aura:attribute name="fieldList" type="List" /> <!-- DataTableに表示する項目リスト -->
+  <aura:attribute name="selectMap" type="Map" /> <!-- 対象の名刺一覧 -->
+  <aura:attribute name="fieldMap" type="Sobject" /> <!-- 登録先オブジェクト別のDataTable表示内容Map<List> -->
+  <aura:attribute name="dataList" type="Sobject" /> <!-- DataTableに表示する内容 -->
+  <aura:attribute name="inputV" type="Sobject" /> <!-- 画面で入力された内容を保持 -->
+  <aura:attribute name="inputVBack" type="Sobject" /> <!-- 前回操作時の画面入力内容(不要な再検索抑止用) -->
+
+  <aura:attribute name="firstLoading" type="Boolean" default="true" /> <!-- 最初画面開く際の読み込み中フラグ -->
+  <aura:attribute name="working" type="Boolean" /> <!-- 読み込み中フラグ -->
+  <aura:attribute name="showErrorMsg" type="Boolean" /> <!-- エラーメッセージ表示フラグ -->
+  <aura:attribute name="searchError" type="Boolean" default="false" /> <!-- 検索によるエラー -->
+  <aura:attribute name="dataHasError" type="Boolean" default="false" /> <!-- 登録に関するエラー -->
+  <aura:attribute name="errorMsg" type="String" /> <!-- エラーメッセージ -->
+
+  <aura:attribute name="sobj" type="Sobject" />
+
+  <aura:handler name="changeSearchCondition" event="c:SB_NC_AccountBulkRegistChangeSearchConditionEvent"
+    action="{!c.changeSearchCondition}" />
+  <aura:handler name="accountBulkRegistEvent" event="c:SB_NC_AccountBulkRegistCommonEvent" action="{!c.doSomething}" />
+
+  <aura:renderIf isTrue="{!v.working}">
+    <aura:renderIf isTrue="{!v.firstLoading}">
+      <div class="slds-spinner_container" style="background-color:white">
+        <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
+          <div class="slds-assistive-text">Loading</div>
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+      <aura:set attribute="else">
+        <lightning:spinner variant="brand" size="large" />
+      </aura:set>
+    </aura:renderIf>
+  </aura:renderIf>
+
+  <div class="slds-tabs_default" style="height: 100%; width: 100%; top: 0px; left: 0; right: auto; z-index:9001; overflow: auto; ">
+    <c:SB_NC_AccountBulkRegistCommon aura:id="bulkRegistCommon" 
+                                      inputV="{!v.inputV}"
+                                      titleV="{!v.titleV}"
+                                      dataList="{!v.dataList}" 
+                                      fieldList="{!v.fieldList}" 
+                                      selectMap="{!v.selectMap}"      
+                                      fromLabel="{!v.fromLabel}" 
+                                      fromId="{!v.fromId}" 
+                                      viewLabel="{!v.viewLabel}" 
+                                      viewId="{!v.viewId}"      
+                                      dataCount="{!v.dataCount}" 
+                                      errorMsg="{!v.errorMsg}" 
+                                      showErrorMsg="{!v.showErrorMsg}"      
+                                      dataHasError="{!v.dataHasError}" 
+                                      searchError="{!v.searchError}" />
+  </div>
+</aura:component>

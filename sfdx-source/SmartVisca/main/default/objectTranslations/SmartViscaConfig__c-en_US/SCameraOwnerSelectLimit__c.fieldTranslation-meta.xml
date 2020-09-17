@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>S Camera: Owner Selection List Limit</label>
+    <name>SCameraOwnerSelectLimit__c</name>
+</CustomFieldTranslation>

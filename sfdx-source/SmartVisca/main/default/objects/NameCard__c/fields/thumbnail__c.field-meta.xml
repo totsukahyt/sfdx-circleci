@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>thumbnail__c</fullName>
+    <externalId>false</externalId>
+    <formula>if(isblank(image_id__c) || isblank(width__c) || isblank(height__c) , null , hyperlink( &quot;/servlet/servlet.FileDownload?file=&quot; &amp; image_id__c , image(&quot;/servlet/servlet.FileDownload?file=&quot; &amp; image_id__c  , &quot;サムネイル&quot; , height__c / 4 , width__c / 4) ,  &quot;_blank&quot; ) )</formula>
+    <label>サムネイル</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,54 @@
+<!-- SB_NameCard_SImageMenu
+/**
+ *
+ * SmartVisca カメラ メニュー
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2015.06.xx  // IONIC版
+ *  @Version 2    2015.8.xx   // Boootstrap版
+ *  @Version 3    2016.3.xx   // 画像補正対応
+ *
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+
+<!-- ローディング中 -->
+<div ng-show="working" style="padding-top:40px; text-align:center">
+      <i class="fa fa-spinner fa-pulse fa-2x" style="color:#4169e1"></i>
+</div>
+<!-- ローディング完了後 -->
+<div ng-hide="working">
+<!-- 登録用ビュー -->
+<div lass="container" ng-show="$state.current.name == 'menu.photos' || $state.current.name == 'menu.upload'" >
+  <div ui-view="photoView" ></div>
+</div>
+<!-- 画像確認用ビュー -->
+<div lass="container" ng-show="$state.current.name == 'menu.confirm'" >
+  <div ui-view="confirmView" ></div>
+</div>
+<!-- 詳細用ビュー -->
+<div lass="container" ng-show="$state.current.name == 'menu.detail'" >
+  <div ui-view="detailView" ></div>
+</div>
+<!-- 履歴用ビュー -->
+<div lass="container" ng-show="$state.current.name == 'menu.history'">
+  <div ui-view="historyView" ></div>
+</div>
+<!-- 設定用ビュー -->
+<div lass="container" ng-show="$state.current.name == 'menu.settings'">
+  <div ui-view="settingsView" ></div>
+</div>
+<!-- About用ビュー -->
+<div lass="container" ng-show="$state.current.name == 'menu.about'">
+  <div ui-view="aboutView" ></div>
+</div>
+<!-- 統計用ビュー -->
+<div lass="container" ng-show="$state.current.name == 'menu.chart'">
+  <div ui-view="chartView" ></div>
+</div>
+</div>
+
+
+</apex:page>

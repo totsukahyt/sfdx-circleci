@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>【Moved】</help>
+    <label>Reg. Acct.&amp;Con.: Don&apos;t overwrite Con. M</label>
+    <name>ContactNotOverWrite__c</name>
+</CustomFieldTranslation>

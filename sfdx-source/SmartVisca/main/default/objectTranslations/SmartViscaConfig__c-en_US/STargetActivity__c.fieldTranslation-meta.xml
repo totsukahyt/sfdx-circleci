@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>0: Account and Contact 1: Contact 2: Account other: Business Card</help>
+    <label>S Objects to add Acitivities</label>
+    <name>STargetActivity__c</name>
+</CustomFieldTranslation>

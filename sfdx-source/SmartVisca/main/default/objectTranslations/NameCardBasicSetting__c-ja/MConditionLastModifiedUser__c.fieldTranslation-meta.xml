@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- 連携設定最終更新者 --></label>
+    <name>MConditionLastModifiedUser__c</name>
+    <relationshipLabel><!-- 名刺基本設定 (連携設定最終更新者) --></relationshipLabel>
+</CustomFieldTranslation>

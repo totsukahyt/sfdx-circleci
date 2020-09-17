@@ -1,0 +1,76 @@
+/**
+*
+*  SB_NameCard_RenkeiMapping
+*   連携マッピングを設定する画面 CSS
+*
+*   選択された連携先のオブジェクトに応じてマッピング可能な選択肢を表示させます
+*
+*  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+*
+*  @author mao
+*  @Version 1.22      2017.07.XX SV_DEV-527 SmartVisca 基本設定の リード対応
+*  @Version 2.4       2019.05.XX  SV_DEV-1630と合わせてリファクタリングを実施
+*
+**/
+.THIS .toprecord{
+  width:30%;
+}
+
+.THIS .se ,
+.THIS .op {
+  position:relative;
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  zoom: 1;
+  *display: inline;
+  margin-top:40px;
+}
+.THIS .sp {
+  content: "\f0dc";
+  font-family: FontAwesome;
+  color: #000;
+  padding:8px;
+  position:relative;
+  right:35px;
+  top:0px;
+  background:red;
+  z-index:-1;
+  width:10%;
+  line-height:10%;
+}
+.THIS .csmfoot{
+  position:relative;
+  margin-top:50px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgb(244, 246, 249);
+  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.16);
+  z-index: 8000;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: .5rem 0;
+}
+.THIS .ishidden {
+  display:none;
+}
+@media (max-width: 600px) {
+  .THIS .tablesize {
+    width:1000px;
+  }
+}
+@media (max-width: 600px) {
+  .THIS .scx {
+    overflow-x:scroll;
+  }
+}
+.THIS h4{
+  font-size:10px;
+}

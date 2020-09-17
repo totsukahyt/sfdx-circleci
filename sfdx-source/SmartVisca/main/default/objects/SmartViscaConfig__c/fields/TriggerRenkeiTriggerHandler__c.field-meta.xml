@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TriggerRenkeiTriggerHandler__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>自動連携のトリガハンドラを呼ぶ</description>
+    <externalId>false</externalId>
+    <inlineHelpText>サンブリッジサポートの指示があった場合のみ設定します。</inlineHelpText>
+    <label>トリガで自動連携を行う</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

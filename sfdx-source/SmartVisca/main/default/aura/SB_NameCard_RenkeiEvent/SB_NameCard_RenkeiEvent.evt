@@ -1,0 +1,12 @@
+<!-- /**
+ *
+ *  SB_NameCard_RenkeiEvent
+ *   変更イベント
+ *   Componet   レコードタイプ変更があった場合、保存されてない場合、イベントを通知
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @Version 1.20      2017.02.XX
+ *  @Author gao
+ **/ -->
+<aura:event type="APPLICATION" description="Event template" />

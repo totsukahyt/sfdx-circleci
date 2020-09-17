@@ -1,0 +1,170 @@
+<!-- SB_NameCard_S1Index
+/**
+ *
+ * Salesforce1対応 ビューのメイン
+ *
+ * Copyright (C) 2014-2018 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.5.xx
+ *  @Version 3      2015.8.xx  angularjs を 1,3.16に
+ *  @Version 4      2016.10.xx https://success.salesforce.com/issues_view?id=a1p30000000T2oLAAS　の対応
+ *  @Version 2.1  2018.12.xx SB_NameCard_SIndexを複製。SB_NameCard_SIndexを新UI用にしたので。
+ *
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false"
+    controller="SB_NameCard_SController">
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <title>{!$Label.SB_NCS1_Text_NCList}</title>
+  <meta name="description" content=""/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+  <script type="text/javascript">
+    var configFromEnv = {};
+    configFromEnv.sessionId = "{!$API.session_Id}";
+    configFromEnv.endpoint = "{!$Api.Partner_Server_URL_330}";
+    var namespace = "{!JSENCODE(namespace)}";
+    var namespace_x = namespace === "" ? "" : namespace +"__";
+    var iOSDevice = {!iOSDevice}  // iOSを識別
+    var apexController = (namespace!='' ? namespace + '.' : '') + 'SB_NameCard_SController';
+</script>
+
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/bootstrap.min.css')}"/>
+<!-- 本番 -->
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_App, 'css/SB_NameCard_Css.min.css')}"/>
+
+<!-- 開発中
+    <c:SB_NameCard_Css />
+-->
+<!--
+<script>
+    // Visualforce page goes blank in the Salesforce1 iOS app
+    // https://success.salesforce.com/issues_view?id=a1p300000008Y6nAAE
+    (function(){try{var a=navigator.userAgent;
+    if((a.indexOf('Salesforce')!=-1)&&(a.indexOf('iPhone')!=-1||a.indexOf('iPad')!=-1)&&(a.indexOf('OS/')!=-1||a.indexOf('OS ')!=-1)&&(a.indexOf('Safari')==-1)){
+    var s=document.createElement('style');
+    s.innerHTML="html,html body{overflow: auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}";
+    document.getElementsByTagName('head')[0].appendChild(s);}}catch(e){}})();
+  </script>
+-->
+  <script>
+  // Salesforce1 - page automatically scrolls to top when user taps on a page element on iOS devices only
+  // https://success.salesforce.com/issues_view?id=a1p30000000T2oLAAS
+  (function(){try{var a=navigator.userAgent;
+  if((a.indexOf('Salesforce')!=-1)&&(a.indexOf('iPhone')!=-1||a.indexOf('iPad')!=-1)&&(a.indexOf('OS/')!=-1||a.indexOf('OS ')!=-1)&&(a.indexOf('Safari')==-1)){
+  var s=document.createElement('style');
+  s.innerHTML="html,html body{overflow: auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}";
+  document.getElementsByTagName('head')[0].appendChild(s);}}catch(e){}})();
+  </script>
+</head>
+
+<body ng-app="SB_NameCard_App" style="padding-top: 50px;">
+
+<div ng-controller="NCMenuController" >
+  <div class="navbar navbar-default navbar-fixed-top nav_sv" role="navigation" style="font-size: 14pt;
+  top: 0px;
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  ">
+<!--
+border-top-width: 0px;
+border-bottom-width: 1px;display: flex;
+transform: translate3d(0px, 0px, 0px);
+
+z-index: 10;
+box-sizing: border-box;
+padding: 5px;
+width: 100%;
+-->
+
+    <div style="margin-top: 10px; display: block; box-sizing: border-box;">
+      <form class="search" role="search" >
+        <span class="uib-dropdown" uib-dropdown="true" on-toggle="toggled(open)">
+          <a href="#" class="uib-dropdown-toggle brand" uib-dropdown-toggle="true">{!$Label.SB_NC_S1ViewerName}&nbsp;<span class="caret"></span>
+          </a>
+          <ul class="uib-dropdown-menu" uib-dropdown-menu="true" aria-labelledby="simple-dropdown">
+            <li><a href="#" ng-click="searchMine()">{!$Label.SB_NCS1_Label_MyNameCards}<i ng-show="targetType=='MineOnly'" class="glyphicon glyphicon-ok"/></a></li>
+            <li><a href="#" ng-click="searchAll()" >{!$Label.SB_NCS1_Label_AllNameCards}<i ng-show="targetType=='All'" class="glyphicon glyphicon-ok"/></a></li>
+            <li><a href="#" ng-click="searchResent()" >{!$Label.SB_NCS1_Label_RecentNamecards}<i ng-show="targetType=='Recent'" class="glyphicon glyphicon-ok"/></a></li>
+            <li ng-show="{!devMode}"><a href="#" ng-click="searchActual()" >{!$Label.SB_NCS1_Label_ImportantNamecards}<i ng-show="targetType=='Actual'" class="glyphicon glyphicon-ok"/></a></li>
+            <li ng-show="{!devMode}"><a href="#" ng-click="goTest()">{!$Label.SB_NCS1_Label_Test}<i ng-show="viewType=='Test'" class="glyphicon glyphicon-ok"/></a></li>
+            <li class="divider"></li>
+                <li ng-show="!indexSearch"><a href="#" ng-click="toggleSeatchMode()" >{!$Label.SB_NCS1_Label_IndexSearch}</a></li>
+                <li ng-show="indexSearch"><a href="#" ng-click="toggleSeatchMode()" >{!$Label.SB_NCS1_Label_StringSearch}</a></li>
+            <li ng-show="config.enableNameCardTag" class="divider"></li>
+            <li ng-show="config.enableNameCardTag" ><a ng-click='tagdNamecards()'>{!$Label.SB_NCS1_Label_TaggedNamecards}<i ng-show="viewType=='Tagd'" class="glyphicon glyphicon-ok"/></a></li>
+            <li ng-show="config.sUseGIS" class="divider"></li>
+            <li ng-show="config.sUseGIS" ><a ng-click='findNearby()'>{!$Label.SB_NCS1_Text_FindNamecardsNearby}<i ng-show="viewType=='NearBy'" class="glyphicon glyphicon-ok"/></a></li>
+            <li ng-show="config.sUseGIS" class="divider"></li>
+            <li ng-show="config.sUseGIS" ><a href='/apex/SB_NameCard_SSetGeoLocations'>{!$Label.SB_NCS1_Label_AddGeolocationInfoToNC}</a></li>
+          </ul>
+        </span>
+        <div ng-show="!indexSearch" class="title" style="float: right; margin-top: -4px;" ng-cloak="true">
+            <div class="title">
+                <input type="text" class="form-control" style="width: 148px;" ng-model="searchWord"  placeholder="{!$Label.SB_NCS1_Label_Search}..."/>
+            </div>
+            <button type="submit" class="btn btn-default" ng-click="search()" style="margin-right: 1pt;">{!$Label.SB_NCS1_Label_Search}</button>
+        </div>
+        <div ng-show="indexSearch" class="btn-group" uib-dropdown="uib-dropdown" style="float: right;" ng-cloak="true">
+           <button type="button" class="btn btn-info uib-dropdown-toggle" uib-dropdown-toggle="true" data-toggle="uib-dropdown" style="font-size: 9pt;">
+              <i class="glyphicon glyphicon-inbox"/>&nbsp;{!$Label.SB_NCS1_Label_Index}<span class="caret"></span>
+          </button>
+          <ul class="uib-dropdown-menu uib-dropdown-menu-right" uib-dropdown-menu="true" aria-labelledby="simple-dropdown" role="menu" style="min-width: 90px; ">
+              <li><a ng-repeat="index in indexs" ng-click="searchIndex(index.text)">{{index.label}}&nbsp;<i ng-show="indexText==index.text" class="glyphicon glyphicon-search"/></a></li>
+              <li ng-show="indexSearch && indexText!=''" class="divider"></li>
+              <li ng-show="indexSearch && indexText!=''" ><a ng-click="searchIndex()">{!$Label.SB_NCS1_Label_Clear}&nbsp;<i class="glyphicon glyphicon-random"/></a></li>
+          </ul>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ngView" autoscroll="false"/>
+<!--
+<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <div>SmartVisca</div>
+</nav>
+-->
+</div>
+
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/jquery.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-locale_ja-jp.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-sanitize.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-animate.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-touch.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/ngStorage.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/hammer.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular.hammer.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/ui-bootstrap-tpls.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-route.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-translate.min.js')}"/>
+<!--
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib,  $Label.SB_NC_GoolgeMapAPIJS)}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/underscore-min.js')}"/>
+-->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/lodash.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-simple-logger.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'js/angular-google-maps.min.js')}"/>
+
+<!-- 本番 -->
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_App.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_Controllers.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_SfdcServices.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_Directives.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.SB_SmartVisca_App, 'js/SB_NameCard_Filters.min.js')}"/>
+
+<!-- 開発中
+  <c:SB_NameCard_App />
+  <c:SB_NameCard_Controllers />
+  <c:SB_NameCard_SfdcServices />
+  <c:SB_NameCard_Directives />
+  <c:SB_NameCard_Filters />
+-->
+</body>
+</html>
+</apex:page>

@@ -1,0 +1,75 @@
+<!-- SB_NameCard_SRegistHistory
+/**
+ *
+ * Salesforce1対応 取引先・取引先責任者へ登録 登録履歴画面
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2016.04.xx  //
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+  <title>{!$Label.SB_NCS1R_Text_RegistrationHistory}</title>
+<style type="text/css">
+
+</style>
+</head>
+<div class="container">
+
+<h4><i class="fa fa-history fa-lg" style="color:#696969;"></i>&nbsp;{!$Label.SB_NCS1R_Text_RegistrationHistory}</h4>
+
+<div class="panel panel-default" ng-repeat="log in logs" style="margin-left: -15pt; margin-right: -15pt;">
+  <div class="panel-heading">{{log.date}}</div>
+  <!-- TABLE -->
+  <table class="table table-striped">
+    <tbody ng-repeat="act in log.actions">
+      <td style="vertical-align: middle;">{{act.time}}&nbsp;&nbsp;{!$Label.SB_NCS1R_Label_Namecard}:&nbsp;{{act.cards}}&nbsp;&nbsp;{!$Label.SB_NCS1R_Label_Image}:&nbsp;{{act.images}}</td>
+      <td style="vertical-align: middle;">{{act.listname}}</td>
+      <td>
+        <a ng-show="{{(act.location && act.location.lat ? 'true': 'false')}}" class="btn"
+          href="http://maps.google.co.jp/maps?f=q&hl=ja&geocode=&q={{act.location.lat}},{{act.location.lng}}&ie=UTF8&ll={{act.location.lat}},{{act.location.lon}}&spn=0.029488,0.083942&z=14">
+        <i class="fa fa-map-marker"></i></a>
+      </td>
+    </tbody>
+  </table>
+</div>
+
+<div style="text-align: center;">
+  <h6 style="color:grey;" ng-show="logs.length == 0">{!$Label.SB_NCS1R_Text_RegistHistoryNotFound}</h6>
+  <!-- <h6 style="color:grey;" ng-show="logs.length > 0">スワイプダウンすると更新します。</h6> -->
+  <h6 style="color:grey;" ng-show="logs.length > 0">{!$Label.SB_NCS1R_Text_KeepTheLatest100Records}</h6>
+</div>
+</div>
+<!-- ボタン -->
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div style="padding:6px;">
+      <div class="btn btn-default pull-left" role="button" ng-click="deleteHistory()" ng-show="logs.length > 0">
+        <i class="fa fa-trash-o"></i>&nbsp;{!$Label.SB_NCS1R_Label_Remove}
+      </div>
+      <div class="btn btn-default pull-right" role="button" ng-click="refresh()">
+        <i class="fa fa-refresh"></i>&nbsp;{!$Label.SB_NCS1R_Label_Refresh}
+      </div>
+  </div>
+</nav>
+
+<!-- 履歴削除確認のモーダル -->
+<script id="confirmDeleteHistory.html" type="text/ng-template">
+  <div class="modal-header text-center" style="background-color :#f8f8ff">
+    <h4 class="modal-title">{!$Label.SB_NCS1R_Text_ConfirmationOfHistoryDeletion}</h4>
+  </div>
+  <div class="modal-body">
+    <h5><i class="fa fa-exclamation-circle fa-2x">{!$Label.SB_NCS1R_Text_RemoveAllHistoryRecords}</h5>
+  </div>
+  <div class="modal-footer" style="background-color :#f8f8ff">
+    <div class="col-xs-offset-1 col-xs-11">
+      <button class="btn btn-default col-xs-4" ng-click="$dismiss()">{!$Label.SB_NCS1R_Label_Cancel}</button>
+      <div class="col-xs-1"></div>
+      <button class="btn btn-danger col-xs-4" ng-click="$close()">{!$Label.SB_NCS1R_Label_OK}</button>
+    </div>
+  </div>
+</script>
+
+</apex:page>

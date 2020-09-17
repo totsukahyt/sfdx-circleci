@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AutoConvAccountSearchNotUsePhone2__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>自動連携でアカウントの候補を探す処理で、名刺の電話番号2を取引先の電話番号と照合しません。</description>
+    <externalId>false</externalId>
+    <label>自動連携: 電話番号2 は取引先候補の条件に使わない</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

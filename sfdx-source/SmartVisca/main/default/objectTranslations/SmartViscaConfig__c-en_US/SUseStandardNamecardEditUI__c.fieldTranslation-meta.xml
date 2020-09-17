@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>On the detail page of Salesforce 1, the results edited on the standard screen are not immediately reflected.</help>
+    <label>Use the Standard Page For NC Edit</label>
+    <name>SUseStandardNamecardEditUI__c</name>
+</CustomFieldTranslation>

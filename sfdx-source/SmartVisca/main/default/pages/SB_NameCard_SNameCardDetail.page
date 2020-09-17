@@ -1,0 +1,395 @@
+<!-- SB_NameCard_SNameCardDetail
+/**
+ *
+ * Salesforce1対応 名刺詳細ビュー
+ *
+ * Copyright (C) 2014 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.5.xx
+ *  @Version 2      2015.8.xx 各タブにactive directive を追加 Angular Hammerに変更
+ *  @Version 3      2015.10.1x  TELタグの修正
+ *  @Version 4      2016.07.xx  英語対応、タブ幅を狭くした。
+ *
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+  <title>{!$Label.SB_NCS1_Text_NCDetail}</title>
+  <apex:stylesheet value="{!URLFOR($Resource.SB_SmartVisca_Lib, 'css/angular.treeview.css')}"/>
+  <style type="text/css">
+    .img-modal-window .modal-dialog {
+      position: relative;
+      top: 100px;
+    }
+
+    .nav>li>a  {
+      padding: 10px 10px;
+    }
+  </style>
+</head>
+<div>
+  <div class="jumbotron" style="height: 110px; background-color: rgb(9, 63, 94); padding-top: 0px; padding-left: 0px; margin-bottom: 6px;" >
+    <div class="container">
+      <table>
+        <tr>
+          <td class="jumbotronCell" rowspan="2">
+
+            <img ng-show="!card.photo" width="64" ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/profile.png')}" alt="{{card.name}}"/>
+            <img ng-show="card.photo" width="64" ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'demo/{{card.photo}}')}" alt="{{card.name}}"/>
+          </td>
+          <td class="jumbotronCell">
+            <h4 style="color: whitesmoke;" class="fullname" ng-cloak="true">{{card.name}}</h4>
+          </td>
+        </tr>
+        <tr>
+          <td class="jumbotronCell" >
+            <div class="jumbotronText" ng-cloak="true">{{card.company_name}}</div>
+            <div class="jumbotronText" ng-cloak="true">{{card.division}}</div>
+            <div class="jumbotronText" ng-cloak="true">{{card.title_name}}</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div ng-show="config.enableNameCardTag">
+    <p style="padding-left: 10px;"> <i class="glyphicon glyphicon-tags"></i>&nbsp;
+      <span ng-repeat="tag in tags">{{tag}},&nbsp;</span>
+      <span class="label label-info" ng-click="toggleTagInput()">{!$Label.SB_NCS1_Text_AddTags}</span>
+    </p>
+    <div uib-collapse="isCollapsed">
+      <div class="well">
+        <div class="col-lg-6">
+          <div class="input-group">
+            <input type="text" class="form-control" ng-model="newTag" uib-typeahead="tag.label for tag in selTags | filter:$viewValue | limitTo:6"  placeholder="{!$Label.SB_NCS1_Label_NewTag}..."/>
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="newTag=''"><i class="glyphicon glyphicon-remove"/></button>
+            </span>
+          </div><!-- /input-group -->
+          <alert ng-repeat="alert in tagAlerts" type="{{alert.type}}" close="closeTagAlert($index)">{{alert.msg}}</alert>
+          <button type="submit" class="btn btn-default" ng-click="saveNewTag()">{!$Label.SB_NCS1_Label_Add}</button>
+        </div><!-- /.col-lg-6 -->
+      </div>
+    </div>
+  </div>
+
+  <uib-tabset justified="false" active="activeTab">
+    <!-- 名刺の 詳細 -->
+    <uib-tab heading="{!$Label.SB_NCS1_Text_Details}" ng-disabled="treeLoading" active="true">
+      <div class="span4 well">
+        <div class="sv-loading" ng-show="working">
+          <img ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+        </div>
+        <div class="content" ng-show="!working">
+         <table class="CardData" ng-cloak="true">
+           <tr ng-show="config.sDetailShowNameKana && card.name_kana!=null"><td>{{card.name_kana}}</td></tr>
+           <tr ng-show="config.sDetailShowCompanyKana && card.company_name_kana!=null"><td>{{card.company_name_kana}}</td></tr>
+           <tr ng-show="config.sDetailShowZipCode && card.zip_code!=null"><td>〒&nbsp;{{card.zip_code}}</td></tr>
+           <!--                 <tr ng-show="config.sDetailShowAddress && (card.address_pref!= null || card.address!=null)"><td><a ng-click="openMap($event)" style="color: blue; text-decoration: underline;"> {{card.address_pref}} &nbsp;{{card.address}}</a></td></tr>-->
+           <tr ng-show="config.sDetailShowAddress && (card.address_pref!= null || card.address!=null)"><td><a ng-href="http://maps.google.com/maps?q={{card.address}}" style="color: blue; text-decoration: underline;"> {{card.address_pref}} &nbsp;{{card.address}}</a></td></tr>
+           <tr ng-show="config.sDetailShowAddress"><td>{{card.address_bld}}</td></tr>
+           <tr ng-show="!card.parentId"><td><i class="glyphicon glyphicon-star-empty"/>&nbsp;{!$Label.SB_NCS1_Text_IsLatestNamecard}</td></tr>
+           <tr ng-show="card.parentId"><td><a ng-href="#/detail/{{card.parentId}}/ret/detail/{{card.id}}" style="color: blue; text-decoration: underline;"><i class="glyphicon glyphicon-hand-right"/>&nbsp;{!$Label.SB_NCS1_Text_LatestNamecard}</a></td></tr>
+           <tr ng-show="config.sDetailShowNewsLink"><td><a ng-cloak="true" ng-href="{!$Label.SB_NC_GoogleNewsURL}{{newsKey}}" style="color: blue; text-decoration: underline;"><i class="glyphicon glyphicon-flash"/>&nbsp;{!$Label.SB_NCS1_Text_SearchNews}</a></td></tr>
+           <tr ng-show="config.sDetailShowAddressEng" class="title"><td >{!$Label.SB_NCS1_Text_AddressInEnglish}&nbsp;<i class="glyphicon glyphicon-globe"/></td></tr>
+           <tr ng-show="config.sDetailShowAddressEng" ><td class="value">{{card.address_eng}}</td></tr>
+           <tr ng-show="config.sDetailShowTel" class="title"><td>{!$Label.SB_NCS1_Text_Telephone}&nbsp;<i class="glyphicon glyphicon-phone-alt"/></td></tr>
+           <tr ng-show="config.sDetailShowTel" ><td class="value"><a ng-href="tel:{{card.tel1}}" style="color: blue; text-decoration: underline;" target="_blank">{{card.tel1}}</a></td></tr>
+           <tr ng-show="config.sDetailShowMobile" class="title"><td>{!$Label.SB_NCS1_Text_MobilePhone}&nbsp;<i class="glyphicon glyphicon-phone"/></td></tr>
+           <tr ng-show="config.sDetailShowMobile" ><td class="value"><a ng-href="tel:{{card.mobile}}" style="color: blue; text-decoration: underline;" target="_blank">{{card.mobile}}</a></td></tr>
+           <tr ng-show="config.sDetailShowFax" class="title"><td>{!$Label.SB_NCS1_Text_Fax}&nbsp;</td></tr>
+           <tr ng-show="config.sDetailShowFax"><td class="value">{{card.fax1}}</td></tr>
+           <tr ng-show="config.sDetailShowEMail" class="title"><td>{!$Label.SB_NCS1_Text_Email}&nbsp;<i class="glyphicon glyphicon-envelope"/></td></tr>
+           <tr ng-show="config.sDetailShowEMail"><td class="value"> <a ng-href="mailto:{{card.email}}" style="color: blue; text-decoration: underline;">{{card.email}}</a></td></tr>
+           <tr ng-show="config.sDetailShowURL" class="title"><td>{!$Label.SB_NCS1_Text_Web}&nbsp;<i class="glyphicon glyphicon-home"/></td></tr>
+           <tr ng-show="config.sDetailShowURL"><td class="value"><a ng-href="{{card.web_url1}}" style="color: blue; text-decoration: underline;" target="_blank">{{card.web_url1}}</a></td></tr>
+           <tr ng-show="config.sDetailShowExchangeDate" class="title"><td>{!$Label.SB_NCS1_Text_ExchangeDate}&nbsp;<i class="glyphicon glyphicon-calendar"/></td></tr>
+           <tr ng-show="config.sDetailShowExchangeDate"><td class="value">{{card.card_exchange_date | date : '{!$Label.SB_NC_NGDateFormat}'}}</td></tr>
+           <tr ng-show="config.sDetailShowOtherOwner && card.ownerId!='{!$User.Id}'" class="title"><td>{!$Label.SB_NCS1_Text_Owner}&nbsp;<i class="glyphicon glyphicon-user"/></td></tr>
+           <tr ng-show="config.sDetailShowOtherOwner && card.ownerId!='{!$User.Id}'"><td class="value">{{card.ownerName}}</td></tr>
+           <tr ng-show="config.sDetailShowListName" class="title"><td>{!$Label.SB_NCS1_Text_ListName}&nbsp;<i class="glyphicon glyphicon-tag"/></td></tr>
+           <tr ng-show="config.sDetailShowListName"><td class="value"> {{card.list_name}}</td></tr>
+           <tr ng-show="config.sDetailShowMemo" class="title"><td>{!$Label.SB_NCS1_Text_Memo}&nbsp;<i class="glyphicon glyphicon-pushpin"/></td></tr>
+           <tr ng-show="config.sDetailShowMemo"><td class="value">{{card.memo}}</td></tr>
+           <tr ng-show="config.sDetailShowFreeHandMemo" class="title"><td>{!$Label.SB_NCS1_Text_HandwrittenMemo}&nbsp;<i class="glyphicon glyphicon-comment"/></td></tr>
+           <tr ng-show="config.sDetailShowFreeHandMemo"><td class="value">{{card.freehandmemo}}</td></tr>
+         </table>
+       </div>
+     </div>
+   </uib-tab>
+   <!-- 名刺の 画像 -->
+   <uib-tab heading="{!$Label.SB_NCS1_Menu_Image}" ng-disabled="working" ng-click="openImageTab()">
+        <!--  hm-rotate="rotate($event)" hm-swipe="swipe($event)" -->
+        <!-- ng-swipe-left="swipeleft($event)" ng-swipe-right="swiperight($event)" -->
+
+    <div class="span4 well">
+      <!-- 名刺画像 -->
+      <p ng-show="card.image_id==null && card.bk_image_id==null" ng-cloak="true"> {!$Label.SB_NCS1_Text_NCImgNotFound}</p>
+      <div ng-show="card.image_id != null" class="cardArea">
+        <p>{!$Label.SB_NCS1_Text_FrontCard}</p>
+        <img id="img_01" name="img_01" ng-src="/servlet/servlet.FileDownload?file={{card.image_id}}" width="{{imgW}}px" hm-tap="tapImage(card.image_id, $event, true)"/>
+      </div>
+      <BR/>
+      <div ng-show="card.bk_image_id != null" class="cardArea">
+        <p>{!$Label.SB_NCS1_Text_BackCard}</p>
+        <img id="img_02" name="img_02" ng-src="/servlet/servlet.FileDownload?file={{card.bk_image_id}}" width="{{imgW}}px" hm-tap="tapImage(card.bk_image_id, $event, false)"/>
+      </div>
+      <BR/>
+      <hr/>
+      <!-- その他の名刺 -->
+      <h4>{!$Label.SB_NCS1_Text_OtherNamecards}</h4>
+      <div class="sv-loading" ng-show="working">
+        <img ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+      </div>
+      <p ng-show="doneOldCards && oldCards.length ==0" >{!$Label.SB_NCS1_Text_NoOtherNamecard}</p>
+      <!-- その他の名刺 リスト -->
+      <div ng-repeat="oldCard in oldCards">
+        <P>{{statuses[oldCard.status].label}}</P>
+        <span ng-show="oldCard.card_exchange_date!=null">{!$Label.SB_NCS1_Text_ExchangeDate}&nbsp;<i class="glyphicon glyphicon-calendar"/>&nbsp;:&nbsp;{{oldCard.card_exchange_date | date : '{!$Label.SB_NC_NGDateFormat}'}}</span>
+        <span ng-show="oldCard.card_exchange_date==null">{!$Label.SB_NCS1_Text_ExchangeDate}&nbsp;<i class="glyphicon glyphicon-calendar"/>&nbsp;:&nbsp;{!$Label.SB_NCS1_Text_Unknown}</span>
+        <br/>
+        <span> {!$Label.SB_NCS1_Text_Owner}&nbsp;<i class="glyphicon glyphicon-user"/>{{oldCard.ownerName}}</span>
+        <div ng-show="oldCard.image_id != null" class="cardArea">
+          <p>{!$Label.SB_NCS1_Text_FrontCard}</p>
+          <img id="img{{oldCard.Id}}" name="img{{oldCard.Id}}" ng-src="/servlet/servlet.FileDownload?file={{oldCard.image_id}}" width="{{imgW}}px" hm-tap="tapImage(oldCard.image_id, $event, true, $index)"/>
+        </div>
+        <div ng-show="oldCard.bk_image_id != null" class="cardArea">
+          <p>{!$Label.SB_NCS1_Text_BackCard}</p>
+          <img id="imgbk{{oldCard.Id}}" name="imgbk{{oldCard.Id}}" ng-src="/servlet/servlet.FileDownload?file={{oldCard.bk_image_id}}" width="{{imgW}}px" hm-tap="tapImage(oldCard.bk_image_id, $event, false, $index)"/>
+        </div>
+        <span ng-show="oldCard.image_id == null && oldCard.bk_image_id==null" >{!$Label.SB_NCS1_Text_NCImgNotFound}</span>
+        <hr/>
+      </div>
+    </div>
+
+  </uib-tab>
+  <!-- 活動 -->
+  <uib-tab heading="{!$Label.SB_NCS1_Text_Activity}" ng-show="config.enableActivity" ng-disabled="working" ng-click="openActivityTab()" >
+    <div class="span4 well">
+      <div class="sv-loading" ng-show="working || !doneMyActivities">
+        <img ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+      </div>
+      <div ng-show="doneMyActivities">
+      <h4>{!$Label.SB_NCS1_Text_ActivitiesPlan}<small>&nbsp;({!$Label.SB_NCS1_Text_FromTodayOnwards})</small></h4>
+        <p class="bg-warning" ng-show="activities.length == 0">{!$Label.SB_NCS1_Text_ActivitiesPlanNotFound}</p>
+        <table class="table">
+          <thead>
+          </thead>
+          <tbody>
+            <tr ng-click="openActivity(act)" ng-repeat="act in activities">
+              <td>
+                <span class="glyphicon glyphicon-tasks" ng-show="act.task!=null"></span>
+                <span class="glyphicon glyphicon-time" ng-show="act.event!=null"></span>
+                <a ng-click="openActivity(act)"><b class="fullname">{{act.subject}}</b></a> <br />
+                <!--<div><small class="metadata">{{act.targetName}}</small></div>-->
+                <div><small class="metadata">{{act.targetDateTime}}</small></div>
+                <div ng-show="act.task!=null"><small class="metadata">{{act.task.Status}}</small></div>
+                <div><small class="metadata">{{act.description}}</small></div>
+              </td>
+              <td><i class="glyphicon glyphicon-chevron-right"/></td>
+            </tr>
+          </tbody>
+        </table>
+        <br/>
+        <div class="btn-toolbar" role="toolbar">
+          <!-- Task not have recordtypes-->
+          <div ng-show="taskRecTypes.length<=1" class="btn-group"  ng-disabled="btnDisabled">
+            <button type="button" class="btn btn-default" ng-click="createTask($event)">
+              <i class="glyphicon glyphicon-tasks"/>&nbsp;{!$Label.SB_NCS1_Text_CreateNewToDo}
+            </button>
+          </div>
+          <!-- Task have recordtypes-->
+          <div  ng-show="taskRecTypes.length>1" class="btn-group" uib-dropdown="uib-dropdown"  ng-disabled="btnDisabled">
+            <button type="button" class="btn btn-default" uib-dropdown-toggle="true" data-toggle="uib-dropdown">
+              <i class="glyphicon glyphicon-tasks"/>&nbsp;{!$Label.SB_NCS1_Text_CreateNewToDo}<span class="caret"/>
+            </button>
+            <ul class="uib-dropdown-menu" uib-dropdown-menu="true" role="menu" aria-labelledby="single-button">
+              <li ng-repeat="rt in taskRecTypes"><a ng-click="createTask($event, rt.id)">{{rt.label}}</a></li>
+            </ul>
+          </div>
+          <!-- Event not have recordtypes-->
+          <div ng-show="eventRecTypes.length<=1" class="btn-group" >
+            <button type="button" class="btn btn-default" ng-click="createEvent($event)" ng-disabled="btnDisabled">
+              <i class="glyphicon glyphicon-time"/>&nbsp;{!$Label.SB_NCS1_Text_CreateNewEvent}
+            </button>
+          </div>
+          <!-- Event have recordtypes-->
+          <div ng-show="eventRecTypes.length>1" class="btn-group" uib-dropdown="uib-dropdown"  ng-disabled="btnDisabled">
+            <button type="button" class="btn btn-default" uib-dropdown-toggle="true" data-toggle="uib-dropdown">
+              <i class="glyphicon glyphicon-time"/>&nbsp;{!$Label.SB_NCS1_Text_CreateNewEvent}<span class="caret"/>
+            </button>
+            <ul class="uib-dropdown-menu" uib-dropdown-menu="true" role="menu" aria-labelledby="single-button">
+              <li ng-repeat="rt in eventRecTypes"><a ng-click="createEvent($event, rt.id)">{{rt.label}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </uib-tab>
+  <!-- 共通 同じ名刺を持つユーザ -->
+  <uib-tab heading="{!$Label.SB_NCS1_Text_Common}" ng-disabled="working" ng-click="openUsersTab()"  >
+    <div class="span4 well">
+      <div class="sv-loading" ng-show="working">
+        <img ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+      </div>
+      <p ng-show="!working && users.length > 0">{!$Label.SB_NCS1_Text_UsersWithSameNC}</p>
+      <p class="bg-warning" ng-show="!working && users.length == 0">{!$Label.SB_NCS1_Msg_UsersWithSameNCNotFound}</p>
+      <div style="margin-bottom: 10px;" ng-show="!working && users.length > 0">
+      </div>
+      <table class="table">
+        <thead>
+        </thead>
+        <tbody>
+          <tr ng-click="openUser(user.Id)" ng-repeat="user in users">
+            <td>
+              <div class="thumbs">
+                <span class="thumbnail" style="background-image: url('{{user.FullPhotoUrl}}')"/>
+              </div>
+            </td>
+            <td>
+              <a ng-click="openUser(user.Id)"><b class="fullname">{{user.Name}}</b></a> <br/>
+              <div><i class="glyphicon glyphicon-phone"></i><small class="metadata">
+                <a href="tel:{{user.Phone}}" style="color: blue; text-decoration: underline;" target="_blank">{{user.Phone}}</a>
+              </small></div>
+              <div><i class="glyphicon glyphicon-envelope"></i><small class="metadata">{{user.Email}}</small></div>
+            </td>
+            <td><i class="glyphicon glyphicon-chevron-right"></i></td>
+          </tr>
+        </tbody>
+      </table>
+      <br/>
+    </div>
+  </uib-tab>
+  <!-- 組織 ツリー -->
+  <uib-tab heading="{!$Label.SB_NCS1_Label_Organization}" ng-click="openOrgTreeTab()" ng-disabled="working"  >
+    <div class="span4 well">
+      <div class="sv-loading" ng-show="working">
+        <img ng-src="{!URLFOR($Resource.SB_SmartVisca_Lib, 'img/loading.gif')}" />
+      </div>
+      <div ng-show="doneOrgTree && nodeList.length > 0">
+        <p class="bg-info">{!$Label.SB_NCS1_Text_ViewDetailsInGrid}</p>
+        <div
+        data-angular-treeview="true"
+        data-tree-id="treeOrg"
+        data-tree-model="nodeList"
+        data-node-id="nodeId"
+        data-node-label="label"
+        data-node-children="items"
+        data-node-mine="mine"
+        data-node-selected="selected" >
+      </div>
+<!--         data-node-label="nodeName"
+        data-node-children="children"
+ -->
+
+      <br/>
+      <p style="font-size: 10px">{!$Label.SB_NCS1_Text_OnlyLatestNC}</p>
+      <p style="font-size: 10px"> <i class="glyphicon glyphicon-star"/>&nbsp;:&nbsp;{!$Label.SB_NCS1_Text_OwnedNamecard}</p>
+    </div>
+  </div>
+</uib-tab>
+</uib-tabset>
+
+<!--
+<p style="text-align: center; margin: 0 0 0px 10px;">
+    <button type="button" ng-show="config.sEnableNameCardEdit && card.ownerId=='{!$User.Id}'" class="btn btn-primary" ng-disabled="working" ng-click="edit()"><i class="glyphicon glyphicon-edit"/>&nbsp;編集</button>
+    <button type="button" class="btn btn-default" ng-disabled="working" ng-click="cancel()">戻る</button>
+</p>
+-->
+<div class="row">
+<p style="text-align: center; margin: 0 0 0px 10px;">
+
+ <!-- <div class="row btn-group" style="text-align: center; margin: 0 0 0px 10px;"> -->
+  <!-- 編集ボタン -->
+  <label class="btn btn-primary" ng-cloak="true" ng-show="config.sEnableNameCardEdit && config.enableNameCardEdit && card.ownerId=='{!$User.Id}'" ng-disabled="working" ng-click="edit()" style="padding: 0.6em 1em 0.6em 1em; font-size: 14px; cursor: pointer;"><i class="glyphicon glyphicon-edit"></i>&nbsp;{!$Label.SB_NCS1_Text_Edit}</label>
+  <!-- 取引先登録 へのリンクボタン -->
+  <label class="btn btn-primary" ng-cloak="true" ng-disabled="working" ng-show="config.enableAccountRegist" ng-click="regist()" style="padding: 0.6em 1em 0.6em 1em; font-size: 14px; cursor: pointer;"><i class="glyphicon glyphicon-user">&nbsp;{{labelRegist}}</i></label>
+  <!-- 踊るボタン -->
+  <label class="btn btn-default" ng-cloak="true" ng-disabled="working" ng-click="cancel()" style="padding: 0.6em 1em 0.6em 1em; font-size: 14px; cursor: pointer;">{!$Label.SB_NCS1_Label_GoBack}</label>
+<!-- </div> -->
+
+</p>
+</div>
+
+<hr/>
+<p>
+  &nbsp;&nbsp;&nbsp;
+  <!-- 取引先へのリンクボタン -->
+  <span class="label label-info" ng-disabled="treeLoading || working" ng-show="config.enableAccountView && card.accountId != null" ng-click="openAccount()">{{labelGotoA}}</span>
+  &nbsp;&nbsp;&nbsp;
+  <!-- 取引先責任者へのリンクボタン -->
+  <span class="label label-info" ng-disabled="treeLoading || working" ng-show="config.enableContactView && card.contactId != null" ng-click="openContact()">{{labelGotoC}}</span>
+</p>
+</div>
+
+
+<!-- タップしたとき名刺画像を拡大表示するダイアログ 枠なし -->
+<script type="text/ng-template" id="imgContent.html">
+  <div class="modal-body" style="max-height: 0px; padding: 0px;" >
+    <!-- for iPhone -->
+<!--          <img ng-show="ios" ng-src="/servlet/servlet.FileDownload?file={{imageId}}"
+     hm-tap="tapped" hm-pinch="pinch"
+     style="transform: scale({{scaleFactor}}) rotate({{deg}}deg);
+     -webkit-transform: scale({{scaleFactor}}) rotate({{deg}}deg);
+     -moz-transform: scale({{scaleFactor}}) rotate({{deg}}deg);
+     -o-transform: scale({{scaleFactor}}) rotate({{deg}}deg);
+     -ms-transform: scale({{scaleFactor}}) rotate({{deg}}deg);"/>
+-->
+    <!-- for Android-->
+    <img ng-src="/servlet/servlet.FileDownload?file={{img.imageId}}"
+      hm-tap="tapped"
+      style="transform: rotate({{img.deg}}deg) translateX({{img.offsetX}}) translateY({{img.offsetY}})  scale({{img.scaleFactor}});
+      -webkit-transform: rotate({{img.deg}}deg) translateX({{img.offsetX}}) translateY({{img.offsetY}}) scale({{img.scaleFactor}});
+      transform-origin: top left;
+      -webkit-transform-origin: top left;" />
+  </div>
+</script>
+<!-- 名刺画像のモーダル  -->
+<script type="text/ng-template" id="imageWindow.html">
+  <div class="modalFrame">
+    <div class="modal-body">
+      <div style="position:relative; overflow:scroll; " >
+        <div hm-pinch="pinched" hm-tap="tapped" hm-pan="paned" hm-swipeleft="reverse" hm-swiperight="reverse"
+          style="
+          width:{{(card.width)}}px;
+          height:{{(card.height)}}px;
+          background: url('{{card.data}}') no-repeat;
+          background-position-x: {{posX}}px;
+          background-position-y: {{posY}}px;
+          transform-origin: left top;
+          -webkit-transform-origin: left top;
+          -moz-transform-origin: left top;
+          -o-transform-origin: left top;
+          -ms-transform-origin: left top;
+          transform: scale({{scaleFactor}});
+          -webkit-transform: scale({{scaleFactor}});
+          -moz-transform: scale({{scaleFactor}});
+          -o-transform: scale({{scaleFactor}});
+          -ms-transform: scale({{scaleFactor}});"></div>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<!-- 画面ブラックアウトモーダル = カメラの画層ファイル読み込み中モーダル -->
+<script id="loadingWindow.html" type="text/ng-template">
+<div style ="padding: 20px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  text-align: center;
+  text-overflow: ellipsis;
+  font-size: 15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left:-20px;
+  ">
+  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+</div>
+</script>
+
+
+</apex:page>

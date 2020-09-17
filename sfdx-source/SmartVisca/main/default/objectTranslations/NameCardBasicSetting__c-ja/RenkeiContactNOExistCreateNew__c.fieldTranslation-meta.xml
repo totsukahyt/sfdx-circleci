@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- 自動連携での取引先をひもづけて、その取引先に名刺に相当する取引先責任者がなければ作成する。 --></help>
+    <label><!-- 自動連携:既存の取引先責任者がなければ新規作成する --></label>
+    <name>RenkeiContactNOExistCreateNew__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>meishi</fullName>
+    <fields>Name</fields>
+    <fields>thumbnail__c</fields>
+    <fields>company_name__c</fields>
+    <fields>division__c</fields>
+    <fields>title_name__c</fields>
+    <label>名刺</label>
+</CompactLayout>

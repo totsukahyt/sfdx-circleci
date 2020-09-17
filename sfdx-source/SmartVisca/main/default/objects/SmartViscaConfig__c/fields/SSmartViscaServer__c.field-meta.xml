@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SSmartViscaServer__c</fullName>
+    <description>SmartViscaサーバのAPIに非標準のURLを使うときに指定します。</description>
+    <externalId>false</externalId>
+    <inlineHelpText>SmartViscaサーバのAPIに非標準のURLを使うときに指定します。</inlineHelpText>
+    <label>SSmartViscaサーバ</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Url</type>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SMAXOrgTreeNameCards__c</fullName>
+    <defaultValue>200</defaultValue>
+    <description>名刺詳細の組織階層の構築で取得する名刺レコード数の上限値</description>
+    <externalId>false</externalId>
+    <inlineHelpText>名刺詳細の組織階層の構築で取得する名刺レコード数の上限値</inlineHelpText>
+    <label>S組織階層を作るときに取得する名刺の上限値</label>
+    <precision>6</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

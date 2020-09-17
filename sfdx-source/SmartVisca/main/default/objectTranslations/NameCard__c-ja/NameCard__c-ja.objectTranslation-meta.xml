@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>名刺</value>
+    </caseValues>
+    <layouts>
+        <layout>名刺レイアウト（一般用）</layout>
+        <sections>
+            <label><!-- イメージ --></label>
+            <section>イメージ</section>
+        </sections>
+        <sections>
+            <label><!-- カスタムリンク --></label>
+            <section>カスタムリンク</section>
+        </sections>
+        <sections>
+            <label><!-- メモ --></label>
+            <section>メモ</section>
+        </sections>
+        <sections>
+            <label><!-- メモ２ --></label>
+            <section>メモ２</section>
+        </sections>
+        <sections>
+            <label><!-- 取込先 --></label>
+            <section>取込先</section>
+        </sections>
+        <sections>
+            <label><!-- 名刺の状態 --></label>
+            <section>名刺の状態</section>
+        </sections>
+        <sections>
+            <label><!-- 英文 --></label>
+            <section>英文</section>
+        </sections>
+        <sections>
+            <label><!-- 連絡先 --></label>
+            <section>連絡先</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>名刺レイアウト（管理者用）</layout>
+        <sections>
+            <label><!-- イメージ --></label>
+            <section>イメージ</section>
+        </sections>
+        <sections>
+            <label><!-- エラー情報 --></label>
+            <section>エラー情報</section>
+        </sections>
+        <sections>
+            <label><!-- カスタムリンク --></label>
+            <section>カスタムリンク</section>
+        </sections>
+        <sections>
+            <label><!-- スキャン情報 --></label>
+            <section>スキャン情報</section>
+        </sections>
+        <sections>
+            <label><!-- メモ --></label>
+            <section>メモ</section>
+        </sections>
+        <sections>
+            <label><!-- 取込先 --></label>
+            <section>取込先</section>
+        </sections>
+        <sections>
+            <label><!-- 取込情報 --></label>
+            <section>取込情報</section>
+        </sections>
+        <sections>
+            <label><!-- 名刺の状態 --></label>
+            <section>名刺の状態</section>
+        </sections>
+        <sections>
+            <label><!-- 氏名 --></label>
+            <section>氏名</section>
+        </sections>
+        <sections>
+            <label><!-- 管理情報 --></label>
+            <section>管理情報</section>
+        </sections>
+        <sections>
+            <label><!-- 英文 --></label>
+            <section>英文</section>
+        </sections>
+        <sections>
+            <label><!-- 連絡先 --></label>
+            <section>連絡先</section>
+        </sections>
+    </layouts>
+    <webLinks>
+        <label><!-- AccountBulkRegist --></label>
+        <name>AccountBulkRegist</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- AccountBulkRegistLex --></label>
+        <name>AccountBulkRegistLex</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- AccountRegist --></label>
+        <name>AccountRegist</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- AccountRegistLex --></label>
+        <name>AccountRegistLex</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- MonitorAutoRenkei --></label>
+        <name>MonitorAutoRenkei</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- MonitorAutoRenkeiBulk --></label>
+        <name>MonitorAutoRenkeiBulk</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- RegistTenshokusakiLex --></label>
+        <name>RegistTenshokusakiLex</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SBOrganizationList --></label>
+        <name>SBOrganizationList</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SBOrganizationListUrl --></label>
+        <name>SBOrganizationListUrl</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SBhaveSameNameCard --></label>
+        <name>SBhaveSameNameCard</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Ullet --></label>
+        <name>Ullet</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- account_contact --></label>
+        <name>account_contact</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- google_map --></label>
+        <name>google_map</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- google_news --></label>
+        <name>google_news</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- path --></label>
+        <name>path</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- registTenshokusaki --></label>
+        <name>registTenshokusaki</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- weather --></label>
+        <name>weather</name>
+    </webLinks>
+</CustomObjectTranslation>

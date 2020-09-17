@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="sb_nc_cardOwners">
+    <apiVersion>45.0</apiVersion>
+    <isExposed>true</isExposed>
+    <!-- https://success.salesforce.com/issues_view?id=a1p3A000000IXaBQAW 
+  Custom labels referenced from Design resource of LC doesn't work on Lightning App Builder --><masterLabel>名刺:同じ人の名刺を持つユーザ</masterLabel>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="includeCurrentOwner" label="表示中レコードの所有者を含める" type="Boolean" default="true" description="ユーザの一覧に表示中のレコードの所有者を含めます"/>
+            <property name="includeInactiveUser" label="無効なユーザも含める" type="Boolean" default="false"/>
+            <property name="traceChangeJob" label="転職前後の名刺も含める" type="Boolean" default="false" description="転職後の名刺として選択されている名刺の所有者を含めます"/>
+            <property name="sortField" label="並び替え項目(初期値)" type="String" datasource="apex://SB_NC_CardOwnersSortPickList"/>
+            <property name="sortOrder" label="並び替え順(初期値)" type="String" datasource="apex://SB_NC_CardOwnersSortOrderPickList"/>
+            <property name="titleFields" label="部署・役職等の表示項目" type="String" placeholder="CompanyName, Department, Title" default="CompanyName, Department, Title" description="ユーザの項目から名前の次に表示する項目のAPI名をカンマ区切りで入力します"/>
+            <property name="fields" label="ユーザの表示項目" type="String" placeholder="EMail, Phone" default="EMail, Phone"  description="ユーザの項目から一覧に表示する項目のAPI名をカンマ区切りで入力します"/>
+            <property name="showExchangeDate" label="名刺交換日を表示する" type="Boolean" default="true"/>
+            <objects>
+                <object>NameCard__c</object>
+            </objects>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Salesforce１の詳細画面では、標準の画面で編集した結果を、即時反映しません。 --></help>
+    <label><!-- S名刺編集は標準の画面を使う --></label>
+    <name>SUseStandardNamecardEditUI__c</name>
+</CustomFieldTranslation>

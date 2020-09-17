@@ -1,0 +1,66 @@
+<!-- /**
+ *
+ *  SB_NC_AccountBulkRegistDataTableCell
+ *  取引先・取引先責任者一括登録 DataTable用Cell
+ *
+ *
+ *  Copyright (C) 2019 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author K.Yoshida
+ *  @Version 2.2  2019.02.XX SV_DEV-1558 LEX 取引先登録 一括画面をLXパッケージ同様のLC化で追加
+ *
+ **/ -->
+<aura:component access="global">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <aura:attribute name="field" type="Map" /> <!-- 項目内容 -->
+  <aura:attribute name="value" type="String" /> <!-- 項目の値 -->
+  <aura:attribute name="label" type="String" /> <!-- 項目表示内容 -->
+  <aura:attribute name="checked" type="Boolean" /> <!-- 項目の値(チェックボックス用 -->
+  <aura:attribute name="cObjectMap" type="Map" /> <!-- レコード内容が保存されてます -->
+  <aura:attribute name="selectMap" type="Map" /> <!-- 名刺一覧のデータが保存されてます -->
+  <aura:attribute name="pickList" type="List" /> <!-- プルダウンリストの選択肢リスト -->
+  <aura:attribute name="eventName" type="String" /> <!-- 実行するイベントのname -->
+  <aura:attribute name="recordId" type="String" /> <!-- 名刺ID -->
+  <aura:attribute name="width" type="String" /> <!-- Cellのwidth -->
+  <aura:attribute name="index" type="Integer" /> <!-- 行index -->
+
+  <!--<aura:attribute name="type" type="String" /> 項目タイプ -->
+
+  <!-- コンポーネントgid -->
+  <aura:attribute name="gid" type="String" />
+  <td style="{!if(v.field.fieldName=='ToDo', 'min-width: 120px;text-align: center;', 'min-width: 100px;')}"
+    role="gridcell">
+    <div class="slds-truncate" style="{!if(v.width != '', 'width:' + v.width + 'px', '')}">
+
+      <aura:renderIf isTrue="{!v.field.type == 'checkbox'}">
+        <c:SB_NC_AccountBulkRegistCheckbox boxid="{!v.index + v.field.fieldName}" fieldName="{!v.field.fieldName}"
+          cObjectMap="{!v.cObjectMap}" checked="{!v.checked}" dis="{!v.field.input == false}" boxlabel="" />
+      </aura:renderIf>
+
+      <aura:renderIf isTrue="{!v.field.type == 'pickList'}">
+        <aura:renderIf isTrue="{!v.field.input == false}">
+          {!v.value}
+        </aura:renderIf>
+        <aura:renderIf isTrue="{!v.field.input == true}">
+          <div class="slds-form-element" data-aura-rendered-by="1588:92;a">
+            <label class="slds-form-element__label" for="{!v.index + v.field.fieldName}"
+              data-aura-rendered-by="1589:92;a">
+              <span class="" data-aura-rendered-by="1591:92;a"></span></label>
+            <div class="slds-form-element__control slds-grow" data-aura-rendered-by="1593:92;a">
+              <div class="slds-select_container" data-aura-rendered-by="1594:92;a">
+                <select id="{!v.index + v.field.fieldName}" class="slds-select" data-aura-rendered-by="1595:92;a"
+                  onchange="{!c.changeValue}">
+                  <aura:iteration items="{!v.pickList }" var="va">
+                    <option label="{!va.label}" value="{!va.value}" selected="{!va.value == v.value}">{!va.label}
+                    </option>
+                  </aura:iteration>
+                </select>
+              </div>
+            </div>
+          </div>
+        </aura:renderIf>
+      </aura:renderIf>
+    </div>
+  </td>
+</aura:component>

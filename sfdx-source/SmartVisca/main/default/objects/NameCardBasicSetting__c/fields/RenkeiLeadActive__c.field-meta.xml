@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RenkeiLeadActive__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>自動連携におけるリード登録機能 を有効化する。リード登録機能 はリード拡張パッケージの機能だが、設定は基本パッケージ内に持つ</description>
+    <externalId>false</externalId>
+    <label>自動連携:リード登録機能を有効化</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

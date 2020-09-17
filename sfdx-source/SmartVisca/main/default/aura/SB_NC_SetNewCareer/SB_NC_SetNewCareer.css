@@ -1,0 +1,26 @@
+/**
+ *
+ *  SB_NC_SetNewCareer
+ *   転職先を設定
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2016.11.xx
+ *  @Version 2.4    2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *
+ **/
+.THIS {
+}
+
+.THIS .mini_info {
+  position: absolute;
+  marginLeft: 14;
+  marginTop: -24;
+}
+.THIS .slds-text-heading_label {
+  text-transform: none;
+}
+/*.THIS .slds-popover {
+  position: absolute;
+}*/

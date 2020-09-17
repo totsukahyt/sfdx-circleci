@@ -1,0 +1,127 @@
+<!-- /**
+ *
+ *  SB_NameCard_RenkeiMappingCell
+ *   連携マッピングCellComponet
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @Version 1.20      2017.02.XX
+ *  @Version 2.4       2019.05.XX  SV_DEV-1630と合わせてリファクタリングを実施
+ *  @Author mao
+ *  @Version 2.4       2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ **/ -->
+<aura:component implements="force:appHostable" access="global" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInit1}"/>
+  <!-- 変更フラグ更新 -->
+  <aura:registerEvent name="changese" type="c:SB_NameCard_RenkeiEvent"/>
+  <!-- 名刺タイプリスト -->
+  <aura:attribute name="nameCardTypeList2" type="List"/>
+  <aura:attribute name="allselect" type="List"/>
+  <!-- 名刺選択できる項目 -->
+  <aura:attribute name="leftselects" type="List"/>
+  <!-- obj2全ての項目 -->
+  <aura:attribute name="rightAllSelects" type="List"/>
+  <!-- obj2選択出来る項目 -->
+  <aura:attribute name="rightSelects" type="List"/>
+  <!-- 削除フラグ -->
+  <aura:attribute name="removeFlag" type="Boolean"/>
+  <!-- エラーメッセージフラグ -->
+  <aura:attribute name="iserror" type="Boolean"/>
+  <!-- エラーメッセージ -->
+  <aura:attribute name="ermsg" type="String"/>
+  <!-- 現在列のindex -->
+  <aura:attribute name="indexs" type="Integer"/>
+  <!-- データのindex -->
+  <aura:attribute name="index" type="Integer"/>
+  <!-- コンポーネントgid -->
+  <aura:attribute name="gid" type="String"/>
+  <!-- disableフラグ -->
+  <aura:attribute name="dis" type="Boolean"/>
+  <!-- disableクラス -->
+  <aura:attribute name="disclass" type="String"/>
+  <!-- 表示用クラス -->
+  <aura:attribute name="showclass" type="String"/>
+  <!-- ラベルマップ -->
+  <aura:attribute name="labmap" type="Map"/>
+  <!-- マッピング内容 -->
+  <aura:attribute name="mapp" type="Sobject"/>
+  <!-- ネームスペース -->
+  <aura:attribute name="nameSpace" type="String"/>
+  <tr>
+    <td style="width:10%;">
+      <div class="slds-media">
+        <div class="{!v.disclass + ' slds-media__figure'}">
+          <label class="slds-checkbox" for="{!v.gid + 'remove'}">
+            <input name="checkboxtop" type="checkbox" id="{!v.gid + 'remove'}" checked="{!v.removeFlag}" onclick="{!c.removeChange}"/>
+            <!-- 既存取引先判断 -->
+            <div class="slds-form-element__label"></div>
+            <div class="slds-checkbox_faux"></div>
+            <div class="slds-assistive-text"></div>
+          </label>
+        </div>
+      </div>
+      <!--   <ui:inputCheckbox value="{!v.removeFlage}"/> -->
+    </td>
+    <td style="width:40%;">
+      <div style="width:50%" class="slds-form-element">
+        <div class="slds-form-element__control">
+          <ui:outputtext class="{!v.showclass}" value="{!v.mapp.NameCardLabel}" />
+          <!--
+          <ui:inputSelect class="{!v.disclass + '  slds-select'}" change="{!c.changeNameCardSelect}" disabled="{!v.dis}">
+            <aura:iteration items="{!v.leftselects }" var="va">
+              <ui:inputSelectOption text="{!va.value}" label="{!va.label}" value="{!va.value == v.mapp.NameCardName}"/>
+            </aura:iteration>
+          </ui:inputSelect>
+          -->
+          <lightning:select class="{!v.disclass}" onchange="{!c.changeNameCardSelect}" disabled="{!v.dis}">
+            <aura:iteration items="{!v.leftselects }" var="va">
+              <option text="{!va.label}" value="{!va.value}" selected="{!va.value == v.mapp.NameCardName}" />
+            </aura:iteration>
+          </lightning:select>
+        </div>
+      </div>
+    </td>
+    <td style="width:40%;">
+      <div style="width:50%" class="slds-form-element">
+        <div class="slds-form-element__control">
+          <ui:outputtext class="{!v.showclass}" value="{!v.mapp.TagetLabel}" />
+            <!--
+            <ui:inputSelect class="{!v.disclass + ' slds-select'}" change="{!c.unsave}" disabled="{!v.dis}">
+              <aura:iteration items="{!v.rightSelects }" var="va">
+                <ui:inputSelectOption text="{!va.value}" label="{!va.label}" value="{!v.mapp.TargetName == va.value}"/>
+              </aura:iteration>
+            </ui:inputSelect>
+            -->
+          <lightning:select class="{!v.disclass}" onchange="{!c.unsave}" disabled="{!v.dis}">
+            <aura:iteration items="{!v.rightSelects }" var="va">
+              <option text="{!va.label}" value="{!va.value}" selected="{!va.value == v.mapp.TargetName}" />
+            </aura:iteration>
+          </lightning:select>
+        </div>
+      </div>
+      <aura:renderIf isTrue="{!v.iserror}">
+        <div class="slds-form-element slds-has-error">
+          <div class="slds-form-element__help" id="{v.gid + 'error'}">{!v.ermsg}</div>
+        </div>
+      </aura:renderIf>
+    </td >
+    <td style="width:10%;">
+      <div class="slds-media">
+        <div class="slds-media__figure">
+          <aura:renderIf isTrue="{!v.dis == false}">
+            <label class="slds-checkbox" for="{!v.gid + '1'}">
+              <input name="checkboxtop" type="checkbox" id="{!v.gid + '1'}" checked="{!v.mapp.IsActive}" onclick="{!c.avtiveChange}"/>
+              <!-- 既存取引先判断 -->
+              <div class="slds-form-element__label"></div>
+              <div class="slds-checkbox_faux"></div>
+              <div class="slds-assistive-text"></div>
+            </label>
+            <aura:set attribute="else">
+              <ui:outputCheckbox value="true"/>
+            </aura:set>
+          </aura:renderIf>
+        </div>
+      </div>
+    </td>
+  </tr>
+</aura:component>

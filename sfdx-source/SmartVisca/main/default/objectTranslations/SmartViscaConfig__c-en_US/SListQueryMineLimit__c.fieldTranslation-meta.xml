@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Upper limit of the number of cases when searching for your business card in the business card list</help>
+    <label>S List Query Mine Limit</label>
+    <name>SListQueryMineLimit__c</name>
+</CustomFieldTranslation>

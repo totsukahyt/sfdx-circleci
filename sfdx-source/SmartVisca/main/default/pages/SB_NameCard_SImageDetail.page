@@ -1,0 +1,164 @@
+<!-- SB_NameCard_SImageDetail
+/**
+ *
+ * SmartVisca カメラ 名刺登録詳細 画面
+ *
+ * Copyright (C) 2015 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2015.06.xx  // IONIC版
+ *  @Version 2    2015.8.xx   // Boootstrap版
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+    <title>{!$Label.SB_NCS1C_Text_NCRegistrationDetails}</title>
+<style type="text/css">
+.modalFrame {
+  width: 100%; height: calc(100% - 42px); padding: 0;
+}
+.modalBody {
+  padding: 0px; width: 100%; height: 100%;
+}
+</style>
+</head>
+
+<!-- 名刺画像 -->
+<div class="row">
+ <!-- 表面画像 -->
+  <div class="col-xs-6" ng-show="card.front.data">
+    <div class="thumbnail" >
+      <img ng-src="{{card.front.data}}" ng-click="openImage(true)" hm-tap="openImage(true)" hm-pinch="pinchTest"/>
+    </div>
+  </div>
+ <!-- 裏面画像 -->
+  <div class="col-xs-6" ng-show="card.back.data">
+    <div class="thumbnail">
+      <img ng-src="{{card.back.data}}" ng-click="openImage(false)"/>
+    </div>
+  </div>
+</div>
+
+<!-- 付与情報 -->
+<form  name="detailForm" role="form">
+  <div class="panel panel-default" style="margin-left: -15pt; margin-right: -15pt;">
+    <ul class="list-group">
+      <!-- メモ -->
+      <li  class="list-group-item">
+        <div class="form-group has-feedback has-clear">
+          <label for="inputName" class="control-label"><i class="fa fa-pencil-square-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_Memo}</label>
+          <div class="row">
+            <div class="col-sm-12">
+              <input type="text" class="form-control required" id="inputName" placeholder="{!$Label.SB_NCS1C_Label_Memo}" ng-model="card.memo"/>
+              <a class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear"
+                ng-click="card.memo=''" ng-show="card.memo.length>0" ng-hide="card.memo==null || card.memo.length==0"
+                style="pointer-events: auto; text-decoration: none;cursor: pointer; margin-right: 12px;"></a>
+            </div>
+          </div>
+        </div>
+      </li>
+      <!-- 名刺交換日 -->
+      <li  class="list-group-item">
+        <div class="form-group">
+          <label for="inputDate" class="control-label"><i class="fa fa-calendar-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_NCExchangeDate}</label>
+          <input type="date" id="inputDate" placeholder="yyyy/mm/dd" ng-model="card.date"/>
+        </div>
+      </li>
+    </ul>
+  </div>
+</form>
+
+
+<!-- ボタン -->
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div style="padding:6px; text-align: center;">
+      <!-- 戻る ボタン -->
+      <div class="btn btn-default pull-left" role="button" ng-disabled="editMode" ng-click="back()">
+        <i class="fa fa-arrow-circle-o-left"></i>&nbsp;{!$Label.SB_NCS1C_Label_GoBack}
+      </div>
+      <!-- 表裏入替え -->
+      <div class="btn btn-default" role="button" ng-click="reverse()" ng-hide="card.back==null">
+        <i class="fa fa-arrows-h"></i>
+      </div>
+      <!-- 削除ボタン -->
+       <div class="btn btn-default pull-right" role="button" ng-click="deleteCard()">
+        <i class="fa fa-trash-o"></i>&nbsp;{!$Label.SB_NCS1C_Label_Remove}
+      </div>
+    </div>
+</nav>
+
+<!-- 名刺画像のモーダル  -->
+<script id="imageWindow.html" type="text/ng-template">
+<div class="modalFrame">
+    <div class="modal-body modalBody">
+      <div style="position:relative; overflow:scroll; " >
+        <div hm-pinch="pinched" hm-tap="tapped" hm-pan="paned" hm-swipeleft="reverse" hm-swiperight="reverse"
+          style="
+          width:{{(front ? card.front.width : card.back.width)}}px; height:{{(front ? card.front.height : card.back.height)}}px; background: url('{{(front ? card.front.data : card.back.data)}}') no-repeat;
+          background-position-x: {{posX}}px;
+          background-position-y: {{posY}}px;
+          transform-origin: left top;
+          -webkit-transform-origin: left top;
+          -moz-transform-origin: left top;
+          -o-transform-origin: left top;
+          -ms-transform-origin: left top;
+          transform: scale({{scaleFactor}});
+          -webkit-transform: scale({{scaleFactor}});
+          -moz-transform: scale({{scaleFactor}});
+          -o-transform: scale({{scaleFactor}});
+          -ms-transform: scale({{scaleFactor}});"></div>
+      </div>
+    </div>
+</div>
+</script>
+
+<!-- 名刺画像削除の確認のモーダル -->
+<script id="confirmDelete.html" type="text/ng-template">
+  <div class="modal-header text-center" style="background-color :#f8f8ff">
+    <h4 class="modal-title">{!$Label.SB_NCS1C_Text_ConfirmationOfImgDeletion}</h4>
+  </div>
+  <div class="modal-body">
+    <h5><i class="fa fa-exclamation-circle fa-2x"></i>&nbsp;{{delete.msg}}</h5>
+  </div>
+  <div class="modal-footer" style="background-color :#f8f8ff">
+    <div class="col-xs-offset-1 col-xs-11">
+      <button class="btn btn-default col-xs-4" ng-click="$dismiss()">{!$Label.SB_NCS1C_Label_Cancel}</button>
+      <div class="col-xs-1"></div>
+      <button class="btn btn-danger col-xs-4" ng-click="$close()">{!$Label.SB_NCS1C_Label_OK}</button>
+    </div>
+  </div>
+</script>
+
+<!-- 名刺画像削除の確認 表 ? 裏 ? 両面 ? のモーダル-->
+<script id="confirmDeleteSide.html" type="text/ng-template">
+  <div class="modal-header text-center" style="background-color :#f8f8ff">
+    <h4 class="modal-title">{!$Label.SB_NCS1C_Text_ConfirmationOfImgDeletion}</h4>
+  </div>
+  <div class="modal-body">
+    <h5>{!$Label.SB_NCS1C_Text_RemoveNCImg}</h5>
+    <form name="myForm" role="form">
+      <div class="radio radio-danger" ng-show="card.back">
+        <input type="radio" name="optionsRadios" id="optionsRadios1" ng-model="delete.side" value="1"/>
+        <label for="optionsRadios1">{!$Label.SB_NCS1C_Label_RemoveFrontside}</label>
+      </div>
+      <div class="radio radio-danger" ng-show="card.back">
+          <input type="radio" name="optionsRadios" id="optionsRadios2" ng-model="delete.side" value="2" checked/>
+          <label for="optionsRadios2">{!$Label.SB_NCS1C_Label_RemoveBackside}</label>
+      </div>
+      <div class="radio radio-danger" ng-show="card.back">
+          <input type="radio" name="optionsRadios" id="optionsRadios3" ng-model="delete.side" value="0"/>
+          <label for="optionsRadios3">{!$Label.SB_NCS1C_Label_RemoveBothSides}</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer" style="background-color :#f8f8ff">
+    <div class="col-xs-offset-1 col-xs-11">
+      <button class="btn btn-default col-xs-4" ng-click="$dismiss()">{!$Label.SB_NCS1C_Label_Cancel}</button>
+      <div class="col-xs-1"></div>
+      <button class="btn btn-primary col-xs-4" ng-click="$close()">{!$Label.SB_NCS1C_Label_OK}</button>
+    </div>
+  </div>
+</script>
+
+</apex:page>

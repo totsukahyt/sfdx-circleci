@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SUseIndexSearch__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>文字を入力し検索するのではなく、予め用意したインデックスによる検索を使います。</description>
+    <externalId>false</externalId>
+    <label>Sインデックス検索を使う</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

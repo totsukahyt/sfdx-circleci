@@ -1,0 +1,84 @@
+<!-- $Id: SB_NameCard_NameCardList.page 1 2011-10-16 11:51:01Z ume $ -->
+<!-- SV_DEV-606 取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+<!--
+    @author gao
+-->
+<!-- Copyright (c) 2011-2015 SunBridge Corp. -->
+<apex:page controller="SB_NameCard_NameCardListController" title="{!windowTitle}" showHeader="true" sidebar="false">
+  <apex:pageMessages />
+  <apex:form >
+    <apex:pageBlock title="{!$Label.sb_nc_cardlist}">
+      <apex:pageBlockButtons >
+          <apex:commandButton action="{!cancel}" value="{!$Label.sb_nc_cancel}" immediate="true"/>
+      </apex:pageBlockButtons>
+
+      <apex:pageBlockSection columns="1" rendered="{!cId != null}">
+        <apex:selectRadio label="{!$Label.sb_nc_searchcondition}" value="{!searchType}">
+          <apex:actionSupport event="onclick" action="{!search}" rerender="nameCardTable"/>
+          <apex:selectOptions value="{!searchTypeSelectOpts}"/>
+        </apex:selectRadio>
+
+      </apex:pageBlockSection>
+
+      <apex:pageBlockTable id="nameCardTable" value="{!nameCards}" var="item">
+        <apex:column >
+          <apex:facet name="header">{!$Label.sb_nc_updateusingcardinfo}</apex:facet>
+          <apex:outputLink value="/apex/SB_NameCard_AccountUpdate?nid={!item.Id}&aid={!aId}&cid={!cId}">{!title} {!$Label.sb_nc_willbeupdated} </apex:outputLink>
+        </apex:column>
+        <apex:column rendered="false">
+          <apex:facet name="header">{!$Label.sb_nc_lastmodified}</apex:facet>
+          <apex:outputText value="{0,date,yyyy/MM/dd}">
+            <!-- 0.375 = 9(JST) / 24 -->
+            <apex:param value="{!item.LastModifiedDate+0.375}"/>
+          </apex:outputText>
+        </apex:column>
+        <apex:column rendered="true">
+          <!-- SV_DEV-606 取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.card_exchange_date__c.Label}</apex:facet>
+          <apex:outputText value="{0,date,yyyy/MM/dd}">
+            <apex:param value="{!item.card_exchange_date__c+0.375}"/>
+          </apex:outputText>
+        </apex:column>
+        <apex:column >
+          <apex:facet name="header">{!$Label.sb_nc_owner}</apex:facet>
+          <apex:outputText value="{!item.Owner.Name}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606 取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.company_name__c.Label}</apex:facet>
+          <apex:outputText value="{!item.company_name__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606 取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.division__c.Label}</apex:facet>
+          <apex:outputText value="{!item.division__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606 取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.title_name__c.Label}</apex:facet>
+          <apex:outputText value="{!item.title_name__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606 取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.Name.Label}</apex:facet>
+          <apex:outputText value="{!item.Name}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606 取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.address__c.Label}</apex:facet>
+          <apex:outputText value="{!item.zip_code__c} {!item.address_pref__c}{!item.address__c}{!item.address_bld__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606 取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.tel1__c.Label}</apex:facet>
+          <apex:outputText value="{!item.tel1__c}"/>
+        </apex:column>
+        <apex:column >
+          <!-- SV_DEV-606 取引先・取引先責任者に登録（一括登録）の 名刺情報に関する項目のラベル -->
+          <apex:facet name="header">{!$ObjectType.NameCard__c.Fields.email__c.Label}</apex:facet>
+          <apex:outputText value="{!item.email__c}"/>
+        </apex:column>
+      </apex:pageBlockTable>
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

@@ -1,0 +1,39 @@
+<!-- /**
+ *
+ *  SB_NC_AccountBulkRegistCheckbox
+ *  取引先・取引先責任者一括登録 LightningスタイルのCheckBoxコンポーネント
+ *
+ *
+ *  Copyright (C) 2019 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author K.Yoshida
+ *  @Version 2.2       2019.02.XX SV_DEV-1558 LEX 取引先登録 一括画面をLXパッケージ同様のLC化で追加
+ *  @Version 2.4       2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *
+ **/ -->
+ <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:appHostable" access="global">
+    <aura:attribute name="boxlabel" type="String"/>
+    <aura:attribute name="cObjectMap" type="Map" />
+    <aura:attribute name="fieldName" type="String" />
+    <aura:attribute name="boxid" type="String"/>
+    <aura:attribute name="dis" type="Boolean"/>
+    <aura:attribute name="checked" type="Boolean"/>
+    <aura:attribute name="leftmargin" type="Integer" default="10"/>
+    <aura:attribute name="eventName" type="String"/>
+    <aura:registerEvent name="accountBulkRegistEvent" type="c:SB_NC_AccountBulkRegistCommonEvent"/>
+  
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+        <aura:renderIf isTrue="{!v.dis == true}">
+          <div style="{!'margin-left:' + v.leftmargin + 'px;'}">
+            <ui:outputCheckbox value="{!v.checked}"/>&nbsp;&nbsp;{!v.boxlabel}
+          </div>
+        </aura:renderIf>
+        <aura:renderIf isTrue="{!v.dis != true}">
+          <label class="slds-checkbox" for="{!v.boxid}">
+            <input name="checkboxtop" type="checkbox" id="{!v.boxid}" checked="{!v.checked}" onclick="{!c.clickbox}"/>
+            <span  class="slds-checkbox_faux checkboxleft"></span>
+            <span class="slds-assistive-text"></span>
+            <span style="margin-left: 10px;" class="slds-form-element__label">{!v.boxlabel}</span>
+          </label>
+        </aura:renderIf>
+  </aura:component>

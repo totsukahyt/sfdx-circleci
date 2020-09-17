@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="Event template">
+    <aura:attribute name="name" type="String" required="true" description="" />
+    <aura:attribute name="value" type="String" required="" description="" />
+    <aura:attribute name="fieldName" type="String" required="" description="" />
+</aura:event>

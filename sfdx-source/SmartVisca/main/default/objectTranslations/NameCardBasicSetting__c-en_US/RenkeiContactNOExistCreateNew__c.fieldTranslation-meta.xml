@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>
+Create a Account in auto. and create a correspondent if there is no counterpart in the Contact equivalent to a business card.</help>
+    <label>Auto.: If no existing Con. create a new</label>
+    <name>RenkeiContactNOExistCreateNew__c</name>
+</CustomFieldTranslation>

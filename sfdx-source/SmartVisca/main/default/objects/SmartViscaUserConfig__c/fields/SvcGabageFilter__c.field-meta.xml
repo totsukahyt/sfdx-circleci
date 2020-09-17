@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SvcGabageFilter__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>画像補正で陰影の除去のあと、ゴミを除去する。</description>
+    <externalId>false</externalId>
+    <label>SmartViscaカメラ:陰影除去後、さらにゴミを取る</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,5 @@
+/* 2019.05.xx v2.4 SV_DEV-1629 組織図の中で名刺を目立たせる */
+/* ツリー要素のうち 個人要素(href="#" でないaタグ) の中の span は太字 */
+.THIS lightning-tree-item a:not([href="#"]) span {
+  font-weight: bold;
+}

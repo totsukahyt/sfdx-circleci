@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TaggedCardsFetchMethod__c</fullName>
+    <defaultValue>2</defaultValue>
+    <description>0: v2.3までの方法。自分所有の名刺のみが対象
+1: v2.4での方法。可視の名刺が対象
+その他: v2.5 可視の名刺が対象で、制限を考慮</description>
+    <externalId>false</externalId>
+    <label>タグ付き名刺の取得方法</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

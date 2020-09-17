@@ -1,0 +1,244 @@
+<!-- SB_NameCard_SRegist
+/**
+ *
+ * Salesforce1対応 取引先・取引先責任者へ登録 登録画面
+ *
+ * Copyright (C) 2016 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1    2016.04.xx  //
+ *
+ **/
+ -->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+  <title>{!$Label.SB_NCS1R_Text_RegistAccount}</title>
+<style type="text/css">
+  .modalFrame {
+    width: 100%; height: calc(100% - 42px); padding: 0;
+  }
+  .modalBody {
+    padding: 0px; width: 100%; height: 100%;
+  }
+  div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  div.scroll {
+    background-color:#00FFFF;
+    height:40px;
+    overflow-x:scroll;
+    white-space: nowrap;
+  }
+
+  /* The starting CSS styles for the enter animation */
+  .fade.ng-enter {
+    transition:0.5s linear all;
+    opacity:0;
+  }
+
+  /* The finishing CSS styles for the enter animation */
+    .fade.ng-enter.ng-enter-active {
+      opacity:1;
+    }
+           #progressbar {
+             position: relative;
+             background-color: rgba(0,0,0,0.1);
+             padding: 1px;
+           }
+  #ngProgress-container {
+      /* オリジナルだと 99999 で Modal の前に出てしまうので */
+      z-index: 0;
+  }
+  /*http://bootsnipp.com/snippets/featured/circle-button*/
+  .btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+  }
+  .btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
+  }
+  .btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    font-size: 24px;
+    line-height: 1.33;
+    border-radius: 35px;
+  }
+
+  .page-header {
+      padding-bottom: 2px;
+      margin: 10px 0 10px;
+  }
+  /*Caruselの要素*/
+  .glyphicon-chevron-left {
+    color: #008080;
+  }
+  .glyphicon-chevron-right {
+    color: #008080;
+  }
+
+  .carousel-control.left {
+    /*background-image: linear-gradient(to right, rgba(247, 245, 245, 0.5) 0, rgba(0,0,0,0.0001) 100%);*/
+    background-image: linear-gradient(to right, rgba(247, 245, 245, 0) 0, rgba(0,0,0,0) 100%);
+  }
+
+  .carousel-control.right {
+    /*background-image: linear-gradient(to right, rgba(0,0,0,0.0001) 0, rgba(247, 245, 245,0.5) 100%);*/
+    background-image: linear-gradient(to right, rgba(247, 245, 245, 0) 0, rgba(0,0,0,0) 100%);
+  }
+
+  .carousel-indicators {
+    bottom: 2px;
+  }
+  .carousel-indicators li {
+    border: 1px solid #008080;
+    opacity: 0.5;
+  }
+
+  .carousel-indicators .active {
+    background-color: #008080;
+    opacity: 0.5;
+  }
+
+  @media screen and (max-width: 480px) {
+  .div-carusel {
+    height: 215px;
+  }
+  .img-card {
+     max-height: 210px;
+     height:100%;
+     width:auto;
+  }
+  }
+
+  @media screen and (min-width: 480px) {
+  .div-carusel {
+    height: 305px;
+  }
+  .img-card {
+     max-height: 300px;
+     height:100%;
+     width:auto;
+  }
+  }
+</style>
+</head>
+
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <!-- カルーセル -->
+      <div class="div-carusel">
+        <uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+          <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+            <div class="div-carusel">
+              <!-- 名刺画像 -->
+              <img class="img-card" ng-if="slide.image" ng-src="{{slide.image}}" style="margin:auto;"/>
+
+              <!-- 名刺のテキスト情報 -->
+              <div ng-if="slide.card">
+                <h3>&nbsp;{{slide.card.name}}</h3>
+                <div class="row">
+                  <!-- 会社名 -->
+                  <div class="col-xs-4 col-sm-2" style="text-align: right">{!$ObjectType.NameCard__c.fields.company_name__c.Label}</div>
+                  <div class="col-xs-8 col-sm-10" style="text-align: left">{{slide.card.company_name}}</div>
+                </div>
+                <div class="row">
+                  <!-- 所属 -->
+                  <div class="col-xs-4 col-sm-2" style="text-align: right;">{!$ObjectType.NameCard__c.fields.division__c.Label}</div>
+                  <div class="col-xs-8 col-sm-10" style="text-align: left;">{{slide.card.division}}</div>
+                </div>
+                <div class="row">
+                  <!-- 役職 -->
+                  <div class="col-xs-4 col-sm-2" style="text-align: right;">{!$ObjectType.NameCard__c.fields.title_name__c.Label}</div>
+                  <div class="col-xs-8 col-sm-10" style="text-align: left;">{{slide.card.title_name}}</div>
+                </div>
+                <div class="row">
+                  <!-- 都道府県 -->
+                  <div class="col-xs-4 col-sm-2" style="text-align: right;">{!$ObjectType.NameCard__c.fields.address_pref__c.Label}</div>
+                  <div class="col-xs-8 col-sm-10" style="text-align: left;">{{slide.card.address_pref}}</div>
+                </div>
+                <div class="row">
+                <!-- メールアドレス -->
+                  <div class="col-xs-4 col-sm-2" style="text-align: right;">{!$ObjectType.NameCard__c.fields.email__c.Label}</div>
+                  <div class="col-xs-8 col-sm-10" style="text-align: left;">{{slide.card.email}}</div>
+                </div>
+                <div class="row">
+                <!-- 携帯電話 -->
+                  <div class="col-xs-4 col-sm-2" style="text-align: right;">{!$ObjectType.NameCard__c.fields.mobile__c.Label}</div>
+                  <div class="col-xs-8 col-sm-10" style="text-align: left;">{{slide.card.mobile}}</div>
+                </div>
+                <div class="row">
+                <!-- 所有者 -->
+                  <div class="col-xs-4 col-sm-2" style="text-align: right;">{!$Label.SB_NC_Owner}</div>
+                  <div class="col-xs-8 col-sm-10" style="text-align: left;">{{slide.card.ownerName}}</div>
+                </div>
+              </div>
+
+            </div>
+            <div class="carousel-caption">
+              <p>{{slide.text}}</p>
+            </div>
+          </uib-slide>
+        </uib-carousel>
+      </div>
+    </div>
+  </div>   <!-- <div class="page-header"> -->
+
+  <!-- プログレスバー -->
+  <div id="progressbar"></div>
+
+  <!-- 1,2,3 -->
+  <div class="row center-block" style="padding: 10px 0px 10px 0px;">
+    <!-- Step 1 -->
+    <div class="  col-xs-4">
+      <button id="step1" type="button" ng-click="skip($event)" class="center-block btn btn-success btn-circle">1</button>
+    </div>
+    <!-- Step 2 -->
+    <div class="  col-xs-4">
+      <button id="step2" type="button" ng-disabled="getStep() < 2" ng-click="skip($event)" class="center-block btn {{getStep() > 1 ? 'btn-success' : 'btn-default'}} btn-circle">2</button>
+    </div>
+    <!-- Step 3 -->
+    <div class="  col-xs-4">
+      <button id="step3" type="button" ng-disabled="getStep() < 3" ng-click="skip($event)" class="center-block btn {{getStep() > 2 ? 'btn-success' : 'btn-default'}} btn-circle">3</button>
+    </div>
+  </div>
+
+  <!-- 登録のウィザード画面 -->
+  <div>
+    <div id="procView" ui-view="procView"></div>
+  </div>
+
+</div>
+
+<!-- アカウント、コンタクト レコード詳細のモーダル -->
+<script id="viewDetail.html" type="text/ng-template">
+  <div class="modal-header text-center" style="background-color :#f8f8ff">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">{{item.title}}</h4>
+  </div>
+  <div class="modal-body">
+    <p ng-repeat="val in item.values" data-fittext=".9" data-fittext-min="10" data-fittext-max="inherit" >{{val}}</p>
+  </div  style="overflow-x: scroll; ">
+</script>
+
+</apex:page>

@@ -1,0 +1,812 @@
+<!-- /**
+*
+*  SB_NameCard_RenkeiSetting
+*   連携基本設定及び更新条件を表示ためのコンポーネント
+*   TODO: (DateTimeのチェックはフォーマット属性使い方わからない)
+*
+*
+*  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+*
+*  @author mao
+*  @Version 1.22      2017.07.XX SV_DEV-527 SmartVisca 基本設定の リード対応
+*  @Version 1.22      2018.02.XX SV_DEV-735 基本設定レコードが二つ作成される
+*  @Version 2.0.2     2018.07.XX SV_DEV-1106 SmartVisca基本設定レコードの一部項目の値が反転して表示される。
+*  @Version 2.0.3     2018.09.XX SV_DEV-1205 [要望]（LEX用・Classic用「SmartVisca設定」SmartVisca連携設定画面)上から「既存のリードの検索条件」、「既存の取引先の検索条件」、「既存の取引先責任者の検索条件」の順番にしてほしい
+*  @Version 2.0.3     2018.09.XX SV_DEV-1206 [要望]（LEX用・Classic用「SmartVisca設定」SmartVisca連携設定画面)処理の内容のタイトル変更、チェックボックスの並び変更（リード、取引先、取引先責任者の順）、レコードタイプ選択プルダウンにインフォメーションが欲しい
+*  @Version 2.4       2019.05.XX SV_DEV-1630と合わせてリファクタリングを実施
+*                     2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+*
+**/ -->
+<aura:component controller="SB_NameCard_RenkeiSettingLcController" implements="force:appHostable" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <!-- タブ変更時、編修放棄 -->
+  <aura:method name="refdata" action="{!c.doInit}" access="PUBLIC"/>
+  <!-- 基本設定コンポーネントをリフレッシュ(最終更新者および更新日) -->
+  <aura:registerEvent name="ref" type="c:SB_NameCard_RefreshLastTimeEvent"/>
+  <aura:handler name="changeJyoukenEvent" event="c:SB_NameCard_JyoukenEvent" action="{!c.changeJyoukenEvent}"/>
+  <!-- 画面変更あるチェック -->
+  <aura:method name="checkChange" action="{!c.checkChange}" access="PUBLIC"/>
+  <!-- クリア -->
+  <aura:method name="clean" action="{!c.clean1}" access="PUBLIC"/>
+  <!-- 表示メッセージを隠す -->
+  <aura:method name="hiddenMsg" action="{!c.hiddenMsg}" access="PUBLIC"/>
+  <!-- タブロード開始メソッド -->
+  <aura:method name="loadingStart" action="{!c.loadingStart}" access="PUBLIC"/>
+  <!-- タブロード停止メソッド -->
+  <aura:method name="loadingEnd1" action="{!c.loadingEnd1}" access="PUBLIC"/>
+  <!-- クリア終了フラグ -->
+  <aura:registerEvent name="loadingEnd" type="c:SB_NameCard_LoadingEnd"/>
+  <!-- メッセージクリア -->
+  <aura:method name="clearMsg" action="{!c.clearMsg}"/>
+  <!-- チェックボックス変更あり保存チェックフラグ -->
+  <aura:handler name="changeSaveFlag" event="c:SB_NameCard_CheckCckboxEvent" action="{!c.changeSaveFlag}"/>
+  <!-- 保存チェックフラグメソッド -->
+  <aura:method name="haveChange" action="{!c.changeSaveFlag}" access="PUBLIC"/>
+  <!-- 成功メッセージ -->
+  <aura:attribute name="okMsg" type="String"/>
+  <!-- エラーメッセージ -->
+  <aura:attribute name="errorMsg" type="String"/>
+  <!-- alert表示タイプ -->
+  <aura:attribute name="type" type="String"/>
+  <!-- #Todo 使わないため削除べき?名刺表示ラベル -->
+  <aura:attribute name="lastId" type="String"/>
+  <aura:attribute name="lastName" type="String"/>
+  <aura:attribute name="lastTime" type="Date"/>
+  <!-- alert表示内容 -->
+  <aura:attribute name="message" type="String"/>
+  <!-- ヘルプテキスト -->
+  <aura:attribute name="helpText" type="String"/>
+  <!-- #Todo 使わないため削除べき?名刺表示ラベル -->
+  <aura:attribute name="namecardLabel" type="String"/>
+  <!-- #Todo 使わないため削除べき?名刺表示ラベル -->
+  <aura:attribute name="isokMsg" type="String"/>
+  <!-- ウォーニングメッセージ(改行) -->
+  <aura:attribute name="warMsg" type="List"/>
+  <!-- エラーメッセージ(改行) -->
+  <aura:attribute name="errorMsgs" type="List"/>
+  <!-- 保存ウォーニングメッセージ(改行) -->
+  <aura:attribute name="saveWarMsg" type="String"/>
+  <!-- lex Classic判定フラグ -->
+  <aura:attribute name="showStyle" type="String"/>
+  <!-- 取引先名は完全一致検索フラグ -->
+  <aura:attribute name="allKaKu" type="Boolean"/>
+  <!-- 会社名は完全一致検索フラグ -->
+  <aura:attribute name="allLeadKaKu" type="Boolean"/>
+  <!-- カスタムラベル -->
+  <aura:attribute name="labMap" type="Map"/>
+  <!-- 項目のラベルを表示 -->
+  <aura:attribute name="baseSetMap" type="Map"/>
+  <!-- 全ての演算子 -->
+  <aura:attribute name="typeCondition" type="Map"/>
+  <!-- 名刺項目のタイプ -->
+  <aura:attribute name="nameCardMap" type="Map" default="{}"/>
+  <aura:attribute name="accountList" type="List"/>
+  <!--取引先レコードタイプ-->
+  <aura:attribute name="accUpsertRecordType" type="List"/>
+  <aura:attribute name="accQueryRecordTypeList" type="List"/>
+  <aura:attribute name="accQuerySelectedList" type="List"/>
+  <!--取引先責任者レコードタイプ-->
+  <aura:attribute name="conUpsertRecordType" type="List"/>
+  <aura:attribute name="conQueryRecordTypeList" type="List"/>
+  <aura:attribute name="conQuerySelectedList" type="List"/>
+  <!--リードレコードタイプ-->
+  <aura:attribute name="leadUpsertRecordType" type="List"/>
+  <aura:attribute name="leadQueryRecordTypeList" type="List"/>
+  <aura:attribute name="leadQuerySelectedList" type="List"/>
+  <aura:attribute name="disList" type="List"/>
+  <!--ローグフーラグ-->
+  <aura:attribute name="login" type="Boolean"/>
+  <!--Alert表示フーラグ-->
+  <aura:attribute name="showAlert" type="Boolean"/>
+  <!--名刺Select Api Label-->
+  <aura:attribute name="nameCardSelects" type="List"/>
+   <!--名刺Select Api Type-->
+  <aura:attribute name="nameCardTypeList" type="List"/>
+  <aura:attribute name="allData" type="List"/>
+  <!-- allData BackUp ToDo 順番変更の場合Alertを表示するか -->
+  <aura:attribute name="allDataBackUp" type="String"/>
+   <!-- 基本設定 -->
+  <aura:attribute name="baseSet" type="Map"/>
+  <!-- backUp data -->
+  <aura:attribute name="backUpbaseSet" type="String"/>
+  <!-- 最終更新者表示タイプクラス(更新者あるの場合リンクあり) -->
+  <aura:attribute name="urlHidden" type="String"/>
+  <!-- 最終更新者表示タイプクラス(更新者あるの場合リンクあり) -->
+  <aura:attribute name="textHidden" type="String"/>
+  <!-- 最終更新者表示タイプクラス(未更新の場合リンクなし) -->
+  <aura:attribute name="needSave" type="Boolean"/>
+  <!-- このページ変更あるかフラグ -->
+  <aura:attribute name="needSaveSelf" type="Boolean"/>
+  <!-- 親コンポーネントのloadフラグ -->
+  <aura:attribute name="isLoading" type="Boolean"/>
+  <!-- 親コンポーネント保存中フラグ -->
+  <aura:attribute name="saveing" type="Boolean"/>
+  <!-- leadパッケージ存在フラグ -->
+  <aura:attribute name="isEnableLeadExtention" type="Boolean" default="false"/>
+  <!-- leadパッケージv2.1以降存在フラグ -->
+  <aura:attribute name="isEnableLeadExtention21" type="Boolean" default="false"/>
+    <!-- 保存jyoukenエラーbreak -->
+  <aura:attribute name="jyoukenErrorBreak" type="Boolean" default="false"/>
+
+  <!-- リード登録機能を有効化するdisフラグ -->
+  <aura:attribute name="disabledLeadActive" type="Boolean"/>
+  <!-- キャンペーン機能を有効化するdisフラグ -->
+  <aura:attribute name="disabledActiveCampaignMember" type="Boolean"/>
+  <!-- キャンペーンの状況disfla -->
+  <aura:attribute name="campaignStatusDis" type="Boolean" default="false"/>
+  <!-- キャンペーンメンバーOption -->
+  <aura:attribute name="campaignMemberStatusOptions" type="List"/>
+
+  <!--エラーメッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.errorMsg))}">
+    <ui:message title="" severity="error">
+      {!v.errorMsg}
+      <aura:renderIf isTrue="{!v.errorMsg == v.labMap.SB_NC_SETTING_ERROR_OtherSection_Saved}">
+        <div class="bRight" data-aura-rendered-by="893:0"><a class="close" onclick="{!c.clearMsg}" data-aura-rendered-by="877:0">×</a></div>
+      </aura:renderIf>
+    </ui:message>
+  </aura:renderIf>
+  <!--成功メッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.okMsg))}">
+    <ui:message title="" severity="confirm" closable="false">
+      {!v.okMsg}
+    </ui:message>
+  </aura:renderIf>
+
+  <!--保存警告メッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.saveWarMsg))}">
+    <ui:message title="" severity="warning" closable="false">
+        {!v.saveWarMsg}
+      <aura:renderIf isTrue="{!v.saveWarMsg == v.labMap.SB_NC_SETTING_ERROR_OtherSection_Saved}">
+        <div class="bRight" data-aura-rendered-by="893:0"><a class="close" onclick="{!c.clearWarningMsg}" data-aura-rendered-by="877:0">×</a></div>
+      </aura:renderIf>
+    </ui:message>
+  </aura:renderIf>
+
+  <c:SB_NameCard_RenkeiMsg Msgs="{!v.warMsg}" style="warning"/>
+  <c:SB_NameCard_RenkeiMsg Msgs="{!v.errorMsgs}" style="error"/>
+  <!-- ■自動連携機能 -->
+  <div style="padding: 20px 20px 10px 20px;">
+    <div class="slds-box slds-theme_shade checkboxtitletop">
+      <h3 class="slds-section__title">{!$Label.c.SB_NC_MAPPING_LABEL_RENKEIACTIVE}</h3>
+      <h4><aura:unescapedHtml value="{!$Label.c.SB_NC_MAPPING_RenkeiActiveHelpMessage}"/></h4>
+      <div class="slds-media" >
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" style="margin-top:20px;">
+              <!-- 自動連携機能を有効化 -->
+              <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_Label_RenkeiActiveF}" obj="{!v.baseSet}"  boxid="RenkeiActive__c" boxvalue="{!v.baseSet.RenkeiActive__c}"/>
+            </div>
+          </div>
+        </div>
+        <aura:renderIf isTrue="{!v.isEnableLeadExtention}">
+          <div class="slds-media" >
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2" style="margin-top:20px;margin-left: 17px;">
+                <!-- リード登録機能を有効化する -->
+                <aura:renderIf isTrue="{!v.disabledLeadActive}">
+                  <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_LEADRegistrationActive}" obj="{!v.baseSet}"  boxid="RenkeiLeadActive__c" boxvalue="{!v.baseSet.RenkeiLeadActive__c}"/>
+                </aura:renderIf>
+                <aura:renderIf isTrue="{!not(v.disabledLeadActive)}">
+                  <c:SB_NameCard_RenkeiCheckbox dis="true" leftmargin="0" checked="{!v.baseSet.RenkeiLeadActive__c == 'true'}" needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_LEADRegistrationActive}" obj="{!v.baseSet}"  boxid="RenkeiLeadActive__c" boxvalue="{!v.baseSet.RenkeiLeadActive__c}"/>
+                </aura:renderIf>
+              </div>
+            </div>
+          </div>
+          <div class="slds-media" >
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2" style="margin-top:20px;margin-left: 34px;">
+                <!-- リード登録機能を有効化する -->
+                <aura:renderIf isTrue="{!v.disabledActiveCampaignMember}">
+                  <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiActiveCampaignMember}" obj="{!v.baseSet}"  boxid="RenkeiActiveCampaignMember__c" boxvalue="{!v.baseSet.RenkeiActiveCampaignMember__c}"/>
+                </aura:renderIf>
+                <aura:renderIf isTrue="{!not(v.disabledActiveCampaignMember)}">
+                  <c:SB_NameCard_RenkeiCheckbox dis="true" leftmargin="0" checked="{!v.baseSet.RenkeiActiveCampaignMember__c == 'true'}" needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiActiveCampaignMember}" obj="{!v.baseSet}"  boxid="RenkeiActiveCampaignMember__c" boxvalue="{!v.baseSet.RenkeiActiveCampaignMember__c}"/>
+                </aura:renderIf>
+              </div>
+            </div>
+          </div>
+          <div class="slds-media" >
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2" style="margin-top:20px;margin-left: 57px;">
+                <div  class="left20 uiInput uiInputTextuiInput_default uiInput_input">
+                  <label class="uiLabel-left form-element__label uiLabel">
+                    <span>{!v.labMap.SB_NC_MAPPING_LABEL_RenkeiCampaignStatus}</span>
+                  </label>
+                  <div style="margin-top:-20px; margin-left:190px;width:150px;" >
+                    <c:SB_NameCard_RenkeiSettingSelect dis="{!v.campaignStatusDis}" ischange="{!v.needSave}" selectlist='{!v.campaignMemberStatusOptions}' selectbody='{!v.baseSet.RenkeiCampaignStatus__c}'/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aura:renderIf>
+    </div>
+  </div>
+
+  <!-- ■既存のリードの検索条件 -->
+  <aura:renderIf isTrue="{!v.isEnableLeadExtention}">
+    <div style="padding: 10px 20px; 10px 20px;">
+      <div class="slds-box slds-theme_shade">
+        <!-- 既存取引先判断条件 -->
+        <h3 class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_ExistingLead_Condition}</h3>
+        <h4>{!$Label.c.SB_NC_MAPPING_ExistingLead_ConditionHelpMessage}</h4>
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:姓 -->
+            <c:SB_NameCard_RenkeiCheckbox checked="true" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactLastName}" obj="{!v.baseSet}"  boxid="RenkeiLeadLastName__c" boxvalue="{!v.baseSet.RenkeiLeadLastName__c}" leftmargin="10"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:リード名 -->
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactFirstName}" obj="{!v.baseSet}"  boxid="RenkeiLeadFirstName__c" boxvalue="{!v.baseSet.RenkeiLeadFirstName__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:リードメールアドレス -->
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactMail}" obj="{!v.baseSet}"  boxid="RenkeiLeadMail__c" boxvalue="{!v.baseSet.RenkeiLeadMail__c}"/>
+          </div>
+        </div>
+        <div class="slds-media " >
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+              <!-- 自動連携:リード会社名 -->
+              <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_Lead_Company}" obj="{!v.baseSet}"  boxid="RenkeiLeadCompany__c" boxvalue="{!v.baseSet.RenkeiLeadCompany__c}" leftmargin="10"/>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+              <!-- 自動連携:リード電話番号 -->
+              <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountPhone}" obj="{!v.baseSet}"  boxid="RenkeiLeadPhone__c" boxvalue="{!v.baseSet.RenkeiLeadPhone__c}"/>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+              <!-- 自動連携:リードURL -->
+              <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountURL}" obj="{!v.baseSet}"  boxid="RenkeiLeadURL__c" boxvalue="{!v.baseSet.RenkeiLeadURL__c}"/>
+            </div>
+          </div>
+        </div>
+        <div class="slds-media " >
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+              <!-- 自動連携:リード都道府県 -->
+              <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountAddressPref}" obj="{!v.baseSet}"  boxid="RenkeiLeadAddressPref__c" boxvalue="{!v.baseSet.RenkeiLeadAddressPref__c}"/>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+              <!-- 自動連携:リード市区郡 -->
+              <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountCity}" obj="{!v.baseSet}"  boxid="RenkeiLeadCity__c" boxvalue="{!v.baseSet.RenkeiLeadCity__c}"/>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+              <!-- 自動連携:リード町名・番地 -->
+              <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccount_Street}" obj="{!v.baseSet}"  boxid="RenkeiLeadStreet__c" boxvalue="{!v.baseSet.RenkeiLeadStreet__c}"/>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+              <!-- 自動連携:リード郵便番号 -->
+              <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountZipCode}" obj="{!v.baseSet}"  boxid="RenkeiLeadZipCode__c" boxvalue="{!v.baseSet.RenkeiLeadZipCode__c}"/>
+            </div>
+          </div>
+        </div>
+        <!-- 検索対象のリードレコードタイプ -->
+        <div class="slds-media checkboxtitletop">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:10px;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 checkboxtitletop">
+              <div class="slds-media__figure checkboxdivleft">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiLeadQueryRecordTypeIds}</div>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5 checkboxtitletop">
+              <div class="slds-media__figure checkboxdivleft">
+                <div class="slds-form-element__control " id="sele" style="width:210px;height:60px;margin-left: 38px;">
+                  <div style="border-radius:3px;padding:4px;border:1px solid rgb(216, 221, 230);overflow:auto;height:68px; background-color:white;">
+                    <lightning:checkboxGroup name="checkboxl"
+                      options="{! v.leadQueryRecordTypeList }"
+                      value="{! v.leadQuerySelectedList }"
+                      onchange="{! c.leadQueryRecordTypeChange }"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slds-media checkboxtitletop">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:30px;">
+            <h4>{!$Label.c.SB_NC_MAPPING_RenkeiLeadQueryRecordTypeIdsHelpMessage}</h4>
+          </div>
+        </div>
+        <!-- 会社名の検索方法 -->
+        <div class="slds-media "  style="margin-left:30px;">
+          <div class="slds-form-element__control" style="width:100%;">
+            <fieldset class="slds-form-element checkboxtitletop">
+              <p style="font-size:14px;" class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_Lead_Radio3}</p>
+              <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+                <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 checkboxtitletop">
+                  <span class="slds-radio">
+                    <input type="radio" id="radio-28" name="Leadoptions" onclick="{!c.onLeadGroup1}" checked="{!v.baseSet.RenkeiLeadExcludeHojinkaku__c == 'true'}" />
+                    <label class="slds-radio__label" for="radio-28">
+                      <span class="slds-radio_faux"></span>
+                      <span class="media__figure">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiLeadExcludeHojinkaku}</span>
+                    </label>
+                  </span>
+                </div>
+                <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 checkboxtitletop">
+                  <span class="slds-radio">
+                    <input type="radio" id="radio-29" name="Leadoptions" onclick="{!c.onLeadGroup2}" checked="{!v.baseSet.RenkeiLeadExcludeHojinkakuPartial__c == 'true'}"/>
+                    <label class="slds-radio__label" for="radio-29">
+                      <span class="slds-radio_faux"></span>
+                      <span class="media__figure">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiLeadExcludeHojinkakuPartial}</span>
+                    </label>
+                  </span>
+                </div>
+
+                <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 checkboxtitletop">
+                  <span class="slds-radio">
+                    <input type="radio" id="radio-30" name="Leadoptions" onclick="{!c.onLeadGroup3}" checked="{!v.allLeadKaKu == 'true'}"/>
+                    <label class="slds-radio__label" for="radio-30">
+                      <span class="slds-radio_faux"></span>
+                      <span class="media__figure">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiLeadExcludeHojinkakuAll}</span>
+                    </label>
+                  </span>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="slds-media checkboxtitletop">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:30px;">
+            <h4><aura:unescapedHtml value="{!$Label.c.SB_NC_MAPPING_LeadRadio3HelpMessage}"/></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aura:renderIf>
+
+  <!-- ■既存の取引先の検索条件 -->
+  <div style="padding: 10px 20px; 10px 20px;">
+    <div class="slds-box slds-theme_shade">
+      <!-- 既存取引先判断条件 -->
+      <h3 class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_ExistingAccount_Condition}</h3>
+      <h4><aura:unescapedHtml value="{!$Label.c.SB_NC_MAPPING_ExistingAccountConditionHelpMessage}"/></h4>
+      <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+          <!-- 自動連携:会社名 -->
+          <c:SB_NameCard_RenkeiCheckbox dis="true" checked="true" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountCompany}" obj="{!v.baseSet}"  boxid="RenkeiAccountCompany__c" boxvalue="{!v.baseSet.RenkeiAccountCompany__c}" leftmargin="10"/>
+        </div>
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+          <!-- 自動連携:部署 -->
+          <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountSite}" obj="{!v.baseSet}"  boxid="RenkeiAccountSite__c" boxvalue="{!v.baseSet.RenkeiAccountSite__c}"/>
+        </div>
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+          <!-- 自動連携:電話番号 -->
+          <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountPhone}" obj="{!v.baseSet}"  boxid="RenkeiAccountPhone__c" boxvalue="{!v.baseSet.RenkeiAccountPhone__c}"/>
+        </div>
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+          <!-- 自動連携:URL -->
+          <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountURL}" obj="{!v.baseSet}"  boxid="RenkeiAccountURL__c" boxvalue="{!v.baseSet.RenkeiAccountURL__c}"/>
+        </div>
+      </div>
+      <div class="slds-media " >
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:都道府県 -->
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountAddressPref}" obj="{!v.baseSet}"  boxid="RenkeiAccountAddressPref__c" boxvalue="{!v.baseSet.RenkeiAccountAddressPref__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:市区郡 -->
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountCity}" obj="{!v.baseSet}"  boxid="RenkeiAccountCity__c" boxvalue="{!v.baseSet.RenkeiAccountCity__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:町名・番地 -->
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccount_Street}" obj="{!v.baseSet}"  boxid="RenkeiAccount_Street__c" boxvalue="{!v.baseSet.RenkeiAccount_Street__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:郵便番号 -->
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountZipCode}" obj="{!v.baseSet}"  boxid="RenkeiAccountZipCode__c" boxvalue="{!v.baseSet.RenkeiAccountZipCode__c}"/>
+          </div>
+        </div>
+      </div>
+      <!-- 自動連携:指定項目 -->
+      <div class="slds-media checkboxtitletop">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:10px;">
+          <div class="slds-media__figure checkboxdivleft" style="margin-top: 10px;">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiSpecificItems}</div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5 checkboxtitletop">
+            <div class="slds-media__figure checkboxdivleft">
+              <div class="slds-form-element__control " id="accList">
+                <c:SB_NameCard_RenkeiSettingSelect ischange="{!v.needSave}" selectlist='{!v.accountList}' selectbody='{!v.baseSet.RenkeiSpecificItems__c}'/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-media checkboxtitletop">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:30px;">
+          <h4>{!$Label.c.SB_NC_MAPPING_RenkeiSpecificItemsHelpMessage}</h4>
+        </div>
+      </div>
+      <!-- 検索対象の取引先レコードタイプ -->
+      <div class="slds-media checkboxtitletop">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:10px;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 checkboxtitletop">
+            <div class="slds-media__figure checkboxdivleft">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountQueryRecordTypeIds}</div>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5 checkboxtitletop">
+            <div class="slds-media__figure checkboxdivleft">
+              <div class="slds-form-element__control " id="sele" style="width:210px;height:60px;margin-left: 40px;">
+                <div style="border-radius:3px;padding:4px;border:1px solid rgb(216, 221, 230);overflow:auto;height:68px;  background-color:white;">
+                  <lightning:checkboxGroup name="checkboxa"
+                    options="{! v.accQueryRecordTypeList }"
+                    value="{! v.accQuerySelectedList }"
+                    onchange="{! c.accQueryRecordTypeChange }"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-media checkboxtitletop">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:30px;">
+          <h4>{!$Label.c.SB_NC_MAPPING_RenkeiAccountQueryRecordTypeIdsHelpMessage}</h4>
+        </div>
+      </div>
+      <!-- 取引先名の検索方法 -->
+      <div class="slds-media "  style="margin-left:30px;">
+        <div class="slds-form-element__control" style="width:100%;">
+          <fieldset class="slds-form-element checkboxtitletop">
+            <p style="font-size:14px;" class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_Radio3}</p>
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 checkboxtitletop">
+                <span class="slds-radio">
+                  <input type="radio" id="radio-25" name="options" onclick="{!c.onGroup1}" checked="{!v.baseSet.RenkeiExcludeHojinkaku__c == 'true'}" />
+                  <label class="slds-radio__label" for="radio-25">
+                    <span class="slds-radio_faux"></span>
+                    <span class="media__figure">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiExcludeHojinkaku}</span>
+                  </label>
+                </span>
+              </div>
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 checkboxtitletop">
+                <span class="slds-radio">
+                  <input type="radio" id="radio-26" name="options" onclick="{!c.onGroup2}" checked="{!v.baseSet.RenkeiExcludeHojinkakuPartial__c == 'true'}"/>
+                  <label class="slds-radio__label" for="radio-26">
+                    <span class="slds-radio_faux"></span>
+                    <span class="media__figure">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiExcludeHojinkakuPartial}</span>
+                  </label>
+                </span>
+              </div>
+
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 checkboxtitletop">
+                <span class="slds-radio">
+                  <input type="radio" id="radio-27" name="options" onclick="{!c.onGroup3}" checked="{!v.allKaKu == 'true'}"/>
+                  <label class="slds-radio__label" for="radio-27">
+                    <span class="slds-radio_faux"></span>
+                    <span class="media__figure">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiExcludeHojinkakuAll}</span>
+                  </label>
+                </span>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="slds-media checkboxtitletop">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:30px;">
+          <h4><aura:unescapedHtml value="{!$Label.c.SB_NC_MAPPING_Radio3HelpMessage}"/></h4>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ■既存の取引先責任者の検索条件 -->
+  <div style="padding: 10px 20px; 10px 20px;">
+    <div class="slds-box slds-theme_shade ">
+      <h3 class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_ExistingContact_Condition}</h3>
+      <h4>{!$Label.c.SB_NC_MAPPING_ExistingContact_ConditionHelpMessage}</h4>
+      <div class="slds-media " >
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:姓 -->
+            <c:SB_NameCard_RenkeiCheckbox checked="true" boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactLastName}" obj="{!v.baseSet}"  boxid="RenkeiContactLastName__c" boxvalue="{!v.baseSet.RenkeiContactLastName__c}" leftmargin="10"/>
+          </div>
+
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:名 -->
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactFirstName}" obj="{!v.baseSet}"  boxid="RenkeiContactFirstName__c" boxvalue="{!v.baseSet.RenkeiContactFirstName__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-5">
+            <!-- 自動連携:メールアドレス -->
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactMail}" obj="{!v.baseSet}"  boxid="RenkeiContactMail__c" boxvalue="{!v.baseSet.RenkeiContactMail__c}"/>
+          </div>
+        </div>
+      </div>
+      <!-- 検索対象の取引先責任者レコードタイプ -->
+      <div class="slds-media checkboxtitletop">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:10PX;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 checkboxtitletop">
+            <div class="slds-media__figure checkboxdivleft">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactQueryRecordTypeIds}</div>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5 checkboxtitletop">
+            <div class="slds-media__figure checkboxdivleft">
+              <div class="slds-form-element__control " id="sele" style="width:210px;height:60px;">
+                <div style="border-radius:3px;padding:4px;border:1px solid rgb(216, 221, 230);overflow:auto;height:68px; background-color:white;">
+                  <lightning:checkboxGroup name="checkboxc"
+                    options="{! v.conQueryRecordTypeList }"
+                    value="{! v.conQuerySelectedList }"
+                    onchange="{! c.conQueryRecordTypeChange }"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-media checkboxtitletop">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:30px;">
+          <h4>{!$Label.c.SB_NC_MAPPING_RenkeiContactQueryRecordTypeIdsHelpMessage}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ■会社名の比較条件 -->
+  <div style="padding: 10px 20px; 10px 20px;">
+    <div class="slds-box slds-theme_shade checkboxtitletop">
+      <h3 class="slds-section__title">{!$Label.c.SB_NC_MAPPING_LABEL_HojinkakuEquationLongAndAbbr}</h3>
+      <h4>
+        <aura:renderIf isTrue="{!v.isEnableLeadExtention21}"><aura:unescapedHtml value="{!$Label.c.SB_NC_MAPPING_HojinkakuEquationLongAndAbbrMessageLX21}"/>
+          <aura:set attribute="else"><aura:unescapedHtml value="{!$Label.c.SB_NC_MAPPING_HojinkakuEquationLongAndAbbrMessage}"/></aura:set>
+        </aura:renderIf>
+      </h4>
+      <div class="slds-media" >
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" style="margin-top:20px;">
+            <!-- 法人格の略称と正称を同一視する -->
+            <c:SB_NameCard_RenkeiCheckbox needSave="{!v.needSaveSelf}" boxlabel="{!$Label.c.SB_NC_MAPPING_Label_HojinkakuEquationLandA}" obj="{!v.baseSet}"  boxid="HojinkakuEquationLongAndAbbr__c" boxvalue="{!v.baseSet.HojinkakuEquationLongAndAbbr__c}"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ■新規作成・上書き処理の設定 -->
+  <div style="{!v.isEnableLeadExtention ? 'padding: 10px 20px 10px 20px':'padding: 10px 20px 10px 20px'}">
+    <div class="slds-box slds-theme_shade ">
+      <!-- SB_NC_MAPPING_LABEL_AccountSpecificItems    特定の項目設定 -->
+      <!-- 複数既存処理 -->
+      <!-- {!$Label.c.SB_NC_MAPPING_LABEL_MultipleExistingProcessing} -->
+      <h3 class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_MultipleExistingProcessing}</h3>
+      <h4>{!$Label.c.SB_NC_MAPPING_MultipleExistingProcessingHelpMessage}</h4>
+       <aura:renderIf isTrue="{!v.isEnableLeadExtention}">
+        <div class="slds-media ">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+              <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiLeadNOExistCreateNew}" obj="{!v.baseSet}"  boxid="RenkeiLeadNOExistCreateNew__c" boxvalue="{!v.baseSet.RenkeiLeadNOExistCreateNew__c}"/>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+              <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiLeadOverwrite}" obj="{!v.baseSet}"  boxid="RenkeiLeadOverwrite__c" boxvalue="{!v.baseSet.RenkeiLeadOverwrite__c}"/>
+            </div>
+          </div>
+        </div>
+      </aura:renderIf>
+      <div class="slds-media ">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountNOExistCreateNew}" obj="{!v.baseSet}"  boxid="RenkeiAccountNOExistCreateNew__c" boxvalue="{!v.baseSet.RenkeiAccountNOExistCreateNew__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountOverwrite}" obj="{!v.baseSet}"  boxid="RenkeiAccountOverwrite__c" boxvalue="{!v.baseSet.RenkeiAccountOverwrite__c}"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="slds-media ">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactNOExistCreateNew}" obj="{!v.baseSet}"  boxid="RenkeiContactNOExistCreateNew__c" boxvalue="{!v.baseSet.RenkeiContactNOExistCreateNew__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactOverwrite}" obj="{!v.baseSet}"  boxid="RenkeiContactOverwrite__c" boxvalue="{!v.baseSet.RenkeiContactOverwrite__c}"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="slds-media ">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+            <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiInheritNCTask}" obj="{!v.baseSet}"  boxid="RenkeiInheritEvent__c" boxvalue="{!v.baseSet.RenkeiInheritEvent__c}"/>
+          </div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+          </div>
+        </div>
+      </div>
+
+      <aura:renderIf isTrue="{!v.isEnableLeadExtention}">
+        <div class="slds-media checkboxtitletop" style="width:100%;margin-left:10px;">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+            <div class="slds-media__figure" style="margin-left:30px;">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiLeadRecordTypes}</div>
+            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5">
+              <div class="slds-media__figure checkboxdivleft">
+                <c:SB_NameCard_RenkeiSettingSelect ischange="{!v.needSave}" selectlist='{!v.leadUpsertRecordType}' selectbody='{!v.baseSet.RenkeiLeadRecordTypes__c}'/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slds-media checkboxtitletop">
+          <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:30px;">
+            <h4>{!$Label.c.SB_NC_MAPPING_RenkeiLeadRecordTypesHelpMessage}</h4>
+          </div>
+        </div>
+      </aura:renderIf>
+      <div class="slds-media checkboxtitletop" style="width:100%;margin-left:10px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-media__figure" style="margin-left:30px;">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAccountRecordTypes}</div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5">
+            <div class="slds-media__figure checkboxdivleft">
+              <div class="slds-form-element__control" id="sele" style="width:150px;min-width:150px;">
+                <c:SB_NameCard_RenkeiSettingSelect ischange="{!v.needSave}" selectlist='{!v.accUpsertRecordType}' selectbody='{!v.baseSet.RenkeiAccountRecordTypes__c}'/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-media checkboxtitletop">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:30px;">
+          <h4>{!$Label.c.SB_NC_MAPPING_RenkeiAccountRecordTypesHelpMessage}</h4>
+        </div>
+      </div>
+      <div class="slds-media checkboxtitletop" style="width:100%;margin-left:10px;">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+          <div class="slds-media__figure" style="margin-left:30px;">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiContactRecordTypes}</div>
+          <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-5 slds-large-size_1-of-5">
+            <div class="slds-media__figure checkboxdivleft">
+              <c:SB_NameCard_RenkeiSettingSelect ischange="{!v.needSave}" selectlist='{!v.conUpsertRecordType}' selectbody='{!v.baseSet.RenkeiContactRecordTypes__c}'/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-media checkboxtitletop">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;margin-left:30px;">
+          <h4>{!$Label.c.SB_NC_MAPPING_RenkeiContactRecordTypesHelpMessage}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ■リードの自動連携に関する応用設定 -->
+  <aura:renderIf isTrue="{!v.isEnableLeadExtention21}">
+    <div style="padding: 10px 20px 10px 20px;">
+        <div class="slds-box slds-theme_shade ">
+          <h3 class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiAdvancedSetting}</h3>
+          <h4><aura:unescapedHtml value="{!$Label.c.SB_NC_MAPPING_RenkeiLeadAdvancedSettingHelpMessage}"/></h4>
+          <div class="slds-media ">
+            <div class="slds-grid slds-wrap slds-grid_pull-padded" style="width:100%;">
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiCreateContactOnAcountWithLead}" obj="{!v.baseSet}"  boxid="RenkeiCreateContactOnAcountWithLead__c" boxvalue="{!v.baseSet.RenkeiCreateContactOnAcountWithLead__c}" />
+              </div>
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiCreateContactOnAcountWithoutLead}" obj="{!v.baseSet}"  boxid="RenkeiCreateContactOnAcountWithoutLead__c" boxvalue="{!v.baseSet.RenkeiCreateContactOnAcountWithoutLead__c}" />
+              </div>
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiCreateLeadOnTooManyAccounts}" obj="{!v.baseSet}"  boxid="RenkeiCreateLeadOnTooManyAccounts__c" boxvalue="{!v.baseSet.RenkeiCreateLeadOnTooManyAccounts__c}" />
+              </div>
+              <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                <c:SB_NameCard_RenkeiCheckbox boxlabel="{!$Label.c.SB_NC_MAPPING_LABEL_RenkeiUpdateAllLeadsOnCondition}" obj="{!v.baseSet}"  boxid="RenkeiUpdateAllLeadsOnCondition__c" boxvalue="{!v.baseSet.RenkeiUpdateAllLeadsOnCondition__c}" />
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </aura:renderIf>
+
+  <!-- ■連携対象の名刺の条件 -->
+  <div style="padding: 20px 20px 60px 20px;">
+    <div class="slds-box slds-theme_shade scx">
+        <h3 class="slds-section__title ">{!$Label.c.SB_NC_MAPPING_LABEL_SeachRenkeiNC}</h3>
+        <h4>{!$Label.c.SB_NC_MAPPING_SeachRenkeiNCHelpMessage}</h4>
+        <div style="margin-top:20px;">
+        <!-- 条件を追加 -->
+        <a type="button" onclick="{!c.addItem}"  aria-haspopup="false" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_ADDITEM}</a>
+        <!-- 条件を削除 -->
+        <a type="button" onclick="{!c.remove}"  aria-haspopup="false" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_DELETEITEM}</a>
+        <!--クリア-->
+        <a type="button" onclick="{!c.clean}"  aria-haspopup="false" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_CLEAR}</a>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover tablesize" style="min-width:600px;margin-top:20px;">
+          <thead>
+            <tr class="slds-text-heading_label "><th scope="col" style="width:7%;"></th>
+              <th scope="col" style="width:31%;">{!$Label.c.SB_NC_MAPPING_LABEL_FIELD}</th>
+              <th scope="col" style="width:29%;">{!$Label.c.SB_NC_MAPPING_LABEL_OPERATOR}</th>
+              <th scope="col" style="width:33%;">{!$Label.c.SB_NC_MAPPING_LABEL_VALUE}</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div style="overflow-y:scroll;max-height:410px;min-width:600px;overflow-x:hidden;" class="tablesize" >
+          <table id = "table" class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover " >
+            <tbody>
+              <aura:iteration var="var" items="{!v.disList}">
+                <c:SB_NameCard_RenkeiJyokendisCell dis="{!var}"/>
+              </aura:iteration>
+              <aura:iteration var="var" items="{!v.allData}" indexVar="index">
+                <c:SB_NameCard_RenkeiJyokenCell labMap="{!v.labMap}" filesErrormessage="{!var.erMsg}" reg="{!$Label.c.SB_NC_SETTING_LABEL_OP_REGEX}" nameCardFieldErrorMsg="{!var.nameCardError}" operatorErrorMsg="{!var.operatorError}" filesError="{!var.isError}" removeFlag='{!var.removeFlag}' leftSelects='{!v.nameCardSelects}' baseSet='{!var.data}' typeCondition="{!v.typeCondition}" nameCardTypeList='{!v.nameCardTypeList}' nameCardMap='{!v.nameCardMap}'/>
+              </aura:iteration>
+           </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--エラーメッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.errorMsg))}">
+    <ui:message title="" severity="error" closable="false">
+      {!v.errorMsg}
+      <aura:renderIf isTrue="{!v.errorMsg == v.labMap.SB_NC_SETTING_ERROR_OtherSection_Saved}">
+        <div class="bRight" data-aura-rendered-by="893:0"><a class="close" onclick="{!c.clearMsg}" data-aura-rendered-by="877:0">×</a></div>
+      </aura:renderIf>
+    </ui:message>
+  </aura:renderIf>
+  <!--成功メッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.okMsg))}">
+    <ui:message title="" severity="confirm" closable="false">
+      {!v.okMsg}
+    </ui:message>
+  </aura:renderIf>
+
+  <!--保存警告メッセージ表示-->
+  <aura:renderIf isTrue="{!not(empty(v.saveWarMsg))}">
+    <ui:message title="" severity="warning" closable="false">
+        {!v.saveWarMsg}
+      <aura:renderIf isTrue="{!v.saveWarMsg == v.labMap.SB_NC_SETTING_ERROR_OtherSection_Saved}">
+        <div class="bRight" data-aura-rendered-by="893:0"><a class="close" onclick="{!c.clearWarningMsg}" data-aura-rendered-by="877:0">×</a></div>
+      </aura:renderIf>
+    </ui:message>
+  </aura:renderIf>
+  <c:SB_NameCard_RenkeiMsg Msgs="{!v.errorMsgs}" style="error"/>
+
+  
+
+
+  <aura:renderIf isTrue="{!v.showAlert}">
+    <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+      <div class="slds-modal__container">
+        <div class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture">
+          <button class="slds-button slds-modal__close slds-button_icon-inverse" title="Close">
+            <div class="slds-assistive-text">Close</div>
+          </button>
+          <h2 class="slds-text-heading_medium" id="prompt-heading-id">{!$Label.c.SB_NC_MAPPING_LABEL_NOTICE}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around_medium">
+          <!-- <p>{!$Label.SmartViscaf.SB_NC_MAPPING_MSG_DEFAULT}</p> -->
+          <p>{!v.message}</p>
+        </div>
+        <div class="slds-modal__footer slds-theme_default">
+          <button onclick="{!c.yes}" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_YES}</button>
+          <button onclick="{!c.no}" class="slds-button slds-button_neutral">{!$Label.c.SB_NC_MAPPING_LABEL_NO}</button>
+        </div>
+      </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:renderIf>
+
+  <!--ロード中...-->
+  <aura:renderIf isTrue="{!v.login}">
+   <div class="slds-spinner_container" style="background-color:white">
+    <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
+      <div class="slds-assistive-text">Loading</div>
+      <div class="slds-spinner__dot-a"></div>
+      <div class="slds-spinner__dot-b"></div>
+    </div>
+   </div>
+  </aura:renderIf>
+
+  <aura:renderIf isTrue="{!v.isLoading}">
+    <div class="slds-spinner_container" style="background-color:white">
+      <div class="slds-spinner_brand slds-spinner slds-spinner_medium" role="alert">
+        <div class="slds-assistive-text">Loading</div>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+  </aura:renderIf>
+  <aura:renderIf isTrue="{!v.showStyle == 'LEX'}">
+    <div class="slds-docked-form-footer">
+        <!-- 保存 -->
+      <a type="button"   id = 'save' onclick="{!c.save}"  aria-haspopup="false" class="slds-button slds-button_brand">{!$Label.c.SB_NC_MAPPING_LABEL_SAVE_BUTTON}</a>
+    </div>
+  </aura:renderIf>
+
+  <aura:renderIf isTrue="{!v.showStyle == 'Classic'}">
+    <div class="csmfoot">
+      <!-- 保存 -->
+      <a type="button"   id = 'save' onclick="{!c.save}"  aria-haspopup="false" class="slds-button slds-button_brand">{!$Label.c.SB_NC_MAPPING_LABEL_SAVE_BUTTON}</a>
+    </div>
+  </aura:renderIf>
+</aura:component>

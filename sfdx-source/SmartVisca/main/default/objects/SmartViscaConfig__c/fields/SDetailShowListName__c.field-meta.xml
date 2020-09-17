@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SDetailShowListName__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>名刺詳細画面（SmartVisca専用のカスタマイズ画面）にリスト名を表示します。</description>
+    <externalId>false</externalId>
+    <label>S名刺詳細：リスト名を表示する</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

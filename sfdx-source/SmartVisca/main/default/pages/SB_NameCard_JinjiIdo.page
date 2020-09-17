@@ -1,0 +1,49 @@
+<!-- $Id$ -->
+<!-- Copyright (c) 2014 SunBridge Inc. -->
+
+<apex:page controller="SB_NameCard_JinjiIdoController" title="{!$Label.sb_nc_text_personnelreshuffleinfobatch}">
+	<!-- <apex:pageMessages />
+	<apex:form >
+		<apex:pageBlock title="{!$Label.sb_nc_text_personnelreshuffleinfobatch}">
+			<apex:pageBlockButtons >
+				<apex:commandButton action="{!batch}" value="{!$Label.sb_nc_label_execute}"/>
+			</apex:pageBlockButtons>
+
+			<apex:pageBlockSection title="{!$Label.sb_nc_text_specifiedinperiod}">
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="{!$Label.sb_nc_label_from}"/>
+					<apex:inputField value="{!fromCip.PrintedDate__c}" required="false"/>
+				</apex:pageBlockSectionItem>
+
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="{!$Label.sb_nc_label_to}"/>
+					<apex:inputField value="{!toCip.PrintedDate__c}" required="false"/>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection title="{!$Label.sb_nc_text_specifiedinbusinesscard}">
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="{!$Label.sb_nc_text_businesscard}"/>
+					<apex:inputField value="{!ncCip.NameCard__c}" required="false"/>
+				</apex:pageBlockSectionItem>
+
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="{!$Label.sb_nc_text_printeddate}"/>
+					<apex:inputField value="{!ncCip.PrintedDate__c}" required="false"/>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+
+		<apex:pageBlock title="{!$Label.sb_nc_text_personnelreshuffleinfodeletionbatch}">
+			<apex:pageBlockButtons >
+				<apex:commandButton action="{!deleteBatch}" value="{!$Label.sb_nc_label_execute}"/>
+			</apex:pageBlockButtons>
+		</apex:pageBlock>
+
+		<apex:pageBlock title="{!$Label.sb_nc_text_personnelreshuffleinfoemailnoticebatch}">
+			<apex:pageBlockButtons >
+				<apex:commandButton action="{!emailNoticeBatch}" value="{!$Label.sb_nc_label_execute}"/>
+			</apex:pageBlockButtons>
+		</apex:pageBlock>
+	</apex:form> -->
+</apex:page>

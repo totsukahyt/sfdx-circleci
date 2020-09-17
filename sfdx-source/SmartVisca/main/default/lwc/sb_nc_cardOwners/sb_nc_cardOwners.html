@@ -1,0 +1,73 @@
+<!-- 
+/**
+ *  sb_nc_cardOwners.html
+ *      
+ *  @author sawano
+ *  @Version1 2019.06.xx v2.4 SV_DEV-1593 LEX画面の名刺詳細から「同じ名刺を持つユーザ」を確認できるようにしてほしい
+ *  
+ */
+ -->
+<template>
+  <lightning-card title={label.apptitle} icon-name="standard:user">
+    <template if:true={showMenu}>
+      <lightning-button-menu slot="actions" label="" alternative-text={label.menu_order} variant="border-filled" icon-name="utility:sort" onselect={handleSortKeySelect}>
+        <lightning-menu-item value="name" label={label.label_name} checked={sortName}></lightning-menu-item>
+        <lightning-menu-item value="department" label={label.label_dept} checked={sortDept}></lightning-menu-item>
+        <lightning-menu-item value="exchangeDate" label={label.exchangedate} checked={sortExchange}></lightning-menu-item>
+      </lightning-button-menu>
+    </template>
+
+    <template if:true={working}>
+      <!-- ローディング中 -->
+      <div style="position: relative; height: 80px;">
+        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+      </div>
+    </template>
+    <template if:false={working}>
+      <template if:true={owners}>
+        <lightning-layout class="slds-m-around_medium">
+          <lightning-layout-item>
+            <!-- c-contact-list-item emits a non-bubbling event so each element must have a listener-->
+            <template for:each={owners} for:item="owner">
+              <c-sb_nc_owner-list-item
+                  key={owner.id}
+                  user={owner}
+                  showdate={showExchangeDate}
+                  onselect={handleSelect}>
+              </c-sb_nc_owner-list-item>
+            </template>
+          </lightning-layout-item>
+          <!-- <lightning-layout-item class="slds-m-left_medium">
+              <template if:true={selectedOwner}>
+                  <img
+                      src={selectedOwner.FullPhotoUrl}
+                      alt="Profile photo"
+                  />
+                  <p>{selectedOwner.Name}</p>
+                  <p>{selectedOwner.Title}</p>
+                  <p>
+                      <lightning-formatted-phone
+                          value={selectedOwner.Phone}
+                      ></lightning-formatted-phone>
+                  </p>
+                  <p>
+                      <lightning-formatted-email
+                          value={selectedOwner.Email}
+                      ></lightning-formatted-email>
+                  </p>
+              </template>
+          </lightning-layout-item> -->
+        </lightning-layout>
+      </template>
+    </template>
+      <!-- <template if:false={owners.data.length}>
+        <lightning-layout class="slds-m-around_medium">
+          <p><lightning-formatted-text value="同じ名刺はないか、他に同じ人の名刺を持つユーザはいません。"></lightning-formatted-text></p>
+          <p><lightning-formatted-text value={label.SB_NC_Text_NoOtherCardOwners}></lightning-formatted-text></p>
+        </lightning-layout>
+      </template> -->
+    <template if:true={error}>
+      <c-sb_nc_error-panel errors={error}></c-sb_nc_error-panel>
+    </template>
+  </lightning-card>
+</template>

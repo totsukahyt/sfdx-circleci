@@ -1,0 +1,35 @@
+/**
+ *
+ *  SB_NameCard_Settings
+ *   コンポーネントを表示するタブ付きコンポーネント CSS
+ *
+ *  Copyright (C) 2017 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author mao
+ *  @Version 1.20      2017.02.XX
+ *  @Version 1.20      2017.09.XX SV_DEV-1219 salesforce最新環境での「SmartVisca設定」内タブがまた大文字で表示される
+ *  @Version 2.4       2019.05.XX SV_DEV-1630と合わせてリファクタリングを実施
+ *                     2019.05.XX SV_DEV-1331 SLDS CSSクラス名変更対応
+ *
+ **/
+.THIS .wrapper {
+  position: fixed;
+  top:0;left:0;right:0;margin:0 auto;
+  background-color: rgb(255,255,255);
+  box-sizing:border-box;
+}
+.THIS.padd{
+  padding: 0rem 0;
+}
+
+.THIS .slds-text-heading_label {
+  font-size: .75rem;
+  line-height: 1.25;
+  color: rgb(84, 105, 141);
+  text-transform: none;
+  letter-spacing: .0625rem;
+}
+/*SV_DEV-1219*/
+.THIS .transformnone {
+  text-transform: none !important;
+}

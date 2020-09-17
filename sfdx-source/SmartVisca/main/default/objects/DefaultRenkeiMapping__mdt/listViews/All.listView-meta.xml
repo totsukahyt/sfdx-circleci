@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>MasterLabel</columns>
+    <columns>DeveloperName</columns>
+    <columns>recordtype__c</columns>
+    <columns>TargetName__c</columns>
+    <columns>NameCardName__c</columns>
+    <columns>IsActive__c</columns>
+    <columns>IsProtected</columns>
+    <filterScope>Everything</filterScope>
+    <label>全て</label>
+    <language>ja</language>
+</ListView>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Card Owner of the Same Person&apos;s Card will be mentioned when a new card from the same person is exchanged.
+A feed is created for each card and multiple feed will be delivered if a user has multiple cards from the same person.
+The Connected Account must have reference permission to the card owner user.</help>
+    <label>Mention Exchanging Same One&apos;s to Owner</label>
+    <name>FeedOnNameCardMentionToOwners__c</name>
+</CustomFieldTranslation>

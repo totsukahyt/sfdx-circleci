@@ -1,0 +1,3345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customApplications>
+        <label><!-- SmartVisca --></label>
+        <name>SmartVisca</name>
+    </customApplications>
+    <customApplications>
+        <label><!-- SmartVisca --></label>
+        <name>SmartViscaLightningApplication</name>
+    </customApplications>
+    <customApplications>
+        <label>Mobile Business Card Manager</label>
+        <name>SmartViscaMobileApplication</name>
+    </customApplications>
+    <customLabels>
+        <label>Unable to get Personnel Change Info</label>
+        <name>SB_MSG_CantGetPersonnelChangeInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Unable to update title</label>
+        <name>SB_MSG_CantUpdateTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Card not found</label>
+        <name>SB_MSG_CardNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>check a map</label>
+        <name>SB_MSG_CheckAMap</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter Company Name and Last Name</label>
+        <name>SB_MSG_CompanyNameMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>Contact is not set</label>
+        <name>SB_MSG_ContactNotSet</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} is not set</label>
+        <name>SB_MSG_ContactNotSetDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} Object does not have access authority.</label>
+        <name>SB_MSG_CrudNotAccessible</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} is not createable.</label>
+        <name>SB_MSG_CrudNotCreateable</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} You do not have permission to delete objects.</label>
+        <name>SB_MSG_CrudNotDeleteable</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} is not updateable.</label>
+        <name>SB_MSG_CrudNotUpdateable</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} Object deletion error: {1}</label>
+        <name>SB_MSG_DmlDeleteFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} Object creation error: {1}</label>
+        <name>SB_MSG_DmlInsertFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} Object update error: {1}</label>
+        <name>SB_MSG_DmlUpdateFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter Account</label>
+        <name>SB_MSG_EnterAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter {0}</label>
+        <name>SB_MSG_EnterAccountDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter Contact</label>
+        <name>SB_MSG_EnterContact</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter {0}</label>
+        <name>SB_MSG_EnterContactDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>You do not have access authority for field {1} ({2}) on object {0}.</label>
+        <name>SB_MSG_FlsNotAccessible</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} Field: {1} ({2}) is not createable.</label>
+        <name>SB_MSG_FlsNotCreateable</name>
+    </customLabels>
+    <customLabels>
+        <label>Object: {0} Field: {1} ({2}) is not updateable.</label>
+        <name>SB_MSG_FlsNotUpdateable</name>
+    </customLabels>
+    <customLabels>
+        <label>Report &quot;SB_haveSameNameCard&quot; is not found</label>
+        <name>SB_MSG_HaveSameNameCardReportNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter Id</label>
+        <name>SB_MSG_IdMissing</name>
+    </customLabels>
+    <customLabels>
+        <label>Illegal Request</label>
+        <name>SB_MSG_IllegalRequest</name>
+    </customLabels>
+    <customLabels>
+        <label>Please check the following Settings.\r\n\r\n{0}</label>
+        <name>SB_MSG_InstallErrMailBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ncsupport@sunbridge.com --></label>
+        <name>SB_MSG_InstallErrMailReplyTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SmartVisca Technical Support --></label>
+        <name>SB_MSG_InstallErrMailSenderDisplayName</name>
+    </customLabels>
+    <customLabels>
+        <label>【SmartVisca】Install Failed</label>
+        <name>SB_MSG_InstallErrMailSubject</name>
+    </customLabels>
+    <customLabels>
+        <label>Your search term must have 2 or more characters.</label>
+        <name>SB_MSG_MoreThanOneLetter</name>
+    </customLabels>
+    <customLabels>
+        <label>New Career must not be an older Card of the Card</label>
+        <name>SB_MSG_NewCareerCantBeOldOfSelf</name>
+    </customLabels>
+    <customLabels>
+        <label>New Career must be another Card</label>
+        <name>SB_MSG_NewCareerMustBeAnother</name>
+    </customLabels>
+    <customLabels>
+        <label>Selected Card doesn&apos;t have its &quot;latest&quot;</label>
+        <name>SB_MSG_NoLatestCardSelected</name>
+    </customLabels>
+    <customLabels>
+        <label>Select a correct destination</label>
+        <name>SB_MSG_SelectCorrectDestination</name>
+    </customLabels>
+    <customLabels>
+        <label>Select a destination</label>
+        <name>SB_MSG_SelectDestination</name>
+    </customLabels>
+    <customLabels>
+        <label>Select a new career</label>
+        <name>SB_MSG_SelectNewCareer</name>
+    </customLabels>
+    <customLabels>
+        <label>Select a Personnel Change Info</label>
+        <name>SB_MSG_SelectPersonnelChangeInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>This is the latest one.</label>
+        <name>SB_MSG_ThisIsTheLatest</name>
+    </customLabels>
+    <customLabels>
+        <label>Unregistered</label>
+        <name>SB_MSG_Unregistered</name>
+    </customLabels>
+    <customLabels>
+        <label>View</label>
+        <name>SB_MSG_ViewRelated</name>
+    </customLabels>
+    <customLabels>
+        <label>Organization Information</label>
+        <name>SB_NCOTL_AppTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Both Sides</label>
+        <name>SB_NCS1C_Label_AlsoBackside</name>
+    </customLabels>
+    <customLabels>
+        <label>Camera・Select</label>
+        <name>SB_NCS1C_Label_CameraSelect</name>
+    </customLabels>
+    <customLabels>
+        <label>Cancel</label>
+        <name>SB_NCS1C_Label_Cancel</name>
+    </customLabels>
+    <customLabels>
+        <label>Show transformation result</label>
+        <name>SB_NCS1C_Label_ConfirmTheTransformationResult</name>
+    </customLabels>
+    <customLabels>
+        <label>Digitize Handwritten Notes (front side only)</label>
+        <name>SB_NCS1C_Label_DigitizeHandwrittenMemo</name>
+    </customLabels>
+    <customLabels>
+        <label>Discard</label>
+        <name>SB_NCS1C_Label_Discard</name>
+    </customLabels>
+    <customLabels>
+        <label>Digitize front side only</label>
+        <name>SB_NCS1C_Label_FrontsideOnlyInput</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove more Garbage</label>
+        <name>SB_NCS1C_Label_GabageFilter</name>
+    </customLabels>
+    <customLabels>
+        <label>Go Back</label>
+        <name>SB_NCS1C_Label_GoBack</name>
+    </customLabels>
+    <customLabels>
+        <label>Log GeoLocation in Transmission History</label>
+        <name>SB_NCS1C_Label_LeaveGeoLocationInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Notes</label>
+        <name>SB_NCS1C_Label_Memo</name>
+    </customLabels>
+    <customLabels>
+        <label>Exchange Date</label>
+        <name>SB_NCS1C_Label_NCExchangeDate</name>
+    </customLabels>
+    <customLabels>
+        <label>List Name</label>
+        <name>SB_NCS1C_Label_NCListName</name>
+    </customLabels>
+    <customLabels>
+        <label>Next</label>
+        <name>SB_NCS1C_Label_Next</name>
+    </customLabels>
+    <customLabels>
+        <label>(No Notes)</label>
+        <name>SB_NCS1C_Label_NoMemo</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove Shade &amp; Garbage</label>
+        <name>SB_NCS1C_Label_NoiseFilter</name>
+    </customLabels>
+    <customLabels>
+        <label>Don&apos;t transform</label>
+        <name>SB_NCS1C_Label_NotToTransform</name>
+    </customLabels>
+    <customLabels>
+        <label>OK</label>
+        <name>SB_NCS1C_Label_OK</name>
+    </customLabels>
+    <customLabels>
+        <label>Refresh</label>
+        <name>SB_NCS1C_Label_Refresh</name>
+    </customLabels>
+    <customLabels>
+        <label>Keep List Name</label>
+        <name>SB_NCS1C_Label_RememberTheNCListName</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove</label>
+        <name>SB_NCS1C_Label_Remove</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove the Backside</label>
+        <name>SB_NCS1C_Label_RemoveBackside</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove Both Sides</label>
+        <name>SB_NCS1C_Label_RemoveBothSides</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove the Frontside</label>
+        <name>SB_NCS1C_Label_RemoveFrontside</name>
+    </customLabels>
+    <customLabels>
+        <label>Send</label>
+        <name>SB_NCS1C_Label_Send</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove Shade</label>
+        <name>SB_NCS1C_Label_ShadeFilter</name>
+    </customLabels>
+    <customLabels>
+        <label>Keep Notes</label>
+        <name>SB_NCS1C_Label_TakeOverMemo</name>
+    </customLabels>
+    <customLabels>
+        <label>Keep Card Exchange Date</label>
+        <name>SB_NCS1C_Label_TakeOverNCExchangeDate</name>
+    </customLabels>
+    <customLabels>
+        <label>To Transform</label>
+        <name>SB_NCS1C_Label_ToTransform</name>
+    </customLabels>
+    <customLabels>
+        <label>Transform the Images</label>
+        <name>SB_NCS1C_Label_TransformTheImg</name>
+    </customLabels>
+    <customLabels>
+        <label>View the log.</label>
+        <name>SB_NCS1C_Label_ViewTheLog</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Image Reg.</label>
+        <name>SB_NCS1C_Menu_NCImgRegistration</name>
+    </customLabels>
+    <customLabels>
+        <label>Settings</label>
+        <name>SB_NCS1C_Menu_Settings</name>
+    </customLabels>
+    <customLabels>
+        <label>Failed to transform the Card Image.</label>
+        <name>SB_NCS1C_Msg_FailedToTransformNCImg</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Image Confirmation</label>
+        <name>SB_NCS1C_Text_ConfirmNCImg</name>
+    </customLabels>
+    <customLabels>
+        <label>Confirmation of History Deletion</label>
+        <name>SB_NCS1C_Text_ConfirmationOfHistoryDeletion</name>
+    </customLabels>
+    <customLabels>
+        <label>Confirmation of Image Deletion</label>
+        <name>SB_NCS1C_Text_ConfirmationOfImgDeletion</name>
+    </customLabels>
+    <customLabels>
+        <label>Information per Card</label>
+        <name>SB_NCS1C_Text_ForInfoOfNCUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>Information per transmission</label>
+        <name>SB_NCS1C_Text_ForInfoOfSendingUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>Grid</label>
+        <name>SB_NCS1C_Text_Grid</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Image handling settings</label>
+        <name>SB_NCS1C_Text_HandingImage</name>
+    </customLabels>
+    <customLabels>
+        <label>latest 100 entries are kept</label>
+        <name>SB_NCS1C_Text_KeepTheLatest100Records</name>
+    </customLabels>
+    <customLabels>
+        <label>Up to</label>
+        <name>SB_NCS1C_Text_MaxAttachment1</name>
+    </customLabels>
+    <customLabels>
+        <label>files can be attached.</label>
+        <name>SB_NCS1C_Text_MaxAttachment2</name>
+    </customLabels>
+    <customLabels>
+        <label>Options per transmission</label>
+        <name>SB_NCS1C_Text_NCImgDigitalizationOptions</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Image List</label>
+        <name>SB_NCS1C_Text_NCImgList</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Registration Details</label>
+        <name>SB_NCS1C_Text_NCRegistrationDetails</name>
+    </customLabels>
+    <customLabels>
+        <label>Card</label>
+        <name>SB_NCS1C_Text_Namecard</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Camera</label>
+        <name>SB_NCS1C_Text_NamecardCamera</name>
+    </customLabels>
+    <customLabels>
+        <label>Number of Files Exceeded</label>
+        <name>SB_NCS1C_Text_NumberOfFilesExceeded</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove all history records.</label>
+        <name>SB_NCS1C_Text_RemoveAllHistoryRecords</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove the Card Images.</label>
+        <name>SB_NCS1C_Text_RemoveNCImg</name>
+    </customLabels>
+    <customLabels>
+        <label>Sending</label>
+        <name>SB_NCS1C_Text_Sending</name>
+    </customLabels>
+    <customLabels>
+        <label>Transmission History</label>
+        <name>SB_NCS1C_Text_SendingHistory</name>
+    </customLabels>
+    <customLabels>
+        <label>No Transmission History</label>
+        <name>SB_NCS1C_Text_SendingHistoryNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Transmission</label>
+        <name>SB_NCS1C_Text_StartOfSending</name>
+    </customLabels>
+    <customLabels>
+        <label>Start transmission</label>
+        <name>SB_NCS1C_Text_StartToSend</name>
+    </customLabels>
+    <customLabels>
+        <label>SunBridge</label>
+        <name>SB_NCS1C_Text_Sunbridge</name>
+    </customLabels>
+    <customLabels>
+        <label>Image</label>
+        <name>SB_NCS1C_Textl_Image</name>
+    </customLabels>
+    <customLabels>
+        <label>Cancel</label>
+        <name>SB_NCS1R_Label_Cancel</name>
+    </customLabels>
+    <customLabels>
+        <label>Details</label>
+        <name>SB_NCS1R_Label_Detials</name>
+    </customLabels>
+    <customLabels>
+        <label>Filter</label>
+        <name>SB_NCS1R_Label_Filter</name>
+    </customLabels>
+    <customLabels>
+        <label>Go Back</label>
+        <name>SB_NCS1R_Label_GoBack</name>
+    </customLabels>
+    <customLabels>
+        <label>Image</label>
+        <name>SB_NCS1R_Label_Image</name>
+    </customLabels>
+    <customLabels>
+        <label>Card</label>
+        <name>SB_NCS1R_Label_Namecard</name>
+    </customLabels>
+    <customLabels>
+        <label>Next</label>
+        <name>SB_NCS1R_Label_Next</name>
+    </customLabels>
+    <customLabels>
+        <label>OK</label>
+        <name>SB_NCS1R_Label_OK</name>
+    </customLabels>
+    <customLabels>
+        <label>Refresh</label>
+        <name>SB_NCS1R_Label_Refresh</name>
+    </customLabels>
+    <customLabels>
+        <label>Register</label>
+        <name>SB_NCS1R_Label_Regist</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove</label>
+        <name>SB_NCS1R_Label_Remove</name>
+    </customLabels>
+    <customLabels>
+        <label>Search</label>
+        <name>SB_NCS1R_Label_Search</name>
+    </customLabels>
+    <customLabels>
+        <label>Select</label>
+        <name>SB_NCS1R_Label_Select</name>
+    </customLabels>
+    <customLabels>
+        <label>Settings</label>
+        <name>SB_NCS1R_Label_Settings</name>
+    </customLabels>
+    <customLabels>
+        <label>Confirmation of History Deletion</label>
+        <name>SB_NCS1R_Text_ConfirmationOfHistoryDeletion</name>
+    </customLabels>
+    <customLabels>
+        <label>Registration to Account and Contact  Registration Confirmation</label>
+        <name>SB_NCS1R_Text_ConfirmationOfRegToAccAndCon</name>
+    </customLabels>
+    <customLabels>
+        <label>will creat new.</label>
+        <name>SB_NCS1R_Text_CreateNew</name>
+    </customLabels>
+    <customLabels>
+        <label>New {0}</label>
+        <name>SB_NCS1R_Text_CreateNewRecord</name>
+    </customLabels>
+    <customLabels>
+        <label>Create {0}</label>
+        <name>SB_NCS1R_Text_CreateNewRecordDiscription</name>
+    </customLabels>
+    <customLabels>
+        <label>latest 100 entries are kept</label>
+        <name>SB_NCS1R_Text_KeepTheLatest100Records</name>
+    </customLabels>
+    <customLabels>
+        <label>matched the Card</label>
+        <name>SB_NCS1R_Text_NCMatched</name>
+    </customLabels>
+    <customLabels>
+        <label>is shown the number of.</label>
+        <name>SB_NCS1R_Text_NumberShown</name>
+    </customLabels>
+    <customLabels>
+        <label>Record Type</label>
+        <name>SB_NCS1R_Text_RecordType</name>
+    </customLabels>
+    <customLabels>
+        <label>Regist Account</label>
+        <name>SB_NCS1R_Text_RegistAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>Destination</label>
+        <name>SB_NCS1R_Text_RegistContents</name>
+    </customLabels>
+    <customLabels>
+        <label>Registration history not found.</label>
+        <name>SB_NCS1R_Text_RegistHistoryNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Registered</label>
+        <name>SB_NCS1R_Text_RegisteredBelow</name>
+    </customLabels>
+    <customLabels>
+        <label>Failed</label>
+        <name>SB_NCS1R_Text_RegisteredFalt</name>
+    </customLabels>
+    <customLabels>
+        <label>Registering</label>
+        <name>SB_NCS1R_Text_Registering</name>
+    </customLabels>
+    <customLabels>
+        <label>Registration History</label>
+        <name>SB_NCS1R_Text_RegistrationHistory</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove all history records.</label>
+        <name>SB_NCS1R_Text_RemoveAllHistoryRecords</name>
+    </customLabels>
+    <customLabels>
+        <label>Lookup {0}</label>
+        <name>SB_NCS1R_Text_SelectOther</name>
+    </customLabels>
+    <customLabels>
+        <label>Search and Set {0}</label>
+        <name>SB_NCS1R_Text_SelectOtherDiscription</name>
+    </customLabels>
+    <customLabels>
+        <label>View Details</label>
+        <name>SB_NCS1R_Text_ViewDetails</name>
+    </customLabels>
+    <customLabels>
+        <label>Add</label>
+        <name>SB_NCS1_Label_Add</name>
+    </customLabels>
+    <customLabels>
+        <label>Add GeoLocation Informations to the Cards</label>
+        <name>SB_NCS1_Label_AddGeolocationInfoToNC</name>
+    </customLabels>
+    <customLabels>
+        <label>All Cards</label>
+        <name>SB_NCS1_Label_AllNameCards</name>
+    </customLabels>
+    <customLabels>
+        <label>Cancel</label>
+        <name>SB_NCS1_Label_Cancel</name>
+    </customLabels>
+    <customLabels>
+        <label>Clear</label>
+        <name>SB_NCS1_Label_Clear</name>
+    </customLabels>
+    <customLabels>
+        <label>Company Name Kana</label>
+        <name>SB_NCS1_Label_CompanyNameKana</name>
+    </customLabels>
+    <customLabels>
+        <label>Filter</label>
+        <name>SB_NCS1_Label_Filter</name>
+    </customLabels>
+    <customLabels>
+        <label>Go Back</label>
+        <name>SB_NCS1_Label_GoBack</name>
+    </customLabels>
+    <customLabels>
+        <label>Important Cards</label>
+        <name>SB_NCS1_Label_ImportantNamecards</name>
+    </customLabels>
+    <customLabels>
+        <label>Index</label>
+        <name>SB_NCS1_Label_Index</name>
+    </customLabels>
+    <customLabels>
+        <label>Use Index Search</label>
+        <name>SB_NCS1_Label_IndexSearch</name>
+    </customLabels>
+    <customLabels>
+        <label>My Cards</label>
+        <name>SB_NCS1_Label_MyNameCards</name>
+    </customLabels>
+    <customLabels>
+        <label>Name Kana</label>
+        <name>SB_NCS1_Label_NameKana</name>
+    </customLabels>
+    <customLabels>
+        <label>New Tag</label>
+        <name>SB_NCS1_Label_NewTag</name>
+    </customLabels>
+    <customLabels>
+        <label>Org.</label>
+        <name>SB_NCS1_Label_Organization</name>
+    </customLabels>
+    <customLabels>
+        <label>Others</label>
+        <name>SB_NCS1_Label_Others</name>
+    </customLabels>
+    <customLabels>
+        <label>Persons</label>
+        <name>SB_NCS1_Label_Persons</name>
+    </customLabels>
+    <customLabels>
+        <label>Recent Cards</label>
+        <name>SB_NCS1_Label_RecentNamecards</name>
+    </customLabels>
+    <customLabels>
+        <label>Remove</label>
+        <name>SB_NCS1_Label_Remove</name>
+    </customLabels>
+    <customLabels>
+        <label>Save</label>
+        <name>SB_NCS1_Label_Save</name>
+    </customLabels>
+    <customLabels>
+        <label>Search</label>
+        <name>SB_NCS1_Label_Search</name>
+    </customLabels>
+    <customLabels>
+        <label>Sort</label>
+        <name>SB_NCS1_Label_Sort</name>
+    </customLabels>
+    <customLabels>
+        <label>Use String Search</label>
+        <name>SB_NCS1_Label_StringSearch</name>
+    </customLabels>
+    <customLabels>
+        <label>Tagged Cards</label>
+        <name>SB_NCS1_Label_TaggedNamecards</name>
+    </customLabels>
+    <customLabels>
+        <label>Test</label>
+        <name>SB_NCS1_Label_Test</name>
+    </customLabels>
+    <customLabels>
+        <label>Image</label>
+        <name>SB_NCS1_Menu_Image</name>
+    </customLabels>
+    <customLabels>
+        <label>Users with the same Card not found.</label>
+        <name>SB_NCS1_Msg_UsersWithSameNCNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Open Activities</label>
+        <name>SB_NCS1_Text_ActivitiesPlan</name>
+    </customLabels>
+    <customLabels>
+        <label>No open Activities</label>
+        <name>SB_NCS1_Text_ActivitiesPlanNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Activity</label>
+        <name>SB_NCS1_Text_Activity</name>
+    </customLabels>
+    <customLabels>
+        <label>Add</label>
+        <name>SB_NCS1_Text_Add</name>
+    </customLabels>
+    <customLabels>
+        <label>add cards to card list</label>
+        <name>SB_NCS1_Text_AddNCToNCList</name>
+    </customLabels>
+    <customLabels>
+        <label>Add Cards to Tag</label>
+        <name>SB_NCS1_Text_AddNCToTag</name>
+    </customLabels>
+    <customLabels>
+        <label>Add a Card to.</label>
+        <name>SB_NCS1_Text_AddNamecardTo</name>
+    </customLabels>
+    <customLabels>
+        <label>Add Tags</label>
+        <name>SB_NCS1_Text_AddTags</name>
+    </customLabels>
+    <customLabels>
+        <label>Address in English</label>
+        <name>SB_NCS1_Text_AddressInEnglish</name>
+    </customLabels>
+    <customLabels>
+        <label>No Cards found</label>
+        <name>SB_NCS1_Text_AvailableNCNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Backside of the Card</label>
+        <name>SB_NCS1_Text_BackCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Click Tag Name to confirm Card.</label>
+        <name>SB_NCS1_Text_ClickTagToConfirmNC</name>
+    </customLabels>
+    <customLabels>
+        <label>Common</label>
+        <name>SB_NCS1_Text_Common</name>
+    </customLabels>
+    <customLabels>
+        <label>New Event</label>
+        <name>SB_NCS1_Text_CreateNewEvent</name>
+    </customLabels>
+    <customLabels>
+        <label>New Task</label>
+        <name>SB_NCS1_Text_CreateNewToDo</name>
+    </customLabels>
+    <customLabels>
+        <label>Due Date</label>
+        <name>SB_NCS1_Text_Deadline</name>
+    </customLabels>
+    <customLabels>
+        <label>Detail</label>
+        <name>SB_NCS1_Text_Details</name>
+    </customLabels>
+    <customLabels>
+        <label>Edit</label>
+        <name>SB_NCS1_Text_Edit</name>
+    </customLabels>
+    <customLabels>
+        <label>Email</label>
+        <name>SB_NCS1_Text_Email</name>
+    </customLabels>
+    <customLabels>
+        <label>End</label>
+        <name>SB_NCS1_Text_End</name>
+    </customLabels>
+    <customLabels>
+        <label>Event</label>
+        <name>SB_NCS1_Text_Events</name>
+    </customLabels>
+    <customLabels>
+        <label>Event Edit</label>
+        <name>SB_NCS1_Text_EventsEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Exchange Date</label>
+        <name>SB_NCS1_Text_ExchangeDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Fax</label>
+        <name>SB_NCS1_Text_Fax</name>
+    </customLabels>
+    <customLabels>
+        <label>Find Cards Nearby</label>
+        <name>SB_NCS1_Text_FindNamecardsNearby</name>
+    </customLabels>
+    <customLabels>
+        <label>Today or After</label>
+        <name>SB_NCS1_Text_FromTodayOnwards</name>
+    </customLabels>
+    <customLabels>
+        <label>Frontside of the Card</label>
+        <name>SB_NCS1_Text_FrontCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Handwritten Notes</label>
+        <name>SB_NCS1_Text_HandwrittenMemo</name>
+    </customLabels>
+    <customLabels>
+        <label>This is the latest Card.</label>
+        <name>SB_NCS1_Text_IsLatestNamecard</name>
+    </customLabels>
+    <customLabels>
+        <label>Latest Card</label>
+        <name>SB_NCS1_Text_LatestNamecard</name>
+    </customLabels>
+    <customLabels>
+        <label>List Name</label>
+        <name>SB_NCS1_Text_ListName</name>
+    </customLabels>
+    <customLabels>
+        <label>Manager</label>
+        <name>SB_NCS1_Text_Manager</name>
+    </customLabels>
+    <customLabels>
+        <label>Notes</label>
+        <name>SB_NCS1_Text_Memo</name>
+    </customLabels>
+    <customLabels>
+        <label>Mobile</label>
+        <name>SB_NCS1_Text_MobilePhone</name>
+    </customLabels>
+    <customLabels>
+        <label>More</label>
+        <name>SB_NCS1_Text_More</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Detail</label>
+        <name>SB_NCS1_Text_NCDetail</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Exchange Date</label>
+        <name>SB_NCS1_Text_NCExchangeDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Image not found.</label>
+        <name>SB_NCS1_Text_NCImgNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Card List</label>
+        <name>SB_NCS1_Text_NCList</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Edit</label>
+        <name>SB_NCS1_Text_NamecardEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Edit</label>
+        <name>SB_NCS1_Text_NamecardEdit2</name>
+    </customLabels>
+    <customLabels>
+        <label>Card List</label>
+        <name>SB_NCS1_Text_NamecardList</name>
+    </customLabels>
+    <customLabels>
+        <label>Cards Selection</label>
+        <name>SB_NCS1_Text_NamecardsSelection</name>
+    </customLabels>
+    <customLabels>
+        <label>There is no Card can be added.</label>
+        <name>SB_NCS1_Text_NoNCCanBeAdded</name>
+    </customLabels>
+    <customLabels>
+        <label>There is no other Card.</label>
+        <name>SB_NCS1_Text_NoOtherNamecard</name>
+    </customLabels>
+    <customLabels>
+        <label>Only displaying the latest Card.</label>
+        <name>SB_NCS1_Text_OnlyLatestNC</name>
+    </customLabels>
+    <customLabels>
+        <label>Other Cards</label>
+        <name>SB_NCS1_Text_OtherNamecards</name>
+    </customLabels>
+    <customLabels>
+        <label>Card I Own</label>
+        <name>SB_NCS1_Text_OwnedNamecard</name>
+    </customLabels>
+    <customLabels>
+        <label>Owner</label>
+        <name>SB_NCS1_Text_Owner</name>
+    </customLabels>
+    <customLabels>
+        <label>Required.</label>
+        <name>SB_NCS1_Text_Required</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- モバイルのSOSLのときのフィルターする項目 --></label>
+        <name>SB_NCS1_Text_SearchFilterFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Search News</label>
+        <name>SB_NCS1_Text_SearchNews</name>
+    </customLabels>
+    <customLabels>
+        <label>Self Introduction</label>
+        <name>SB_NCS1_Text_SelfIntroduction</name>
+    </customLabels>
+    <customLabels>
+        <label>Start</label>
+        <name>SB_NCS1_Text_Start</name>
+    </customLabels>
+    <customLabels>
+        <label>Tag</label>
+        <name>SB_NCS1_Text_Tag</name>
+    </customLabels>
+    <customLabels>
+        <label>Tagged Card not found.</label>
+        <name>SB_NCS1_Text_TaggedNCNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Phone</label>
+        <name>SB_NCS1_Text_Telephone</name>
+    </customLabels>
+    <customLabels>
+        <label>Task Edit</label>
+        <name>SB_NCS1_Text_ToDoEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Task</label>
+        <name>SB_NCS1_Text_ToDos</name>
+    </customLabels>
+    <customLabels>
+        <label>Top</label>
+        <name>SB_NCS1_Text_Top</name>
+    </customLabels>
+    <customLabels>
+        <label>Unknown</label>
+        <name>SB_NCS1_Text_Unknown</name>
+    </customLabels>
+    <customLabels>
+        <label>User Detail</label>
+        <name>SB_NCS1_Text_UserDetail</name>
+    </customLabels>
+    <customLabels>
+        <label>Users having the same Card</label>
+        <name>SB_NCS1_Text_UsersWithSameNC</name>
+    </customLabels>
+    <customLabels>
+        <label>Click to view details</label>
+        <name>SB_NCS1_Text_ViewDetailsInGrid</name>
+    </customLabels>
+    <customLabels>
+        <label>Web</label>
+        <name>SB_NCS1_Text_Web</name>
+    </customLabels>
+    <customLabels>
+        <label>Users having Business Cards from the same person</label>
+        <name>SB_NCSCOWNER_AppTitle</name>
+    </customLabels>
+    <customLabels>
+        <label> &amp; </label>
+        <name>SB_NC_AND</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} {1}</label>
+        <name>SB_NC_AccRecType</name>
+    </customLabels>
+    <customLabels>
+        <label>Account</label>
+        <name>SB_NC_Account</name>
+    </customLabels>
+    <customLabels>
+        <label>Account (Department) &amp; Contact (Department/Mail)</label>
+        <name>SB_NC_AccountAndContact</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} (Department) &amp; {1} (Department/Mail)</label>
+        <name>SB_NC_AccountAndContactDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Company Name</label>
+        <name>SB_NC_AccountName</name>
+    </customLabels>
+    <customLabels>
+        <label>Account (Owner)</label>
+        <name>SB_NC_AccountOwner</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} (Owner)</label>
+        <name>SB_NC_AccountOwnerDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Account</label>
+        <name>SB_NC_AccountType</name>
+    </customLabels>
+    <customLabels>
+        <label>Add Task</label>
+        <name>SB_NC_AddTodo</name>
+    </customLabels>
+    <customLabels>
+        <label>Address</label>
+        <name>SB_NC_Address</name>
+    </customLabels>
+    <customLabels>
+        <label>{2} {6} {5} {3}</label>
+        <name>SB_NC_AddressFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 住所分割時に使う正規表現 --></label>
+        <name>SB_NC_AddressRegex</name>
+    </customLabels>
+    <customLabels>
+        <label>Address + Building Name</label>
+        <name>SB_NC_Address_Bld</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card</label>
+        <name>SB_NC_BusinessCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Selectable Fields</label>
+        <name>SB_NC_CANSELECTFIELD</name>
+    </customLabels>
+    <customLabels>
+        <label>Cancel</label>
+        <name>SB_NC_Cancel</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card Information</label>
+        <name>SB_NC_CardInformation</name>
+    </customLabels>
+    <customLabels>
+        <label>Update by Business Card</label>
+        <name>SB_NC_CardList</name>
+    </customLabels>
+    <customLabels>
+        <label>New Career can only be set from the latest Card</label>
+        <name>SB_NC_CareerErrorNotLatest</name>
+    </customLabels>
+    <customLabels>
+        <label>City</label>
+        <name>SB_NC_City</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} {1}</label>
+        <name>SB_NC_CntRecType</name>
+    </customLabels>
+    <customLabels>
+        <label>Comments</label>
+        <name>SB_NC_Comment</name>
+    </customLabels>
+    <customLabels>
+        <label>Completed</label>
+        <name>SB_NC_Completed</name>
+    </customLabels>
+    <customLabels>
+        <label>Contact</label>
+        <name>SB_NC_Contact</name>
+    </customLabels>
+    <customLabels>
+        <label>Contact (Owner)</label>
+        <name>SB_NC_ContactOwner</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} (Owner)</label>
+        <name>SB_NC_ContactOwnerDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>contact</label>
+        <name>SB_NC_ContactType</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;New&gt;</label>
+        <name>SB_NC_Create</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CRUD/FLS のチェック対象外のオブジェクト --></label>
+        <name>SB_NC_CrudFlsIgnoreObjects</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- デモ用の組織 --></label>
+        <name>SB_NC_DemoOrgs</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- デモ用の写真 --></label>
+        <name>SB_NC_DemoPhotos</name>
+    </customLabels>
+    <customLabels>
+        <label>Department</label>
+        <name>SB_NC_Department</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 部署を区切るための正規表現 --></label>
+        <name>SB_NC_DivisionRegex</name>
+    </customLabels>
+    <customLabels>
+        <label>Do not register</label>
+        <name>SB_NC_DontRegister</name>
+    </customLabels>
+    <customLabels>
+        <label>Do not register (Enter Company Name and Last Name)</label>
+        <name>SB_NC_DontRegister_CompanyNameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Due Date</label>
+        <name>SB_NC_DueDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Email</label>
+        <name>SB_NC_Email</name>
+    </customLabels>
+    <customLabels>
+        <label>Email</label>
+        <name>SB_NC_EmailAddress</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card Exchange</label>
+        <name>SB_NC_ExchangeCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Exchange Date</label>
+        <name>SB_NC_ExchangeDate</name>
+    </customLabels>
+    <customLabels>
+        <label>exchanged card with</label>
+        <name>SB_NC_ExchangedToo1</name>
+    </customLabels>
+    <customLabels>
+        <label>{1} of {0} too</label>
+        <name>SB_NC_ExchangedToo2</name>
+    </customLabels>
+    <customLabels>
+        <label>changed to</label>
+        <name>SB_NC_ExchangedToo3</name>
+    </customLabels>
+    <customLabels>
+        <label>.</label>
+        <name>SB_NC_ExchangedToo4</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} records are not shown because records exceeded limit in searching  partial or exact match of {0} Name or Department</label>
+        <name>SB_NC_FORM_RegistOverCandidateRecords</name>
+    </customLabels>
+    <customLabels>
+        <label>Excat matching was used because records exceeded limit in searching partial matchi of {0} Name or Department</label>
+        <name>SB_NC_FORM_RegistPerfectMatchCandidate</name>
+    </customLabels>
+    <customLabels>
+        <label>Up to 1000 records are shown as a total of {0} Accounts and {1} Contacts.</label>
+        <name>SB_NC_FORM_RenkeiMonitorOver1000</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Google　News のリクエストURL --></label>
+        <name>SB_NC_GoogleNewsURL</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- GoolgeMapAPIのjs --></label>
+        <name>SB_NC_GoolgeMapAPIJS</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 法人格の略号との組合せ --></label>
+        <name>SB_NC_HojinKakuPairs</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 法人格除去に使う正規表現の一部 --></label>
+        <name>SB_NC_HojinKakuRegex</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 法人格除去に使う正規表現のフォーマット --></label>
+        <name>SB_NC_HojinKakuRegexFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 複数の正式名称が１つの略称になるもの --></label>
+        <name>SB_NC_HojinkakuDuplicate</name>
+    </customLabels>
+    <customLabels>
+        <label>Record Type not exist</label>
+        <name>SB_NC_LabelNoRecordType</name>
+    </customLabels>
+    <customLabels>
+        <label>Limited Record Types are shown</label>
+        <name>SB_NC_LabelRestrictedRecordType</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}({1})/{2}({3}/{4})</label>
+        <name>SB_NC_Label_AccountANDContact</name>
+    </customLabels>
+    <customLabels>
+        <label>Attempt to Login</label>
+        <name>SB_NC_Label_AttempToLogin</name>
+    </customLabels>
+    <customLabels>
+        <label>Attemp to Login with the Configured Key</label>
+        <name>SB_NC_Label_AttempToLoginWithConfiguredKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Close</label>
+        <name>SB_NC_Label_Close</name>
+    </customLabels>
+    <customLabels>
+        <label>Exact match for {0} Name except legal personality</label>
+        <name>SB_NC_Label_CompanyMatcingCorpMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Exact match search for {0} Name</label>
+        <name>SB_NC_Label_CompanyMatcingExactMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Partial match for {0} Name except legal personality</label>
+        <name>SB_NC_Label_CompanyMatcingPartialMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Search method of {0} Name</label>
+        <name>SB_NC_Label_CompanyMatcingSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label>Count</label>
+        <name>SB_NC_Label_Count</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;New&gt;</label>
+        <name>SB_NC_Label_CreateNewRecordDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Encode</label>
+        <name>SB_NC_Label_Encode</name>
+    </customLabels>
+    <customLabels>
+        <label>Encoding Key</label>
+        <name>SB_NC_Label_EncodingKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Execute</label>
+        <name>SB_NC_Label_Execute</name>
+    </customLabels>
+    <customLabels>
+        <label>FROM</label>
+        <name>SB_NC_Label_From</name>
+    </customLabels>
+    <customLabels>
+        <label>Key</label>
+        <name>SB_NC_Label_Key</name>
+    </customLabels>
+    <customLabels>
+        <label>My Cards only</label>
+        <name>SB_NC_Label_MyNameCards</name>
+    </customLabels>
+    <customLabels>
+        <label>Organization ID</label>
+        <name>SB_NC_Label_OrganizationID</name>
+    </customLabels>
+    <customLabels>
+        <label>Owner</label>
+        <name>SB_NC_Label_Owner</name>
+    </customLabels>
+    <customLabels>
+        <label>Zip/Postal Code</label>
+        <name>SB_NC_Label_Postcode</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} Record Types</label>
+        <name>SB_NC_Label_RecordType</name>
+    </customLabels>
+    <customLabels>
+        <label>Save</label>
+        <name>SB_NC_Label_Save</name>
+    </customLabels>
+    <customLabels>
+        <label>Save the Entered Key</label>
+        <name>SB_NC_Label_SaveEnteredKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Specify the Record Types to be searched.</label>
+        <name>SB_NC_Label_SearchRecordTypeExplanation</name>
+    </customLabels>
+    <customLabels>
+        <label>Configuration</label>
+        <name>SB_NC_Label_Setting</name>
+    </customLabels>
+    <customLabels>
+        <label>Site</label>
+        <name>SB_NC_Label_Site</name>
+    </customLabels>
+    <customLabels>
+        <label>TO</label>
+        <name>SB_NC_Label_To</name>
+    </customLabels>
+    <customLabels>
+        <label>Add Task</label>
+        <name>SB_NC_Label_ToDoRegistration</name>
+    </customLabels>
+    <customLabels>
+        <label>State/Province &amp; City</label>
+        <name>SB_NC_Label_To_Street</name>
+    </customLabels>
+    <customLabels>
+        <label>Please confirm the message.</label>
+        <name>SB_NC_Label_WarningConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label>Last Modified</label>
+        <name>SB_NC_LastModified</name>
+    </customLabels>
+    <customLabels>
+        <label>Latest</label>
+        <name>SB_NC_LatestCard</name>
+    </customLabels>
+    <customLabels>
+        <label>th line</label>
+        <name>SB_NC_Line</name>
+    </customLabels>
+    <customLabels>
+        <label>An error occurred when saving the mapping of the object and it could not be saved.</label>
+        <name>SB_NC_MAPPING_ChangeRecordTypeError</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Account search condision for Automatic Conversion.&lt;br&gt;
+The condition is also applied to Account and Contact Bulk Registration in Lightning Experience.&lt;br&gt;
+ex) Setting &quot;Account Site&quot; and invoking Bulk Registration for Business Cards that have the same Company Name but various Departments -&gt; An Account for each Business Card will be created because SmartVisca recognizes they are separate companies.</label>
+        <name>SB_NC_MAPPING_ExistingAccountConditionHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Contact search condition for Automatic Conversion</label>
+        <name>SB_NC_MAPPING_ExistingContact_ConditionHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Lead search condition for Automatic Conversion</label>
+        <name>SB_NC_MAPPING_ExistingLead_ConditionHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set whether to recognize abbreviation the same as formal legal personality.&lt;br&gt;
+The condition is also applied to Account and Contact seach in Registration in Lightning Experience&lt;br&gt;
+ex) When enables, Business Card with Company Name &quot;株式会社スマートビスカ&quot; will match Account whose Name is &quot;㈱スマートビスカ&quot;.</label>
+        <name>SB_NC_MAPPING_HojinkakuEquationLongAndAbbrMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set whether to recognize abbreviation the same as formal legal personality.&lt;br&gt;
+The condition is also applied to Lead or Account and Contact seach in Registration in Lightning Experience&lt;br&gt;
+ex) When enables, Business Card with Company Name &quot;株式会社スマートビスカ&quot; will match Lead or Account whose Name is &quot;㈱スマートビスカ&quot;.</label>
+        <name>SB_NC_MAPPING_HojinkakuEquationLongAndAbbrMessageLX21</name>
+    </customLabels>
+    <customLabels>
+        <label>Invalid mapping field: {0}</label>
+        <name>SB_NC_MAPPING_InalidField</name>
+    </customLabels>
+    <customLabels>
+        <label>There is no field {0} for latest Card takes over the value. The setting of this field will be deleted when saved.</label>
+        <name>SB_NC_MAPPING_Ingert_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Mandaroy mapping &quot;{0}&quot; &quot;{1}&quot; had been deleted. Will restore the mapping at saving.</label>
+        <name>SB_NC_MAPPING_KoteiMappingDeleted_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Mandaroy mapping &quot;{0}&quot; &quot;{1}&quot; had been deactivated. Will restore the mapping at saving.</label>
+        <name>SB_NC_MAPPING_KoteiMappingInactivate_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Active</label>
+        <name>SB_NC_MAPPING_LABEL_ACTIVE</name>
+    </customLabels>
+    <customLabels>
+        <label>Add Condition</label>
+        <name>SB_NC_MAPPING_LABEL_ADDITEM</name>
+    </customLabels>
+    <customLabels>
+        <label>Add Mapping</label>
+        <name>SB_NC_MAPPING_LABEL_ADD_BUTTON</name>
+    </customLabels>
+    <customLabels>
+        <label>Mapping not Saved. Are you sure to change Conversion Target?</label>
+        <name>SB_NC_MAPPING_LABEL_AUSAVE</name>
+    </customLabels>
+    <customLabels>
+        <label>Display &quot;Overwrite existing Account with Business Card Information&quot;</label>
+        <name>SB_NC_MAPPING_LABEL_AccountOverwrite</name>
+    </customLabels>
+    <customLabels>
+        <label>SmartVisca Basic Settings</label>
+        <name>SB_NC_MAPPING_LABEL_BASESET</name>
+    </customLabels>
+    <customLabels>
+        <label>This feature is not permitted</label>
+        <name>SB_NC_MAPPING_LABEL_CANNOTPAGE</name>
+    </customLabels>
+    <customLabels>
+        <label>Clear</label>
+        <name>SB_NC_MAPPING_LABEL_CLEAR</name>
+    </customLabels>
+    <customLabels>
+        <label>Field for Comparison with Company Name</label>
+        <name>SB_NC_MAPPING_LABEL_CompareTarget</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Comparison using Fields other than Account Name</label>
+        <name>SB_NC_MAPPING_LABEL_CompareTargetAccountCustomize</name>
+    </customLabels>
+    <customLabels>
+        <label>Account Field for Comparison with Company Name</label>
+        <name>SB_NC_MAPPING_LABEL_CompareTargetAccountName</name>
+    </customLabels>
+    <customLabels>
+        <label>Lead Field for Comparison with Company Name</label>
+        <name>SB_NC_MAPPING_LABEL_CompareTargetLeadCompanyName</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Comparison using Fields other than Company Name</label>
+        <name>SB_NC_MAPPING_LABEL_CompareTargetLeadCustomize</name>
+    </customLabels>
+    <customLabels>
+        <label>Display &quot;Overwrite existing Contact with Business Card Information&quot;</label>
+        <name>SB_NC_MAPPING_LABEL_ContactOverwrite</name>
+    </customLabels>
+    <customLabels>
+        <label>Revert to Default</label>
+        <name>SB_NC_MAPPING_LABEL_DEFAULTE_BUTTON</name>
+    </customLabels>
+    <customLabels>
+        <label>Delete Condition</label>
+        <name>SB_NC_MAPPING_LABEL_DELETEITEM</name>
+    </customLabels>
+    <customLabels>
+        <label>Delete Mapping</label>
+        <name>SB_NC_MAPPING_LABEL_DELETE_BUTTON</name>
+    </customLabels>
+    <customLabels>
+        <label>Search Conditions of existing Account</label>
+        <name>SB_NC_MAPPING_LABEL_ExistingAccount_Condition</name>
+    </customLabels>
+    <customLabels>
+        <label>Search Conditions of existing Contact</label>
+        <name>SB_NC_MAPPING_LABEL_ExistingContact_Condition</name>
+    </customLabels>
+    <customLabels>
+        <label>Search Conditions of existing Lead</label>
+        <name>SB_NC_MAPPING_LABEL_ExistingLead_Condition</name>
+    </customLabels>
+    <customLabels>
+        <label>Field</label>
+        <name>SB_NC_MAPPING_LABEL_FIELD</name>
+    </customLabels>
+    <customLabels>
+        <label>Company Name comparison condition</label>
+        <name>SB_NC_MAPPING_LABEL_HojinkakuEquationLongAndAbbr</name>
+    </customLabels>
+    <customLabels>
+        <label>Activate Lead Registration Feature</label>
+        <name>SB_NC_MAPPING_LABEL_LEADRegistrationActive</name>
+    </customLabels>
+    <customLabels>
+        <label>Last Modified By</label>
+        <name>SB_NC_MAPPING_LABEL_LastModifiedBy</name>
+    </customLabels>
+    <customLabels>
+        <label>Last Updated Date</label>
+        <name>SB_NC_MAPPING_LABEL_LastModifiedByDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Display &quot;Overwrite existing Lead with Business Card Information&quot;</label>
+        <name>SB_NC_MAPPING_LABEL_LeadOverwrite</name>
+    </customLabels>
+    <customLabels>
+        <label>Company</label>
+        <name>SB_NC_MAPPING_LABEL_Lead_Company</name>
+    </customLabels>
+    <customLabels>
+        <label>Search Method of Company</label>
+        <name>SB_NC_MAPPING_LABEL_Lead_Radio3</name>
+    </customLabels>
+    <customLabels>
+        <label>Setting of new creation / overwrite</label>
+        <name>SB_NC_MAPPING_LABEL_MultipleExistingProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Campaign selection at ScanApp</label>
+        <name>SB_NC_MAPPING_LABEL_NCCampaignActive</name>
+    </customLabels>
+    <customLabels>
+        <label>SmertVisca Conversion Settings</label>
+        <name>SB_NC_MAPPING_LABEL_NCRENKEISET</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card Scanning Option</label>
+        <name>SB_NC_MAPPING_LABEL_NCScanOption</name>
+    </customLabels>
+    <customLabels>
+        <label>No</label>
+        <name>SB_NC_MAPPING_LABEL_NO</name>
+    </customLabels>
+    <customLabels>
+        <label>please confirm</label>
+        <name>SB_NC_MAPPING_LABEL_NOTICE</name>
+    </customLabels>
+    <customLabels>
+        <label>Operator</label>
+        <name>SB_NC_MAPPING_LABEL_OPERATOR</name>
+    </customLabels>
+    <customLabels>
+        <label>or</label>
+        <name>SB_NC_MAPPING_LABEL_OR</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to Accounts &amp; Contacts</label>
+        <name>SB_NC_MAPPING_LABEL_REGISTAANDC</name>
+    </customLabels>
+    <customLabels>
+        <label>Regist to Leads or Accounts &amp; Contacts</label>
+        <name>SB_NC_MAPPING_LABEL_REGISTAANDCANDL</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to Accounts</label>
+        <name>SB_NC_MAPPING_LABEL_REGISTACCOUNT</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to Contacts</label>
+        <name>SB_NC_MAPPING_LABEL_REGISTCONTACT</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to Leads</label>
+        <name>SB_NC_MAPPING_LABEL_REGISTLEAD</name>
+    </customLabels>
+    <customLabels>
+        <label>Automatic Conversion Feature</label>
+        <name>SB_NC_MAPPING_LABEL_RENKEIACTIVE</name>
+    </customLabels>
+    <customLabels>
+        <label>Conversion Target Object</label>
+        <name>SB_NC_MAPPING_LABEL_RENKEIOBJECT</name>
+    </customLabels>
+    <customLabels>
+        <label>Search method of Account name</label>
+        <name>SB_NC_MAPPING_LABEL_Radio3</name>
+    </customLabels>
+    <customLabels>
+        <label>Set default value of &quot;Overwrite existing Account with Business Card Information&quot;  &quot;On&quot;</label>
+        <name>SB_NC_MAPPING_LABEL_RegistAccountNotOverWrite</name>
+    </customLabels>
+    <customLabels>
+        <label>Set default value of &quot;Overwrite existing Contact with Business Card Information&quot;  &quot;On&quot;</label>
+        <name>SB_NC_MAPPING_LABEL_RegistContactNotOverWrite</name>
+    </customLabels>
+    <customLabels>
+        <label>Set default value of &quot;Overwrite existing Lead with Business Card Information&quot;  to &quot;On&quot;</label>
+        <name>SB_NC_MAPPING_LABEL_RegistLeadNotOverWrite</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Default Value of &quot;Add Task&quot;  &quot;On&quot;</label>
+        <name>SB_NC_MAPPING_LABEL_RegistNoToDo</name>
+    </customLabels>
+    <customLabels>
+        <label>Default Value of &quot;Task Subject&quot;</label>
+        <name>SB_NC_MAPPING_LABEL_RegsitToDoSubject</name>
+    </customLabels>
+    <customLabels>
+        <label>State</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountAddressPref</name>
+    </customLabels>
+    <customLabels>
+        <label>City</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountCity</name>
+    </customLabels>
+    <customLabels>
+        <label>Account Name</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountCompany</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Account creation</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountNOExistCreateNew</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Account overwriting</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountOverwrite</name>
+    </customLabels>
+    <customLabels>
+        <label>Phone</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountPhone</name>
+    </customLabels>
+    <customLabels>
+        <label>Account Record Type to be searched</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountQueryRecordTypeIds</name>
+    </customLabels>
+    <customLabels>
+        <label>Account Record Type</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountRecordTypes</name>
+    </customLabels>
+    <customLabels>
+        <label>Account Site</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountSite</name>
+    </customLabels>
+    <customLabels>
+        <label>Website</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountURL</name>
+    </customLabels>
+    <customLabels>
+        <label>Postal Code</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccountZipCode</name>
+    </customLabels>
+    <customLabels>
+        <label>Street</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAccount_Street</name>
+    </customLabels>
+    <customLabels>
+        <label>Make it a Member of the selected Campaign</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiActiveCampaignMember</name>
+    </customLabels>
+    <customLabels>
+        <label>Advanced Stettings of Lead Automatic Conversion</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiAdvancedSetting</name>
+    </customLabels>
+    <customLabels>
+        <label>Campaign Member Status</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiCampaignStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>First Name</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiContactFirstName</name>
+    </customLabels>
+    <customLabels>
+        <label>Last Name</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiContactLastName</name>
+    </customLabels>
+    <customLabels>
+        <label>Email</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiContactMail</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Contact creation</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiContactNOExistCreateNew</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Contact overwriting</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiContactOverwrite</name>
+    </customLabels>
+    <customLabels>
+        <label>Contact Record Type to be searched</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiContactQueryRecordTypeIds</name>
+    </customLabels>
+    <customLabels>
+        <label>Contact Record Type</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiContactRecordTypes</name>
+    </customLabels>
+    <customLabels>
+        <label>Create Contact when Lead exists and corresponding Account is unique</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiCreateContactOnAcountWithLead</name>
+    </customLabels>
+    <customLabels>
+        <label>Create Contact when Lead doesn’t exist and corresponding Account is unique</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiCreateContactOnAcountWithoutLead</name>
+    </customLabels>
+    <customLabels>
+        <label>Create Lead when multiple corresponding Account exsits</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiCreateLeadOnTooManyAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label>Exact match for Account Name except legal personality</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiExcludeHojinkaku</name>
+    </customLabels>
+    <customLabels>
+        <label>Exact match search for Account Name</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiExcludeHojinkakuAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Partial match for Account Name except legal personality</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiExcludeHojinkakuPartial</name>
+    </customLabels>
+    <customLabels>
+        <label>Associate Business Card Task at Automatic Conversion</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiInheritNCTask</name>
+    </customLabels>
+    <customLabels>
+        <label>Exact match for Company except legal personality</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiLeadExcludeHojinkaku</name>
+    </customLabels>
+    <customLabels>
+        <label>Exact match search for Company</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiLeadExcludeHojinkakuAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Partial match for Company except legal personality</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiLeadExcludeHojinkakuPartial</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Lead creation</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiLeadNOExistCreateNew</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Lead overwriting</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiLeadOverwrite</name>
+    </customLabels>
+    <customLabels>
+        <label>Lead Record Type to search</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiLeadQueryRecordTypeIds</name>
+    </customLabels>
+    <customLabels>
+        <label>Lead Record Type</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiLeadRecordTypes</name>
+    </customLabels>
+    <customLabels>
+        <label>Specified Field</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiSpecificItems</name>
+    </customLabels>
+    <customLabels>
+        <label>Update multiple corresponding Leads</label>
+        <name>SB_NC_MAPPING_LABEL_RenkeiUpdateAllLeadsOnCondition</name>
+    </customLabels>
+    <customLabels>
+        <label>Save</label>
+        <name>SB_NC_MAPPING_LABEL_SAVE_BUTTON</name>
+    </customLabels>
+    <customLabels>
+        <label>SmartVisca Conversion Mapping</label>
+        <name>SB_NC_MAPPING_LABEL_SBRENKEIMAPPING</name>
+    </customLabels>
+    <customLabels>
+        <label>Card Condition to convert</label>
+        <name>SB_NC_MAPPING_LABEL_SeachRenkeiNC</name>
+    </customLabels>
+    <customLabels>
+        <label>Task Assignee</label>
+        <name>SB_NC_MAPPING_LABEL_ToDoOwner</name>
+    </customLabels>
+    <customLabels>
+        <label>Value</label>
+        <name>SB_NC_MAPPING_LABEL_VALUE</name>
+    </customLabels>
+    <customLabels>
+        <label>Data types unmatch between mapping source and destination.</label>
+        <name>SB_NC_MAPPING_LABEL_WRONGMAPPING</name>
+    </customLabels>
+    <customLabels>
+        <label>Yes</label>
+        <name>SB_NC_MAPPING_LABEL_YES</name>
+    </customLabels>
+    <customLabels>
+        <label>Compare company names recognizing abbreviation the same as the formal legal personality.</label>
+        <name>SB_NC_MAPPING_Label_HojinkakuEquationLandA</name>
+    </customLabels>
+    <customLabels>
+        <label>Display Account Record Type selection</label>
+        <name>SB_NC_MAPPING_Label_RegistDispAccountRectype</name>
+    </customLabels>
+    <customLabels>
+        <label>Display Contact Record Type selection</label>
+        <name>SB_NC_MAPPING_Label_RegistDispContactRectype</name>
+    </customLabels>
+    <customLabels>
+        <label>Displaye Lead Record Type Choices.</label>
+        <name>SB_NC_MAPPING_Label_RegistDispLeadRectype</name>
+    </customLabels>
+    <customLabels>
+        <label>Display the &quot;Overwrite&quot; checkbox</label>
+        <name>SB_NC_MAPPING_Label_RegistDispOverWriteCheckbox</name>
+    </customLabels>
+    <customLabels>
+        <label>Enable Automatic Conversion Feature</label>
+        <name>SB_NC_MAPPING_Label_RenkeiActiveF</name>
+    </customLabels>
+    <customLabels>
+        <label>Activate latest Card take over values</label>
+        <name>SB_NC_MAPPING_Label_SaishinInheritValues</name>
+    </customLabels>
+    <customLabels>
+        <label>Exact match for Company Name except legal personality: Searches for Leads having the same Company Name as Business Card except legal personality.&lt;br&gt;
+Partial match for Company Name except legal personality: Searches for Leads that have Company Name including Company Name of Business Card Company legal personality.&lt;br&gt;
+Exact match search for CompanyName: Searches for Leads having excactly the same Company Name as Business Card.</label>
+        <name>SB_NC_MAPPING_LeadRadio3HelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Value must not be blank</label>
+        <name>SB_NC_MAPPING_MSG_CANNOTBLANK</name>
+    </customLabels>
+    <customLabels>
+        <label>Are you sure to clear?</label>
+        <name>SB_NC_MAPPING_MSG_CLEAN</name>
+    </customLabels>
+    <customLabels>
+        <label>Not saved. Are you sure to leave this page?</label>
+        <name>SB_NC_MAPPING_MSG_CLEANMESSAGE</name>
+    </customLabels>
+    <customLabels>
+        <label>Create date must not be blank</label>
+        <name>SB_NC_MAPPING_MSG_CreateDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Are you sure to revert to default?</label>
+        <name>SB_NC_MAPPING_MSG_DEFAULT</name>
+    </customLabels>
+    <customLabels>
+        <label>Please check the error message</label>
+        <name>SB_NC_MAPPING_MSG_LINEERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Last update date must not be blank</label>
+        <name>SB_NC_MAPPING_MSG_LastModifiedDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Select a Field</label>
+        <name>SB_NC_MAPPING_MSG_No_NameCardField</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter Operator</label>
+        <name>SB_NC_MAPPING_MSG_No_Operator</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter a proper regular expression</label>
+        <name>SB_NC_MAPPING_MSG_REGEXERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>This field already mapped</label>
+        <name>SB_NC_MAPPING_MSG_SAMEERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>This field has already been set up</label>
+        <name>SB_NC_MAPPING_MSG_SAMEERRORSET</name>
+    </customLabels>
+    <customLabels>
+        <label>Saving failed. Please check the message.</label>
+        <name>SB_NC_MAPPING_MSG_SAVEERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Saved</label>
+        <name>SB_NC_MAPPING_MSG_SAVEOK</name>
+    </customLabels>
+    <customLabels>
+        <label>Select a field to map</label>
+        <name>SB_NC_MAPPING_MSG_SELECTMAPPINGERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Please enter TRUE or FALSE</label>
+        <name>SB_NC_MAPPING_MSG_TYPEBOOLEANERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Invalid date. Date format should be yyyy-mm-dd</label>
+        <name>SB_NC_MAPPING_MSG_TYPEDATEERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter correct Email</label>
+        <name>SB_NC_MAPPING_MSG_TYPEEMAILERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter correct Number</label>
+        <name>SB_NC_MAPPING_MSG_TYPENUMBERERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter correct URL</label>
+        <name>SB_NC_MAPPING_MSG_TYPEURLERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Field {1} of {0} can not be selected. The mapping of this field will be deleted when saved.</label>
+        <name>SB_NC_MAPPING_Mapping_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Field must be selected to activate taking over values.</label>
+        <name>SB_NC_MAPPING_Mapping_inherit_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Settings for creating or updating at Automatic Conversion</label>
+        <name>SB_NC_MAPPING_MultipleExistingProcessingHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set whether to display extended options on SmartVisca ScanApp.</label>
+        <name>SB_NC_MAPPING_NCScanOptionHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>(Not updated)</label>
+        <name>SB_NC_MAPPING_NOUPDATE</name>
+    </customLabels>
+    <customLabels>
+        <label>There is no configurable conversion target object.</label>
+        <name>SB_NC_MAPPING_NO_SELECT_RENKEIOBJECT_ERRORMESSAGE</name>
+    </customLabels>
+    <customLabels>
+        <label>Condition {0} to identify person isn&apos;t defined. The settings in this item will be deleted at saving.</label>
+        <name>SB_NC_MAPPING_NayoseJyoken_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Record type {1} of {0} is inactive.</label>
+        <name>SB_NC_MAPPING_NoAvailableR_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>No access permission for specified record type of {0}.</label>
+        <name>SB_NC_MAPPING_NoAvailable_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Record type {1} of {0} is invalid.</label>
+        <name>SB_NC_MAPPING_NoObject_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Exact match for Company Name except legal personality: Searches for Accounts having Account Name same as Company Name of Business Card except legal personality.&lt;br&gt;
+Partial match for Company Name except legal personality: Searches for Accounts having Account Name including Company Name of Business Card except legal personality.&lt;br&gt;
+Exact match search for CompanyName: Searches for Accounts having Account Name exactly same as Company Name of Business Card.</label>
+        <name>SB_NC_MAPPING_Radio3HelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set search conditions、shown fields and field initial values for the Register to Account &amp; Contact.</label>
+        <name>SB_NC_MAPPING_RegistAandCHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set search conditions、shown fields and field initial values for the Register to Lead or Account &amp; Contact.</label>
+        <name>SB_NC_MAPPING_RegistAandCandLHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Enables selecting other field than Account Name at searching Account for matching Company Name of Business Card at Register to Account &amp; Contact.</label>
+        <name>SB_NC_MAPPING_RegistAccountCompareCustomizeHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Account Record Types shown in search criteria in Register to Account &amp; Contact. All Record Types will be shown if no Record Type is set.</label>
+        <name>SB_NC_MAPPING_RegistAccountQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Contact Record Types shown in search criteria in Register to Account &amp; Contact. All Record Types will be shown if no Record Type is set.</label>
+        <name>SB_NC_MAPPING_RegistContactQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Enables selecting other field than Account Name and Lead Company Name for matching Company Name of Business Card at searching Lead or Account at Register to Lead or Account &amp; Contact.</label>
+        <name>SB_NC_MAPPING_RegistLeadCompareCustomizeHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Lead Record Types shown in search criteria in Register to Lead. All Record Types will be shown if no Record Type is set.</label>
+        <name>SB_NC_MAPPING_RegistLeadQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Account Record Types to be searched in Auto Conversion. All Record Types will be effective if no Record Type is set.</label>
+        <name>SB_NC_MAPPING_RenkeiAccountQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Account Record Type in creating Account at Automatic Conversion.</label>
+        <name>SB_NC_MAPPING_RenkeiAccountRecordTypesHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>When Business Card data is created or updated at final delivery, you can automatically create and update business partners / correspondents.&lt;br&gt;In the &quot;SmartVisca Conversion Settings&quot; tab, you can set the conditions for automatic linkage.&lt;br&gt;Lead coordination When extended packages are installed, leads can be created and updated automatically in addition to business partners and correspondents.</label>
+        <name>SB_NC_MAPPING_RenkeiActiveHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Contact Record Types to be searched in Auto Conversion. All Record Types will be effective if no Record Type is set.</label>
+        <name>SB_NC_MAPPING_RenkeiContactQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Contact Record Type in creating Contact at Automatic Conversion.</label>
+        <name>SB_NC_MAPPING_RenkeiContactRecordTypesHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>You can configure Automatic Conversion behavior when corresponding Leads or Accounts are duplicated.&lt;br&gt;
+Please refer to the System Administrator Manual for detail.</label>
+        <name>SB_NC_MAPPING_RenkeiLeadAdvancedSettingHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Lead Record Types to be searched in Auto Conversion. All Record Types will be effective if no Record Type is set.</label>
+        <name>SB_NC_MAPPING_RenkeiLeadQueryRecordTypeIdsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set Lead Record Type in creating Lead at Automatic Conversion.</label>
+        <name>SB_NC_MAPPING_RenkeiLeadRecordTypesHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set fields to be registered to Accounts, and Contacts from Business Card fields.</label>
+        <name>SB_NC_MAPPING_RenkeiObjectACHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Set fields to be registered to Leads, Accounts, and Contacts from Business Card fields.</label>
+        <name>SB_NC_MAPPING_RenkeiObjectLACHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>In addition to other conditions, if the contents of the Notes (not Handwritten Notes) set at the time of acquisition matches the character string of &quot;Specified Field&quot;, it is regarded as the same Account.</label>
+        <name>SB_NC_MAPPING_RenkeiSpecificItemsHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Latest Card is identified using Card Exchange Date.&lt;br&gt;Values of user created custom fields of Business Card can be copied to the new latest Card when latest Card is reassigned.&lt;br&gt;This feature is not available if there are no user created custom fields in Business Card.</label>
+        <name>SB_NC_MAPPING_SaishinInheritValuesHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Add conditions to invoke Automatic Conversion.</label>
+        <name>SB_NC_MAPPING_SeachRenkeiNCHelpMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_MAPPING_Trigger_campaignStatus_ErrorMessage --></label>
+        <name>SB_NC_MAPPING_Trigger_campaignStatus_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Sort order</label>
+        <name>SB_NC_MENU_ORDER</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 無効なユーザでは所有者に設定することができません。 --></label>
+        <name>SB_NC_MSG_CanNotSetInActiveUserToOwner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ToDoの任命先に無効なユーザ({0})を指定できません。 --></label>
+        <name>SB_NC_MSG_CanNotSetInActiveUserToOwnerToDo</name>
+    </customLabels>
+    <customLabels>
+        <label>Too many matching records.</label>
+        <name>SB_NC_MSG_CandidateRecordTooMuch</name>
+    </customLabels>
+    <customLabels>
+        <label>Insufficient access permissions for the object.</label>
+        <name>SB_NC_MSG_INSUFFICIENT_ACCESS</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card Owner is a queue.</label>
+        <name>SB_NC_MSG_NAMECARD_OWNER_QUEUE</name>
+    </customLabels>
+    <customLabels>
+        <label>Please select the Business Card.</label>
+        <name>SB_NC_MSG_NotSelectNameCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Task owner must not be a queue</label>
+        <name>SB_NC_MSG_QUEUES_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Regiseter Error</label>
+        <name>SB_NC_MSG_Regist_Error</name>
+    </customLabels>
+    <customLabels>
+        <label>Mobile</label>
+        <name>SB_NC_Mobile</name>
+    </customLabels>
+    <customLabels>
+        <label>Can Not Use InActive Queue.</label>
+        <name>SB_NC_Msg_CanNotUseInActiveQueue</name>
+    </customLabels>
+    <customLabels>
+        <label>Too many candidates were found to proceed process. Choose less business cards.</label>
+        <name>SB_NC_Msg_ChooseLessBusinessCards</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter the correct organization ID, please.</label>
+        <name>SB_NC_Msg_EnterCorrectOrganizationID</name>
+    </customLabels>
+    <customLabels>
+        <label>Enter the organization ID, please.</label>
+        <name>SB_NC_Msg_EnterOrganizationID</name>
+    </customLabels>
+    <customLabels>
+        <label>Entire Period</label>
+        <name>SB_NC_Msg_EntirePeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>Execute Deletion Batch</label>
+        <name>SB_NC_Msg_ExecuteDeletionBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Execute Email Notice Batch</label>
+        <name>SB_NC_Msg_ExecuteEmailNoticeBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>The key has been saved.</label>
+        <name>SB_NC_Msg_KeySaved</name>
+    </customLabels>
+    <customLabels>
+        <label>Keyword</label>
+        <name>SB_NC_Msg_Keyword</name>
+    </customLabels>
+    <customLabels>
+        <label>Login failed.</label>
+        <name>SB_NC_Msg_LoginFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>Login succeeded.</label>
+        <name>SB_NC_Msg_LoginSucceeded</name>
+    </customLabels>
+    <customLabels>
+        <label>Period</label>
+        <name>SB_NC_Msg_Period</name>
+    </customLabels>
+    <customLabels>
+        <label>Personnel Reshuffle</label>
+        <name>SB_NC_Msg_PersonnelReshuffle</name>
+    </customLabels>
+    <customLabels>
+        <label>MM/dd/yyyy</label>
+        <name>SB_NC_NGDateFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Name</label>
+        <name>SB_NC_Name</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card Owner</label>
+        <name>SB_NC_NameCardOwner</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;New Account&gt;</label>
+        <name>SB_NC_NewAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;New {0}&gt;</label>
+        <name>SB_NC_NewAccountDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>New Career :</label>
+        <name>SB_NC_NewCareerCard</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;New Contact&gt;</label>
+        <name>SB_NC_NewContact</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;New {0}&gt;</label>
+        <name>SB_NC_NewContactDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>New Title</label>
+        <name>SB_NC_NewTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>New Title</label>
+        <name>SB_NC_NewTitle2</name>
+    </customLabels>
+    <customLabels>
+        <label>Not Started</label>
+        <name>SB_NC_NotStarted</name>
+    </customLabels>
+    <customLabels>
+        <label>Owner</label>
+        <name>SB_NC_Owner</name>
+    </customLabels>
+    <customLabels>
+        <label>Person</label>
+        <name>SB_NC_Person</name>
+    </customLabels>
+    <customLabels>
+        <label>Phone</label>
+        <name>SB_NC_Phone</name>
+    </customLabels>
+    <customLabels>
+        <label>Title</label>
+        <name>SB_NC_Position</name>
+    </customLabels>
+    <customLabels>
+        <label>Prefecture + Address + Building Name</label>
+        <name>SB_NC_Pref_Address_Bld</name>
+    </customLabels>
+    <customLabels>
+        <label>State/Province</label>
+        <name>SB_NC_Prefecture</name>
+    </customLabels>
+    <customLabels>
+        <label>Record Type</label>
+        <name>SB_NC_RecType</name>
+    </customLabels>
+    <customLabels>
+        <label>Select Record Type to create {0} / {1}</label>
+        <name>SB_NC_RecordTypeExplain</name>
+    </customLabels>
+    <customLabels>
+        <label>Reflect Personnel Change Info</label>
+        <name>SB_NC_ReflectPersonnelChange</name>
+    </customLabels>
+    <customLabels>
+        <label>Reflect To Contact&apos;s Title</label>
+        <name>SB_NC_ReflectToTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Reflect To {0}&apos;s Title</label>
+        <name>SB_NC_ReflectToTitleDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- S1取引先登録時表示する取引先の項目の初期値 --></label>
+        <name>SB_NC_RegistQueryAccountFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- S1取引先責任者登録時表示する取引先責任者の項目の初期値 --></label>
+        <name>SB_NC_RegistQueryContactFields</name>
+    </customLabels>
+    <customLabels>
+        <label>An error occurred while registering the {0} record.</label>
+        <name>SB_NC_Regist_Error_Occured</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to Accounts &amp; Contacts</label>
+        <name>SB_NC_RegisterAllToAccountAndContact</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to {0}s &amp; {1}s</label>
+        <name>SB_NC_RegisterAllToAccountAndContactDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Account &amp; Contact</label>
+        <name>SB_NC_RegisterTo</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to Account &amp; Contact</label>
+        <name>SB_NC_RegisterToContact</name>
+    </customLabels>
+    <customLabels>
+        <label>Register to {0} &amp; {1}</label>
+        <name>SB_NC_RegisterToContactDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Account and Contact corresponding to selected Business Card</label>
+        <name>SB_NC_RenkeiMon_AcntContMatchToCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Business Card Information</label>
+        <name>SB_NC_RenkeiMon_BusinessCardInformation</name>
+    </customLabels>
+    <customLabels>
+        <label>Candidate Record to register</label>
+        <name>SB_NC_RenkeiMon_CandidateToBeRegistered</name>
+    </customLabels>
+    <customLabels>
+        <label>Values of Fields</label>
+        <name>SB_NC_RenkeiMon_FieldValue</name>
+    </customLabels>
+    <customLabels>
+        <label>Open Account creation page</label>
+        <name>SB_NC_RenkeiMon_OpenAccoutCreate</name>
+    </customLabels>
+    <customLabels>
+        <label>Open Contact creation page</label>
+        <name>SB_NC_RenkeiMon_OpenContactCreate</name>
+    </customLabels>
+    <customLabels>
+        <label>Card to convert</label>
+        <name>SB_NC_RenkeiMon_ProcessTarget</name>
+    </customLabels>
+    <customLabels>
+        <label>Record ID</label>
+        <name>SB_NC_RenkeiMon_RecordId</name>
+    </customLabels>
+    <customLabels>
+        <label>Registering</label>
+        <name>SB_NC_RenkeiMon_Registering</name>
+    </customLabels>
+    <customLabels>
+        <label>Registering Result (not executed)</label>
+        <name>SB_NC_RenkeiMon_RegisteringResultNotExe</name>
+    </customLabels>
+    <customLabels>
+        <label>Result</label>
+        <name>SB_NC_RenkeiMon_Result</name>
+    </customLabels>
+    <customLabels>
+        <label>Result Message</label>
+        <name>SB_NC_RenkeiMon_ResultMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Running...</label>
+        <name>SB_NC_RenkeiMon_Running</name>
+    </customLabels>
+    <customLabels>
+        <label>Terminate Time:</label>
+        <name>SB_NC_RenkeiMon_TerminateTime</name>
+    </customLabels>
+    <customLabels>
+        <label>Try Registration</label>
+        <name>SB_NC_RenkeiMon_TryRegistration</name>
+    </customLabels>
+    <customLabels>
+        <label>Create with another</label>
+        <name>SB_NC_Renkei_CreateElsewhere</name>
+    </customLabels>
+    <customLabels>
+        <label>Update with another</label>
+        <name>SB_NC_Renkei_UpdateElsewhere</name>
+    </customLabels>
+    <customLabels>
+        <label>Update Reference Field</label>
+        <name>SB_NC_Renkei_UpdateReference</name>
+    </customLabels>
+    <customLabels>
+        <label>repeat</label>
+        <name>SB_NC_Repeat</name>
+    </customLabels>
+    <customLabels>
+        <label>Update Contact Title</label>
+        <name>SB_NC_ReplaceContactTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Update {0} Title</label>
+        <name>SB_NC_ReplaceContactTitleDEV</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ01 --></label>
+        <name>SB_NC_Reserved01</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ02 --></label>
+        <name>SB_NC_Reserved02</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ03 --></label>
+        <name>SB_NC_Reserved03</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ04 --></label>
+        <name>SB_NC_Reserved04</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ05 --></label>
+        <name>SB_NC_Reserved05</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ06 --></label>
+        <name>SB_NC_Reserved06</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ07 --></label>
+        <name>SB_NC_Reserved07</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ08 --></label>
+        <name>SB_NC_Reserved08</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ09 --></label>
+        <name>SB_NC_Reserved09</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ10 --></label>
+        <name>SB_NC_Reserved10</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ11 --></label>
+        <name>SB_NC_Reserved11</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ12 --></label>
+        <name>SB_NC_Reserved12</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ13 --></label>
+        <name>SB_NC_Reserved13</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ14 --></label>
+        <name>SB_NC_Reserved14</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ15 --></label>
+        <name>SB_NC_Reserved15</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ16 --></label>
+        <name>SB_NC_Reserved16</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ17 --></label>
+        <name>SB_NC_Reserved17</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ18 --></label>
+        <name>SB_NC_Reserved18</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ19 --></label>
+        <name>SB_NC_Reserved19</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- リザーブ20 --></label>
+        <name>SB_NC_Reserved20</name>
+    </customLabels>
+    <customLabels>
+        <label>back</label>
+        <name>SB_NC_Return</name>
+    </customLabels>
+    <customLabels>
+        <label>New {0} &amp; {1} Settings</label>
+        <name>SB_NC_RulesOfCreate</name>
+    </customLabels>
+    <customLabels>
+        <label>Registration</label>
+        <name>SB_NC_S1AccountRegistPage</name>
+    </customLabels>
+    <customLabels>
+        <label>SmartVisca Camera</label>
+        <name>SB_NC_S1CameraName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- S1カメラのスキャナー名 --></label>
+        <name>SB_NC_S1ScannerName</name>
+    </customLabels>
+    <customLabels>
+        <label>Cards</label>
+        <name>SB_NC_S1ViewerName</name>
+    </customLabels>
+    <customLabels>
+        <label>Search</label>
+        <name>SB_NC_SEARCH</name>
+    </customLabels>
+    <customLabels>
+        <label>There is no matching record.</label>
+        <name>SB_NC_SEARCH_ERROR_NO_MATCHING</name>
+    </customLabels>
+    <customLabels>
+        <label>Selected Items</label>
+        <name>SB_NC_SELECTEDFIELD</name>
+    </customLabels>
+    <customLabels>
+        <label>There is no SmartVisca Basic Settings record. Please confirm that the access right to the SmartVisca Basic Settings Object is appropriate without executing &quot;Save&quot;.</label>
+        <name>SB_NC_SETTING_ERROR_No_NameCardBasicSetting</name>
+    </customLabels>
+    <customLabels>
+        <label>It is possible that the SmartVisca Basic Settings record was updated in other sessions. Please check the displayed value.</label>
+        <name>SB_NC_SETTING_ERROR_OtherSection_Saved</name>
+    </customLabels>
+    <customLabels>
+        <label>Select field from the list to compare Company Name with other than Account Name.</label>
+        <name>SB_NC_SETTING_ERROR_Required_RegistAccountCompareField</name>
+    </customLabels>
+    <customLabels>
+        <label>Select field from the list to compare Company Name with other than Company Name of Lead.</label>
+        <name>SB_NC_SETTING_ERROR_Required_RegistLeadCompareField</name>
+    </customLabels>
+    <customLabels>
+        <label>Selected specification field {0} does not exist</label>
+        <name>SB_NC_SETTING_ERROR_Wrong_RenkeiSpecificItems</name>
+    </customLabels>
+    <customLabels>
+        <label>blank or &quot;?&quot;</label>
+        <name>SB_NC_SETTING_LABEL_Blank</name>
+    </customLabels>
+    <customLabels>
+        <label>ーNone ー</label>
+        <name>SB_NC_SETTING_LABEL_NONE</name>
+    </customLabels>
+    <customLabels>
+        <label>contains</label>
+        <name>SB_NC_SETTING_LABEL_OP_CONTAINS</name>
+    </customLabels>
+    <customLabels>
+        <label>equals</label>
+        <name>SB_NC_SETTING_LABEL_OP_EQUAL</name>
+    </customLabels>
+    <customLabels>
+        <label>&gt;=</label>
+        <name>SB_NC_SETTING_LABEL_OP_GREATER_EQUAL_THAN</name>
+    </customLabels>
+    <customLabels>
+        <label>&gt;</label>
+        <name>SB_NC_SETTING_LABEL_OP_GREATER_THAN</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;=</label>
+        <name>SB_NC_SETTING_LABEL_OP_LESS_EQUAL_THAN</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;</label>
+        <name>SB_NC_SETTING_LABEL_OP_LESS_THAN</name>
+    </customLabels>
+    <customLabels>
+        <label>does not contain</label>
+        <name>SB_NC_SETTING_LABEL_OP_NOT_CONTAINS</name>
+    </customLabels>
+    <customLabels>
+        <label>not equal to</label>
+        <name>SB_NC_SETTING_LABEL_OP_NOT_EQUAL</name>
+    </customLabels>
+    <customLabels>
+        <label>matches regular expression</label>
+        <name>SB_NC_SETTING_LABEL_OP_REGEX</name>
+    </customLabels>
+    <customLabels>
+        <label>starts with</label>
+        <name>SB_NC_SETTING_LABEL_OP_START_WITH</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_SETTING_MSG_ConLeadSearchContRequireCheck --></label>
+        <name>SB_NC_SETTING_MSG_ConLeadSearchContRequireCheck</name>
+    </customLabels>
+    <customLabels>
+        <label>The field {0} of the condition of the Business Card to be linked does not exist. This condition will be deleted when saved.</label>
+        <name>SB_NC_SETTING_NoNCField_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Illegal field {0} is specified in the condition of the Business Card to be linked. This record will be deleted when saved.</label>
+        <name>SB_NC_SETTING_WrongNCField_ErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- SB_NC_SImageServerOptions --></label>
+        <name>SB_NC_SImageServerOptions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 昇順ソート --></label>
+        <name>SB_NC_SORT_ASCENDING</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- 降順ソート --></label>
+        <name>SB_NC_SORT_DESCENDING</name>
+    </customLabels>
+    <customLabels>
+        <label>Save</label>
+        <name>SB_NC_Save</name>
+    </customLabels>
+    <customLabels>
+        <label>Save (Ignore Alert)</label>
+        <name>SB_NC_SaveAlertIgnore</name>
+    </customLabels>
+    <customLabels>
+        <label>Saving…</label>
+        <name>SB_NC_Saving</name>
+    </customLabels>
+    <customLabels>
+        <label>Search Criteria</label>
+        <name>SB_NC_SearchCondition</name>
+    </customLabels>
+    <customLabels>
+        <label>Account Name</label>
+        <name>SB_NC_SearchForAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>Account Name and Account Site</label>
+        <name>SB_NC_SearchForAccountAndDepartment</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} Name and Account Site</label>
+        <name>SB_NC_SearchForAccountAndDepartmentDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} Name</label>
+        <name>SB_NC_SearchForAccountDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Select</label>
+        <name>SB_NC_Select</name>
+    </customLabels>
+    <customLabels>
+        <label>Select New Career</label>
+        <name>SB_NC_SelectNewCareerCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Select Destination</label>
+        <name>SB_NC_SelectRegister</name>
+    </customLabels>
+    <customLabels>
+        <label>Set New Career</label>
+        <name>SB_NC_SetNewCareer</name>
+    </customLabels>
+    <customLabels>
+        <label>record type</label>
+        <name>SB_NC_SmallRecordType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- この正規表現に当てはまると検索しない --></label>
+        <name>SB_NC_SoslInvalidStringRegex</name>
+    </customLabels>
+    <customLabels>
+        <label>Search again using at least two characters, excluding *, ?, (), or &quot; &quot;.</label>
+        <name>SB_NC_SoslOneCharacterWithReservedCharacters</name>
+    </customLabels>
+    <customLabels>
+        <label>Please specify &quot;owner&quot; when creating a new Account or Contact</label>
+        <name>SB_NC_SpecifyOwnerWhenCreateAcCo</name>
+    </customLabels>
+    <customLabels>
+        <label>Street</label>
+        <name>SB_NC_Street</name>
+    </customLabels>
+    <customLabels>
+        <label>Street + Building Name</label>
+        <name>SB_NC_Street_Bld</name>
+    </customLabels>
+    <customLabels>
+        <label>Subject</label>
+        <name>SB_NC_Subject</name>
+    </customLabels>
+    <customLabels>
+        <label>Unselected</label>
+        <name>SB_NC_TEXT_NotSelected</name>
+    </customLabels>
+    <customLabels>
+        <label>Selection is over {0}. {1} records are selected.</label>
+        <name>SB_NC_TEXT_SELECTEDCARDOVER</name>
+    </customLabels>
+    <customLabels>
+        <label>Latest Card takes over designated Custom Field values</label>
+        <name>SB_NC_TITLE_SaishinInherit</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} &amp; {1}</label>
+        <name>SB_NC_Text_A_AND_B</name>
+    </customLabels>
+    <customLabels>
+        <label>{0},{1} &amp; {2}</label>
+        <name>SB_NC_Text_A_AND_B_AND_C</name>
+    </customLabels>
+    <customLabels>
+        <label>{0}・{1}</label>
+        <name>SB_NC_Text_Account_Contact</name>
+    </customLabels>
+    <customLabels>
+        <label>Card</label>
+        <name>SB_NC_Text_BusinessCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Create</label>
+        <name>SB_NC_Text_Create</name>
+    </customLabels>
+    <customLabels>
+        <label>Personnel Reshuffle Information Batch</label>
+        <name>SB_NC_Text_PersonnelReshuffleInfoBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Personnel Reshuffle Information Deletion Batch</label>
+        <name>SB_NC_Text_PersonnelReshuffleInfoDeletionBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Personnel Reshuffle Information Email Notice Batch</label>
+        <name>SB_NC_Text_PersonnelReshuffleInfoEmailNoticeBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Personnel Reshuffle Information Key Configurations</label>
+        <name>SB_NC_Text_PersonnelReshuffleInfoKeyConfigurations</name>
+    </customLabels>
+    <customLabels>
+        <label>Personnel Reshuffle Information Key Encoding</label>
+        <name>SB_NC_Text_PersonnelReshuffleInfoKeyEncoding</name>
+    </customLabels>
+    <customLabels>
+        <label>Printed Date</label>
+        <name>SB_NC_Text_PrintedDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Specified in Card</label>
+        <name>SB_NC_Text_SpecifiedInBusinessCard</name>
+    </customLabels>
+    <customLabels>
+        <label>Specified in Period</label>
+        <name>SB_NC_Text_SpecifiedInPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label>New Record Settings</label>
+        <name>SB_NC_Text_SpecifiedWhenCreateNew</name>
+    </customLabels>
+    <customLabels>
+        <label>Overwrite Settings</label>
+        <name>SB_NC_Text_SpecifiedWhenOverWrite</name>
+    </customLabels>
+    <customLabels>
+        <label>Update</label>
+        <name>SB_NC_Text_Update</name>
+    </customLabels>
+    <customLabels>
+        <label>Task</label>
+        <name>SB_NC_ToDo</name>
+    </customLabels>
+    <customLabels>
+        <label>Department</label>
+        <name>SB_NC_USER_DEPARTMENT</name>
+    </customLabels>
+    <customLabels>
+        <label>Update</label>
+        <name>SB_NC_UpdateUsingCardInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Overwrite existing {0} with Business Card Information</label>
+        <name>SB_NC_UpdateforAccountDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>Overwrite Existing Account</label>
+        <name>SB_NC_UpdateforContact</name>
+    </customLabels>
+    <customLabels>
+        <label>Overwrite existing {0} with Business Card Information</label>
+        <name>SB_NC_UpdateforContactDEV</name>
+    </customLabels>
+    <customLabels>
+        <label>For personal use</label>
+        <name>SB_NC_ValPersonalTagType</name>
+    </customLabels>
+    <customLabels>
+        <label>Update</label>
+        <name>SB_NC_WillBeUpdated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- USER-AGENTからiOS8あるいは追加して8以降を識別するための文字列 --></label>
+        <name>SB_NC_iOS8Device</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- USER-AGENTからiOSを識別するための文字列 --></label>
+        <name>SB_NC_iOSDevice</name>
+    </customLabels>
+    <customLabels>
+        <label>MM/dd/yyyy HH:mm</label>
+        <name>SB_NC_ngDatetimeFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>All</label>
+        <name>SB_Text_All</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Trident/7.0 以外の Windows IE 11用の識別子 なければ、none --></label>
+        <name>SB_Text_IE11Identity</name>
+    </customLabels>
+    <customLabels>
+        <label>SB_SmartVisca_UnregisteredUs</label>
+        <name>SB_Text_UnregisteredIcon</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Edge 以外の Windows Edge用の識別子 なければ、none --></label>
+        <name>SB_Text_WindowsEdgeIdentity</name>
+    </customLabels>
+    <customLabels>
+        <label>The bulk operation was rolled back because one of the records wasn&apos;t processed successfully. See AllOrNoneHeader.</label>
+        <name>SFDC_SC_ALL_OR_NONE_OPERATION_ROLLED_BACK</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t submit a record that is already in an approval process. Wait for the previous approval process to complete before resubmitting a request with this record.</label>
+        <name>SFDC_SC_ALREADY_IN_PROCESS</name>
+    </customLabels>
+    <customLabels>
+        <label>Designate an assignee for the approval request (ProcessInstanceStep or ProcessInstanceWorkitem).</label>
+        <name>SFDC_SC_ASSIGNEE_TYPE_REQUIRED</name>
+    </customLabels>
+    <customLabels>
+        <label>The changes you are trying to make can’t be completed because changes to the associated master-detail relationship can’t be made.</label>
+        <name>SFDC_SC_BAD_CUSTOM_ENTITY_PARENT_DOMAIN</name>
+    </customLabels>
+    <customLabels>
+        <label>Your client application blind carbon-copied an email address even though the org’s Compliance BCC Email option is enabled. This option specifies a particular email address that automatically receives a copy of all outgoing email. When this option is enabled, you can’t BCC any other email address. To disable the option, log in to the user interface and from Setup, enter Compliance BCC Email in the Quick Find box, then select Compliance BCC Email.</label>
+        <name>SFDC_SC_BCC_NOT_AIBCE</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t deactivate Divisions if an assignment rule references divisions or if the DefaultDivision field on a user record isn’t set to null.</label>
+        <name>SFDC_SC_CANNOT_DEACTIVATE_DIVISION</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t modify components that are included in a managed package.</label>
+        <name>SFDC_SC_CANNOT_DELETE_MANAGED_OBJECT</name>
+    </customLabels>
+    <customLabels>
+        <label>You must have at least one active administrator user.</label>
+        <name>SFDC_SC_CANNOT_DISABLE_LAST_ADMIN</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t modify components that are included in a managed package.</label>
+        <name>SFDC_SC_CANNOT_MODIFY_MANAGED_OBJECT</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t define a new parent record for the specified record.</label>
+        <name>SFDC_SC_CANNOT_REPARENT_RECORD</name>
+    </customLabels>
+    <customLabels>
+        <label>A converted lead could not be updated.</label>
+        <name>SFDC_SC_CANNOT_UPDATE_CONVERTED_LEAD</name>
+    </customLabels>
+    <customLabels>
+        <label>An update to a product caused by a cascade can&apos;t be done because the associated product is active.</label>
+        <name>SFDC_SC_CANT_CASCADE_PA</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t change the type of a field that is referenced in an Apex script.</label>
+        <name>SFDC_SC_CANT_CFTOAR</name>
+    </customLabels>
+    <customLabels>
+        <label>You can create only one managed package in an org.</label>
+        <name>SFDC_SC_CANT_CREATE_AMP</name>
+    </customLabels>
+    <customLabels>
+        <label>If dated conversions are enabled, you must have at least one DatedConversionRate record.</label>
+        <name>SFDC_SC_CANT_DELETE_LDC</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t disable the corporate currency for an org. To disable a currency that is set as the corporate currency, first use the user interface to change the corporate currency to a different currency. Then disable the original currency.</label>
+        <name>SFDC_SC_CANT_DISABLE_CORP_CURRENCY</name>
+    </customLabels>
+    <customLabels>
+        <label>If you exceed the limit of five IP ranges specified in a profile, you can&apos;t enable restriction of login by IP addresses. Reduce the number of specified ranges in the profile and try the request again.</label>
+        <name>SFDC_SC_CANT_ENABLE_IP_RR</name>
+    </customLabels>
+    <customLabels>
+        <label>You do not have permission to create, update, or activate the specified record.</label>
+        <name>SFDC_SC_CANT_INSERT_UAC</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t rename a field that is referenced in an Apex script.</label>
+        <name>SFDC_SC_CANT_RENAME_ARF</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t rename an object that is referenced in an Apex script.</label>
+        <name>SFDC_SC_CANT_RENAME_ARO</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t change the corporate currency for an org from the API. Use the user interface to change the corporate currency.</label>
+        <name>SFDC_SC_CANT_UNSET_CORP_CURRENCY</name>
+    </customLabels>
+    <customLabels>
+        <label>If you don’t have appropriate permissions on a parent record, you can’t change the owner of or define sharing rules for a child record. For example, you can’t change the owner of a contact record if you can’t edit its parent account record.</label>
+        <name>SFDC_SC_CHILD_SHARE_FAILS_PARENT</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t create a circular dependency between metadata objects in your org. For example, public group A can&apos;t include public group B, if public group B already includes public group A.</label>
+        <name>SFDC_SC_CIRCULAR_DEPENDENCY</name>
+    </customLabels>
+    <customLabels>
+        <label>You do not have permission to access the community that this entity belongs to. You must be given permission to access the community before you can access this entity.</label>
+        <name>SFDC_SC_COMMUNITY_NOT_ACCESSIBLE</name>
+    </customLabels>
+    <customLabels>
+        <label>You have reached the maximum number of indexes on a field for your org.</label>
+        <name>SFDC_SC_CT_FIELD_ILE</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t exceed the maximum size for a CLOB field.</label>
+        <name>SFDC_SC_CUSTOM_CFLE</name>
+    </customLabels>
+    <customLabels>
+        <label>You have reached the maximum number of custom objects or custom fields for your org.</label>
+        <name>SFDC_SC_CUSTOM_ENTITY_OR_FIELD_LIMIT</name>
+    </customLabels>
+    <customLabels>
+        <label>You can create only one custom index per field.</label>
+        <name>SFDC_SC_CUSTOM_INDEX_EXISTS</name>
+    </customLabels>
+    <customLabels>
+        <label>You have reached the maximum number of custom links for your org.</label>
+        <name>SFDC_SC_CUSTOM_LINK_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>Your org has reached its custom metadata maximum limit.</label>
+        <name>SFDC_SC_CUSTOM_METADATA_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>Your org has reached its custom settings maximum limit.</label>
+        <name>SFDC_SC_CUSTOM_SETTINGS_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have reached the maximum number of custom tabs for your org.</label>
+        <name>SFDC_SC_CUSTOM_TAB_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t delete a record because it is in use by another object.</label>
+        <name>SFDC_SC_DELETE_FAILED</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t perform the requested operation because of an existing dependency on the specified object or field.</label>
+        <name>SFDC_SC_DEPENDENCY_EXISTS</name>
+    </customLabels>
+    <customLabels>
+        <label>Duplicate records have been detected. Used for an Error object with a data type of DuplicateError.</label>
+        <name>SFDC_SC_DUPLICATES_DETECTED</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t create a relationship between the specified case and solution because it already exists.</label>
+        <name>SFDC_SC_DUPLICATE_CASE_SOLUTION</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t create a custom object or custom field with a duplicate master name.</label>
+        <name>SFDC_SC_DUPLICATE_CUSTOM_TAB_MOTIF</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t create a custom object or custom field with a duplicate developer name.</label>
+        <name>SFDC_SC_DUPLICATE_DEVELOPER_NAME</name>
+    </customLabels>
+    <customLabels>
+        <label>A user-specified external ID matches more than one record during an upsert.</label>
+        <name>SFDC_SC_DUPLICATE_EXTERNAL_ID</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t create a custom object or custom field with a duplicate master name.</label>
+        <name>SFDC_SC_DUPLICATE_MASTER_LABEL</name>
+    </customLabels>
+    <customLabels>
+        <label>A sendEmail() call could not choose between OrgWideEmailAddress.DisplayName or senderDisplayName. Define only one of the two fields.</label>
+        <name>SFDC_SC_DUPLICATE_SENDER_DISPLAY_NAME</name>
+    </customLabels>
+    <customLabels>
+        <label>A create, update, or upsert failed because of a duplicate user name.</label>
+        <name>SFDC_SC_DUPLICATE_USERNAME</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t supply a duplicate value for a field that must be unique. For example, you can’t submit two copies of the same session ID in a invalidateSessions() call.</label>
+        <name>SFDC_SC_DUPLICATE_VALUE</name>
+    </customLabels>
+    <customLabels>
+        <label>Custom object or custom field IDs must be unique.</label>
+        <name>SFDC_SC_DUP_CT_ED</name>
+    </customLabels>
+    <customLabels>
+        <label>Emails to one or more recipients have bounced. Check the email addresses to make sure that they are valid.</label>
+        <name>SFDC_SC_EMAIL_ADDRESS_BOUNCED</name>
+    </customLabels>
+    <customLabels>
+        <label>Because of an error earlier in the call, the current email was not processed.</label>
+        <name>SFDC_SC_EMAIL_NOT_PDTPE</name>
+    </customLabels>
+    <customLabels>
+        <label>A single email message was sent with the REJECT setting in the optOutPolicy field to recipients that have opted out from receiving email. To avoid this error, set the optOutPolicy field to another value.</label>
+        <name>SFDC_SC_EMAIL_OPTED_OUT</name>
+    </customLabels>
+    <customLabels>
+        <label>The email template is invalid and can’t be rendered. Check the template for incorrectly specified merge fields.</label>
+        <name>SFDC_SC_EMAIL_TEMPLATE_FORMULA_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>One or more merge fields don’t exist. Check the spelling of field names.</label>
+        <name>SFDC_SC_EMAIL_TEMPLATE_MERGEFIELD_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>The merge fields in this email template can’t be processed. Ensure that your template body is valid.</label>
+        <name>SFDC_SC_EMAIL_TEMPLATE_PROCESSING_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>You don’t have access to one or more merge fields in this template. To request access, contact your Salesforce administrator.</label>
+        <name>SFDC_SC_EMAIL_TMP_MAE</name>
+    </customLabels>
+    <customLabels>
+        <label>One or more merge fields have no value. To provide values, update the records before sending the email.</label>
+        <name>SFDC_SC_EMAIL_TMP_MER_VE</name>
+    </customLabels>
+    <customLabels>
+        <label>The Scontrol file name was empty, but the binary was not empty.</label>
+        <name>SFDC_SC_EMPTY_SCONTROL_FILE_NAME</name>
+    </customLabels>
+    <customLabels>
+        <label>If the value in a record’s LastModifiedDate field is later than the current date, you can’t update the record .</label>
+        <name>SFDC_SC_ENTITY_FAILED_IOU</name>
+    </customLabels>
+    <customLabels>
+        <label>If a record has been archived, you can’t access it.</label>
+        <name>SFDC_SC_ENTITY_IS_ARCHIVED</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t reference an object that has been deleted. This status code occurs only in API version 10.0 and later. Previous releases of the API use INVALID_ID_FIELD for this error.</label>
+        <name>SFDC_SC_ENTITY_IS_DELETED</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t edit a record that is locked by an approval process.</label>
+        <name>SFDC_SC_ENTITY_IS_LOCKED</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t add an org to more than one Environment Hub.</label>
+        <name>SFDC_SC_ENV_HUB_MC</name>
+    </customLabels>
+    <customLabels>
+        <label>An email address is invalid, or another error occurred during an email-related transaction.</label>
+        <name>SFDC_SC_ERROR_IN_MAILER</name>
+    </customLabels>
+    <customLabels>
+        <label>The activation of a Contract failed.</label>
+        <name>SFDC_SC_FAILED_ACTIVATION</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t define a custom validation formula that violates a field integrity rule.</label>
+        <name>SFDC_SC_FIELD_CT_VE</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t violate field integrity rules.</label>
+        <name>SFDC_SC_FIELD_FVE</name>
+    </customLabels>
+    <customLabels>
+        <label>The creation of the lookup filter failed because it exceeds the maximum number of lookup filters allowed per object.</label>
+        <name>SFDC_SC_FILTERED_LOOKUP_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>Your attempt to upload an HTML file failed. HTML attachments and documents, including HTML attachments to a Solution, can&apos;t be uploaded if the Disallow HTML documents and attachments checkbox is selected on the HTML Documents and Attachments Settings page.</label>
+        <name>SFDC_SC_HTML_FILE_UPLOAD_NOT_ALLOWED</name>
+    </customLabels>
+    <customLabels>
+        <label>The image exceeds the maximum width, height, and file size.</label>
+        <name>SFDC_SC_IMAGE_TOO_LARGE</name>
+    </customLabels>
+    <customLabels>
+        <label>The owner of the specified item is an inactive user. To reference this item, either reactivate the owner or reassign ownership to another active user.</label>
+        <name>SFDC_SC_INACTIVE_OWNER_OR_USER</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t perform the specified action because you don’t have sufficient permissions.</label>
+        <name>SFDC_SC_INSUFFICIENT_ACCESS_OR_READONLY</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t delete a person account.</label>
+        <name>SFDC_SC_INVAILD_PAO</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t define a new sharing rule that provides less access than the specified org-wide default.</label>
+        <name>SFDC_SC_INVALID_ACCESS_LEVEL</name>
+    </customLabels>
+    <customLabels>
+        <label>You supplied an argument that is of the wrong type for the operation being attempted.</label>
+        <name>SFDC_SC_INVALID_ARGUMENT_TYPE</name>
+    </customLabels>
+    <customLabels>
+        <label>You specified an assignee type that is not a valid integer between one and six.</label>
+        <name>SFDC_SC_INVALID_ASSIGNEE_TYPE</name>
+    </customLabels>
+    <customLabels>
+        <label>You specified an assignment rule that is invalid or that isn’t defined in the org.</label>
+        <name>SFDC_SC_INVALID_ASSIGNMENT_RULE</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified batch operation is invalid.</label>
+        <name>SFDC_SC_INVALID_BATCH_OPERATION</name>
+    </customLabels>
+    <customLabels>
+        <label>The outgoing email has anEmailFileAttachment with an invalidcontentType property. See RFC2045 - Internet Message Format.</label>
+        <name>SFDC_SC_INVALID_CONTENT_TYPE</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified credit card information is not valid.</label>
+        <name>SFDC_SC_INVALID_CREDIT_CARD_INFO</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified value in a relationship field is not valid, or data is not of the expected type.</label>
+        <name>SFDC_SC_INVALID_CROSS_REFERENCE_KEY</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified cross-reference type is not valid for the specified field.</label>
+        <name>SFDC_SC_INVALID_CROSS_RTYPEFF</name>
+    </customLabels>
+    <customLabels>
+        <label>Specify a positive, non-zero value for the currency conversion rate.</label>
+        <name>SFDC_SC_INVALID_CURRENCY_CONV_RATE</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t modify the corporate currency conversion rate.</label>
+        <name>SFDC_SC_INVALID_CURRENCY_CORP_RATE</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified currency ISO code is not valid.</label>
+        <name>SFDC_SC_INVALID_CURRENCY_ISO</name>
+    </customLabels>
+    <customLabels>
+        <label>A specified email address is invalid.</label>
+        <name>SFDC_SC_INVALID_EMAIL_ADDRESS</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t set the value for owner to null.</label>
+        <name>SFDC_SC_INVALID_EMPTY_KEY_OWNER</name>
+    </customLabels>
+    <customLabels>
+        <label>Invalid parameters were specified when subscribing to an event.</label>
+        <name>SFDC_SC_INVALID_EVENT_SUBSCRIPTION</name>
+    </customLabels>
+    <customLabels>
+        <label>You specified an invalid field name when trying to update or upsert a record.</label>
+        <name>SFDC_SC_INVALID_FIELD</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t combine a person Account Record Type change with any other field update.</label>
+        <name>SFDC_SC_INVALID_FIELD_FOR_INSERT_UPDATE</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t use an email template with an invalid field name.</label>
+        <name>SFDC_SC_INVALID_FIELD_WHEN_USING_TEMPLATE</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified filter action can&apos;t be used with the specified object. For example, an alert is not a valid filter action for a Task.</label>
+        <name>SFDC_SC_INVALID_FILTER_ACTION</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified ID field (ID, ownerId), or cross-reference field is invalid.</label>
+        <name>SFDC_SC_INVALID_ID_FIELD</name>
+    </customLabels>
+    <customLabels>
+        <label>A specified Inet address is not valid.</label>
+        <name>SFDC_SC_INVALID_INET_ADDRESS</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t clone a Pricebook2 or PricebookEntry record that isn’t active.</label>
+        <name>SFDC_SC_INVALID_LINEITEM_CLONE_STATE</name>
+    </customLabels>
+    <customLabels>
+        <label>The outgoing email&apos;s References or In-Reply-To fields are invalid. These fields must contain valid Message-IDs. See RFC2822 - Internet Message Format.</label>
+        <name>SFDC_SC_INVALID_MESSAGE_ID_REFERENCE</name>
+    </customLabels>
+    <customLabels>
+        <label>There is no applicable approval process for the specified object.</label>
+        <name>SFDC_SC_INVALID_OPERATION</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified Operator is not applicable for the field type when used as a workflow filter.</label>
+        <name>SFDC_SC_INVALID_OPERATOR</name>
+    </customLabels>
+    <customLabels>
+        <label>You specified an invalid or null value for a restricted picklist.</label>
+        <name>SFDC_SC_INVALID_OR_NULL_FRP</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified partner network status is invalid for the specified template field.</label>
+        <name>SFDC_SC_INVALID_PARTNER_NETWORK_STATUS</name>
+    </customLabels>
+    <customLabels>
+        <label>Version 31.0 and earlier: You can’t create, update, or delete data while the instance where your org resides is being upgraded to the latest release. Try again after the release has completed. For release schedules, see trust.salesforce.com. After version 31.0, the code is INSERT_UPDATE_DELETE_NOT_ALLOWED_DURING_MAINTENANCE.</label>
+        <name>SFDC_SC_INVALID_READ_ONLY_USER_DML</name>
+    </customLabels>
+    <customLabels>
+        <label>Specify true or false for the saveAsActivity flag.</label>
+        <name>SFDC_SC_INVALID_SAVE_AS_ACTIVITY_FLAG</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified sessionId is malformed (incorrect length or format) or has expired. Log in again to start a new session.</label>
+        <name>SFDC_SC_INVALID_SESSION_ID</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified org status change is not valid.</label>
+        <name>SFDC_SC_INVALID_STATUS</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified type is not valid for the specified object.</label>
+        <name>SFDC_SC_INVALID_TYPE</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified type is not valid for the specified operation.</label>
+        <name>SFDC_SC_INVALID_TYPE_FOR_OPERATION</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified value is not valid for the specified field&apos;s type.</label>
+        <name>SFDC_SC_INVALID_TYPE_ON_FIELD_IN_RECORD</name>
+    </customLabels>
+    <customLabels>
+        <label>An operation affects an object that is cross-referenced by the specified object, but the logged-in user doesn’t have sufficient permissions on the cross-referenced object. For example, a logged-in user attempts to modify an account record, and the update creates a ProcessInstanceWorkitem. If the user doesn’t have permission to approve, reject, or reassign the ProcessInstanceWorkitem, this exception occurs.</label>
+        <name>SFDC_SC_IN_ACCESS_OCRE</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified IP address is outside the IP range specified for the org.</label>
+        <name>SFDC_SC_IP_RANGE_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>Starting with version 32.0, you can’t create, update, or delete data while the instance where your org resides is being upgraded to the latest release. Try again after the release has completed. For release schedules, see trust.salesforce.com. Before version 32.0, the code is INVALID_READ_ONLY_USER_DML.</label>
+        <name>SFDC_SC_IUD_NOT_ADM</name>
+    </customLabels>
+    <customLabels>
+        <label>The solution is invalid. For example, this exception occurs if you try to associate a translated solution with a master solution that’s associated with another translated solution.</label>
+        <name>SFDC_SC_IVD_MASTER_ORS</name>
+    </customLabels>
+    <customLabels>
+        <label>The number of records you attempted to purchase from Data.com exceeds your available record addition limit.</label>
+        <name>SFDC_SC_JIGSAW_IMPORT_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the number of licenses assigned to your org.</label>
+        <name>SFDC_SC_LICENSE_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You attempted an action with a high-volume portal user that&apos;s not allowed. For example, trying to add the user to a case team.</label>
+        <name>SFDC_SC_LIGHT_PORTAL_USER_EXCEPTION</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded a limit on a field size or value, license, or other component.</label>
+        <name>SFDC_SC_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>An ID must be either 15 characters, or 18 characters with a valid case-insensitive extension. There is also an exception code of the same name.</label>
+        <name>SFDC_SC_MALFORMED_ID</name>
+    </customLabels>
+    <customLabels>
+        <label>A manager has not been defined for the specified approval process.</label>
+        <name>SFDC_SC_MANAGER_NOT_DEFINED</name>
+    </customLabels>
+    <customLabels>
+        <label>A mass mail retry failed because your org has exceeded its mass mail retry limit.</label>
+        <name>SFDC_SC_MASSMAIL_RETRY_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>The org has exceeded its daily limit for mass email. Mass email messages can&apos;t be sent again until the next day.</label>
+        <name>SFDC_SC_MASS_MAIL_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum number of specified CC addresses in a workflow email alert.</label>
+        <name>SFDC_SC_MAXIMUM_CCEMAILS_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum size of an attachment.</label>
+        <name>SFDC_SC_MAXIMUM_SIZE_OF_ATTACHMENT</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum size of a document.</label>
+        <name>SFDC_SC_MAXIMUM_SIZE_OF_DOCUMENT</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum number of active rules.</label>
+        <name>SFDC_SC_MAX_ACTIVE_RULES_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum number of approval steps for an approval process.</label>
+        <name>SFDC_SC_MAX_APPROVAL_STEPS_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum number of actions per rule.</label>
+        <name>SFDC_SC_MAX_APRE</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the document size limit for a dashboard.</label>
+        <name>SFDC_SC_MAX_DASHBOARD_CE</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum number of formulas per rule.</label>
+        <name>SFDC_SC_MAX_FORMULAS_PER_RULE_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have reached the maximum number of levels in a hierarchy.</label>
+        <name>SFDC_SC_MAX_HLR</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum number of rules for an object.</label>
+        <name>SFDC_SC_MAX_RULES_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum number of entries for a rule.</label>
+        <name>SFDC_SC_MAX_RULE_ENTRIES_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum number of rules per Territory.</label>
+        <name>SFDC_SC_MAX_TM_RULES_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the maximum number of rule criteria per rule for a Territory.</label>
+        <name>SFDC_SC_MAX_TM_RULE_ITEMS_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>A merge operation failed.</label>
+        <name>SFDC_SC_MERGE_FAILED</name>
+    </customLabels>
+    <customLabels>
+        <label>You did not specify a required argument.</label>
+        <name>SFDC_SC_MISSING_ARGUMENT</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t insert a reduction order item if the original order shipping address is different from the shipping address of other items in the reduction order.</label>
+        <name>SFDC_SC_NONUNIQUE_SHIPPING_ADDRESS</name>
+    </customLabels>
+    <customLabels>
+        <label>A process() request failed because the record submitted does not satisfy the entry criteria of any active approval processes for which the user has permission.</label>
+        <name>SFDC_SC_NO_APPLICABLE_PROCESS</name>
+    </customLabels>
+    <customLabels>
+        <label>Your org does not permit email attachments.</label>
+        <name>SFDC_SC_NO_ATTACHMENT_PERMISSION</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t add members to an inactive Division.</label>
+        <name>SFDC_SC_NO_INACTIVE_DIVISION_MEMBERS</name>
+    </customLabels>
+    <customLabels>
+        <label>You don’t have permission to send the email. You must have “Mass Email” to send mass mail or “Send Email” to send individual email.</label>
+        <name>SFDC_SC_NO_MASS_MAIL_PERMISSION</name>
+    </customLabels>
+    <customLabels>
+        <label>The number specified is outside the valid range of values.</label>
+        <name>SFDC_SC_NUMBER_OUTSIDE_VALID_RANGE</name>
+    </customLabels>
+    <customLabels>
+        <label>The number of history fields specified for the sObject exceeds the allowed limit.</label>
+        <name>SFDC_SC_NUM_HISTORY</name>
+    </customLabels>
+    <customLabels>
+        <label>An email can&apos;t be sent because the specified User has opted out of mass mail.</label>
+        <name>SFDC_SC_OPTED_OUT_OF_MASS_MAIL</name>
+    </customLabels>
+    <customLabels>
+        <label>The operation you attempted can&apos;t be performed for one or more users. For example, you can&apos;t add high-volume portal users to a group.</label>
+        <name>SFDC_SC_OP_WITH_INVALID_USER_TYPE_EXCEPTION</name>
+    </customLabels>
+    <customLabels>
+        <label>The logged-in user can’t access an object that is in a licensed package without a license for the package.</label>
+        <name>SFDC_SC_PACKAGE_LICENSE_REQUIRED</name>
+    </customLabels>
+    <customLabels>
+        <label>A create User operation failed because you can&apos;t create a second portal user under a Contact.</label>
+        <name>SFDC_SC_PORTAL_USER_AEFC</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t have a private contact on an asset.</label>
+        <name>SFDC_SC_PRIVATE_CONTACT_ON_ASSET</name>
+    </customLabels>
+    <customLabels>
+        <label>You can’t access a record that’s in use by a workflow or approval process.</label>
+        <name>SFDC_SC_RECORD_IN_USE_BY_WORKFLOW</name>
+    </customLabels>
+    <customLabels>
+        <label>A request that has been running too long is canceled.</label>
+        <name>SFDC_SC_REQUEST_RUNNING_TOO_LONG</name>
+    </customLabels>
+    <customLabels>
+        <label>A call requires a field that was not specified.</label>
+        <name>SFDC_SC_REQUIRED_FIELD_MISSING</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t recursively update or delete the same object from an Apex trigger. This error often occurs when:
+You try to update or delete an object from within its before trigger.
+You try to delete an object from within its after trigger.
+This error occurs with both direct and indirect operations. The following is an example of an indirect operation:
+
+A request is submitted to update Object A.
+A before update trigger on object A creates an object B.
+Object A is updated.
+An after insert trigger on object B queries object A and updates it. This update is an indirect update of object A because of the before trigger of object A, so an error is generated.</label>
+        <name>SFDC_SC_SELF_REFERENCE_FROM_TRIGGER</name>
+    </customLabels>
+    <customLabels>
+        <label>If a parent record has a child record that needs a sharing rule, you can’t delete the sharing rule for the parent record.</label>
+        <name>SFDC_SC_SHARE_NEEDED_FOR_CHILD_OWNER</name>
+    </customLabels>
+    <customLabels>
+        <label>(API version 18.0 and later) The org has exceeded its daily limit for individual emails. Individual email messages can’t be sent again until the next day.</label>
+        <name>SFDC_SC_SINGLE_EMAIL_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>Custom prices can&apos;t be defined without corresponding standard prices.</label>
+        <name>SFDC_SC_STANDARD_PRICE_NOT_DEFINED</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded your org’s storage limit.</label>
+        <name>SFDC_SC_STORAGE_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified string exceeds the maximum allowed length.</label>
+        <name>SFDC_SC_STRING_TOO_LONG</name>
+    </customLabels>
+    <customLabels>
+        <label>You have exceeded the number of tabs allowed for a tabset.</label>
+        <name>SFDC_SC_TABSET_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>The template specified is unavailable. Specify another template or make the template available for use.</label>
+        <name>SFDC_SC_TEMPLATE_NOT_ACTIVE</name>
+    </customLabels>
+    <customLabels>
+        <label>An operation can&apos;t be performed because a territory realignment is in progress.</label>
+        <name>SFDC_SC_TERRITORY_REALIGN_IN_PROGRESS</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified text uses a character set that is not supported.</label>
+        <name>SFDC_SC_TEXT_DATA_OSC</name>
+    </customLabels>
+    <customLabels>
+        <label>Too many Apex requests have been sent. This error is transient. Resend your request after a short wait.</label>
+        <name>SFDC_SC_TOO_MANY_APEX_REQUESTS</name>
+    </customLabels>
+    <customLabels>
+        <label>A request failed because too many values were passed in for a multi-select picklist. You can select a maximum of 100 values for a multi-select picklist.</label>
+        <name>SFDC_SC_TOO_MANY_ENUM_VALUE</name>
+    </customLabels>
+    <customLabels>
+        <label>You can&apos;t assign the record to the specified User because the user does not have read permission.</label>
+        <name>SFDC_SC_TRANSFER_REQUIRES_READ</name>
+    </customLabels>
+    <customLabels>
+        <label>A deadlock or timeout condition has been detected.
+A deadlock involves at least two transactions that are attempting to update overlapping sets of objects. If the transaction involves a summary field, the parent objects are locked, making these transactions especially prone to deadlocks. To debug, check your code for deadlocks and correct. Deadlocks are generally not the result of an issue with Salesforce operations.
+A timeout occurs when a transaction takes too long to complete, for example, when replacing a value in a picklist or changing a custom field definition. The timeout state is temporary. No corrective action is needed.
+If an object in a batch can’t be locked, the entire batch fails with this error. Errors with this status code contain the IDs of the records that couldn’t be locked, when available, in the error message.</label>
+        <name>SFDC_SC_UNABLE_TO_LOCK_ROW</name>
+    </customLabels>
+    <customLabels>
+        <label>The appropriate default record type could not be found.</label>
+        <name>SFDC_SC_UNA_RTPE</name>
+    </customLabels>
+    <customLabels>
+        <label>An object could not be undeleted because it does not exist or has not been deleted.</label>
+        <name>SFDC_SC_UNDELETE_FAILED</name>
+    </customLabels>
+    <customLabels>
+        <label>The system encountered an internal error. Report this problem to Salesforce.</label>
+        <name>SFDC_SC_UNKNOWN_EXCEPTION</name>
+    </customLabels>
+    <customLabels>
+        <label>The specified user does not have an email address.</label>
+        <name>SFDC_SC_UNSPECIFIED_EMAIL_ADDRESS</name>
+    </customLabels>
+    <customLabels>
+        <label>A sendEmail() call attempted to use an unverified email address defined in the OrgWideEmailAddress object.</label>
+        <name>SFDC_SC_UNVERIFIED_SENDER_ADDRESS</name>
+    </customLabels>
+    <customLabels>
+        <label>The size of a WebLink URL or JavaScript code exceeds the limit.</label>
+        <name>SFDC_SC_WEBLINK_SIZE_LIMIT_EXCEEDED</name>
+    </customLabels>
+    <customLabels>
+        <label>The WebLink URL has failed the URL string validation check.</label>
+        <name>SFDC_SC_WEBLINK_URL_INVALID</name>
+    </customLabels>
+    <customLabels>
+        <label>The controller type for your Visualforce email template does not match the object type being used.</label>
+        <name>SFDC_SC_WRONG_CONTROLLER_TYPE</name>
+    </customLabels>
+    <customTabs>
+        <label><!-- SmartVisca --></label>
+        <name>SB_NameCard</name>
+    </customTabs>
+    <customTabs>
+        <label>SmartVisca Camera</label>
+        <name>SmartViscaCamera</name>
+    </customTabs>
+    <customTabs>
+        <label>SmartVisca Setting</label>
+        <name>SmartViscaSettings</name>
+    </customTabs>
+    <customTabs>
+        <label>SmartVisca Setting*</label>
+        <name>SmartViscaSettingsLex</name>
+    </customTabs>
+</Translations>

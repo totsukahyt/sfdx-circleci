@@ -1,0 +1,119 @@
+<!-- SB_NameCard_SEvent
+/**
+ *
+ * Salesforce1対応 行動 編集ビュー
+ *
+ * Copyright (C) 2014-2019 SunBridge Inc. All Rights Reserved.
+ *
+ *  @author sawano
+ *  @Version 1      2014.6.xx
+ *  @Version 2      2015.10.1x
+ *  @Version 3      2016.9.xx 英語対応
+ *  @Version 4      2018.03.xx v1.22 SV_DEV-823 Salesforce1 のToDoの詳細画面で期日がnullで表示されている。 → Safari 系 で発生  → 日時を unix time で受け渡す 変数名変更
+ *                            開始 終了 時間 input type="datetime-local" の step="300"  をやめます。 Android S1 だけ機能してた SV_DEV-841  Salesforce1 で行動登録後に「有効な値を入力してください」メッセージが表示される。
+ *                            SV_DEV-843 【例外動作】Salesforce1 で新規行動登録時に終了時刻を開始時刻より前に設定した場合にエラーにならず登録処理が完了し、登録されない。
+ *                              終了の入力値の 最小値を min="{{minDate}}” で指定してたので、 ng-min で 開始の入力値以上に
+ *                            SV_DEV-844 Salesforce1 で新規行動登録時に終日行動に設定した場合に登録されない。 期間14日ごえのケース
+ *                              → 終了期日は ng-max を入れる。
+ *   注） activity.location が CodeScan SecurityRules の Client DOM XSS で引っかかります。 anguler.js が対処してくれててもわかってくれない。
+ *
+ **/
+-->
+<apex:page docType="html-5.0" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false">
+<head>
+  <title>{!$Label.SB_NCS1_Text_EventsEdit}</title>
+  <style type="text/css">
+/*    .required {
+      transition:0.5s linear all;
+      background: white;
+    }
+    .required.ng-invalid {
+      border-color: #ff4500;
+      color:white;
+    }
+*/  </style>
+  <script type="text/javascript"></script>
+</head>
+
+<div class="container">
+  <div class="page-header">
+    <h2 ng-show="config.sUserLanguage!='en_US'"><i class="glyphicon glyphicon-time"/>&nbsp;{!$Label.SB_NCS1_Text_Events}{{mode==1 ? '{!$Label.SB_NCS1_Text_Details}' : (mode==2 ? '{!$Label.SB_NCS1_Text_Edit}' : '{!$Label.SB_NCS1_Text_Add}')}}<small></small></h2>
+    <h2 ng-show="config.sUserLanguage=='en_US'"><i class="glyphicon glyphicon-time"/>&nbsp;{{mode==3 ? '{!$Label.SB_NCS1_Text_Add}&nbsp;' : ''}}{!$Label.SB_NCS1_Text_Events}&nbsp;{{mode==1 ? '{!$Label.SB_NCS1_Text_Details}' : ''}}{{mode==2 ? '{!$Label.SB_NCS1_Text_Edit}' : ''}}</h2>
+  </div>
+
+  <div class="span4 well " ng-show="{{mode == 1}}">
+    <div class="content">
+      <table class="CardData">
+        <tr><td>{!$ObjectType.Event.fields.subject.Label} :</td><td>{{activity.subject}}</td></tr>
+        <!-- 終日行動でないとき -->
+        <tr ng-show="!activity.allDay"><td>{!$Label.SB_NCS1_Text_Start} :</td><td>{{activity.startDatetimeL | date : '{!$Label.SB_NC_ngDatetimeFormat}'}}</td></tr>
+        <tr ng-show="!activity.allDay"><td>{!$Label.SB_NCS1_Text_End} :</td><td>{{activity.endDatetimeL | date : '{!$Label.SB_NC_ngDatetimeFormat}'}}</td></tr>
+        <!-- 終日のとき -->
+        <tr ng-show="activity.allDay"><td>{!$Label.SB_NCS1_Text_Start} :</td><td>{{activity.startDatetimeL | date : '{!$Label.SB_NC_NGDateFormat}'}}</td></tr>
+        <tr ng-show="activity.allDay"><td>{!$Label.SB_NCS1_Text_End} :</td><td>{{activity.endDatetimeL | date : '{!$Label.SB_NC_NGDateFormat}'}}</td></tr>
+        <tr ng-show="activity.allDay"><td colspan="2">{!$ObjectType.Event.fields.IsAllDayEvent.Label}</td></tr>
+        <tr><td>{!$ObjectType.Event.fields.Description.Label} :</td><td ng-bind-html="activity.description"></td></tr>
+        <tr><td>{!$ObjectType.Event.fields.Location.Label} :</td><td>{{activity.location}}</td></tr>
+      </table>
+    </div>
+    <p style='text-align: center'>
+      <button class="btn btn-primary" ng-disabled="treeLoading" role="button" ng-click="openEdit()"><i class="glyphicon glyphicon-edit"/>{!$Label.SB_NCS1_Text_Edit}</button>
+      <button class="btn btn-default" ng-disabled="treeLoading" role="button" ng-click="cancel()">{!$Label.SB_NCS1_Label_GoBack}</button>
+    </p>
+  </div>
+
+  <form class="well" name="myForm" ng-show="{{mode != 1}}">
+    <!-- <div class="control-group" ng-class="{error: myForm.Name.$invalid}"> -->
+      <!-- 件名 -->
+      <div class="form-group">
+        <label for="txSubject">{!$ObjectType.Event.fields.Subject.Label}&lowast;&nbsp;:</label>
+        <input type="text" id="txSubject"  style="width: 100%;" ng-model="activity.subject"
+          uib-typeahead="subject for subject in subjects | filter:$viewValue | limitTo:6" required="true"
+          ng-maxlength="{!$ObjectType.Event.fields.Subject.length}"/>
+      </div>
+      <!-- 開始 -->
+      <div class="form-group">
+        <label for ="">{!$Label.SB_NCS1_Text_Start}&lowast;&nbsp;:</label>
+        <input ng-if="!activity.allDay" type="datetime-local" step="60" name="datetimeStart" style="width: 100%;" ng-model="activity.startDatetimeL" ng-min="minDateTime" ng-required="!activity.allDay" ng-change="changeStart()"/>
+        <!-- <input ng-if="activity.allDay" type="date" name="dateStart" style="width: 100%;" ng-model="activity.activityDateL" ng-min="minDate" ng-required="activity.allDay"/> -->
+        <input ng-if="activity.allDay" type="date" name="dateStart" style="width: 100%;" ng-model="activity.startDatetimeL" ng-min="minDateTime" ng-required="activity.allDay" ng-change="changeStart()"/>
+      </div>
+      <!-- <p>activity.startDatetimeL : {{activity.startDatetimeL}}</p> -->
+      <!-- <p>activity.activityDateL: {{activity.activityDateL}} </p> -->
+      <!-- 終了 -->
+      <div class="form-group">
+        <label>{!$Label.SB_NCS1_Text_End}&lowast;&nbsp;:</label>
+        <input ng-if="!activity.allDay" type="datetime-local" step="60" name="datetimeEnd" style="width: 100%;" ng-model="activity.endDatetimeL" ng-required="!activity.allDay" ng-min="activity.startDatetimeL" ng-max="maxDateTime" />
+        <!-- <input ng-if="activity.allDay" type="date" name="dateEnd" style="width: 100%;" ng-model="activity.eventEndDateL" ng-required="activity.allDay" ng-min="activity.activityDateL" ng-max="activity.activityDateL + 1000*60*60*24 *14"/> -->
+        <input ng-if="activity.allDay" type="date" name="dateEnd" style="width: 100%;" ng-model="activity.endDatetimeL" ng-required="activity.allDay" ng-min="activity.startDatetimeL" ng-max="maxDateTime"/>
+      </div>
+      <!-- <p>activity.endDatetimeL : {{activity.endDatetimeL}}</p> -->
+      <!-- <p>activity.eventEndDateL: {{activity.eventEndDateL}} </p> -->
+      <!-- 終日行動 -->
+      <div class="form-group">
+        <label>{!$ObjectType.Event.fields.IsAllDayEvent.Label}&nbsp;:</label>
+        <input type="checkbox" name="allDay" ng-model="activity.allDay" />
+      </div>
+      <!-- 説明 -->
+      <div class="form-group">
+        <label>{!$ObjectType.Event.fields.Description.Label}&nbsp;:</label>
+        <textarea name="description" style="width: 100%;" ng-model="activity.description"
+          ng-maxlength="{!$ObjectType.Event.fields.Description.length}"/>
+      </div>
+      <!-- 場所 -->
+      <div class="form-group">
+        <label>{!$ObjectType.Event.fields.Location.Label}&nbsp;:</label>
+        <input type="text" name="location" style="width: 100%;" ng-model="activity.location"
+        ng-maxlength="{!$ObjectType.Event.fields.Location.length}"/>
+      </div>
+    <!-- </div> -->
+    <hr/>
+    <p style='text-align: center'>
+      <button ng-click="save()" ng-disabled="!myForm.$valid" class="btn btn-primary" role="button" ><i class="glyphicon glyphicon-ok-circle"/>{!$Label.SB_NCS1_Label_Save}</button>
+      <button ng-click="remove()" ng-show="activity.eventId" class="btn btn-danger" role="button" ><i class="glyphicon glyphicon-remove-circle"/>{!$Label.SB_NCS1_Label_Remove}</button>
+      <button ng-click="cancel()" class="btn" role="button" >{!$Label.SB_NCS1_Label_Cancel}</button>
+    </p>
+
+  </form>
+</div>
+</apex:page>

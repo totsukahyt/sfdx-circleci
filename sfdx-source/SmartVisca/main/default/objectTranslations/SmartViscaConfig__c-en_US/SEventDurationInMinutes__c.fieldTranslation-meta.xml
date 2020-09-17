@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>S The Duration of Omission Activity(min)</label>
+    <name>SEventDurationInMinutes__c</name>
+</CustomFieldTranslation>

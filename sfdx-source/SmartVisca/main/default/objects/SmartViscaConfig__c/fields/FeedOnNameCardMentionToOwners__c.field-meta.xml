@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FeedOnNameCardMentionToOwners__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>同じ人の名刺の中で最新の名刺が変わったときに、同じ人の名刺の所有者にメンションします。
+名刺ごとにフィードが作成されるので、同一のユーザが同じ人の名刺を複数持っていた場合、重複して通知を受けます。
+名刺連携ユーザが名刺所有者ユーザを参照可能である必要があります。</description>
+    <externalId>false</externalId>
+    <inlineHelpText>同じ人の名刺の中で最新の名刺が変わったときに、同じ人の名刺の所有者にメンションします。 
+名刺ごとにフィードが作成されるので、同一のユーザが同じ人の名刺を複数持っていた場合、重複して通知を受けます。 
+名刺連携ユーザが名刺所有者ユーザを参照可能である必要があります。</inlineHelpText>
+    <label>同じ人と名刺交換したフィードを名刺所有者にメンションする</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
