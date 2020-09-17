@@ -163,6 +163,7 @@ jobs:
       - image: circleci/node:current-browsers
     environment:
       PACKAGE_VERSION_NAME : September 2020
+      METADATA_PACKAGE_ID : 0332x000000kRZ9AAM
     steps:
       - checkout
       # 20200915 ソースdeployエラーのため、CLI最新版に変更
