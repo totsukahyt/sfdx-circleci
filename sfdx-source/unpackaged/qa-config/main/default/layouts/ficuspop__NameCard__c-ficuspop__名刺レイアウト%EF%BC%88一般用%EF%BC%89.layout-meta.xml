@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>SmartViscaf__AccountRegist</customButtons>
-    <customButtons>SmartViscaf__registTenshokusaki</customButtons>
-    <customButtons>SmartViscaf__SBhaveSameNameCard</customButtons>
-    <customButtons>SmartViscaf__SBOrganizationList</customButtons>
+    <customButtons>ficuspop__AccountRegist</customButtons>
+    <customButtons>ficuspop__registTenshokusaki</customButtons>
+    <customButtons>ficuspop__SBhaveSameNameCard</customButtons>
+    <customButtons>ficuspop__SBOrganizationList</customButtons>
     <excludeButtons>Share</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
@@ -18,29 +18,29 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__company_name__c</field>
+                <field>ficuspop__company_name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__division__c</field>
+                <field>ficuspop__division__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__title_name__c</field>
+                <field>ficuspop__title_name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__web_url1__c</field>
+                <field>ficuspop__web_url1__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>SmartViscaf__name_kana__c</field>
+                <field>ficuspop__name_kana__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__company_name_kana__c</field>
+                <field>ficuspop__company_name_kana__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -48,7 +48,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__card_exchange_date__c</field>
+                <field>ficuspop__card_exchange_date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -61,41 +61,41 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__email__c</field>
+                <field>ficuspop__email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__tel1__c</field>
+                <field>ficuspop__tel1__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__tel2__c</field>
+                <field>ficuspop__tel2__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__mobile__c</field>
+                <field>ficuspop__mobile__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__fax1__c</field>
+                <field>ficuspop__fax1__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__zip_code__c</field>
+                <field>ficuspop__zip_code__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__address_pref__c</field>
+                <field>ficuspop__address_pref__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__address__c</field>
+                <field>ficuspop__address__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__address_bld__c</field>
+                <field>ficuspop__address_bld__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -108,21 +108,21 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__first_name__c</field>
+                <field>ficuspop__first_name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__middle_name__c</field>
+                <field>ficuspop__middle_name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__last_name__c</field>
+                <field>ficuspop__last_name__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__address_eng__c</field>
+                <field>ficuspop__address_eng__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -135,11 +135,11 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__memo__c</field>
+                <field>ficuspop__memo__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__freehandmemo__c</field>
+                <field>ficuspop__freehandmemo__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
@@ -152,7 +152,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__list_name__c</field>
+                <field>ficuspop__list_name__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
@@ -166,13 +166,13 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>SmartViscaf__thumbnail__c</field>
+                <field>ficuspop__thumbnail__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>SmartViscaf__bk_thumbnail__c</field>
+                <field>ficuspop__bk_thumbnail__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -185,17 +185,17 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>SmartViscaf__ParentLink__c</field>
+                <field>ficuspop__ParentLink__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__tenshokugonomeishi__c</field>
+                <field>ficuspop__tenshokugonomeishi__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>SmartViscaf__delivery_icon__c</field>
+                <field>ficuspop__delivery_icon__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -208,17 +208,17 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>SmartViscaf__accountLink__c</field>
+                <field>ficuspop__accountLink__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>SmartViscaf__contactLink__c</field>
+                <field>ficuspop__contactLink__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>SmartViscaf__leadLink__c</field>
+                <field>ficuspop__leadLink__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -254,15 +254,15 @@
     </layoutSections>
     <miniLayout>
         <fields>Name</fields>
-        <fields>SmartViscaf__company_name__c</fields>
-        <fields>SmartViscaf__division__c</fields>
-        <fields>SmartViscaf__title_name__c</fields>
-        <fields>SmartViscaf__thumbnail__c</fields>
+        <fields>ficuspop__company_name__c</fields>
+        <fields>ficuspop__division__c</fields>
+        <fields>ficuspop__title_name__c</fields>
+        <fields>ficuspop__thumbnail__c</fields>
     </miniLayout>
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
-            <actionName>SmartViscaf__RegistTenshokusakiLex</actionName>
+            <actionName>ficuspop__RegistTenshokusakiLex</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>6</sortOrder>
         </platformActionListItems>
@@ -292,12 +292,12 @@
             <sortOrder>4</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>SmartViscaf__AccountRegistLex</actionName>
+            <actionName>ficuspop__AccountRegistLex</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>5</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>SmartViscaf__SBOrganizationListUrl</actionName>
+            <actionName>ficuspop__SBOrganizationListUrl</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>7</sortOrder>
         </platformActionListItems>
@@ -324,29 +324,29 @@
     </quickActionList>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>SmartViscaf__company_name__c</fields>
-        <fields>SmartViscaf__division__c</fields>
-        <fields>SmartViscaf__title_name__c</fields>
-        <fields>SmartViscaf__tel1__c</fields>
-        <fields>SmartViscaf__email__c</fields>
+        <fields>ficuspop__company_name__c</fields>
+        <fields>ficuspop__division__c</fields>
+        <fields>ficuspop__title_name__c</fields>
+        <fields>ficuspop__tel1__c</fields>
+        <fields>ficuspop__email__c</fields>
         <fields>OWNER.ALIAS</fields>
-        <fields>SmartViscaf__card_exchange_date__c</fields>
-        <fields>SmartViscaf__list_name__c</fields>
-        <relatedList>SmartViscaf__NameCard__c.SmartViscaf__Parent__c</relatedList>
-        <sortField>SmartViscaf__card_exchange_date__c</sortField>
+        <fields>ficuspop__card_exchange_date__c</fields>
+        <fields>ficuspop__list_name__c</fields>
+        <relatedList>ficuspop__NameCard__c.ficuspop__Parent__c</relatedList>
+        <sortField>ficuspop__card_exchange_date__c</sortField>
         <sortOrder>Desc</sortOrder>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>SmartViscaf__company_name__c</fields>
-        <fields>SmartViscaf__division__c</fields>
-        <fields>SmartViscaf__title_name__c</fields>
-        <fields>SmartViscaf__tel1__c</fields>
-        <fields>SmartViscaf__email__c</fields>
+        <fields>ficuspop__company_name__c</fields>
+        <fields>ficuspop__division__c</fields>
+        <fields>ficuspop__title_name__c</fields>
+        <fields>ficuspop__tel1__c</fields>
+        <fields>ficuspop__email__c</fields>
         <fields>OWNER.ALIAS</fields>
-        <fields>SmartViscaf__card_exchange_date__c</fields>
-        <fields>SmartViscaf__list_name__c</fields>
-        <relatedList>SmartViscaf__NameCard__c.SmartViscaf__tenshokugonomeishi__c</relatedList>
+        <fields>ficuspop__card_exchange_date__c</fields>
+        <fields>ficuspop__list_name__c</fields>
+        <relatedList>ficuspop__NameCard__c.ficuspop__tenshokugonomeishi__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>ACCOUNT.NAME</fields>
@@ -355,13 +355,13 @@
         <fields>ACCOUNT.PHONE1</fields>
         <fields>CORE.USERS.ALIAS</fields>
         <fields>ACCOUNT.LAST_ACTIVITY</fields>
-        <relatedList>Account.SmartViscaf__NameCard__c</relatedList>
+        <relatedList>Account.ficuspop__NameCard__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>FULL_NAME</fields>
         <fields>ACCOUNT.NAME</fields>
         <fields>CONTACT.PHONE1</fields>
-        <relatedList>Contact.SmartViscaf__NameCard__c</relatedList>
+        <relatedList>Contact.ficuspop__NameCard__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>

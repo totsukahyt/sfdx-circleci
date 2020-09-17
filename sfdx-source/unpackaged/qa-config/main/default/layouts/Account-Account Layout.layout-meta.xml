@@ -103,19 +103,19 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__NameCard__c</field>
+                <field>ficuspop__NameCard__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__NameCardMemo__c</field>
+                <field>ficuspop__NameCardMemo__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__NameCardListName__c</field>
+                <field>ficuspop__NameCardListName__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>SmartViscaf__NameCardFreehandmemo__c</field>
+                <field>ficuspop__NameCardFreehandmemo__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
@@ -301,7 +301,7 @@
             <sortOrder>32</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>SmartViscaf__NameCardListLex</actionName>
+            <actionName>ficuspop__NameCardListLex</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>33</sortOrder>
         </platformActionListItems>
