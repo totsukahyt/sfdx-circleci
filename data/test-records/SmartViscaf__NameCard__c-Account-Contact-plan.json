@@ -16,19 +16,19 @@
         ]
     },
     {
-        "sobject": "ficuspop__NameCard__c",
+        "sobject": "smvTest__NameCard__c",
         "saveRefs": true,
         "resolveRefs": true,
         "files": [
-            "ficuspop__NameCard__cs.json"
+            "smvTest__NameCard__cs.json"
         ]
     },
     {
-        "sobject": "ficuspop__NameCard__c",
+        "sobject": "smvTest__NameCard__c",
         "saveRefs": true,
         "resolveRefs": true,
         "files": [
-            "ficuspop__NameCard__old.json"
+            "smvTest__NameCard__old.json"
         ]
     },
     {

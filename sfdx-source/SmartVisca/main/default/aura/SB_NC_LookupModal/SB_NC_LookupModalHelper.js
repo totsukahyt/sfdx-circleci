@@ -80,10 +80,10 @@
             // // 名前空間名 を取った項目を追加する。
             // items.forEach(function(item) {
             //   var keys = Object.keys(item).filter(function(f) {
-            //     return f.toLowerCase().startsWith('ficuspop__');
+            //     return f.toLowerCase().startsWith('smvTest__');
             //   });
             //   keys.forEach(function(k) {
-            //     var l = k.replace(/^ficuspop__/i, '');
+            //     var l = k.replace(/^smvTest__/i, '');
             //     item[l] = item[k];
             //   });
             // });

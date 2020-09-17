@@ -41,8 +41,8 @@
         <type>Default</type>
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
-    <compactLayoutAssignment>ficuspop__meishi</compactLayoutAssignment>
-    <customHelpPage>ficuspop__SB_NameCard_UserGuide</customHelpPage>
+    <compactLayoutAssignment>smvTest__meishi</compactLayoutAssignment>
+    <customHelpPage>smvTest__SB_NameCard_UserGuide</customHelpPage>
     <deploymentStatus>Deployed</deploymentStatus>
     <deprecated>false</deprecated>
     <description>スキャナから取り込んだ名刺情報がここに保存されます。
@@ -66,39 +66,39 @@ Business Card: Stores digitized business card information.</description>
     </nameField>
     <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
     <searchLayouts>
-        <customTabListAdditionalFields>ficuspop__company_name__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ficuspop__division__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ficuspop__title_name__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ficuspop__tel1__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ficuspop__email__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>smvTest__company_name__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>smvTest__division__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>smvTest__title_name__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>smvTest__tel1__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>smvTest__email__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>OWNER.ALIAS</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ficuspop__card_exchange_date__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ficuspop__list_name__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ficuspop__delivery_type__c</customTabListAdditionalFields>
-        <listViewButtons>ficuspop__AccountBulkRegistLex</listViewButtons>
-        <lookupDialogsAdditionalFields>ficuspop__company_name__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>ficuspop__division__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>ficuspop__email__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>ficuspop__card_exchange_date__c</lookupDialogsAdditionalFields>
+        <customTabListAdditionalFields>smvTest__card_exchange_date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>smvTest__list_name__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>smvTest__delivery_type__c</customTabListAdditionalFields>
+        <listViewButtons>smvTest__AccountBulkRegistLex</listViewButtons>
+        <lookupDialogsAdditionalFields>smvTest__company_name__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>smvTest__division__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>smvTest__email__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>smvTest__card_exchange_date__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>OWNER.ALIAS</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>ficuspop__list_name__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>smvTest__list_name__c</lookupDialogsAdditionalFields>
         <searchFilterFields>NAME</searchFilterFields>
-        <searchFilterFields>ficuspop__company_name__c</searchFilterFields>
-        <searchFilterFields>ficuspop__email__c</searchFilterFields>
-        <searchFilterFields>ficuspop__address_pref__c</searchFilterFields>
+        <searchFilterFields>smvTest__company_name__c</searchFilterFields>
+        <searchFilterFields>smvTest__email__c</searchFilterFields>
+        <searchFilterFields>smvTest__address_pref__c</searchFilterFields>
         <searchFilterFields>OWNER.ALIAS</searchFilterFields>
-        <searchFilterFields>ficuspop__card_exchange_date__c</searchFilterFields>
-        <searchFilterFields>ficuspop__list_name__c</searchFilterFields>
-        <searchResultsAdditionalFields>ficuspop__company_name__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>ficuspop__division__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>ficuspop__title_name__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>ficuspop__tel1__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>ficuspop__email__c</searchResultsAdditionalFields>
+        <searchFilterFields>smvTest__card_exchange_date__c</searchFilterFields>
+        <searchFilterFields>smvTest__list_name__c</searchFilterFields>
+        <searchResultsAdditionalFields>smvTest__company_name__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>smvTest__division__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>smvTest__title_name__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>smvTest__tel1__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>smvTest__email__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>OWNER.ALIAS</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>ficuspop__card_exchange_date__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>ficuspop__list_name__c</searchResultsAdditionalFields>
-        <searchResultsCustomButtons>ficuspop__AccountBulkRegist</searchResultsCustomButtons>
-        <searchResultsCustomButtons>ficuspop__AccountBulkRegistLex</searchResultsCustomButtons>
+        <searchResultsAdditionalFields>smvTest__card_exchange_date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>smvTest__list_name__c</searchResultsAdditionalFields>
+        <searchResultsCustomButtons>smvTest__AccountBulkRegist</searchResultsCustomButtons>
+        <searchResultsCustomButtons>smvTest__AccountBulkRegistLex</searchResultsCustomButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>

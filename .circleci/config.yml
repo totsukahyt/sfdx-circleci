@@ -231,7 +231,7 @@ jobs:
 
               sfdx force:source:convert -r "$PACKAGE_DIRECTORY" \
                                         -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
-                                        -n "$PACKAGE_NAME" \
+                                        -n "svTest" \
                                         --loglevel error
               # package.xmlにインストール後スクリプトの記載
               sed -i 's|</Package>|<postInstallClass>SB_NC_PostInstallScript</postInstallClass></Package>|' ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml

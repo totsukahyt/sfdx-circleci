@@ -104,19 +104,19 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__NameCard__c</field>
+                <field>smvTest__NameCard__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__NameCardMemo__c</field>
+                <field>smvTest__NameCardMemo__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__NameCardListName__c</field>
+                <field>smvTest__NameCardListName__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__NameCardFreehandmemo__c</field>
+                <field>smvTest__NameCardFreehandmemo__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
@@ -237,7 +237,7 @@
             <sortOrder>27</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>ficuspop__NameCardListLex</actionName>
+            <actionName>smvTest__NameCardListLex</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>28</sortOrder>
         </platformActionListItems>

@@ -8,5 +8,5 @@
     <masterLabel>取引先・取引先責任者に登録</masterLabel>
     <openType>replace</openType>
     <protected>false</protected>
-    <url>{!URLFOR( &quot;/apex/ficuspop__SB_NameCard_AccountRegist&quot;, null, [id=NameCard__c.Id] ) }</url>
+    <url>{!URLFOR( &quot;/apex/smvTest__SB_NameCard_AccountRegist&quot;, null, [id=NameCard__c.Id] ) }</url>
 </WebLink>

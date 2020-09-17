@@ -8,5 +8,5 @@
     <masterLabel>取引先・取引先責任者に登録*</masterLabel>
     <openType>replace</openType>
     <protected>false</protected>
-    <url>/apex/ficuspop__SB_NC_PageDispacher?page=SB_NC_AccountRegist&amp;id={!NameCard__c.Id}</url>
+    <url>/apex/smvTest__SB_NC_PageDispacher?page=SB_NC_AccountRegist&amp;id={!NameCard__c.Id}</url>
 </WebLink>

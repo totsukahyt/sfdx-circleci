@@ -9,5 +9,5 @@
     <masterLabel>自動連携の検証</masterLabel>
     <openType>noSidebar</openType>
     <protected>false</protected>
-    <url>/apex/ficuspop__SB_NameCard_RenkeiMonitor?id={!NameCard__c.Id}</url>
+    <url>/apex/smvTest__SB_NameCard_RenkeiMonitor?id={!NameCard__c.Id}</url>
 </WebLink>

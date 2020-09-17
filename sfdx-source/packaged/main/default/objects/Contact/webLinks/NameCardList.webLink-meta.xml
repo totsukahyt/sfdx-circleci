@@ -8,5 +8,5 @@
     <masterLabel>名刺で更新</masterLabel>
     <openType>replace</openType>
     <protected>false</protected>
-    <url>{!URLFOR( &quot;/apex/ficuspop__SB_NameCard_NameCardList&quot;, null, [cid=Contact.Id] ) }</url>
+    <url>{!URLFOR( &quot;/apex/smvTest__SB_NameCard_NameCardList&quot;, null, [cid=Contact.Id] ) }</url>
 </WebLink>

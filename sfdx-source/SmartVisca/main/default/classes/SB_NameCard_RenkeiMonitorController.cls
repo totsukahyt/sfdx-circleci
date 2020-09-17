@@ -422,7 +422,7 @@ public with sharing class SB_NameCard_RenkeiMonitorController {
 
 
   // 戻り先のURLを作ります。
-  // https://svt01-dev-ed.lightning.force.com/lightning/o/ficuspop__NameCard__c/list?filterName=00B0I00000B2kx4UAB
+  // https://svt01-dev-ed.lightning.force.com/lightning/o/smvTest__NameCard__c/list?filterName=00B0I00000B2kx4UAB
   // https://svdev-sawano-dev-ed.my.salesforce.com/a06?fcf=00B6F00000Iya1x
   private static String RETURN_URL_FORM_LEX = '{0}/lightning/o/{1}/list?filterName={3}';
   private static String RETURN_URL_FORM = '{0}/{2}?fcf={3}';

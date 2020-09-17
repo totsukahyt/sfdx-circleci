@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>ficuspop__AccountRegist</customButtons>
-    <customButtons>ficuspop__registTenshokusaki</customButtons>
-    <customButtons>ficuspop__SBhaveSameNameCard</customButtons>
-    <customButtons>ficuspop__SBOrganizationList</customButtons>
+    <customButtons>smvTest__AccountRegist</customButtons>
+    <customButtons>smvTest__registTenshokusaki</customButtons>
+    <customButtons>smvTest__SBhaveSameNameCard</customButtons>
+    <customButtons>smvTest__SBOrganizationList</customButtons>
     <excludeButtons>Share</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
@@ -18,29 +18,29 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__company_name__c</field>
+                <field>smvTest__company_name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__division__c</field>
+                <field>smvTest__division__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__title_name__c</field>
+                <field>smvTest__title_name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__web_url1__c</field>
+                <field>smvTest__web_url1__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>ficuspop__name_kana__c</field>
+                <field>smvTest__name_kana__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__company_name_kana__c</field>
+                <field>smvTest__company_name_kana__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -48,7 +48,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__card_exchange_date__c</field>
+                <field>smvTest__card_exchange_date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -61,41 +61,41 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__email__c</field>
+                <field>smvTest__email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__tel1__c</field>
+                <field>smvTest__tel1__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__tel2__c</field>
+                <field>smvTest__tel2__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__mobile__c</field>
+                <field>smvTest__mobile__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__fax1__c</field>
+                <field>smvTest__fax1__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__zip_code__c</field>
+                <field>smvTest__zip_code__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__address_pref__c</field>
+                <field>smvTest__address_pref__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__address__c</field>
+                <field>smvTest__address__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__address_bld__c</field>
+                <field>smvTest__address_bld__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -108,21 +108,21 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__first_name__c</field>
+                <field>smvTest__first_name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__middle_name__c</field>
+                <field>smvTest__middle_name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__last_name__c</field>
+                <field>smvTest__last_name__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__address_eng__c</field>
+                <field>smvTest__address_eng__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -135,11 +135,11 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__memo__c</field>
+                <field>smvTest__memo__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__freehandmemo__c</field>
+                <field>smvTest__freehandmemo__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
@@ -152,7 +152,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__list_name__c</field>
+                <field>smvTest__list_name__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
@@ -166,13 +166,13 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>ficuspop__thumbnail__c</field>
+                <field>smvTest__thumbnail__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>ficuspop__bk_thumbnail__c</field>
+                <field>smvTest__bk_thumbnail__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -185,17 +185,17 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>ficuspop__ParentLink__c</field>
+                <field>smvTest__ParentLink__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ficuspop__tenshokugonomeishi__c</field>
+                <field>smvTest__tenshokugonomeishi__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>ficuspop__delivery_icon__c</field>
+                <field>smvTest__delivery_icon__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -208,17 +208,17 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>ficuspop__accountLink__c</field>
+                <field>smvTest__accountLink__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>ficuspop__contactLink__c</field>
+                <field>smvTest__contactLink__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>ficuspop__leadLink__c</field>
+                <field>smvTest__leadLink__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -254,15 +254,15 @@
     </layoutSections>
     <miniLayout>
         <fields>Name</fields>
-        <fields>ficuspop__company_name__c</fields>
-        <fields>ficuspop__division__c</fields>
-        <fields>ficuspop__title_name__c</fields>
-        <fields>ficuspop__thumbnail__c</fields>
+        <fields>smvTest__company_name__c</fields>
+        <fields>smvTest__division__c</fields>
+        <fields>smvTest__title_name__c</fields>
+        <fields>smvTest__thumbnail__c</fields>
     </miniLayout>
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
-            <actionName>ficuspop__RegistTenshokusakiLex</actionName>
+            <actionName>smvTest__RegistTenshokusakiLex</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>6</sortOrder>
         </platformActionListItems>
@@ -292,12 +292,12 @@
             <sortOrder>4</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>ficuspop__AccountRegistLex</actionName>
+            <actionName>smvTest__AccountRegistLex</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>5</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>ficuspop__SBOrganizationListUrl</actionName>
+            <actionName>smvTest__SBOrganizationListUrl</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>7</sortOrder>
         </platformActionListItems>
@@ -324,29 +324,29 @@
     </quickActionList>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>ficuspop__company_name__c</fields>
-        <fields>ficuspop__division__c</fields>
-        <fields>ficuspop__title_name__c</fields>
-        <fields>ficuspop__tel1__c</fields>
-        <fields>ficuspop__email__c</fields>
+        <fields>smvTest__company_name__c</fields>
+        <fields>smvTest__division__c</fields>
+        <fields>smvTest__title_name__c</fields>
+        <fields>smvTest__tel1__c</fields>
+        <fields>smvTest__email__c</fields>
         <fields>OWNER.ALIAS</fields>
-        <fields>ficuspop__card_exchange_date__c</fields>
-        <fields>ficuspop__list_name__c</fields>
-        <relatedList>ficuspop__NameCard__c.ficuspop__Parent__c</relatedList>
-        <sortField>ficuspop__card_exchange_date__c</sortField>
+        <fields>smvTest__card_exchange_date__c</fields>
+        <fields>smvTest__list_name__c</fields>
+        <relatedList>smvTest__NameCard__c.smvTest__Parent__c</relatedList>
+        <sortField>smvTest__card_exchange_date__c</sortField>
         <sortOrder>Desc</sortOrder>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>ficuspop__company_name__c</fields>
-        <fields>ficuspop__division__c</fields>
-        <fields>ficuspop__title_name__c</fields>
-        <fields>ficuspop__tel1__c</fields>
-        <fields>ficuspop__email__c</fields>
+        <fields>smvTest__company_name__c</fields>
+        <fields>smvTest__division__c</fields>
+        <fields>smvTest__title_name__c</fields>
+        <fields>smvTest__tel1__c</fields>
+        <fields>smvTest__email__c</fields>
         <fields>OWNER.ALIAS</fields>
-        <fields>ficuspop__card_exchange_date__c</fields>
-        <fields>ficuspop__list_name__c</fields>
-        <relatedList>ficuspop__NameCard__c.ficuspop__tenshokugonomeishi__c</relatedList>
+        <fields>smvTest__card_exchange_date__c</fields>
+        <fields>smvTest__list_name__c</fields>
+        <relatedList>smvTest__NameCard__c.smvTest__tenshokugonomeishi__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>ACCOUNT.NAME</fields>
@@ -355,13 +355,13 @@
         <fields>ACCOUNT.PHONE1</fields>
         <fields>CORE.USERS.ALIAS</fields>
         <fields>ACCOUNT.LAST_ACTIVITY</fields>
-        <relatedList>Account.ficuspop__NameCard__c</relatedList>
+        <relatedList>Account.smvTest__NameCard__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>FULL_NAME</fields>
         <fields>ACCOUNT.NAME</fields>
         <fields>CONTACT.PHONE1</fields>
-        <relatedList>Contact.ficuspop__NameCard__c</relatedList>
+        <relatedList>Contact.smvTest__NameCard__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>

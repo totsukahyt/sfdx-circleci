@@ -541,7 +541,7 @@ public with sharing class SB_NC_UpdateByCardLcController {
       inputV.searchTypeSelectOpts.add(new SB_NC_UpdateByCardDTO.LabelValue(str + System.Label.SB_NC_AND + str1, '0'));
       inputV.searchTypeSelectOpts.add(new SB_NC_UpdateByCardDTO.LabelValue(str, '1'));
       inputV.searchTypeSelectOpts.add(new SB_NC_UpdateByCardDTO.LabelValue(str1, '2'));
-      // inputV.checkboxValue = !baseSetting.ficuspop__RegistLeadNotOverWrite__c && Lead.SObjectType.getDescribe().isUpdateable();
+      // inputV.checkboxValue = !baseSetting.smvTest__RegistLeadNotOverWrite__c && Lead.SObjectType.getDescribe().isUpdateable();
     }
     return JSON.serialize(inputV);
   }
