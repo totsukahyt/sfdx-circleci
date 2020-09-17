@@ -277,9 +277,9 @@ jobs:
             #                                      -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
             #                                      -w 20 \
             #                                      --loglevel error > ./versionId.txt
-              sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
-                                               -i $METADATA_PACKAGE_ID \
-                                               --loglevel error > ./version_info.txt
+              # sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+              #                                  -i $METADATA_PACKAGE_ID \
+              #                                  --loglevel error > ./version_info.txt
               VID=$(cat ./versionId.txt)
               echo 'VID1 : ' ${VID}
               VID=`echo ${VID#*[}`
@@ -288,7 +288,7 @@ jobs:
               echo 'VID3 : ' ${VID}
               echo 'export VERSIONID_ENV=${VID}' >> $BASH_ENV
               source $BASH_ENV
-              grep ${VERSIONID_ENV} ./version_info.txt > pkg_info.txt
+              grep 04t2x000004KPYQAA4 ./version_info.txt > pkg_info.txt
               # echo 'QA scratch環境の作成 '
               # sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-QA-${CIRCLE_PROJECT_REPONAME}-BETA -a QA-${CIRCLE_PROJECT_REPONAME}-BETA -n -s -d 30 --wait 10
               # sfdx force:org:list --all
