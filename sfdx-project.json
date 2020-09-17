@@ -4,7 +4,7 @@
     { "path": "sfdx-source/unpackaged/dev-config"},
     { "path": "sfdx-source/unpackaged/qa-config"}
   ],
-  "namespace": "",
+  "namespace": "ficuspop",
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "46.0",
   "plugins": {
