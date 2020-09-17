@@ -200,7 +200,7 @@ jobs:
           command: |
             if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
               sfdx force:auth:jwt:grant --clientid 3MVG97quAmFZJfVy26n1jTv2MQMTgLt7ZYsH3w3hD177DJFK5u_Xj6B19joV7jNxYAmJlpeENdi7Pkl5lhfbx --jwtkeyfile assets/server_pkg.key --username svtestpjt@sohobb.jp --setdefaultdevhubusername  --setalias PKG-${CIRCLE_PROJECT_REPONAME}-BETA
-              sfdx force:auth:jwt:grant --clientid 3MVG9Gdzj3taRxuMdFXdodmfZnY4kySlRb1AcwYVXrSOCMJm4ADtJ.34Yo.LJRDG77Y9MbQPyH7ubyvLosJPu --jwtkeyfile assets/server_pkg.key --username test-5xheprghz0nw@example.com --setdefaultdevhubusername  --setalias PKG-${CIRCLE_PROJECT_REPONAME}-BETA -r https://test.salesforce.com
+              sfdx force:auth:jwt:grant --clientid 3MVG9Gdzj3taRxuMdFXdodmfZnY4kySlRb1AcwYVXrSOCMJm4ADtJ.34Yo.LJRDG77Y9MbQPyH7ubyvLosJPu --jwtkeyfile assets/server_pkg.key --username test-5xheprghz0nw@example.com --setdefaultdevhubusername  --setalias QA-${CIRCLE_PROJECT_REPONAME}-BETA -r https://test.salesforce.com
             else
               exit 0
             fi
