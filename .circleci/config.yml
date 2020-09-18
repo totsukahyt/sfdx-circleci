@@ -317,7 +317,7 @@ jobs:
               TAG_HEAD=$(echo beta_)
               UB=$(echo _)
               VERSION_NAME=$(cat version_name.txt)
-              BETA_TAG=$(echo $TAG_HEAD$PKG_VERSION$UB${VERSION_NAME})1
+              BETA_TAG=$(echo $TAG_HEAD$PKG_VERSION$UB${VERSION_NAME})2
               echo '{"betatag":"'$BETA_TAG'"}' > data/beta_tag.json
               git tag $BETA_TAG
               git push origin $BETA_TAG
