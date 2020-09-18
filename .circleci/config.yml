@@ -200,7 +200,10 @@ jobs:
           command: |
             if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
               sfdx force:auth:jwt:grant --clientid 3MVG97quAmFZJfVy26n1jTv2MQMTgLt7ZYsH3w3hD177DJFK5u_Xj6B19joV7jNxYAmJlpeENdi7Pkl5lhfbx --jwtkeyfile assets/server_pkg.key --username svtestpjt@sohobb.jp --setdefaultdevhubusername  --setalias PKG-${CIRCLE_PROJECT_REPONAME}-BETA
-            else
+              sfdx force:auth:jwt:grant --clientid 3MVG9Gdzj3taRxuMpe34wmRPIREGETTrR7PcjjsA6VRaTmviq4cTRgIKcj9NvSHy4im2Pbqie9DSgklfLlozr --jwtkeyfile assets/server_pkg.key --username test-vt6ut8sucqjx@example.com --setdefaultdevhubusername  --setalias QA-${CIRCLE_PROJECT_REPONAME}-BETA -r https://test.salesforce.com
+              sfdx force:org:display -u QA-${CIRCLE_PROJECT_REPONAME}-BETA --json > ./qa_userPassword.json
+              cat ./qa_userPassword.json
+              else
               exit 0
             fi
       #　PJT環境認証完了
@@ -223,84 +226,84 @@ jobs:
             fi
 
       # 　DEV環境認証完了
-      - run:
-          name: Convert SFDX source to MDAPI source
-          command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
-              # パッケージ用にprefixつけたソースに上書き
-              cp sfdx-source/packaged/main sfdx-source/SmartVisca/ -f -r
+      # - run:
+      #     name: Convert SFDX source to MDAPI source
+      #     command: |
+      #       if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+      #         # パッケージ用にprefixつけたソースに上書き
+      #         cp sfdx-source/packaged/main sfdx-source/SmartVisca/ -f -r
 
-              sfdx force:source:convert -r "$PACKAGE_DIRECTORY" \
-                                        -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
-                                        -n "svTest" \
-                                        --loglevel error
-              # package.xmlにインストール後スクリプトの記載
-              sed -i 's|</Package>|<postInstallClass>SB_NC_PostInstallScript</postInstallClass></Package>|' ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
-              cat ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
-            else
-              exit 0
-            fi
+      #         sfdx force:source:convert -r "$PACKAGE_DIRECTORY" \
+      #                                   -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
+      #                                   -n "svTest" \
+      #                                   --loglevel error
+      #         # package.xmlにインストール後スクリプトの記載
+      #         sed -i 's|</Package>|<postInstallClass>SB_NC_PostInstallScript</postInstallClass></Package>|' ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
+      #         cat ./mdapi-source/circle_build_$CIRCLE_BUILD_NUM/package.xml
+      #       else
+      #         exit 0
+      #       fi
 
-      - run:
-          name: Deploy MDAPI Source to the Packaging Org
-          command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
-              sfdx force:mdapi:deploy -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
-                                      -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
-                                      -w 15 \
-                                      --verbose \
-                                      --loglevel error
-            else
-              exit 0
-            fi
+      # - run:
+      #     name: Deploy MDAPI Source to the Packaging Org
+      #     command: |
+      #       if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+      #         sfdx force:mdapi:deploy -d "./mdapi-source/circle_build_$CIRCLE_BUILD_NUM" \
+      #                                 -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+      #                                 -w 15 \
+      #                                 --verbose \
+      #                                 --loglevel error
+      #       else
+      #         exit 0
+      #       fi
 
-      - run:
-          name: List current version history for the first-generation package about to be uploaded
-          command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
-              sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
-                                               -i $METADATA_PACKAGE_ID \
-                                               --loglevel error
-            else
-              exit 0
-            fi
+      # - run:
+      #     name: List current version history for the first-generation package about to be uploaded
+      #     command: |
+      #       if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+      #         sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+      #                                          -i $METADATA_PACKAGE_ID \
+      #                                          --loglevel error
+      #       else
+      #         exit 0
+      #       fi
 
-      - run:
-          name: Create (upload) a new MANAGED BETA package version
-          no_output_timeout: 30m
-          command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
-              sfdx force:package1:version:create -i $METADATA_PACKAGE_ID \
-                                                 -n "$PACKAGE_VERSION_NAME" \
-                                                 -d "Package version generated by CI process" \
-                                                 -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
-                                                 -w 20 \
-                                                 --loglevel error > ./versionId.txt
-              sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
-                                               -i $METADATA_PACKAGE_ID \
-                                               --loglevel error > ./version_info.txt
-              VID=$(cat ./versionId.txt)
-              echo 'VID1 : ' ${VID}
-              VID=`echo ${VID#*[}`
-              echo 'VID2 : ' ${VID}
-              VID=`echo ${VID%]*}`
-              echo 'VID3 : ' ${VID}
-              echo 'export VERSIONID_ENV=${VID}' >> $BASH_ENV
-              source $BASH_ENV
-              grep ${VERSIONID_ENV} ./version_info.txt > pkg_info.txt
-              echo 'QA scratch環境の作成 '
-              sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-QA-${CIRCLE_PROJECT_REPONAME}-BETA -a QA-${CIRCLE_PROJECT_REPONAME}-BETA -n -s -d 30 --wait 10
-              sfdx force:org:list --all
-              sfdx force:package:install --package $VERSIONID_ENV -u QA-${CIRCLE_PROJECT_REPONAME}-BETA --publishwait 15 --wait 15
-              sfdx force:user:password:generate -u QA-${CIRCLE_PROJECT_REPONAME}-BETA
-              sfdx force:user:display --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA --json > ./qa_userPassword.json
-              cat ./qa_userPassword.json
-              echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.json)' >> $BASH_ENV
-              echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
-              source $BASH_ENV
-            else
-              exit 0
-            fi
+      # - run:
+      #     name: Create (upload) a new MANAGED BETA package version
+      #     no_output_timeout: 30m
+      #     command: |
+      #       if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+      #         sfdx force:package1:version:create -i $METADATA_PACKAGE_ID \
+      #                                            -n "$PACKAGE_VERSION_NAME" \
+      #                                            -d "Package version generated by CI process" \
+      #                                            -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+      #                                            -w 20 \
+      #                                            --loglevel error > ./versionId.txt
+      #         sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
+      #                                          -i $METADATA_PACKAGE_ID \
+      #                                          --loglevel error > ./version_info.txt
+      #         VID=$(cat ./versionId.txt)
+      #         echo 'VID1 : ' ${VID}
+      #         VID=`echo ${VID#*[}`
+      #         echo 'VID2 : ' ${VID}
+      #         VID=`echo ${VID%]*}`
+      #         echo 'VID3 : ' ${VID}
+      #         echo 'export VERSIONID_ENV=${VID}' >> $BASH_ENV
+      #         source $BASH_ENV
+      #         grep ${VERSIONID_ENV} ./version_info.txt > pkg_info.txt
+      #         echo 'QA scratch環境の作成 '
+      #         sfdx force:org:create -f config/project-scratch-def.json orgName=${CIRCLE_WORKFLOW_ID}-QA-${CIRCLE_PROJECT_REPONAME}-BETA -a QA-${CIRCLE_PROJECT_REPONAME}-BETA -n -s -d 30 --wait 10
+      #         sfdx force:org:list --all
+      #         sfdx force:package:install --package $VERSIONID_ENV -u QA-${CIRCLE_PROJECT_REPONAME}-BETA --publishwait 15 --wait 15
+      #         sfdx force:user:password:generate -u QA-${CIRCLE_PROJECT_REPONAME}-BETA
+      #         sfdx force:user:display --targetusername QA-${CIRCLE_PROJECT_REPONAME}-BETA --json > ./qa_userPassword.json
+      #         cat ./qa_userPassword.json
+      #         echo 'export QAVERY_IMPORTANT=$(cat ./qa_userPassword.json)' >> $BASH_ENV
+      #         echo 'export QAMSG_HEAD=$(echo ベターパッケージ QA scratch環境を作成しました。)' >> $BASH_ENV
+      #         source $BASH_ENV
+      #       else
+      #         exit 0
+      #       fi
 
       - run:
           name: create and push beta tag
@@ -313,6 +316,7 @@ jobs:
               fi
               TAG_HEAD=$(echo beta_)
               UB=$(echo _)
+              VERSION_NAME=$(cat version_name.txt)
               BETA_TAG=$(echo $TAG_HEAD$PKG_VERSION$UB${VERSION_NAME})
               echo '{"betatag":"'$BETA_TAG'"}' > data/beta_tag.json
               git tag $BETA_TAG
