@@ -201,8 +201,8 @@ jobs:
             if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
               sfdx force:auth:jwt:grant --clientid 3MVG97quAmFZJfVy26n1jTv2MQMTgLt7ZYsH3w3hD177DJFK5u_Xj6B19joV7jNxYAmJlpeENdi7Pkl5lhfbx --jwtkeyfile assets/server_pkg.key --username svtestpjt@sohobb.jp --setdefaultdevhubusername  --setalias PKG-${CIRCLE_PROJECT_REPONAME}-BETA
               sfdx force:auth:jwt:grant --clientid 3MVG9Gdzj3taRxuMpe34wmRPIREGETTrR7PcjjsA6VRaTmviq4cTRgIKcj9NvSHy4im2Pbqie9DSgklfLlozr --jwtkeyfile assets/server_pkg.key --username test-vt6ut8sucqjx@example.com --setdefaultdevhubusername  --setalias QA-${CIRCLE_PROJECT_REPONAME}-BETA -r https://test.salesforce.com
-              sfdx force:org:display -u QA-${CIRCLE_PROJECT_REPONAME}-BETA --json > ./qa_userPassword.json
-              cat ./qa_userPassword.json
+              sfdx force:org:display -u QA-${CIRCLE_PROJECT_REPONAME}-BETA --json > qa_userPassword.json
+              cat qa_userPassword.json
               else
               exit 0
             fi
