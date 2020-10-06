@@ -275,6 +275,7 @@ jobs:
             if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
               sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
                                                --loglevel error > ./version_info.txt
+              cat ./version_info.txt
               VID=$(cat ./versionId.txt)
               echo 'VID1 : ' ${VID}
               VID=`echo ${VID#*[}`
@@ -285,7 +286,6 @@ jobs:
               source $BASH_ENV
               grep ${VERSIONID_ENV} ./version_info.txt > pkg_info.txt
               echo 'QA scratch環境の作成 '
-              source $BASH_ENV
             else
               exit 0
             fi
