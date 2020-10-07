@@ -23,17 +23,13 @@ jobs:
           command : |
             if [ $CIRCLE_PULL_REQUEST ]; then
               openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
-            else
-              exit 0
-            fi
+
       - run: 
           name: DEV jwt
           command : | 
             if [ $CIRCLE_PULL_REQUEST ]; then
               sfdx force:auth:jwt:grant --clientid ${HUB_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias DEV-${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
-            else
-              exit 0
-            fi
+
       #　DEV環境認証完了
       - run:
           name: Setup Org
@@ -46,9 +42,7 @@ jobs:
               sfdx force:source:deploy -u circle_build_test -p sfdx-source/unpackaged/dev-config
               sfdx force:user:create --setalias ${CIRCLE_WORKFLOW_ID}@test.org --definitionfile config/project-user-admin-def.json
               sfdx force:apex:execute -u ${CIRCLE_WORKFLOW_ID}@test.org -f script/apex/postinstall.apex
-            else
-              exit 0
-            fi
+
       - run:
           name: Run Apex Tests
           no_output_timeout: 30m
@@ -73,9 +67,7 @@ jobs:
           command: |
             if [ $CIRCLE_PULL_REQUEST ]; then
               sfdx force:org:delete -u circle_build_test -p
-            else
-              exit 0
-            fi
+
 
       - slack/notify:
           channel: ${SLACK_CHANNEL}
@@ -190,40 +182,32 @@ jobs:
       - run: 
           name: create PKG org server key
           command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+
               openssl enc -nosalt -aes-256-cbc -d -in assets/server_pkg.key.enc -out assets/server_pkg.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
-            else
-              exit 0
-            fi
+
       - run: 
           name: PKG jwt
           command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+
               sfdx force:auth:jwt:grant --clientid 3MVG97quAmFZJfVy26n1jTv2MQMTgLt7ZYsH3w3hD177DJFK5u_Xj6B19joV7jNxYAmJlpeENdi7Pkl5lhfbx --jwtkeyfile assets/server_pkg.key --username svtestpjt@sohobb.jp --setdefaultdevhubusername  --setalias PKG-${CIRCLE_PROJECT_REPONAME}-BETA
               sfdx force:auth:jwt:grant --clientid 3MVG9Gdzj3taRxuMpe34wmRPIREGETTrR7PcjjsA6VRaTmviq4cTRgIKcj9NvSHy4im2Pbqie9DSgklfLlozr --jwtkeyfile assets/server_pkg.key --username test-vt6ut8sucqjx@example.com --setdefaultdevhubusername  --setalias QA-${CIRCLE_PROJECT_REPONAME}-BETA -r https://test.salesforce.com
               sfdx force:org:display -u QA-${CIRCLE_PROJECT_REPONAME}-BETA --json > ./qa_UserPassword.json
               cat ./qa_UserPassword.json
-              else
-              exit 0
-            fi
+  
       #　PJT環境認証完了
       #　DEV環境認証開始
       - run: 
           name: create DEV org server key
           command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+
               openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${DECRYPTION_KEY} -iv ${DECRYPTION_IV}
-            else
-              exit 0
-            fi
+
       - run: 
           name: DEV jwt
           command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+
               sfdx force:auth:jwt:grant --clientid ${HUB_CONSUMER_KEY} --jwtkeyfile assets/server.key --username ${HUB_SFDC_USER} --setdefaultdevhubusername --setalias DEV-${CIRCLE_PROJECT_REPONAME}-BETA
-            else
-              exit 0
-            fi
+
 
       # 　DEV環境認証完了
       # - run:
@@ -272,7 +256,7 @@ jobs:
           name: Create (upload) a new MANAGED BETA package version
           no_output_timeout: 30m
           command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+
               sfdx force:package1:version:list -u PKG-${CIRCLE_PROJECT_REPONAME}-BETA \
                                                --loglevel error > ./version_info.txt
               cat ./version_info.txt
@@ -286,14 +270,12 @@ jobs:
               source $BASH_ENV
               grep ${VERSIONID_ENV} ./version_info.txt > pkg_info.txt
               echo 'QA scratch環境の作成 '
-            else
-              exit 0
-            fi
+
 
       - run:
           name: create and push beta tag
           command: |
-            if [ $(cat monday.txt) -lt $(cat commit_date.txt) ]; then
+
               # betaタグを作成　例：v1.0.0_beta1
               PKG_INFO=$(cat pkg_info.txt)
               if [[ $PKG_INFO =~ [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} ]]; then
@@ -311,9 +293,7 @@ jobs:
               echo '{"betatag":"'$BETA_TAG'"}' > data/beta_tag.json
               git tag $BETA_TAG
               git push origin $BETA_TAG
-            else
-              exit 0
-            fi
+
 
       - slack/notify:
           channel: ${SLACK_CHANNEL}
