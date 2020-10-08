@@ -275,7 +275,8 @@ jobs:
       - run:
           name: create and push beta tag
           command: |
-
+              git remote -v
+              git config -l
               # betaタグを作成　例：v1.0.0_beta1
               PKG_INFO=$(cat pkg_info.txt)
               if [[ $PKG_INFO =~ [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} ]]; then
