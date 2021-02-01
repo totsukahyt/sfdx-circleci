@@ -28,18 +28,21 @@ workflows:
   scheduled-preproduction-workflow:
     triggers:
       - schedule:
-          cron: "6 8 * * *"
+          cron: "11 8 * * *"
           filters:
              branches:
                only: "859"
     jobs:
       - build-and-test
           
-  # scheduled-develop-workflow:
-  #   triggers:
-  #     - schedule:
-  #         cron: "5 8 * * *"
-  #   jobs:
-  #     - build-and-test
+  scheduled-develop-workflow:
+    triggers:
+      - schedule:
+          cron: "13 8 * * *"
+          filters:
+             branches:
+               only: "859"
+    jobs:
+      - build-and-test
 
 
