@@ -31,8 +31,7 @@ workflows:
           cron: "6 8 * * *"
           filters:
              branches:
-               only:
-                "859"
+               only: "859"
     jobs:
       - build-and-test
           
